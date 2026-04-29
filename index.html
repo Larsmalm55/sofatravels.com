@@ -1,1 +1,2195 @@
-Add homepage
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sofatravels — Discover the Hidden Norway</title>
+  <meta name="description" content="Sofatravels.com — Free inspiration and trip-planning portal for European travelers discovering the hidden Norway. Routes, editorial stories, and local secrets.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #F9F7F4;
+      --cream:      #F4F0E8;
+      --dark:       #1A1A1A;
+      --green:      #2D5016;
+      --sage:       #6B8F71;
+      --fjord:      #3D6B8C;
+      --warm-gray:  #8B8680;
+      --light-gray: #E8E4DF;
+      --gold:       #C4933F;
+      --text:       #2C2C2C;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════
+       NAVIGATION
+    ═══════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 0 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      background: rgba(249, 247, 244, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(139,134,128,0.14);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--sage); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    .nav-cta {
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.09em !important;
+      opacity: 1 !important;
+      color: #fff !important;
+      background: var(--dark);
+      padding: 10px 22px;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--green) !important; }
+
+    /* ═══════════════════════════
+       AUTH BUTTON & USER MENU
+    ═══════════════════════════ */
+    .nav-auth-btn {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: transparent;
+      border: 1px solid var(--light-gray);
+      padding: 9px 20px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+    .nav-auth-btn:hover { border-color: var(--dark); background: var(--cream); }
+
+    .nav-user-menu {
+      position: relative;
+      display: inline-block;
+    }
+    .nav-user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--dark);
+      background: var(--cream);
+      border: 1px solid var(--light-gray);
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+    .nav-user-trigger:hover { background: var(--light-gray); }
+    .nav-user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--sage);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--light-gray);
+      border-radius: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      min-width: 180px;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .nav-user-menu:hover .nav-user-dropdown { display: block; }
+    .nav-user-dropdown a, .nav-user-dropdown button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--dark);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+    }
+    .nav-user-dropdown a:hover, .nav-user-dropdown button:hover { background: var(--cream); }
+    .nav-user-dropdown .dropdown-divider {
+      border: none;
+      border-top: 1px solid var(--light-gray);
+      margin: 4px 0;
+    }
+    .nav-user-dropdown .dropdown-logout {
+      color: #c0392b;
+    }
+
+    /* ═══════════════════════════
+       AUTH MODAL
+    ═══════════════════════════ */
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,26,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-overlay.open { display: flex; }
+
+    .auth-modal {
+      background: #fff;
+      width: 100%;
+      max-width: 440px;
+      margin: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+      animation: slideUp 0.28s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-header {
+      padding: 36px 40px 0;
+      position: relative;
+    }
+    .auth-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: var(--warm-gray);
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+    .auth-close:hover { color: var(--dark); }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--light-gray);
+      margin-top: 24px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: 'Inter', sans-serif;
+      color: var(--warm-gray);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .auth-tab.active {
+      color: var(--dark);
+      border-bottom-color: var(--dark);
+    }
+
+    .auth-body { padding: 32px 40px 40px; }
+
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
+
+    .auth-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .auth-logo span { color: var(--sage); }
+
+    .auth-subtitle {
+      font-size: 13px;
+      color: var(--warm-gray);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    .auth-form-group {
+      margin-bottom: 18px;
+    }
+    .auth-form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .auth-form-group input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid var(--light-gray);
+      border-radius: 2px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background: var(--bg);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .auth-form-group input:focus { border-color: var(--sage); }
+    .auth-form-group input::placeholder { color: var(--warm-gray); }
+
+    .auth-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .auth-submit:hover { background: var(--green); }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--warm-gray);
+    }
+    .auth-switch a {
+      color: var(--sage);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    .auth-message {
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-size: 13px;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .auth-message.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+      display: block;
+    }
+    .auth-message.error {
+      background: #fdecea;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+      display: block;
+    }
+
+    .auth-note {
+      font-size: 11px;
+      color: var(--warm-gray);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════
+       ADMIN PANEL (BRUKER-LISTE)
+    ═══════════════════════════ */
+    .admin-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,26,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .admin-overlay.open { display: flex; }
+    .admin-modal {
+      background: #fff;
+      width: 100%;
+      max-width: 680px;
+      max-height: 80vh;
+      margin: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.28s ease;
+    }
+    .admin-modal-header {
+      padding: 28px 36px;
+      border-bottom: 1px solid var(--light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-modal-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 500;
+    }
+    .admin-modal-body {
+      padding: 28px 36px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .admin-stat {
+      background: var(--cream);
+      padding: 18px 20px;
+      border-radius: 2px;
+      text-align: center;
+    }
+    .admin-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    .admin-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--warm-gray);
+      margin-top: 4px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .admin-table th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      border-bottom: 1px solid var(--light-gray);
+    }
+    .admin-table td {
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--light-gray);
+      color: var(--dark);
+    }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: var(--cream); }
+    .admin-empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--warm-gray);
+      font-size: 14px;
+    }
+    .admin-export-btn {
+      padding: 10px 20px;
+      background: var(--sage);
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom,
+          rgba(26,26,26,0.08) 0%,
+          rgba(26,26,26,0.18) 35%,
+          rgba(26,26,26,0.62) 72%,
+          rgba(26,26,26,0.90) 100%),
+        linear-gradient(155deg,
+          #1B2F26 0%,
+          #1B3A5C 22%,
+          #2D5A8E 42%,
+          #3D6B5C 62%,
+          #2D5016 100%);
+    }
+
+    /* Mountain silhouette */
+    .hero-mountain {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 920px;
+      padding: 0 60px 108px;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 44px;
+      height: 1px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 6.5vw, 92px);
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.07;
+      margin-bottom: 30px;
+      letter-spacing: -0.015em;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .hero-lead {
+      font-size: 17px;
+      color: rgba(255,255,255,0.68);
+      max-width: 530px;
+      margin-bottom: 48px;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 17px 34px;
+      background: #fff;
+      color: var(--dark);
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold); color: #fff; }
+
+    .btn-outline {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 17px 34px;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      border-radius: 2px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    .hero-scroll-indicator {
+      position: absolute;
+      bottom: 44px;
+      right: 60px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.38);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .hero-scroll-indicator::after {
+      content: '';
+      width: 1px;
+      height: 56px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* ═══════════════════════════
+       SECTION BASICS
+    ═══════════════════════════ */
+    section { padding: 108px 60px; }
+
+    .section-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: var(--sage);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 4.2vw, 58px);
+      font-weight: 500;
+      line-height: 1.13;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    .section-lead {
+      font-size: 16px;
+      color: var(--warm-gray);
+      max-width: 540px;
+      line-height: 1.8;
+      margin-bottom: 64px;
+    }
+
+    /* ═══════════════════════════
+       DREAMING — EDITORIAL STORIES
+    ═══════════════════════════ */
+    #dreaming { background: var(--cream); }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+
+    .story-card {
+      display: block;
+      text-decoration: none;
+      overflow: hidden;
+      background: #fff;
+      transition: box-shadow 0.3s;
+    }
+    .story-card:hover { box-shadow: 0 12px 48px rgba(0,0,0,0.09); }
+
+    .story-card-featured {
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-img {
+      width: 100%;
+      transition: transform 0.65s ease;
+      flex-shrink: 0;
+    }
+
+    .story-card:hover .story-img { transform: scale(1.04); }
+
+    .story-img-featured {
+      height: 380px;
+      background: linear-gradient(145deg, #2C4A3E 0%, #4A7C59 45%, #6B9E7A 75%, #8BB899 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .story-img-featured img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      transition: transform 0.65s ease;
+    }
+    .story-card:hover .story-img-featured img { transform: scale(1.04); }
+    .story-img-bergen {
+      aspect-ratio: 16 / 9;
+      height: auto;
+      background: linear-gradient(148deg, #1B3A5C 0%, #2D5A8E 55%, #4A7BAF 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .story-img-bergen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+      transition: transform 0.65s ease;
+    }
+    .story-card:hover .story-img-bergen img { transform: scale(1.04); }
+    .story-img-fjord {
+      height: 210px;
+      background: linear-gradient(148deg, #2A3F2E 0%, #3D6B8C 60%, #5A9BAF 100%);
+    }
+    .story-img-history {
+      height: 210px;
+      background: linear-gradient(148deg, #3B2D2A 0%, #6B4F3A 55%, #9B7A5A 100%);
+    }
+
+    .story-card-body {
+      padding: 30px 34px 34px;
+      flex: 1;
+    }
+
+    .story-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 12px;
+    }
+
+    .story-card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .story-card-featured .story-card-body h3 { font-size: 28px; }
+
+    .story-card-body p {
+      font-size: 14px;
+      color: var(--warm-gray);
+      line-height: 1.72;
+      margin-bottom: 20px;
+    }
+
+    .read-more {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--dark);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(26,26,26,0.25);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .read-more:hover { color: var(--sage); border-color: var(--sage); }
+
+    .stories-right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ═══════════════════════════
+       PLANNING
+    ═══════════════════════════ */
+    #planning { background: var(--bg); }
+
+    .planning-tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--light-gray);
+      margin-bottom: 52px;
+    }
+
+    .planning-tool {
+      padding: 48px 42px;
+      border-right: 1px solid var(--light-gray);
+    }
+    .planning-tool:last-child { border-right: none; }
+
+    .planning-tool-icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 28px;
+    }
+
+    .planning-tool h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    .planning-tool p {
+      font-size: 14px;
+      color: var(--warm-gray);
+      line-height: 1.72;
+      margin-bottom: 22px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 13px;
+      border: 1px solid var(--light-gray);
+      color: var(--warm-gray);
+      border-radius: 2px;
+      background: #fff;
+    }
+
+    .routes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .route-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 34px 36px;
+      border: 1px solid var(--light-gray);
+      background: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.25s, border-color 0.25s;
+    }
+    .route-card:hover {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.07);
+      border-color: rgba(107,143,113,0.3);
+    }
+
+    .route-days {
+      min-width: 56px;
+    }
+
+    .route-days-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--light-gray);
+      line-height: 1;
+    }
+
+    .route-days-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-top: 4px;
+    }
+
+    .route-info h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .route-info p {
+      font-size: 13px;
+      color: var(--warm-gray);
+      line-height: 1.68;
+    }
+
+    /* ═══════════════════════════
+       WHAT TOURISTS MISS
+    ═══════════════════════════ */
+    #miss {
+      background: var(--dark);
+    }
+
+    #miss .section-eyebrow { color: var(--gold); }
+    #miss .section-eyebrow::before { background: var(--gold); }
+    #miss .section-title { color: #fff; }
+    #miss .section-lead { color: rgba(255,255,255,0.50); }
+
+    .miss-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .miss-card {
+      background: var(--dark);
+      padding: 48px 42px;
+      transition: background 0.3s;
+    }
+    .miss-card:hover { background: #202020; }
+
+    .miss-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .miss-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .miss-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.46);
+      line-height: 1.78;
+      margin-bottom: 22px;
+    }
+
+    .miss-link {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196,147,63,0.35);
+      padding-bottom: 2px;
+      display: inline-block;
+      transition: border-color 0.2s;
+    }
+    .miss-link:hover { border-color: var(--gold); }
+
+    /* ═══════════════════════════
+       LANESTORIES GATEWAY
+    ═══════════════════════════ */
+    #lanestories { background: #F0EDE5; }
+
+    .lane-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 90px;
+      align-items: center;
+      margin-bottom: 72px;
+    }
+
+    .lane-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fjord);
+      margin-bottom: 22px;
+    }
+
+    .lane-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--fjord);
+    }
+
+    .lane-header-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 3.6vw, 50px);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.18;
+      margin-bottom: 20px;
+    }
+
+    .lane-header-text p {
+      font-size: 16px;
+      color: var(--warm-gray);
+      line-height: 1.78;
+      margin-bottom: 34px;
+    }
+
+    .btn-fjord {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 17px 34px;
+      background: var(--fjord);
+      color: #fff;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .btn-fjord:hover { background: #2d5570; }
+
+    .lane-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px 48px;
+    }
+
+    .lane-stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .lane-stat-label {
+      font-size: 13px;
+      color: var(--warm-gray);
+      line-height: 1.5;
+    }
+
+    .lane-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .lane-card {
+      background: #fff;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .lane-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.11);
+    }
+
+    .lane-card-visual {
+      height: 210px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lane-card-bg {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s ease;
+    }
+    .lane-card:hover .lane-card-bg { transform: scale(1.06); }
+
+    .visual-alleys  { background: linear-gradient(148deg, #1B3A5C 0%, #2C5082 60%, #4A7BAF 100%); }
+    .visual-nordnes { background: linear-gradient(148deg, #2A1F1A 0%, #5C3B2E 55%, #8B6650 100%); }
+    .visual-bryggen { background: linear-gradient(148deg, #1F2D1F 0%, #3D5C3D 55%, #6B8F5A 100%); }
+
+    .lane-lock {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      background: rgba(0,0,0,0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .lane-card-body {
+      padding: 26px 30px 30px;
+    }
+
+    .lane-card-city {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fjord);
+      margin-bottom: 9px;
+    }
+
+    .lane-card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 9px;
+      line-height: 1.3;
+    }
+
+    .lane-card-body p {
+      font-size: 13px;
+      color: var(--warm-gray);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .lane-card-cta {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--fjord);
+    }
+
+    /* ═══════════════════════════
+       CONVERSION / EMAIL SIGNUP
+    ═══════════════════════════ */
+    #conversion {
+      background: var(--green);
+      text-align: center;
+    }
+
+    #conversion .section-eyebrow {
+      color: rgba(255,255,255,0.50);
+      justify-content: center;
+    }
+    #conversion .section-eyebrow::before { background: rgba(255,255,255,0.28); }
+
+    .conversion-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(34px, 4.2vw, 60px);
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.14;
+      margin-bottom: 18px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .conversion-title em {
+      font-style: italic;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .conversion-lead {
+      font-size: 16px;
+      color: rgba(255,255,255,0.60);
+      max-width: 490px;
+      margin: 0 auto 48px;
+      line-height: 1.78;
+    }
+
+    .email-form {
+      display: flex;
+      max-width: 510px;
+      margin: 0 auto 18px;
+    }
+
+    .email-form input {
+      flex: 1;
+      padding: 18px 22px;
+      border: none;
+      font-size: 14px;
+      color: var(--dark);
+      background: rgba(255,255,255,0.95);
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .email-form input::placeholder { color: #aaa; }
+
+    .email-form button {
+      padding: 18px 30px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .email-form button:hover { background: #d4a34f; }
+
+    .conversion-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.36);
+    }
+
+    /* ═══════════════════════════
+       FOOTER
+    ═══════════════════════════ */
+    footer {
+      background: #101010;
+      color: rgba(255,255,255,0.45);
+      padding: 80px 60px 44px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr 1fr;
+      gap: 64px;
+      margin-bottom: 64px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px;
+      font-weight: 600;
+      color: #fff;
+      display: block;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--sage); }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.72;
+      margin-bottom: 28px;
+    }
+
+    .footer-partner-block {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 24px;
+    }
+
+    .footer-partner-eyebrow {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 10px;
+    }
+
+    .footer-partner-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.72);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      transition: color 0.2s;
+    }
+    .footer-partner-name:hover { color: #fff; }
+
+    .footer-partner-desc {
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-col h4 {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 22px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer-col ul a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: rgba(255,255,255,0.85); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 36px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 18px;
+    }
+
+    .lang-switcher a {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.30);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .lang-switcher a:hover,
+    .lang-switcher a.active { color: rgba(255,255,255,0.65); }
+
+    .footer-legal a {
+      color: rgba(255,255,255,0.30);
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: rgba(255,255,255,0.65); }
+
+    /* ═══════════════════════════
+       RESPONSIVE
+    ═══════════════════════════ */
+    @media (max-width: 1100px) {
+      nav { padding: 0 32px; }
+      .nav-links { gap: 22px; }
+      section { padding: 80px 32px; }
+      .hero-content { padding: 0 32px 80px; }
+      .hero-scroll-indicator { right: 32px; }
+      .stories-grid { grid-template-columns: 1fr; }
+      .story-card-featured { grid-row: auto; }
+      .planning-tools { grid-template-columns: 1fr; }
+      .planning-tool { border-right: none; border-bottom: 1px solid var(--light-gray); }
+      .planning-tool:last-child { border-bottom: none; }
+      .miss-grid { grid-template-columns: 1fr 1fr; }
+      .lane-header { grid-template-columns: 1fr; gap: 48px; }
+      .lane-cards { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 44px; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section { padding: 64px 20px; }
+      .hero-content { padding: 0 20px 64px; }
+      .hero-scroll-indicator { display: none; }
+      .routes-grid { grid-template-columns: 1fr; }
+      .miss-grid { grid-template-columns: 1fr; }
+      .lane-cards { grid-template-columns: 1fr; }
+      .email-form { flex-direction: column; }
+      .email-form input { border-bottom: 1px solid rgba(255,255,255,0.1); }
+      footer { padding: 60px 20px 36px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+      .footer-bottom { flex-direction: column; gap: 18px; text-align: center; }
+      .footer-legal { margin-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ╔════════════════════════╗
+     ║     NAVIGATION         ║
+     ╚════════════════════════╝ -->
+<nav>
+  <a href="#" class="nav-logo">Sofa<span>travels</span></a>
+  <ul class="nav-links">
+    <li><a href="#dreaming">Stories</a></li>
+    <li><a href="#planning">Routes</a></li>
+    <li><a href="#miss">Hidden Norway</a></li>
+    <li><a href="#lanestories">City Stories</a></li>
+    <li><a href="#conversion">Free Guide</a></li>
+    <li><a href="https://lanestories.com" class="nav-cta">Lane Stories →</a></li>
+  </ul>
+
+  <!-- Auth / User button (injected by JS) -->
+  <div id="nav-auth-area">
+    <button class="nav-auth-btn" onclick="openAuthModal('register')">Logg inn</button>
+  </div>
+</nav>
+
+<!-- ╔════════════════════════╗
+     ║        HERO            ║
+     ╚════════════════════════╝ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Mountain silhouette SVG -->
+  <svg class="hero-mountain" viewBox="0 0 1440 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,420 L0,300 L100,240 L200,270 L320,170 L440,210 L560,110 L680,155 L800,75 L920,120 L1040,48 L1160,94 L1280,28 L1400,70 L1440,55 L1440,420 Z" fill="#0a0a0a" opacity="0.30"/>
+    <path d="M0,420 L0,340 L160,285 L320,310 L480,230 L640,265 L800,185 L960,225 L1120,162 L1280,200 L1440,140 L1440,420 Z" fill="#0a0a0a" opacity="0.40"/>
+    <path d="M0,420 L0,375 L240,345 L480,360 L720,325 L960,350 L1200,318 L1440,338 L1440,420 Z" fill="#0a0a0a" opacity="0.55"/>
+  </svg>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Norway for the curious traveler</p>
+    <h1>Discover the <em>hidden</em><br>Norway before you go.</h1>
+    <p class="hero-lead">Beyond the postcards and the package tours lies a Norway few ever find — fjords with no crowds, stories that never made the guidebooks, and roads that will change how you see the world.</p>
+    <div class="hero-ctas">
+      <a href="#planning" class="btn-primary">Explore Routes</a>
+      <a href="#lanestories" class="btn-outline">Hidden Stories in Cities</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator">Scroll</div>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║    DREAMING SECTION    ║
+     ╚════════════════════════╝ -->
+<section id="dreaming">
+  <div class="section-eyebrow">Inspiration</div>
+  <h2 class="section-title">Start dreaming<br>about Norway</h2>
+  <p class="section-lead">Our editors travel slow, interview local historians, and go where no tour bus can follow. These are the stories they found.</p>
+
+  <div class="stories-grid">
+
+    <!-- Featured story -->
+    <a href="#" class="story-card story-card-featured">
+      <div class="story-img story-img-featured">
+        <img src="Bilder/hardanger-bunad.jpg" alt="Jente i bunad ved Hardangerfjorden med epleblomster og snødekte fjell" loading="lazy">
+      </div>
+      <div class="story-card-body">
+        <div class="story-tag">Hidden Region · Hardanger</div>
+        <h3>The Hardanger Nobody Talks About</h3>
+        <p>Forget the brochures. Behind the famous fjord lies a landscape of abandoned farms, medieval stave churches, and a cider culture that has survived for centuries unnoticed. We spent two weeks finding it all — and we found far more than we expected.</p>
+        <a href="#" class="read-more">Read the story</a>
+      </div>
+    </a>
+
+    <!-- Right column -->
+    <div class="stories-right">
+      <a href="#" class="story-card">
+        <div class="story-img story-img-bergen">
+          <img src="Bilder/bergen-natt.jpg" alt="Bergen havn om natten med lysrefleksjoner i vannet" loading="lazy">
+        </div>
+        <div class="story-card-body">
+          <div class="story-tag">Urban Exploration · Bergen</div>
+          <h3>Bergen Beyond the Guidebooks</h3>
+          <p>There's a city hiding behind Bryggen's famous facades. Narrow alleys, bohemian quarters, and a fish market that tells a thousand years of trade.</p>
+          <a href="#" class="read-more">Read the story</a>
+        </div>
+      </a>
+
+      <a href="#" class="story-card">
+        <div class="story-img story-img-fjord"></div>
+        <div class="story-card-body">
+          <div class="story-tag">Road Trip · Vestlandet</div>
+          <h3>The Secret Fjord Roads</h3>
+          <p>When tourists queue for the Trollstigen, the old coastal roads lie silent. These forgotten routes wind past fishing villages, glacial lakes, and views that will stop you cold.</p>
+          <a href="#" class="read-more">Read the story</a>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║    PLANNING SECTION    ║
+     ╚════════════════════════╝ -->
+<section id="planning">
+  <div class="section-eyebrow">Trip Planning</div>
+  <h2 class="section-title">Plan your perfect<br>Norway route</h2>
+  <p class="section-lead">Whether you arrive by camper from the Netherlands or fly into Bergen, we've mapped every scenario for a slow, meaningful journey through Norway.</p>
+
+  <!-- Tool pillars -->
+  <div class="planning-tools">
+
+    <div class="planning-tool">
+      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="19" stroke="#6B8F71" stroke-width="1.4"/>
+        <path d="M21 11 L21 21 L29 27" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Suggested Itineraries</h3>
+      <p>Curated day-by-day plans for travelers who want structure without losing spontaneity. Built around slow travel principles, not tourist traps.</p>
+      <div class="tag-list">
+        <span class="tag">3 days</span>
+        <span class="tag">7 days</span>
+        <span class="tag">14 days</span>
+        <span class="tag">Open-ended</span>
+      </div>
+    </div>
+
+    <div class="planning-tool">
+      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 35 L21 7 L35 35" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11 27 L31 27" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <h3>Ferry vs. Fly</h3>
+      <p>The definitive guide to arriving in Norway the right way. For German and Dutch travelers, the overnight ferry from Amsterdam or Kiel changes everything about your trip.</p>
+      <div class="tag-list">
+        <span class="tag">From Netherlands</span>
+        <span class="tag">From Germany</span>
+        <span class="tag">Road + Ferry</span>
+      </div>
+    </div>
+
+    <div class="planning-tool">
+      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="9" width="30" height="26" rx="2" stroke="#6B8F71" stroke-width="1.4"/>
+        <path d="M6 18 L36 18" stroke="#6B8F71" stroke-width="1.4"/>
+        <path d="M14 6 L14 13" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M28 6 L28 13" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="14" cy="26" r="1.5" fill="#6B8F71"/>
+        <circle cx="21" cy="26" r="1.5" fill="#6B8F71"/>
+        <circle cx="28" cy="26" r="1.5" fill="#6B8F71"/>
+      </svg>
+      <h3>Map-Based Routes</h3>
+      <p>Interactive route concepts showing distances, ferry crossings, camping options, and our recommended hidden detours — built for camper and car travelers.</p>
+      <div class="tag-list">
+        <span class="tag">Western Fjords Loop</span>
+        <span class="tag">Coastal Road</span>
+        <span class="tag">Inner Valleys</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Route cards -->
+  <div class="routes-grid">
+
+    <div class="route-card">
+      <div class="route-days">
+        <div class="route-days-number">3</div>
+        <div class="route-days-label">Days</div>
+      </div>
+      <div class="route-info">
+        <h4>Bergen Basecamp</h4>
+        <p>Use Bergen as your anchor. Three days exploring the city, Hardangerfjord, and one overnight in a mountain valley lodge that most travelers never discover.</p>
+      </div>
+    </div>
+
+    <div class="route-card">
+      <div class="route-days">
+        <div class="route-days-number">7</div>
+        <div class="route-days-label">Days</div>
+      </div>
+      <div class="route-info">
+        <h4>The Western Fjords Loop</h4>
+        <p>Bergen → Flåm → Aurland → Balestrand → Mundal → return. The essential Norwegian journey, done at the right pace with the right stops.</p>
+      </div>
+    </div>
+
+    <div class="route-card">
+      <div class="route-days">
+        <div class="route-days-number">10</div>
+        <div class="route-days-label">Days</div>
+      </div>
+      <div class="route-info">
+        <h4>Camper Grand Tour</h4>
+        <p>Designed for camper travelers arriving by ferry from Kiel or Amsterdam. Covers the coast, the Hardanger, and the inner fjord valleys without doubling back.</p>
+      </div>
+    </div>
+
+    <div class="route-card">
+      <div class="route-days">
+        <div class="route-days-number">14</div>
+        <div class="route-days-label">Days</div>
+      </div>
+      <div class="route-info">
+        <h4>The Slow Norway</h4>
+        <p>For travelers who want to truly stop. Two weeks with local ferries, mountain hikes, village stays, and long evenings reading beside a fjord. Norway at its best.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║  WHAT TOURISTS MISS   ║
+     ╚════════════════════════╝ -->
+<section id="miss">
+  <div class="section-eyebrow">What Most Tourists Miss</div>
+  <h2 class="section-title">The Norway hidden<br>in plain sight</h2>
+  <p class="section-lead">Every overlooked corner, every untold story, every place where you'll be the only visitor — this is what we live for.</p>
+
+  <div class="miss-grid">
+
+    <div class="miss-card">
+      <div class="miss-number">01</div>
+      <h3>The Old Postal Roads</h3>
+      <p>Before the fjord tunnels, Norwegians crossed the mountains on ancient postal roads. Some date to the 17th century. Many are still walkable, and entirely empty of other travelers.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+    <div class="miss-card">
+      <div class="miss-number">02</div>
+      <h3>The Stavkirke Secrets</h3>
+      <p>Norway has 28 surviving stave churches. Most tourists visit only Borgund. The others — some in remote valleys reached by boat — hold carvings, legends, and silence you cannot find in a guidebook.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+    <div class="miss-card">
+      <div class="miss-number">03</div>
+      <h3>The Hanseatic Underground</h3>
+      <p>Bergen's Bryggen was the northernmost outpost of a German merchant empire. Behind the painted facades are cellars, tunnels, and a hidden world that shaped Northern Europe for 400 years.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+    <div class="miss-card">
+      <div class="miss-number">04</div>
+      <h3>Forgotten Fjord Villages</h3>
+      <p>When agriculture modernized, many inner fjord villages were abandoned. Their stone walls, old orchards, and boat sheds remain — a Norway frozen in time, reachable only by local ferry.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+    <div class="miss-card">
+      <div class="miss-number">05</div>
+      <h3>Wartime Resistance Sites</h3>
+      <p>The Norwegian resistance left traces across the country — from secret printing presses in Bergen's basements to mountain hideouts used by fighters throughout the occupation.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+    <div class="miss-card">
+      <div class="miss-number">06</div>
+      <h3>Night Ferry Culture</h3>
+      <p>Norwegians still travel by overnight ferry along the coast. Book a cabin. Watch the islands slide past in the dark. Wake to a new landscape. This is not a tourist activity — it is how Norway moves.</p>
+      <a href="#lanestories" class="miss-link">Experience more through Lane Stories</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║  LANESTORIES GATEWAY  ║
+     ╚════════════════════════╝ -->
+<section id="lanestories">
+  <div class="lane-header">
+
+    <div class="lane-header-text">
+      <div class="lane-badge">
+        <span class="lane-badge-dot"></span>
+        Partner Experience
+      </div>
+      <h2>The hidden stories of Norway's cities, unlocked.</h2>
+      <p>Sofatravels shows you the country. Lane Stories takes you inside the layers — the dark histories, secret passages, and forgotten lives hidden behind every street corner in Norway's most captivating cities. A curated digital experience built for curious travelers who want more than a sightseeing list.</p>
+      <a href="https://lanestories.com" class="btn-fjord">Explore Lane Stories →</a>
+    </div>
+
+    <div class="lane-stats">
+      <div>
+        <div class="lane-stat-number">40+</div>
+        <div class="lane-stat-label">Hidden stories in Bergen alone</div>
+      </div>
+      <div>
+        <div class="lane-stat-number">6</div>
+        <div class="lane-stat-label">Norwegian cities covered</div>
+      </div>
+      <div>
+        <div class="lane-stat-number">800+</div>
+        <div class="lane-stat-label">Years of history uncovered</div>
+      </div>
+      <div>
+        <div class="lane-stat-number" style="font-size:26px; padding-top:6px;">Self-guided</div>
+        <div class="lane-stat-label">Walk at your own pace, any time of day</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lane-cards">
+
+    <a href="https://lanestories.com" class="lane-card">
+      <div class="lane-card-visual">
+        <div class="lane-card-bg visual-alleys"></div>
+        <div class="lane-lock">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.75)"/>
+            <path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.75)" stroke-width="1.3" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="lane-card-body">
+        <div class="lane-card-city">Bergen</div>
+        <h3>The Hidden Alleys of Bergen</h3>
+        <p>The passages that once connected merchants, artisans, and sailors — a city within the city that most visitors walk past without ever noticing.</p>
+        <span class="lane-card-cta">Unlock on Lane Stories →</span>
+      </div>
+    </a>
+
+    <a href="https://lanestories.com" class="lane-card">
+      <div class="lane-card-visual">
+        <div class="lane-card-bg visual-nordnes"></div>
+        <div class="lane-lock">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.75)"/>
+            <path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.75)" stroke-width="1.3" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="lane-card-body">
+        <div class="lane-card-city">Bergen · Nordnes</div>
+        <h3>Dark Histories of Nordnes</h3>
+        <p>The peninsula at the edge of Bergen holds stories of plague, fire, and wartime occupation that shaped the soul of the city over eight centuries.</p>
+        <span class="lane-card-cta">Unlock on Lane Stories →</span>
+      </div>
+    </a>
+
+    <a href="https://lanestories.com" class="lane-card">
+      <div class="lane-card-visual">
+        <div class="lane-card-bg visual-bryggen"></div>
+        <div class="lane-lock">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.75)"/>
+            <path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.75)" stroke-width="1.3" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="lane-card-body">
+        <div class="lane-card-city">Bergen · Bryggen</div>
+        <h3>Secret Passages of Bryggen</h3>
+        <p>The UNESCO-listed waterfront hides a labyrinth of medieval corridors, hidden courtyards, and the ghost of a Hanseatic empire that once ruled Northern trade.</p>
+        <span class="lane-card-cta">Unlock on Lane Stories →</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║  SOFT CONVERSION      ║
+     ╚════════════════════════╝ -->
+<section id="conversion">
+  <div class="section-eyebrow">Free Download</div>
+  <h2 class="conversion-title">Get the <em>Hidden Norway</em><br>Route Guide</h2>
+  <p class="conversion-lead">Our free PDF covers 3-day, 7-day, and 14-day itineraries — with off-the-beaten-path detours, local recommendations, and full ferry schedules for German and Dutch travelers.</p>
+
+  <form class="email-form" onsubmit="return false;">
+    <input type="email" placeholder="Your email address">
+    <button type="submit">Get Free Guide</button>
+  </form>
+  <p class="conversion-note">No spam. Unsubscribe any time. Available in English, Deutsch &amp; Nederlands.</p>
+</section>
+
+<!-- ╔════════════════════════╗
+     ║        FOOTER         ║
+     ╚════════════════════════╝ -->
+<footer>
+  <div class="footer-grid">
+
+    <!-- Brand column -->
+    <div>
+      <a href="#" class="footer-logo">Sofa<span>travels</span></a>
+      <p class="footer-brand-desc">A free inspiration and planning portal for European travelers discovering Norway. Editorial, independent, and built around the philosophy of slow travel.</p>
+      <div class="footer-partner-block">
+        <p class="footer-partner-eyebrow">Part of the ecosystem</p>
+        <a href="https://lanestories.com" class="footer-partner-name">
+          Lane Stories
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7 L12 7 M8 3 L12 7 L8 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <p class="footer-partner-desc">Paid city experiences for curious travelers. Hidden stories, unlocked on your own schedule.</p>
+      </div>
+    </div>
+
+    <!-- Explore -->
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#dreaming">Travel Stories</a></li>
+        <li><a href="#planning">Route Planner</a></li>
+        <li><a href="#miss">Hidden Norway</a></li>
+        <li><a href="#lanestories">City Experiences</a></li>
+        <li><a href="#conversion">Free Route Guide</a></li>
+      </ul>
+    </div>
+
+    <!-- Destinations -->
+    <div class="footer-col">
+      <h4>Destinations</h4>
+      <ul>
+        <li><a href="#">Bergen</a></li>
+        <li><a href="#">Hardanger</a></li>
+        <li><a href="#">Western Fjords</a></li>
+        <li><a href="#">Coastal Roads</a></li>
+        <li><a href="#">Inner Valleys</a></li>
+      </ul>
+    </div>
+
+    <!-- Traveler types -->
+    <div class="footer-col">
+      <h4>Traveler Types</h4>
+      <ul>
+        <li><a href="#">Roadtrip (DE)</a></li>
+        <li><a href="#">Camper (NL)</a></li>
+        <li><a href="#">Slow Travel</a></li>
+        <li><a href="#">History &amp; Culture</a></li>
+        <li><a href="#">Family Trips</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 Sofatravels.com &nbsp;·&nbsp; Free inspiration for Norway travelers</span>
+    <div class="lang-switcher">
+      <a href="#" class="active">EN</a>
+      <a href="#">DE</a>
+      <a href="#">NL</a>
+    </div>
+    <div class="footer-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ╔════════════════════════╗
+     ║    AUTH MODAL          ║
+     ╚════════════════════════╝ -->
+<div class="auth-overlay" id="authOverlay" onclick="handleOverlayClick(event)">
+  <div class="auth-modal">
+    <div class="auth-header">
+      <div class="auth-logo">Sofa<span>travels</span></div>
+      <button class="auth-close" onclick="closeAuthModal()">×</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Logg inn</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Registrer</button>
+      </div>
+    </div>
+    <div class="auth-body">
+
+      <!-- LOGIN PANEL -->
+      <div class="auth-panel active" id="panelLogin">
+        <p class="auth-subtitle" style="margin-bottom:24px;">Velkommen tilbake. Logg inn for å se dine ruter og lagrede steder.</p>
+        <div id="loginMsg" class="auth-message"></div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="auth-form-group">
+            <label>E-post</label>
+            <input type="email" id="loginEmail" placeholder="din@epost.no" required autocomplete="email">
+          </div>
+          <div class="auth-form-group">
+            <label>Passord</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="auth-submit">Logg inn</button>
+        </form>
+        <div class="auth-switch">Har du ikke konto? <a href="#" onclick="switchTab('register'); return false;">Registrer deg gratis</a></div>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div class="auth-panel" id="panelRegister">
+        <p class="auth-subtitle" style="margin-bottom:24px;">Opprett gratis konto og få tilgang til ruter, lagrede steder og gratis reiseguide.</p>
+        <div id="registerMsg" class="auth-message"></div>
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <div class="auth-form-row">
+            <div class="auth-form-group">
+              <label>Fornavn</label>
+              <input type="text" id="regFirstName" placeholder="Ola" required autocomplete="given-name">
+            </div>
+            <div class="auth-form-group">
+              <label>Etternavn</label>
+              <input type="text" id="regLastName" placeholder="Nordmann" required autocomplete="family-name">
+            </div>
+          </div>
+          <div class="auth-form-group">
+            <label>E-post</label>
+            <input type="email" id="regEmail" placeholder="din@epost.no" required autocomplete="email">
+          </div>
+          <div class="auth-form-group">
+            <label>Land</label>
+            <input type="text" id="regCountry" placeholder="Norge, Deutschland, Nederland …" autocomplete="country-name">
+          </div>
+          <div class="auth-form-group">
+            <label>Passord</label>
+            <input type="password" id="regPassword" placeholder="Minst 6 tegn" required autocomplete="new-password" minlength="6">
+          </div>
+          <button type="submit" class="auth-submit">Opprett konto</button>
+        </form>
+        <p class="auth-note">🔒 Ingen spam. Dine data lagres sikkert og deles ikke med tredjeparter.</p>
+        <div class="auth-switch">Har du allerede konto? <a href="#" onclick="switchTab('login'); return false;">Logg inn her</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ╔════════════════════════╗
+     ║   ADMIN BRUKER-PANEL  ║
+     ╚════════════════════════╝ -->
+<div class="admin-overlay" id="adminOverlay" onclick="handleAdminOverlayClick(event)">
+  <div class="admin-modal">
+    <div class="admin-modal-header">
+      <h2>Registrerte brukere</h2>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button class="admin-export-btn" onclick="exportUsersCSV()">Last ned CSV</button>
+        <button class="auth-close" onclick="closeAdminPanel()" style="position:static;">×</button>
+      </div>
+    </div>
+    <div class="admin-modal-body" id="adminModalBody">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔════════════════════════╗
+     ║     AUTH JAVASCRIPT   ║
+     ╚════════════════════════╝ -->
+<script>
+// ─────────────────────────────────────────────
+//  KONFIGURASJON
+//  Bytt ut FORMSPREE_ID med din egen ID fra formspree.io
+//  (Gratis konto → New Form → kopier ID-en)
+// ─────────────────────────────────────────────
+const FORMSPREE_ID = 'YOUR_FORMSPREE_ID';  // ← Bytt ut her
+const STORAGE_KEY  = 'sofatravels_users';
+const SESSION_KEY  = 'sofatravels_session';
+
+// ─── Hjelpe-funksjoner ───────────────────────
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveUsers(users) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+}
+function getSession() {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
+  catch { return null; }
+}
+function saveSession(user) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+}
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+// ─── Modal-kontroll ──────────────────────────
+function openAuthModal(tab) {
+  switchTab(tab || 'login');
+  document.getElementById('authOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAuthModal() {
+  document.getElementById('authOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  clearMessages();
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('authOverlay')) closeAuthModal();
+}
+function clearMessages() {
+  ['loginMsg','registerMsg'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'auth-message';
+    el.textContent = '';
+  });
+}
+
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+  clearMessages();
+}
+
+// ─── Registrering ────────────────────────────
+async function handleRegister(e) {
+  e.preventDefault();
+  const msgEl = document.getElementById('registerMsg');
+
+  const firstName = document.getElementById('regFirstName').value.trim();
+  const lastName  = document.getElementById('regLastName').value.trim();
+  const email     = document.getElementById('regEmail').value.trim().toLowerCase();
+  const country   = document.getElementById('regCountry').value.trim();
+  const password  = document.getElementById('regPassword').value;
+
+  const users = getUsers();
+  if (users.find(u => u.email === email)) {
+    msgEl.className = 'auth-message error';
+    msgEl.textContent = 'Denne e-postadressen er allerede registrert.';
+    return;
+  }
+
+  const newUser = {
+    id:         Date.now(),
+    firstName,
+    lastName,
+    email,
+    country,
+    password,   // NB: kun for demo – i produksjon bør passord hashes på server
+    registeredAt: new Date().toISOString(),
+    lastLogin:  new Date().toISOString()
+  };
+
+  users.push(newUser);
+  saveUsers(users);
+
+  // Send til Formspree (du ser registreringen i din Formspree-dashboard)
+  if (FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
+    try {
+      await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'NY BRUKER – Sofatravels',
+          navn: `${firstName} ${lastName}`,
+          epost: email,
+          land: country,
+          tidspunkt: newUser.registeredAt
+        })
+      });
+    } catch (err) { console.warn('Formspree feil:', err); }
+  }
+
+  const { password: _, ...safeUser } = newUser;
+  saveSession(safeUser);
+  closeAuthModal();
+  updateNavAuth(safeUser);
+  showWelcomeToast(firstName);
+}
+
+// ─── Innlogging ──────────────────────────────
+function handleLogin(e) {
+  e.preventDefault();
+  const msgEl    = document.getElementById('loginMsg');
+  const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+
+  const users = getUsers();
+  const found = users.find(u => u.email === email && u.password === password);
+
+  if (!found) {
+    msgEl.className = 'auth-message error';
+    msgEl.textContent = 'Feil e-post eller passord. Prøv igjen.';
+    return;
+  }
+
+  // Oppdater siste innlogging
+  found.lastLogin = new Date().toISOString();
+  saveUsers(users);
+
+  const { password: _, ...safeUser } = found;
+  saveSession(safeUser);
+  closeAuthModal();
+  updateNavAuth(safeUser);
+  showWelcomeToast(found.firstName);
+}
+
+// ─── Utlogging ───────────────────────────────
+function handleLogout() {
+  clearSession();
+  updateNavAuth(null);
+}
+
+// ─── Nav-oppdatering ─────────────────────────
+function updateNavAuth(user) {
+  const area = document.getElementById('nav-auth-area');
+  if (!user) {
+    area.innerHTML = `<button class="nav-auth-btn" onclick="openAuthModal('register')">Logg inn</button>`;
+  } else {
+    const initials = (user.firstName[0] + (user.lastName[0] || '')).toUpperCase();
+    area.innerHTML = `
+      <div class="nav-user-menu">
+        <button class="nav-user-trigger">
+          <div class="nav-user-avatar">${initials}</div>
+          ${user.firstName}
+        </button>
+        <div class="nav-user-dropdown">
+          <a href="#">Mine reiser</a>
+          <a href="#">Lagrede steder</a>
+          <hr class="dropdown-divider">
+          <button onclick="openAdminPanel()" style="color:var(--sage)">🔑 Admin: Bruker-liste</button>
+          <hr class="dropdown-divider">
+          <button class="dropdown-logout" onclick="handleLogout()">Logg ut</button>
+        </div>
+      </div>`;
+  }
+}
+
+// ─── Toast-varsel ────────────────────────────
+function showWelcomeToast(name) {
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
+    background:var(--dark); color:#fff; padding:14px 28px; border-radius:2px;
+    font-size:13px; font-family:'Inter',sans-serif; z-index:9999;
+    box-shadow:0 8px 32px rgba(0,0,0,0.2); animation:slideUp 0.3s ease;
+  `;
+  t.textContent = `Velkommen, ${name}! 🏔️`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ─── Admin-panel ─────────────────────────────
+function openAdminPanel() {
+  const users = getUsers();
+  const body  = document.getElementById('adminModalBody');
+
+  const today = new Date().toISOString().slice(0,10);
+  const todayCount = users.filter(u => u.registeredAt.startsWith(today)).length;
+
+  body.innerHTML = `
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <div class="admin-stat-num">${users.length}</div>
+        <div class="admin-stat-label">Totalt registrert</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num">${todayCount}</div>
+        <div class="admin-stat-label">Registrert i dag</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num">${[...new Set(users.map(u=>u.country).filter(Boolean))].length}</div>
+        <div class="admin-stat-label">Ulike land</div>
+      </div>
+    </div>
+    ${users.length === 0
+      ? `<div class="admin-empty">Ingen registrerte brukere ennå.</div>`
+      : `<table class="admin-table">
+          <thead>
+            <tr>
+              <th>Navn</th>
+              <th>E-post</th>
+              <th>Land</th>
+              <th>Registrert</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${users.slice().reverse().map(u => `
+              <tr>
+                <td>${u.firstName} ${u.lastName}</td>
+                <td>${u.email}</td>
+                <td>${u.country || '–'}</td>
+                <td>${new Date(u.registeredAt).toLocaleDateString('nb-NO')}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`
+    }`;
+
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdminPanel() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleAdminOverlayClick(e) {
+  if (e.target === document.getElementById('adminOverlay')) closeAdminPanel();
+}
+
+function exportUsersCSV() {
+  const users = getUsers();
+  if (!users.length) { alert('Ingen brukere å eksportere.'); return; }
+  const header = ['Fornavn','Etternavn','E-post','Land','Registrert','Siste innlogging'];
+  const rows   = users.map(u => [
+    u.firstName, u.lastName, u.email, u.country || '',
+    new Date(u.registeredAt).toLocaleString('nb-NO'),
+    new Date(u.lastLogin).toLocaleString('nb-NO')
+  ]);
+  const csv = [header, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a   = document.createElement('a');
+  a.href    = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(csv);
+  a.download = `sofatravels_brukere_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ─── Initialisering ──────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (session) updateNavAuth(session);
+
+  // ESC-tast lukker modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeAuthModal(); closeAdminPanel(); }
+  });
+});
+</script>
+
+</body>
+</html>
