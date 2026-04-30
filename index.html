@@ -1353,6 +1353,91 @@
     /* ═══════════════════════════
        RESPONSIVE
     ═══════════════════════════ */
+    /* ═══════════════════════════
+       CONTENT GATE
+    ═══════════════════════════ */
+    /* Hero scroll cue */
+    .hero-scroll-cue {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; z-index: 10;
+      animation: cueFloat 2.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+    @keyframes cueFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+      50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
+    }
+
+    /* Gate — normal flow section, not fixed */
+    #contentGate {
+      display: none;
+      background: var(--bg);
+    }
+    #contentGate.active { display: block; }
+
+    /* Ticker */
+    .gate-ticker-wrap {
+      background: var(--dark);
+      overflow: hidden;
+      width: 100%;
+      padding: 16px 0;
+      mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    }
+    .gate-ticker {
+      display: inline-flex; gap: 32px;
+      white-space: nowrap;
+      animation: tickerScroll 45s linear infinite;
+    }
+    .gate-ticker span { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; }
+    .ticker-dot { color: var(--gold) !important; opacity: 0.9; }
+    @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .gate-ticker-wrap:hover .gate-ticker { animation-play-state: paused; }
+
+    /* Preview grid */
+    .gate-previews {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 60px 40px 52px;
+    }
+    .gate-preview-card { background: #fff; border-radius: 3px; overflow: hidden; border: 1px solid var(--light-gray); box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .gate-preview-img { height: 160px; position: relative; overflow: hidden; }
+    .gate-preview-blur { position: absolute; inset: 0; backdrop-filter: blur(8px); background: rgba(0,0,0,0.15); }
+    .gate-lock { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.95); }
+    .gate-lock-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .gate-lock-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+    .gate-preview-body { padding: 16px 18px 18px; }
+    .gate-preview-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage); margin-bottom: 7px; }
+    .gate-preview-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 500; color: var(--dark); line-height: 1.35; }
+
+    /* CTA block */
+    .gate-card {
+      background: var(--cream);
+      padding: 60px 20px 72px;
+      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 16px;
+      border-top: 1px solid var(--light-gray);
+    }
+    .gate-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 44px); font-weight: 600; color: var(--dark); line-height: 1.15; margin: 0; }
+    .gate-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+    .gate-btn-primary { background: var(--dark); color: #fff; border: none; cursor: pointer; padding: 16px 36px; border-radius: 2px; font-size: 14px; font-weight: 600; letter-spacing: 0.07em; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+    .gate-btn-primary:hover { background: var(--green); }
+    .gate-btn-secondary { background: transparent; color: var(--dark); border: 1px solid rgba(0,0,0,0.2); cursor: pointer; padding: 15px 30px; border-radius: 2px; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+    .gate-btn-secondary:hover { border-color: var(--dark); }
+    .gate-note { font-size: 12px; color: var(--warm-gray); }
+
+    /* Social proof */
+    .gate-social-proof { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--warm-gray); }
+    .gate-proof-avatars { display: flex; }
+    .gate-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; margin-left: -8px; border: 2px solid var(--cream); }
+    .gate-proof-avatars .gate-avatar:first-child { margin-left: 0; }
+
     @media (max-width: 1100px) {
       nav { padding: 0 32px; }
       .nav-links { gap: 22px; }
@@ -1396,11 +1481,11 @@
 <nav>
   <a href="#" class="nav-logo">Sofa<span>travels</span></a>
   <ul class="nav-links">
-    <li><a href="#dreaming">Stories</a></li>
-    <li><a href="#planning">Routes</a></li>
-    <li><a href="#miss">Hidden Norway</a></li>
-    <li><a href="#lanestories">City Stories</a></li>
-    <li><a href="#conversion">Free Guide</a></li>
+    <li><a href="#dreaming" onclick="return navGuard(event)">Stories</a></li>
+    <li><a href="#planning" onclick="return navGuard(event)">Routes</a></li>
+    <li><a href="#miss" onclick="return navGuard(event)">Hidden Norway</a></li>
+    <li><a href="#lanestories" onclick="return navGuard(event)">City Stories</a></li>
+    <li><a href="#conversion" onclick="return navGuard(event)">Free Guide</a></li>
     <li><a href="https://lanestories.com" class="nav-cta">Lane Stories →</a></li>
   </ul>
 
@@ -1434,7 +1519,138 @@
   </div>
 
   <div class="hero-scroll-indicator">Scroll</div>
+
+  <!-- Scroll-cue for gate (synlig kun når gate er aktiv) -->
+  <div class="hero-scroll-cue" id="heroScrollCue" style="display:none;" onclick="document.getElementById('contentGate').scrollIntoView({behavior:'smooth'})">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Se hva som venter
+  </div>
 </section>
+
+<!-- ╔════════════════════════╗
+     ║     CONTENT GATE       ║
+     ╚════════════════════════╝ -->
+<div id="contentGate">
+
+  <!-- TICKER -->
+  <div class="gate-ticker-wrap">
+    <div class="gate-ticker">
+      <span>The Hardanger Nobody Talks About</span>
+      <span class="ticker-dot">·</span>
+      <span>Bergen's Dark Medieval Alleys</span>
+      <span class="ticker-dot">·</span>
+      <span>The Viking Corridor at Gudvangen</span>
+      <span class="ticker-dot">·</span>
+      <span>What Tourists Miss in Nærøyfjord</span>
+      <span class="ticker-dot">·</span>
+      <span>Secret Fjord Roads of Vestlandet</span>
+      <span class="ticker-dot">·</span>
+      <span>Lærdal: Norway's Most Overlooked Town</span>
+      <span class="ticker-dot">·</span>
+      <span>The Stave Church Route Nobody Drives</span>
+      <span class="ticker-dot">·</span>
+      <span>Dark Histories of Nordnes</span>
+      <span class="ticker-dot">·</span>
+      <span>The Orchards That Built Hardanger</span>
+      <span class="ticker-dot">·</span>
+      <span>Bergen Loop: 7 Days, 12 Hidden Layers</span>
+      <span class="ticker-dot">·</span>
+      <!-- Duplisert for sømløs loop -->
+      <span>The Hardanger Nobody Talks About</span>
+      <span class="ticker-dot">·</span>
+      <span>Bergen's Dark Medieval Alleys</span>
+      <span class="ticker-dot">·</span>
+      <span>The Viking Corridor at Gudvangen</span>
+      <span class="ticker-dot">·</span>
+      <span>What Tourists Miss in Nærøyfjord</span>
+      <span class="ticker-dot">·</span>
+      <span>Secret Fjord Roads of Vestlandet</span>
+      <span class="ticker-dot">·</span>
+      <span>Lærdal: Norway's Most Overlooked Town</span>
+      <span class="ticker-dot">·</span>
+      <span>The Stave Church Route Nobody Drives</span>
+      <span class="ticker-dot">·</span>
+      <span>Dark Histories of Nordnes</span>
+      <span class="ticker-dot">·</span>
+      <span>The Orchards That Built Hardanger</span>
+      <span class="ticker-dot">·</span>
+      <span>Bergen Loop: 7 Days, 12 Hidden Layers</span>
+      <span class="ticker-dot">·</span>
+    </div>
+  </div>
+
+  <!-- LÅSTE PREVIEW-KORT -->
+  <div class="gate-previews">
+
+    <div class="gate-preview-card">
+      <div class="gate-preview-img" style="background: linear-gradient(148deg,#1B3A5C,#2D5A8E,#4A7BAF);">
+        <div class="gate-preview-blur"></div>
+        <div class="gate-lock">
+          <div class="gate-lock-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="gate-lock-label">Logg inn for å lese</span>
+          </div>
+        </div>
+      </div>
+      <div class="gate-preview-body">
+        <div class="gate-preview-tag">Route Guide</div>
+        <p class="gate-preview-title">Bergen Loop: The Route Europeans Drive Without Seeing</p>
+      </div>
+    </div>
+
+    <div class="gate-preview-card">
+      <div class="gate-preview-img" style="background: linear-gradient(148deg,#2A3F2E,#3D6B4C,#5A9B6F);">
+        <div class="gate-preview-blur"></div>
+        <div class="gate-lock">
+          <div class="gate-lock-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="gate-lock-label">Logg inn for å lese</span>
+          </div>
+        </div>
+      </div>
+      <div class="gate-preview-body">
+        <div class="gate-preview-tag">Hidden Region</div>
+        <p class="gate-preview-title">The Hardanger Nobody Talks About</p>
+      </div>
+    </div>
+
+    <div class="gate-preview-card">
+      <div class="gate-preview-img" style="background: linear-gradient(148deg,#3B2D2A,#6B4F3A,#9B7A5A);">
+        <div class="gate-preview-blur"></div>
+        <div class="gate-lock">
+          <div class="gate-lock-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="gate-lock-label">Logg inn for å lese</span>
+          </div>
+        </div>
+      </div>
+      <div class="gate-preview-body">
+        <div class="gate-preview-tag">City Stories</div>
+        <p class="gate-preview-title">Bergen Beyond the Guidebooks</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="gate-card">
+    <div class="gate-social-proof">
+      <div class="gate-proof-avatars">
+        <div class="gate-avatar" style="background:#3D6B8C;">K</div>
+        <div class="gate-avatar" style="background:#6B8F71;">M</div>
+        <div class="gate-avatar" style="background:#C4933F;">A</div>
+        <div class="gate-avatar" style="background:#2D5016;">J</div>
+      </div>
+      <span>Bli med europeiske reisende som oppdager det skjulte Norge</span>
+    </div>
+    <h2 class="gate-title">Alt dette er gratis.<br>Du trenger bare en konto.</h2>
+    <div class="gate-buttons">
+      <button class="gate-btn-primary" onclick="openGateModal('register')">Opprett gratis konto</button>
+      <button class="gate-btn-secondary" onclick="openGateModal('login')">Logg inn</button>
+    </div>
+    <p class="gate-note">Ingen kredittkort. Ingen spam. Alltid gratis.</p>
+  </div>
+</div>
 
 <!-- ╔════════════════════════╗
      ║    DREAMING SECTION    ║
@@ -1960,18 +2176,66 @@ function clearSession() {
   localStorage.removeItem(SESSION_KEY);
 }
 
+// ─── Gate-logikk ─────────────────────────────
+let gateActive = false;
+
+function activateGate() {
+  gateActive = true;
+  document.getElementById('contentGate').classList.add('active');
+  const scrollCue = document.getElementById('heroScrollCue');
+  if (scrollCue) scrollCue.style.display = 'flex';
+  const closeBtn = document.querySelector('.auth-close');
+  if (closeBtn) closeBtn.style.display = 'none';
+}
+
+function deactivateGate() {
+  gateActive = false;
+  document.getElementById('contentGate').classList.remove('active');
+  const scrollCue = document.getElementById('heroScrollCue');
+  if (scrollCue) scrollCue.style.display = 'none';
+  const closeBtn = document.querySelector('.auth-close');
+  if (closeBtn) closeBtn.style.display = '';
+}
+
+function getGateScrollLimit() {
+  const gate = document.getElementById('contentGate');
+  if (!gate) return Infinity;
+  return gate.offsetTop + gate.offsetHeight - window.innerHeight;
+}
+
+function openGateModal(tab) {
+  switchTab(tab || 'register');
+  document.getElementById('authOverlay').classList.add('open');
+  // Skjul lukk-knappen
+  const closeBtn = document.querySelector('.auth-close');
+  if (closeBtn) closeBtn.style.display = 'none';
+}
+
+function navGuard(e) {
+  if (!getSession()) {
+    e.preventDefault();
+    openGateModal('register');
+    return false;
+  }
+  return true;
+}
+
 // ─── Modal-kontroll ──────────────────────────
 function openAuthModal(tab) {
   switchTab(tab || 'login');
   document.getElementById('authOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  if (gateActive) {
+    const closeBtn = document.querySelector('.auth-close');
+    if (closeBtn) closeBtn.style.display = 'none';
+  }
 }
 function closeAuthModal() {
+  if (gateActive) return;
   document.getElementById('authOverlay').classList.remove('open');
-  document.body.style.overflow = '';
   clearMessages();
 }
 function handleOverlayClick(e) {
+  if (gateActive) return; // Blokkerer lukking via overlay-klikk
   if (e.target === document.getElementById('authOverlay')) closeAuthModal();
 }
 function clearMessages() {
@@ -2041,7 +2305,9 @@ async function handleRegister(e) {
 
   const { password: _, ...safeUser } = newUser;
   saveSession(safeUser);
-  closeAuthModal();
+  deactivateGate();
+  document.getElementById('authOverlay').classList.remove('open');
+  clearMessages();
   updateNavAuth(safeUser);
   showWelcomeToast(firstName);
 }
@@ -2068,7 +2334,9 @@ function handleLogin(e) {
 
   const { password: _, ...safeUser } = found;
   saveSession(safeUser);
-  closeAuthModal();
+  deactivateGate();
+  document.getElementById('authOverlay').classList.remove('open');
+  clearMessages();
   updateNavAuth(safeUser);
   showWelcomeToast(found.firstName);
 }
@@ -2194,12 +2462,40 @@ function exportUsersCSV() {
 // ─── Initialisering ──────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const session = getSession();
-  if (session) updateNavAuth(session);
 
-  // ESC-tast lukker modal
+  if (session) {
+    // Innlogget: vis bruker i nav, ingen gate
+    updateNavAuth(session);
+  } else {
+    // Ikke innlogget: aktiver gate og scroll-blokkering
+    // Modalen åpnes KUN når bruker klikker — ikke automatisk
+    activateGate();
+  }
+
+  // ESC-tast: kun tillat lukking av admin-panel, ikke auth-modal når gate er aktiv
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeAuthModal(); closeAdminPanel(); }
+    if (e.key === 'Escape') {
+      closeAdminPanel();
+      if (!gateActive) closeAuthModal();
+    }
   });
+
+  // Tillat scroll ned til og med gate, men blokker forbi
+  window.addEventListener('scroll', () => {
+    if (!gateActive) return;
+    const limit = getGateScrollLimit();
+    if (window.scrollY > limit) window.scrollTo({ top: limit, behavior: 'instant' });
+  });
+  window.addEventListener('wheel', e => {
+    if (!gateActive) return;
+    const limit = getGateScrollLimit();
+    if (e.deltaY > 0 && window.scrollY >= limit - 2) e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('touchmove', e => {
+    if (!gateActive) return;
+    const limit = getGateScrollLimit();
+    if (window.scrollY >= limit - 2) e.preventDefault();
+  }, { passive: false });
 });
 </script>
 
