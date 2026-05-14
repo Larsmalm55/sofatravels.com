@@ -18,14 +18,20 @@ exports.handler = async function(event) {
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
+  
+  // Log key status (not the actual key)
   if (!apiKey) {
+    console.log('ERROR: ANTHROPIC_API_KEY is not set');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on server' }) };
   }
+  
+  console.log('API key found, length:', apiKey.length, 'starts with:', apiKey.substring(0, 7));
 
   let body;
   try {
     body = JSON.parse(event.body);
   } catch(e) {
+    console.log('ERROR: Invalid JSON body', e.message);
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
 
@@ -51,21 +57,20 @@ exports.handler = async function(event) {
 
     const req = https.request(options, (res) => {
       let data = '';
+      console.log('Anthropic response status:', res.statusCode);
       res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => {
-        try {
-          resolve({
-            statusCode: 200,
-            headers,
-            body: data,
-          });
-        } catch(e) {
-          resolve({ statusCode: 500, headers, body: JSON.stringify({ error: 'Parse error' }) });
-        }
+        console.log('Anthropic response:', data.substring(0, 200));
+        resolve({
+          statusCode: 200,
+          headers,
+          body: data,
+        });
       });
     });
 
     req.on('error', (e) => {
+      console.log('Request error:', e.message);
       resolve({ statusCode: 500, headers, body: JSON.stringify({ error: e.message }) });
     });
 
