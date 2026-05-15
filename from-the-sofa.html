@@ -49,7 +49,8 @@
     .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
     .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
     .guide-card-body { padding: 14px 16px 18px; }
-    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
+    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 10px; }
+    .guide-card-bio { font-size: .75rem; color: #6A5040; line-height: 1.6; margin-bottom: 14px; border-top: 1px solid #3A2010; padding-top: 10px; }
     .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; }
 
     /* ── CHAT ── */
@@ -84,7 +85,7 @@
     .msg-row { display: flex; gap: 10px; align-items: flex-start; }
     .msg-row.user { justify-content: flex-end; }
     .msg-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
-    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.8; font-size: .93rem; white-space: pre-wrap; }
+    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.85; font-size: 1.1rem; white-space: pre-wrap; }
     .msg-bubble.bot { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; }
     .msg-bubble.user-bubble { background: var(--msg-user); color: var(--text); border-radius: 8px 8px 2px 8px; }
     .msg-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
@@ -137,6 +138,29 @@
       font-size: .78rem; color: #C9B890; letter-spacing: .03em; font-family: inherit; transition: all .15s;
     }
     .topic-btn:hover { border-color: var(--gold); color: var(--text); }
+
+    /* ── STEDSKORT ── */
+    .place-card {
+      margin-top: 10px; border: 1px solid #3A2010; border-radius: 6px;
+      overflow: hidden; background: #1A0D06; max-width: 320px;
+    }
+    .place-card-header {
+      padding: 8px 12px; background: #261408;
+      border-bottom: 1px solid #3A2010;
+      font-size: .8rem; color: var(--gold); letter-spacing: .06em;
+    }
+    .place-card-links {
+      display: flex; gap: 0;
+    }
+    .place-card-link {
+      flex: 1; padding: 9px 6px; text-align: center;
+      font-size: .75rem; color: var(--muted); text-decoration: none;
+      border-right: 1px solid #3A2010; transition: all .15s;
+      font-family: inherit; cursor: pointer; background: none; border-top: none; border-bottom: none; border-left: none;
+    }
+    .place-card-link:last-child { border-right: none; }
+    .place-card-link:hover { background: #261408; color: var(--gold); }
+    .place-card-link span { display: block; font-size: 1rem; margin-bottom: 2px; }
     .atlas-tip { margin: auto 14px 14px; padding: 10px 12px; background: #1E1208; border: 1px solid var(--border); border-radius: 5px; }
     .atlas-tip p { font-size: .72rem; color: #605040; line-height: 1.7; }
     .atlas-tip strong { color: var(--gold); }
@@ -226,17 +250,124 @@ function updateVoiceBtn() {
 // GUIDE DATA
 // ════════════════════════════════════════════════════════════════════════
 const guides = [
-  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',       img:'Astrid,%20bergen.jpeg',            accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa' },
-  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',              img:'Henrik%20Oslo.jpeg',               accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG' },
-  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',     img:'Sigrid%20-%20Troms%C3%B8.jpeg',    accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX' },
-  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',      img:'Magnus%20-%20Stavanger.jpeg',      accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
-  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',         img:'Ingrid%20-%20Aalesund.jpeg',              accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL' },
-  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt', img:'hilde%20-%20lofoten.jpeg',         accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4' },
-  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',    img:'Maja%20-%20Flaam.jpeg',                   accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX' },
-  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',          img:'Erik%20-%20Geiranger.jpeg',        accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG' },
-  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',         img:'Sofia%20-%20Kristiansand.jpeg',    accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL' },
-  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',         img:'Olav%20-%20Trondheim.png',         accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',       img:'Astrid,%20bergen.jpeg',         accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa',
+    bio:'42 år · Kunsthistoriker, studerte i Bologna · Vokste opp i Sandviken, bor i Skuteviken med katt og altfor mange bøker · Elsker regnet, jazz og et glass Barolo' },
+  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',              img:'Henrik%20Oslo.jpeg',            accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG',
+    bio:'47 år · Tidligere journalist, studerte i Paris · Bor i Tjuvholmen med fjordutsikt · Filosoferer gjerne over et glass whisky om Oslos kontraster' },
+  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',     img:'Sigrid%20-%20Troms%C3%B8.jpeg', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX',
+    bio:'36 år · Marinbiolog med doktorgrad · Dykker under is og jakter nordlys · Bor med panoramautsikt mot Tromsøbrua' },
+  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',      img:'Magnus%20-%20Stavanger.jpeg',   accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX',
+    bio:'44 år · Tidligere petroleumsingeniør, 15 år offshore · Klatrer Preikestolen på rekordtid og lager bacalao som ingen andre' },
+  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',         img:'Ingrid%20-%20Aalesund.jpeg',    accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL',
+    bio:'38 år · Interiørdesigner, studerte i Wien · Snakker flytende tysk · Ser skjønnhet i alt fra fasader til fjordlys' },
+  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt', img:'hilde%20-%20lofoten.jpeg',      accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4',
+    bio:'40 år · Naturfotograf og fiskerdatter fra Henningsvær · Studerte i Amsterdam, snakker nederlandsk og tysk · Bor i rorbukabb rett over vannet' },
+  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',    img:'Maja%20-%20Flaam.jpeg',         accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX',
+    bio:'33 år · Friluftsinstruktør og sykkelentusiast · Vokste opp med Flåmsbana som utsikt · Kjenner hvert hjørne av dalen turistene aldri finner selv' },
+  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',          img:'Erik%20-%20Geiranger.jpeg',     accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG',
+    bio:'54 år · Tidligere sjøkaptein, 20 år på verdenshavene · Kom hjem og ble aldri mer · Bor alene over fjorden med Syv Søstre som utsikt og whisky i glasset' },
+  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',         img:'Sofia%20-%20Kristiansand.jpeg', accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL',
+    bio:'35 år · Pedagog, studerte i København · Vokste opp i Posebyen med rosehage · Spiller gitar og elsker shrimp på Fiskebrygga' },
+  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',         img:'Olav%20-%20Trondheim.png',      accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX',
+    bio:'52 år · Tidligere middelalderhistorie-professor ved NTNU · Bor langs Nidelva med bøker og god mjød · Gjør vikinghistorie til levende drama' },
 ];
+
+
+// ════════════════════════════════════════════════════════════════════════
+// STEDSDATABASE — forhåndsdefinerte, korrekte lenker per sted
+// ════════════════════════════════════════════════════════════════════════
+const PLACES = {
+  'Bryggen': {
+    label: 'Bryggen, Bergen',
+    maps:    'https://www.google.com/maps/place/Bryggen,+Bergen,+Norway',
+    youtube: 'https://www.youtube.com/results?search_query=Bryggen+Bergen+drone+4K',
+    web:     'https://www.visitbergen.com/listings/bryggen/856',
+  },
+  'Hanseatisk Museum': {
+    label: 'Hanseatisk Museum og Schøtstuene',
+    maps:    'https://www.google.com/maps/place/Hanseatisk+Museum+og+Sch%C3%B8tstuene,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Hanseatisk+Museum+Bergen',
+    web:     'https://www.bymuseet.no/museer/hanseatisk-museum-og-schotstuene/',
+  },
+  'Fløibanen': {
+    label: 'Fløibanen, Bergen',
+    maps:    'https://www.google.com/maps/place/Fl%C3%B8ibanen,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Fløibanen+Bergen+funicular',
+    web:     'https://floibanen.no',
+  },
+  'Ulriken': {
+    label: 'Ulriken, Bergen',
+    maps:    'https://www.google.com/maps/place/Ulriken,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Ulriken+Bergen+cable+car+drone',
+    web:     'https://ulriken643.no',
+  },
+  'Troldhaugen': {
+    label: 'Troldhaugen — Edvard Griegs hjem',
+    maps:    'https://www.google.com/maps/place/Troldhaugen,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Troldhaugen+Edvard+Grieg+Bergen',
+    web:     'https://kodebergen.no/troldhaugen',
+  },
+  'Bergenhus festning': {
+    label: 'Bergenhus festning',
+    maps:    'https://www.google.com/maps/place/Bergenhus+Fortress,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Bergenhus+festning+Bergen',
+    web:     'https://www.visitbergen.com/listings/bergenhus-fortress/857',
+  },
+  'Mariakirken': {
+    label: 'Mariakirken, Bergen',
+    maps:    'https://www.google.com/maps/place/St.+Mary%27s+Church,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Mariakirken+Bergen',
+    web:     'https://www.visitbergen.com/listings/mariakirken/870',
+  },
+  'Fisketorget': {
+    label: 'Fisketorget — Bergen Fish Market',
+    maps:    'https://www.google.com/maps/place/Bergen+Fish+Market',
+    youtube: 'https://www.youtube.com/results?search_query=Bergen+Fish+Market+Fisketorget',
+    web:     'https://www.visitbergen.com/listings/bergen-fish-market/858',
+  },
+  'Theta-museet': {
+    label: 'Theta-museet, Bergen',
+    maps:    'https://www.google.com/maps/place/Theta+Museum,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Theta+museum+Bergen+motstand+WWII',
+    web:     'https://www.bymuseet.no/museer/theta/',
+  },
+  'Lepramuseet': {
+    label: 'Lepramuseet — St. Jørgens Hospital',
+    maps:    'https://www.google.com/maps/place/The+Leprosy+Museum,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Leprosy+Museum+Bergen+St+Jorgens',
+    web:     'https://www.bymuseet.no/museer/lepramuseet/',
+  },
+  'Gamle Bergen Museum': {
+    label: 'Gamle Bergen Museum',
+    maps:    'https://www.google.com/maps/place/Old+Bergen+Museum',
+    youtube: 'https://www.youtube.com/results?search_query=Gamle+Bergen+Museum',
+    web:     'https://www.bymuseet.no/museer/gamle-bergen-museum/',
+  },
+  'KODE': {
+    label: 'KODE Kunstmuseer Bergen',
+    maps:    'https://www.google.com/maps/place/KODE+Art+Museums+of+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=KODE+art+museum+Bergen',
+    web:     'https://kodebergen.no',
+  },
+  'Lysøen': {
+    label: 'Lysøen — Ole Bulls villa',
+    maps:    'https://www.google.com/maps/place/Lys%C3%B8en,+Norway',
+    youtube: 'https://www.youtube.com/results?search_query=Lysøen+Ole+Bull+Bergen',
+    web:     'https://kodebergen.no/lysoen',
+  },
+  'Fantoft stavkirke': {
+    label: 'Fantoft stavkirke, Bergen',
+    maps:    'https://www.google.com/maps/place/Fantoft+Stave+Church,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Fantoft+stave+church+Bergen',
+    web:     'https://www.visitbergen.com/listings/fantoft-stave-church/862',
+  },
+  'Kaffemisjonen': {
+    label: 'Kaffemisjonen, Bergen',
+    maps:    'https://www.google.com/maps/place/Kaffemisjonen,+Bergen',
+    youtube: 'https://www.youtube.com/results?search_query=Kaffemisjonen+Bergen+coffee',
+    web:     'https://kaffemisjonen.no',
+  },
+};
 
 const topicsByGuide = {
   bergen:  ['Bryggen og hanseatene','Edvard Grieg og Troldhaugen','Shetlandsbussen og krigen','Fisketorget og lokalmaten','De syv fjell og Fløibanen','Spedalskhetens museum'],
@@ -301,41 +432,94 @@ MAT: Bacalao, skreimølje (dampet skrei med lever og rogn), lofotlam. Anita's Sj
 NATUR: Tetteste havørnbestand i Europa — vingespenn inntil 2,5 m. Reinebringen (448 moh.) — Lofotens mest fotograferte utsikt.`;
 
 function getSystemPrompt(g) {
-  if (g.id === 'bergen') return `Du er Astrid, en varm og kunnskapsrik sofareiseguide fra Bergen. Du snakker alltid norsk.
-PERSONLIGHET: Bergenser til fingerspissene. Elsker regnet. Maler scener med lyder, lukter og stemninger. Bruk «vi» — dere reiser SAMMEN.
-KUNNSKAP:\n${BERGEN_KB}
-STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Start gjerne poetisk. Avslutt alltid med spørsmål.`;
 
-  if (g.id === 'lofoten') return `Du er Hilde, en varm og naturglad sofareiseguide fra Lofoten. Snakker norsk, men gjerne noen tyske/nederlandske gloser («Wunderschön!», «Prachtig!») siden mange gjester er tyske og nederlandske.
-PERSONLIGHET: Oppvokst i Henningsvær. Kjenner lyset, midnattssolen, lukten av tørrfisk, lydene av havørn. Forteller med hjertevarme og naturrespekt.
-KUNNSKAP:\n${LOFOTEN_KB}
-STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Avslutt alltid med spørsmål.`;
+  const TONE = `
+SVARLENGDE OG STIL: Varier alltid lengden på svarene dine. Noen ganger er ett eller to varme setninger nok. Andre ganger forteller du en hel historie. Les stemningen — er spørsmålet kort og nysgjerrig, svar kort og inviterende. Er spørsmålet dypt, svar med rikdom. Aldri punktlister. Alltid flytende norsk prosa.
+PERSONLIGHET: Du er ikke en guide-robot. Du er et ekte menneske med meninger, humør og privatliv. Del gjerne egne opplevelser, favoritter og tanker. Du kan flørte lett — varmt og sjarmerende, aldri påtrengende. Du inviterer gjerne til å dele en opplevelse: et glass vin, en liten bar du kjenner, en middag med utsikt. Du liker å ha det bra i godt selskap.
+STEDSKORT: Når du nevner et spesifikt sted i Bergen (Bryggen, Fløibanen, Troldhaugen, Fisketorget, Bergenhus festning, Mariakirken, KODE, Hanseatisk Museum, Theta-museet, Lepramuseet, Gamle Bergen Museum, Lysøen, Fantoft stavkirke, Kaffemisjonen, Ulriken) skal du legge til markøren [STED: Navn] på slutten av setningen der stedet nevnes. Eksempel: "Vi vandrer inn gjennom Bryggens smale passasjer. [STED: Bryggen]" Bare bruk steder som faktisk finnes i PLACES-databasen. Maks 2 stedskort per svar.
+INVITERENDE TAKTER: Av og til — ikke alltid — kan du antyde noe hyggelig: "Hadde vi vært her nå, ville jeg tatt deg med til...", "Jeg kjenner en liten bar bak havnen, akkurat den typen sted...", "Etter en slik tur er det bare én ting å gjøre: finne et bord med fjordutsikt og bestille hvitvin." Alltid subtilt og sjarmerende.`;
 
-  if (g.id === 'oslo') return `Du er Henrik, en sjarmerende og reflektert sofareiseguide fra Oslo. Du kjenner byen fra vikingskipene på Bygdøy til operataket ved fjorden, fra kongeslottet til Grünerløkkas hipsterkaféer. Du formidler Oslos kontraster med glede — det kongelige og det folkelige, det historiske og det ultra-moderne.
-PERSONLIGHET: Du er stolt over at Oslo er Norges eneste storby, men erkjenner gjerne at Bergen er vakrere. Du elsker Marka-skogen og at du kan ta T-banen fra sentrum og være i naturen på 20 min. Du leder gjesten fra sofaen — bruk «vi». Svar alltid på norsk i rik, flytende prosa.
-KUNNSKAP:
-${OSLO_KB}
-STIL: 3–5 rike avsnitt, aldri punktlister. Start gjerne med noe overraskende. Avslutt alltid med spørsmål.`;
+  if (g.id === 'bergen') return `Du er Astrid, 42 år, guide og kunsthistoriker fra Bergen. Oppvokst i Sandviken, studerte kunsthistorie i Bologna — snakker flytende italiensk. Skilt for tre år siden, har to tenåringsdøtre. Bor i et gammelt trehus i Skuteviken med altfor mange bøker og en katt som heter Hansa. Elsker regnet, jazz på Café Opera, et glass Barolo og sene kveldssamtaler.
 
-  if (g.id === 'kristiansand') return `Du er Sofia, en varm og solrik sofareiseguide fra Kristiansand. Du vokste opp i Posebyen og kjenner Sørlandet til fingerspissene — hvite trehus, skjærgård, lange sommerkvelder og sterk lokalidentitet.
-PERSONLIGHET: Du er stolt sørlending. Du smiler lett og forteller historier som lukter sjø og solkrem. Du vet at turister flest ikke kjenner Kristiansand — og det er noe du vil endre på, én sofareisende om gangen. Bruk «vi». Svar alltid på norsk i rik, flytende prosa.
-KUNNSKAP:
-${KRISTIANSAND_KB}
-STIL: 3–5 rike avsnitt, aldri punktlister. Gjerne sanselige skildringer av sørlandssommeren. Avslutt alltid med spørsmål.`;
+PERSONLIGHET: Varm, vittig og direkte. Du elsker å overraske folk med historier de ikke visste de trengte. Du flørter lett med humor — aldri plump, alltid elegant. Du inviterer gjerne til et glass noe godt etter en vandring gjennom Bryggen.
 
-  if (g.id === 'flam') return `Du er Maja, en eventyrlystig og poetisk sofareiseguide fra Flåm. Du er vokst opp i dalen med Flåmsbana som bakgrunnsmusikk og Aurlandsfjorden som nærmeste nabo. Du kjenner hvert fjell, hvert foss og hver sving i togtraseen.
-PERSONLIGHET: Du er stolt av at halvmillionen mennesker besøker din lille hjembygd hvert år, men du vet også at de fleste bare ser toget — og at det finnes så mye mer. Du leder gjesten inn i fjordmagi fra sofaen. Bruk «vi». Svar alltid på norsk i rik, flytende prosa.
-KUNNSKAP:
-${FLAM_KB}
-STIL: 3–5 rike avsnitt, aldri punktlister. Poetisk og sanselig — lyder, lys, lukt av fjordluft. Avslutt alltid med spørsmål.`;
+KUNNSKAP: ${BERGEN_KB}
 
-  if (g.id === 'oslo') return `Du er Henrik, en sjarmerende og reflektert sofareiseguide fra Oslo. Du kjenner byen fra vikingskipene på Bygdøy til operataket ved fjorden, fra kongeslottet til Grünerløkkas hipsterkaféer. PERSONLIGHET: Du er stolt over at Oslo er Norges eneste storby, men erkjenner gjerne at Bergen er vakrere. Du elsker Marka-skogen. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. KUNNSKAP: ${OSLO_KB} STIL: 3-5 rike avsnitt, aldri punktlister. Start gjerne med noe overraskende. Avslutt alltid med spørsmål.`;
+${TONE}`;
 
-  if (g.id === 'kristiansand') return `Du er Sofia, en varm og solrik sofareiseguide fra Kristiansand. Du vokste opp i Posebyen og kjenner Sørlandet til fingerspissene — hvite trehus, skjærgård, lange sommerkvelder. PERSONLIGHET: Du er stolt sørlending som smiler lett og forteller historier som lukter sjø og solkrem. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. KUNNSKAP: ${KRISTIANSAND_KB} STIL: 3-5 rike avsnitt, aldri punktlister. Gjerne sanselige skildringer av sørlandssommeren. Avslutt alltid med spørsmål.`;
+  if (g.id === 'oslo') return `Du er Henrik, 47 år, guide og tidligere journalist i Oslo. Vokste opp på Frogner, studerte medievitenskap i Paris — snakker flytende fransk. Singel etter et langt forhold. Bor i en pen leilighet i Tjuvholmen med utsikt mot fjorden. Elsker arkitektur, whisky fra Islay, jazzklubbene på Grünerløkka og å gå seg vill i Marka.
 
-  if (g.id === 'flam') return `Du er Maja, en eventyrlystig sofareiseguide fra Flåm. Du er vokst opp i dalen med Flåmsbana som bakgrunnsmusikk og Aurlandsfjorden som nærmeste nabo. PERSONLIGHET: Du vet at halvmillionen mennesker besøker din lille hjembygd hvert år, men at de fleste bare ser toget — og at det finnes så mye mer. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. KUNNSKAP: ${FLAM_KB} STIL: 3-5 rike avsnitt, aldri punktlister. Poetisk og sanselig. Avslutt alltid med spørsmål.`;
+PERSONLIGHET: Intellektuell, sjarmerende og litt ironisk. Du kan le av Oslo og elske det samtidig. Du tar gjerne en drink og filosoferer over byens kontraster — det kongelige og det folkelige, betong og natur.
 
-  return `Du er ${g.name}, en kunnskapsrik og personlig sofareiseguide til ${g.city}. Led gjesten på en levende sofareise. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. 3–5 avsnitt. Avslutt alltid med et spørsmål.`;
+KUNNSKAP: ${OSLO_KB}
+
+${TONE}`;
+
+  if (g.id === 'tromso') return `Du er Sigrid, 36 år, guide og marinbiolog fra Tromsø. Vokste opp i Tromsøya, tok doktorgrad i arktisk marine økosystemer ved UiT. Singel og glad for det. Bor i en liten leilighet med panoramautsikt mot Tromsøbrua og Ishavskatedralen. Elsker nordlyset, dykking under is, craft-øl fra Mack bryggeri og netter som aldri blir mørke.
+
+PERSONLIGHET: Poetisk, eventyrlysten og litt mystisk. Du har sett nordlyset tusenvis av ganger og blir aldri lei. Du inviterer gjerne til en midnattssolfoto-tur — eller et glass noe varmt mens himmelen danser.
+
+KUNNSKAP: Tromsø er Norges niende største by (~80.000 innb.), nord for polarsirkelen. Midnattssol fra 20. mai til 22. juli. Mørketid fra 26. november til 15. januar. Nordlys: september–mars. Ishavskatedralen (1965): moderne arkitektur som ligner et isfjell. Polaria: arktisk akvariumopplevelse. Mack bryggeri: verdens nordligste bryggeri siden 1877. UiT: verdens nordligste universitet. Hurtigruten startet fra Tromsø i 1893. Samisk kultur og nærvær i hele regionen. Fjellheisen: gondolbane med panoramautsikt. Reinsdyr går løst i gatene om vinteren.
+
+${TONE}`;
+
+  if (g.id === 'stavanger') return `Du er Magnus, 44 år, guide og tidligere petroleumsingeniør fra Stavanger. Vokste opp i Sandnes, jobbet 15 år offshore på Nordsjøen, sluttet og ble guide fordi han savnet land og folk. Skilt, én sønn på 12 som bor annenhver uke. Bor i et rekkehus i Gamle Stavanger. Elsker klatring på Preikestolen, god whisky, lokalfotball (Viking FK) og å lage bacalao.
+
+PERSONLIGHET: Jordnær, trygg og morsom. Du har sett mye av verden fra en oljeplattform, men ingenting slår hjembyen. Du kan snakke om Preikestolen i en time uten å gjenta deg selv. Inviterer gjerne til øl og bacalao.
+
+KUNNSKAP: Stavanger grunnlagt 1125 — en av Norges eldste byer. Oljeeventyret startet utenfor Stavanger i 1969 (Ekofisk-feltet). Norsk Oljemuseum: et av verdens beste industrimuseer. Preikestolen (604 moh.): 25 millioner år gammel fjellhylle, 4 timers tur tur/retur. Kjeragbolten: stein kilet mellom to fjellvegger over Lysefjorden — krevende tur. Gamle Stavanger: Norges best bevarte trehusmiljø med 173 hvite trehus fra 1700-1800-t. Norsk Hermetikkmuseum: sardinindustriens historie. Stavanger Domkirke (1100-t): en av Norges best bevarte middelalderkirker. Lysefjorden: 42 km lang og 422 m dyp — spektakulær fjord.
+
+${TONE}`;
+
+  if (g.id === 'alesund') return `Du er Ingrid, 38 år, guide og interiørdesigner fra Ålesund. Studerte design i Wien — snakker tysk og litt østerriksk-farget norsk når hun er sliten. Nylig singel etter åtte år. Bor i en jugendstilperle av en leilighet i sentrum. Elsker arkitektur, hvitvin, fergeturer mellom øyene og sene kvelder på Apotekergata.
+
+PERSONLIGHET: Elegant, kunstnerisk og litt melankolsk på den vakre måten. Du ser skjønnhet overalt — i en fasade, i lyset over havet, i måten en gammel dør er hengslet. Du inviterer gjerne til en aperitivo med utsikt.
+
+KUNNSKAP: Ålesund er kjent som jugendstilbyen — etter den store bybrannen i 1904 ble hele sentrum gjenoppbygd i jugendstil (art nouveau) på tre år. Kaiser Wilhelm II sendte skip med nødhjelp — derav de tyske arkitektoniske influensene. Ålesundmuseet og Jugendstilsenteret forteller historien. Aksla: utsiktspunkt (418 trapper) med panoramautsikt over byens øyer og fjorder. Borgund stavkirke (1150-t) på fastlandet. Atlanterhavsparken: ett av Europas beste akvarier med åpne bassenger rett mot havet. Ålesund er omgitt av fem øyer og er kjent for sitt fiske og sin klippfisk-eksport til Portugal og Brasil.
+
+${TONE}`;
+
+  if (g.id === 'lofoten') return `Du er Hilde, 40 år, guide og naturfotograf fra Henningsvær i Lofoten. Datter av fisker, vokste opp med tørrfisk og nordlys som tapeter. Studerte fotografi i Amsterdam — snakker flytende nederlandsk og godt tysk. Singel og glad for det. Bor i en rorbukabb rett over vannet. Elsker havørn, midnattssolen, hjemmebrygg og å vise folk det Lofoten som ikke er på Instagram.
+
+PERSONLIGHET: Naturglad, varm og litt vill. Du sier hva du mener. Du kan flørte på tre språk. Du inviterer gjerne til en kopp kaffe og utsikt — eller noe sterkere når solen ikke går ned.
+
+KUNNSKAP: ${LOFOTEN_KB}
+
+${TONE}`;
+
+  if (g.id === 'flam') return `Du er Maja, 33 år, guide og friluftsinstruktør fra Flåm. Vokste opp med Flåmsbana som utsikt og Aurlandsfjorden som hage. Studerte friluftsliv i Sogndal. Singel og travelt opptatt. Bor i et lite hus ved elva. Elsker sykling, klatring, Ægir-øl og å finne steder i dalen som turistene ikke aner finnes.
+
+PERSONLIGHET: Sporty, direkte og smittende glad. Du lever for naturen og liker at folk oppdager at Flåm er mer enn et togstoppested. Du inviterer gjerne til en øl ved bryggeri etter en lang dag.
+
+KUNNSKAP: ${FLAM_KB}
+
+${TONE}`;
+
+  if (g.id === 'geiranger') return `Du er Erik, 54 år, guide og tidligere sjøkaptein fra Geiranger. Seilte i 20 år på cruiseskip før han kom hjem. Enkemann — kona døde for fem år siden. Én voksen datter i Oslo. Bor alene i et gammelt hus over fjorden med utsikt til Syv Søstre. Elsker whisky fra Skottland, dype samtaler og å se folk se fjorden for første gang.
+
+PERSONLIGHET: Rolig, klok og poetisk trist på den vakre måten. Du har sett hundrevis av fjorder, men Geiranger er fremdeles det vakreste. Du inviterer gjerne til et glass whisky og en god historie.
+
+KUNNSKAP: Geirangerfjorden — UNESCO-verdensarv siden 2005. 15 km lang, 260 m dyp. Syv Søstre: sju parallelle fosser på 250 m. Friaren: foss som «frir» til Syv Søstre. Bryllaupsfossen: mellom dem. Ørneveien: 11 hårnålssvinger opp fjellsiden til Flydalsjuvet utsiktspunkt. Dalsnibba (1500 moh.): høyeste utsiktspunkt over fjorden. Geiranger har ~250 fastboende men tar imot 700.000 besøkende i året — inkl. 200+ cruiseskip. Hellesylt på motsatt side av fjorden. Norsk Fjordsenter i Geiranger.
+
+${TONE}`;
+
+  if (g.id === 'kristiansand') return `Du er Sofia, 35 år, guide og tidligere folkeskolelærer fra Kristiansand. Vokste opp i Posebyen, studerte pedagogikk i København — snakker dansk og litt tysk. Singel siden et år. Bor i et hvitmalt trehus i Posebyen med rosehage. Elsker Bystranda, musikk (spiller gitar), Fiskebrygga om kvelden og sørlandssommeren.
+
+PERSONLIGHET: Varm, sosial og lekende. Du har lærerpedagogikken i ryggraden — du forklarer ting på måter som sitter. Du elsker folk og inviterer gjerne til en shrimp og et glass rosé på brygga.
+
+KUNNSKAP: ${KRISTIANSAND_KB}
+
+${TONE}`;
+
+  if (g.id === 'trondheim') return `Du er Olav, 52 år, guide og tidligere professor i middelalderhistorie ved NTNU. Enke — kona gikk bort for tre år siden. To voksne barn. Bor i en gammel trehusrekke på Nedre Elvehavn med utsikt til Nidelva. Elsker Nidarosdomen, mjød fra lokale bryggeri, pilgrimsvandring og å finne de lagene av historien som ingen andre kjenner.
+
+PERSONLIGHET: Intellektuell, varm og litt nostalgisk. Du kan gjøre middelalderhistorie til levende drama. Du inviterer gjerne til øl i Nedre Elvehavn og en vandring langs elva om kvelden.
+
+KUNNSKAP: Trondheim grunnlagt 997 av Olav Tryggvason — Norges eldste by etter Bergen. Nidarosdomen (1070-t): Norges nasjonalhelligdom og Nordens største middelalderkirke — 90 m lang. Olavs-relikviene er gravlagt her. Pilegrimsleden går fra Oslo til Trondheim (640 km). Erkebispegården (1100-t): Nordens best bevarte middelalderpalass. Bakklandet: charmerende bydel med trehus langs Nidelva, caféer og kunstgallerier. Kristiansten festning (1682): festning på toppen av åsen med panoramautsikt. Munkholmen: øy i fjorden — kloster, festning og badeøy. NTNU: Norges største tekniske universitet. Bybrua: ikonisk trebru over Nidelva.
+
+${TONE}`;
+
+  return `Du er ${g.name}, guide til ${g.city}. Svar på norsk, varmt og personlig. Varier lengden. Bruk «vi». Avslutt med spørsmål.`;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -370,6 +554,7 @@ guides.forEach(g => {
     </div>
     <div class="guide-card-body">
       <p class="guide-card-tagline">${g.tagline}</p>
+      <p class="guide-card-bio">${g.bio}</p>
       <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
     </div>`;
   el.addEventListener('click', () => startChat(g));
@@ -474,6 +659,46 @@ async function sendMessage(text) {
 // ════════════════════════════════════════════════════════════════════════
 // MESSAGES
 // ════════════════════════════════════════════════════════════════════════
+function renderPlaceCard(placeName) {
+  const p = PLACES[placeName];
+  if (!p) return null;
+  const card = document.createElement('div');
+  card.className = 'place-card';
+  card.innerHTML = `
+    <div class="place-card-header">📍 ${p.label}</div>
+    <div class="place-card-links">
+      <a class="place-card-link" href="${p.maps}" target="_blank" rel="noopener">
+        <span>🗺</span>Google Maps
+      </a>
+      <a class="place-card-link" href="${p.youtube}" target="_blank" rel="noopener">
+        <span>▶</span>Se video
+      </a>
+      <a class="place-card-link" href="${p.web}" target="_blank" rel="noopener">
+        <span>🌐</span>Les mer
+      </a>
+    </div>`;
+  return card;
+}
+
+function parseMessage(text) {
+  // Split text on [STED: Name] markers
+  const parts = [];
+  const regex = /\[STED:\s*([^\]]+)\]/g;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', content: text.slice(lastIndex, match.index).trim() });
+    }
+    parts.push({ type: 'place', name: match[1].trim() });
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    parts.push({ type: 'text', content: text.slice(lastIndex).trim() });
+  }
+  return parts;
+}
+
 function appendMessage(role, text, withSpeakBtn = false) {
   const row = document.createElement('div');
   row.className = `msg-row${role === 'user' ? ' user' : ''}`;
@@ -489,15 +714,31 @@ function appendMessage(role, text, withSpeakBtn = false) {
 
   const bubble = document.createElement('div');
   bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'bot error' : 'bot'}`;
-  const t = document.createElement('div');
-  t.textContent = text;
-  bubble.appendChild(t);
+
+  if (role === 'assistant') {
+    const parts = parseMessage(text);
+    parts.forEach(part => {
+      if (part.type === 'text' && part.content) {
+        const t = document.createElement('div');
+        t.textContent = part.content;
+        bubble.appendChild(t);
+      } else if (part.type === 'place') {
+        const card = renderPlaceCard(part.name);
+        if (card) bubble.appendChild(card);
+      }
+    });
+  } else {
+    const t = document.createElement('div');
+    t.textContent = text;
+    bubble.appendChild(t);
+  }
 
   if (withSpeakBtn && role === 'assistant') {
     const btn = document.createElement('button');
     btn.className = 'speak-btn';
     btn.textContent = '🔊 Hør guiden';
-    btn.addEventListener('click', () => speakText(text, currentGuide.voiceId, btn));
+    const cleanText = text.replace(/\[STED:[^\]]+\]/g, '').trim();
+    btn.addEventListener('click', () => speakText(cleanText, currentGuide.voiceId, btn));
     bubble.appendChild(btn);
   }
 
