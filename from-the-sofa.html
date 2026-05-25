@@ -238,7 +238,7 @@
 <!-- ══ CLAUDE API BANNER ══════════════════════════════════════════════════════ -->
 <div id="claude-banner" class="api-banner" role="alert">
   <label><strong>Claude API-nøkkel</strong> mangler — hentes fra console.anthropic.com</label>
-  <input type="password" id="claude-key-input" placeholder="sk-ant-api03-..." autocomplete="off" />
+  <input type="password" id="claude-key-input" placeholder="Ikke i bruk — nøkkel er server-side" autocomplete="off" />
   <button id="claude-key-save">Lagre</button>
   <button class="banner-close" id="claude-banner-close">✕</button>
 </div>
@@ -315,22 +315,14 @@
 // ════════════════════════════════════════════════════════════════════════
 // API KEYS
 // ════════════════════════════════════════════════════════════════════════
-let CLAUDE_KEY  = localStorage.getItem('st_claude')  || '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';
+// Claude API key er server-side (Netlify env: ANTHROPIC_API_KEY)
 let ELEVEN_KEY  = localStorage.getItem('st_eleven')  || '';
 let voiceOn     = false;
 let currentAudio = null;
 
-function checkClaudeKey() {
-  document.getElementById('claude-banner').classList.toggle('show', !CLAUDE_KEY.startsWith('sk-ant'));
-}
+function checkClaudeKey() { /* nøkkel er server-side */ }
 
-// Claude banner
-document.getElementById('claude-key-save').addEventListener('click', () => {
-  const v = document.getElementById('claude-key-input').value.trim();
-  if (v.startsWith('sk-')) { CLAUDE_KEY = v; localStorage.setItem('st_claude', v); checkClaudeKey(); }
-  else { flashInput('claude-key-input'); }
-});
-document.getElementById('claude-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('claude-key-save').click(); });
+// Claude banner (skjult — ikke lenger nødvendig)
 document.getElementById('claude-banner-close').addEventListener('click', () => document.getElementById('claude-banner').classList.remove('show'));
 
 // ElevenLabs banner
@@ -586,7 +578,6 @@ document.getElementById('back-btn').addEventListener('click', () => {
 });
 
 function startChat(g) {
-  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
   currentGuide = g;
   history = [];
   messagesEl.innerHTML = '';
@@ -637,7 +628,6 @@ chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 async function sendMessage(text) {
   const msg = (text || chatInput.value).trim();
   if (!msg || isLoading) return;
-  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
   stopAudio();
   chatInput.value = '';
   appendMessage('user', msg);
@@ -648,14 +638,9 @@ async function sendMessage(text) {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -667,7 +652,6 @@ async function sendMessage(text) {
     if (data.error) {
       removeTyping(typingId);
       appendMessage('error', `API-feil: ${data.error.message}`);
-      if (data.error.type === 'authentication_error') document.getElementById('claude-banner').classList.add('show');
     } else {
       const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
       removeTyping(typingId);
