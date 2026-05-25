@@ -646,7 +646,7 @@ async function sendMessage(text) {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/.netlify/edge-functions/chat-stream', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

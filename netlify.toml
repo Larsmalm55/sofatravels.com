@@ -3,5 +3,5 @@
   edge_functions = "netlify/edge-functions"
 
 [[edge_functions]]
-  path = "/.netlify/edge-functions/chat-stream"
+  path = "/api/chat"
   function = "chat-stream"
