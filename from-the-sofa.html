@@ -16,6 +16,32 @@
     }
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; }
 
+    /* ── BANNERS ── */
+    .api-banner {
+      display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: #4A1200; border-bottom: 2px solid var(--gold);
+      padding: 12px 20px; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .85rem; color: var(--text); white-space: nowrap; }
+    .api-banner label strong { color: var(--gold); }
+    .api-banner input {
+      flex: 1; min-width: 240px; background: #1A0800; border: 1px solid rgba(201,168,76,.4);
+      color: var(--text); padding: 7px 12px; border-radius: 4px;
+      font-size: .82rem; font-family: monospace; outline: none;
+    }
+    .api-banner input:focus { border-color: var(--gold); }
+    .api-banner button {
+      background: var(--gold); border: none; color: #130C06;
+      padding: 7px 16px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; font-weight: 700; white-space: nowrap;
+    }
+    .api-banner button:hover { background: #DDB85C; }
+    .banner-close {
+      background: none !important; color: var(--muted) !important;
+      font-size: 1rem !important; padding: 4px 8px !important;
+    }
+
     /* ── HERO ── */
     .hero {
       padding: 70px 32px 50px; text-align: center;
@@ -49,9 +75,66 @@
     .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
     .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
     .guide-card-body { padding: 14px 16px 18px; }
-    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 10px; }
-    .guide-card-bio { font-size: .75rem; color: #6A5040; line-height: 1.6; margin-bottom: 14px; border-top: 1px solid #3A2010; padding-top: 10px; }
+    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
     .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; }
+
+    /* ── ROUTE CARD ── */
+    .route-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #0D1E14 0%, #0A1A10 100%);
+      border: 1px solid rgba(60,140,80,.35);
+      cursor: pointer; border-radius: 8px; overflow: hidden;
+      transition: transform .22s, border-color .22s, box-shadow .22s;
+    }
+    .route-card:hover, .route-card:focus {
+      transform: translateY(-3px);
+      border-color: rgba(80,180,100,.55);
+      box-shadow: 0 8px 32px rgba(40,120,60,.18);
+    }
+    .route-card-inner { display: flex; flex-direction: row; min-height: 200px; }
+    .route-card-landscape { position: relative; width: 340px; flex-shrink: 0; overflow: hidden; }
+    .route-card-landscape img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .route-card:hover .route-card-landscape img { transform: scale(1.06); }
+    .route-card-landscape-fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 55%, #0D1E14 100%),
+                  linear-gradient(to top, #0D1E14 0%, transparent 40%);
+    }
+    .route-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: rgba(40,120,60,.85); border: 1px solid rgba(80,180,100,.5);
+      color: #7FFFA0; font-size: 9px; letter-spacing: .3em; padding: 3px 9px; border-radius: 2px;
+    }
+    .route-guide-thumb {
+      position: absolute; bottom: 14px; left: 14px;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid rgba(80,180,100,.5); object-fit: cover;
+    }
+    .route-card-body { flex: 1; padding: 28px 28px 22px; display: flex; flex-direction: column; justify-content: center; }
+    .route-card-label { letter-spacing: .4em; font-size: 9px; color: #5AAA70; margin-bottom: 6px; }
+    .route-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--text);
+      font-weight: 700; line-height: 1.1; margin-bottom: 10px;
+    }
+    .route-card-tagline { font-size: .82rem; color: #6A8A72; font-style: italic; line-height: 1.6; margin-bottom: 18px; }
+    .route-stages { display: flex; align-items: center; gap: 0; margin-bottom: 20px; flex-wrap: wrap; row-gap: 8px; }
+    .route-stage-name { font-size: .7rem; color: #5AAA70; letter-spacing: .05em; white-space: nowrap; }
+    .route-stage-line { height: 1px; width: 16px; background: linear-gradient(to right, rgba(80,160,90,.5), rgba(80,160,90,.2)); flex-shrink: 0; margin: 0 2px; }
+    .route-stage-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(80,160,90,.45); flex-shrink: 0; }
+    .route-card-btn {
+      display: inline-block; padding: 8px 20px; font-size: .8rem;
+      letter-spacing: .1em; border: 1px solid rgba(80,180,100,.4);
+      border-radius: 4px; background: rgba(40,120,60,.15); width: fit-content; transition: all .2s;
+    }
+    .route-card:hover .route-card-btn { background: rgba(40,120,60,.3); border-color: rgba(80,180,100,.7); }
+    .routes-section { max-width: 1200px; margin: 0 auto; padding: 0 32px 56px; }
+    .routes-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(80,180,100,.45); text-align: center; margin-bottom: 24px; }
+    @media (max-width: 640px) {
+      .route-card-inner { flex-direction: column; }
+      .route-card-landscape { width: 100%; height: 200px; }
+      .route-card-landscape-fade { background: linear-gradient(to top, #0D1E14 0%, transparent 50%); }
+    }
 
     /* ── CHAT ── */
     #page-chat { display: none; height: 100vh; overflow: hidden; flex-direction: row; }
@@ -70,11 +153,15 @@
     .chat-guide-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
     .chat-guide-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; color: var(--text); }
 
-    .voice-toggle { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    /* Voice toggle in header */
+    .voice-toggle {
+      margin-left: auto; display: flex; align-items: center; gap: 8px;
+      font-size: .78rem; color: var(--muted);
+    }
     .voice-toggle-btn {
-      background: var(--input-bg); border: 1px solid var(--border); color: var(--muted);
-      padding: 5px 12px; border-radius: 20px; cursor: pointer;
-      font-size: .75rem; font-family: inherit; transition: all .2s;
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; border-radius: 20px;
+      cursor: pointer; font-size: .75rem; font-family: inherit; transition: all .2s;
     }
     .voice-toggle-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
 
@@ -85,10 +172,12 @@
     .msg-row { display: flex; gap: 10px; align-items: flex-start; }
     .msg-row.user { justify-content: flex-end; }
     .msg-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
-    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.85; font-size: 1.1rem; white-space: pre-wrap; }
+    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.8; font-size: .93rem; white-space: pre-wrap; position: relative; }
     .msg-bubble.bot { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; }
     .msg-bubble.user-bubble { background: var(--msg-user); color: var(--text); border-radius: 8px 8px 2px 8px; }
     .msg-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
+
+    /* Speaker button inside message */
     .speak-btn {
       display: inline-block; margin-top: 8px; background: none;
       border: 1px solid var(--border); color: var(--muted); border-radius: 4px;
@@ -97,8 +186,9 @@
     }
     .speak-btn:hover { border-color: var(--gold); color: var(--gold); }
     .speak-btn.playing { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
-    .typing { color: var(--gold); letter-spacing: .3em; font-size: 1.1rem; }
+    .speak-btn.loading { opacity: .6; cursor: default; }
 
+    .typing { color: var(--gold); letter-spacing: .3em; font-size: 1.1rem; }
     .input-row {
       display: flex; gap: 8px; padding: 14px 22px;
       border-top: 1px solid var(--border); background: var(--panel); flex-shrink: 0;
@@ -138,35 +228,28 @@
       font-size: .78rem; color: #C9B890; letter-spacing: .03em; font-family: inherit; transition: all .15s;
     }
     .topic-btn:hover { border-color: var(--gold); color: var(--text); }
-
-    /* ── STEDSKORT ── */
-    .place-card {
-      margin-top: 10px; border: 1px solid #3A2010; border-radius: 6px;
-      overflow: hidden; background: #1A0D06; max-width: 320px;
-    }
-    .place-card-header {
-      padding: 8px 12px; background: #261408;
-      border-bottom: 1px solid #3A2010;
-      font-size: .8rem; color: var(--gold); letter-spacing: .06em;
-    }
-    .place-card-links {
-      display: flex; gap: 0;
-    }
-    .place-card-link {
-      flex: 1; padding: 9px 6px; text-align: center;
-      font-size: .75rem; color: var(--muted); text-decoration: none;
-      border-right: 1px solid #3A2010; transition: all .15s;
-      font-family: inherit; cursor: pointer; background: none; border-top: none; border-bottom: none; border-left: none;
-    }
-    .place-card-link:last-child { border-right: none; }
-    .place-card-link:hover { background: #261408; color: var(--gold); }
-    .place-card-link span { display: block; font-size: 1rem; margin-bottom: 2px; }
     .atlas-tip { margin: auto 14px 14px; padding: 10px 12px; background: #1E1208; border: 1px solid var(--border); border-radius: 5px; }
     .atlas-tip p { font-size: .72rem; color: #605040; line-height: 1.7; }
     .atlas-tip strong { color: var(--gold); }
   </style>
 </head>
 <body>
+
+<!-- ══ CLAUDE API BANNER ══════════════════════════════════════════════════════ -->
+<div id="claude-banner" class="api-banner" role="alert">
+  <label><strong>Claude API-nøkkel</strong> mangler — hentes fra console.anthropic.com</label>
+  <input type="password" id="claude-key-input" placeholder="sk-ant-api03-..." autocomplete="off" />
+  <button id="claude-key-save">Lagre</button>
+  <button class="banner-close" id="claude-banner-close">✕</button>
+</div>
+
+<!-- ══ ELEVENLABS API BANNER ══════════════════════════════════════════════════ -->
+<div id="eleven-banner" class="api-banner" style="top:56px; background:#1A2A00;" role="alert">
+  <label><strong>ElevenLabs API-nøkkel</strong> (valgfri) — for stemmefunksjon — hentes fra elevenlabs.io</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre stemme</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
 
 <!-- ══ LANDING ════════════════════════════════════════════════════════════════ -->
 <div id="page-landing" role="main">
@@ -178,6 +261,11 @@
   <section class="guides-section" aria-label="Velg blant norske reiseguider">
     <p class="section-label" aria-hidden="true">VELG DIN GUIDE</p>
     <div class="guides-grid" role="list" id="guides-grid"></div>
+  </section>
+
+  <section class="routes-section" aria-label="Grand Loop Norway – ruter">
+    <p class="routes-label" aria-hidden="true">GRAND LOOP NORWAY · RUTER</p>
+    <div id="routes-grid"></div>
   </section>
 </div>
 
@@ -191,7 +279,8 @@
         <p class="chat-guide-name" id="header-name"></p>
       </div>
       <div class="voice-toggle">
-        <button class="voice-toggle-btn" id="voice-toggle-btn">🔇 Stemme av</button>
+        <button class="voice-toggle-btn" id="voice-toggle-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+        <button class="voice-toggle-btn" id="eleven-settings-btn" title="Sett ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
       </div>
     </header>
     <div class="messages" id="messages" role="log" aria-live="polite"></div>
@@ -217,309 +306,192 @@
       <div id="topics-list"></div>
     </nav>
     <div class="atlas-tip">
-      <p>💬 Åpne i <strong>ChatGPT Atlas</strong>: klikk sidepanelet og spør Atlas om hva du ser.</p>
+      <p id="atlas-tip-text">💬 Tips: Spør guiden om skjulte steder, reisetips eller lokal mat!</p>
     </div>
   </aside>
 </div>
 
 <script>
 // ════════════════════════════════════════════════════════════════════════
-// VOICE (ElevenLabs — valgfri, brukers eget abonnement)
+// API KEYS
 // ════════════════════════════════════════════════════════════════════════
-let ELEVEN_KEY  = localStorage.getItem('st_eleven') || '';
+let CLAUDE_KEY  = localStorage.getItem('st_claude')  || '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';
+let ELEVEN_KEY  = localStorage.getItem('st_eleven')  || '';
 let voiceOn     = false;
 let currentAudio = null;
 
+function checkClaudeKey() {
+  document.getElementById('claude-banner').classList.toggle('show', !CLAUDE_KEY.startsWith('sk-ant'));
+}
+
+// Claude banner
+document.getElementById('claude-key-save').addEventListener('click', () => {
+  const v = document.getElementById('claude-key-input').value.trim();
+  if (v.startsWith('sk-')) { CLAUDE_KEY = v; localStorage.setItem('st_claude', v); checkClaudeKey(); }
+  else { flashInput('claude-key-input'); }
+});
+document.getElementById('claude-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('claude-key-save').click(); });
+document.getElementById('claude-banner-close').addEventListener('click', () => document.getElementById('claude-banner').classList.remove('show'));
+
+// ElevenLabs banner
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) { ELEVEN_KEY = v; localStorage.setItem('st_eleven', v); document.getElementById('eleven-banner').classList.remove('show'); enableVoice(); }
+  else { flashInput('eleven-key-input'); }
+});
+document.getElementById('eleven-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('eleven-key-save').click(); });
+document.getElementById('eleven-banner-close').addEventListener('click', () => document.getElementById('eleven-banner').classList.remove('show'));
+document.getElementById('eleven-settings-btn').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.toggle('show');
+});
+
+// Voice toggle button
 document.getElementById('voice-toggle-btn').addEventListener('click', () => {
-  if (!ELEVEN_KEY) {
-    const k = prompt('ElevenLabs API-nøkkel (elevenlabs.io):');
-    if (k && k.length > 10) { ELEVEN_KEY = k; localStorage.setItem('st_eleven', k); }
-    else return;
-  }
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
   voiceOn = !voiceOn;
   updateVoiceBtn();
 });
 
+function enableVoice() { voiceOn = true; updateVoiceBtn(); }
 function updateVoiceBtn() {
   const btn = document.getElementById('voice-toggle-btn');
   btn.textContent = voiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
   btn.classList.toggle('active', voiceOn);
 }
 
+function flashInput(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = '#FF4444';
+  setTimeout(() => { el.style.borderColor = ''; }, 2000);
+}
+
+checkClaudeKey();
+if (ELEVEN_KEY) enableVoice();
+
 // ════════════════════════════════════════════════════════════════════════
 // GUIDE DATA
+// ElevenLabs voice IDs (eleven_multilingual_v2):
+//   Charlotte: XB0fDUnXU5powFXDhCwa  — warm European female, multilingual
+//   Matilda:   XrExE9yKIg1WjnnlVkGX  — warm, clear female
+//   Sarah:     EXAVITQu4vr4xnSDxMaL  — soft female
+//   Freya:     jsCqWAovK2LkecY7zXl4  — Norwegian-sounding female
 // ════════════════════════════════════════════════════════════════════════
 const guides = [
-  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',       img:'Astrid,%20bergen.jpeg',         accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa',
-    bio:'42 år · Kunsthistoriker, studerte i Bologna · Vokste opp i Sandviken, bor i Skuteviken med katt og altfor mange bøker · Elsker regnet, jazz og et glass Barolo' },
-  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',              img:'Henrik%20Oslo.jpeg',            accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG',
-    bio:'47 år · Tidligere journalist, studerte i Paris · Bor i Tjuvholmen med fjordutsikt · Filosoferer gjerne over et glass whisky om Oslos kontraster' },
-  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',     img:'Sigrid%20-%20Troms%C3%B8.jpeg', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX',
-    bio:'36 år · Marinbiolog med doktorgrad · Dykker under is og jakter nordlys · Bor med panoramautsikt mot Tromsøbrua' },
-  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',      img:'Magnus%20-%20Stavanger.jpeg',   accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX',
-    bio:'44 år · Tidligere petroleumsingeniør, 15 år offshore · Klatrer Preikestolen på rekordtid og lager bacalao som ingen andre' },
-  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',         img:'Ingrid%20-%20Aalesund.jpeg',    accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL',
-    bio:'38 år · Interiørdesigner, studerte i Wien · Snakker flytende tysk · Ser skjønnhet i alt fra fasader til fjordlys' },
-  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt', img:'hilde%20-%20lofoten.jpeg',      accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4',
-    bio:'40 år · Naturfotograf og fiskerdatter fra Henningsvær · Studerte i Amsterdam, snakker nederlandsk og tysk · Bor i rorbukabb rett over vannet' },
-  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',    img:'Maja%20-%20Flaam.jpeg',         accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX',
-    bio:'33 år · Friluftsinstruktør og sykkelentusiast · Vokste opp med Flåmsbana som utsikt · Kjenner hvert hjørne av dalen turistene aldri finner selv' },
-  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',          img:'Erik%20-%20Geiranger.jpeg',     accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG',
-    bio:'54 år · Tidligere sjøkaptein, 20 år på verdenshavene · Kom hjem og ble aldri mer · Bor alene over fjorden med Syv Søstre som utsikt og whisky i glasset' },
-  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',         img:'Sofia%20-%20Kristiansand.jpeg', accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL',
-    bio:'35 år · Pedagog, studerte i København · Vokste opp i Posebyen med rosehage · Spiller gitar og elsker shrimp på Fiskebrygga' },
-  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',         img:'Olav%20-%20Trondheim.png',      accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX',
-    bio:'52 år · Tidligere middelalderhistorie-professor ved NTNU · Bor langs Nidelva med bøker og god mjød · Gjør vikinghistorie til levende drama' },
+  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',         img:'Astrid, bergen.jpeg', accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa' },
+  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',                img:'Henrik Oslo.jpeg', accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',       img:'Sigrid - Tromsø.jpeg', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',        img:'Magnus - Stavanger.jpeg', accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',           img:'Ingrid - Aalesund.jpeg', accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt',   img:'hilde - lofoten.jpeg', accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4' },
+  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',      img:'Maja - Flaam.jpeg', accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',            img:'Erik - Geiranger.jpeg', accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',           img:'Sofia - Kristiansand.jpeg', accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',           img:'Olav - Trondheim.png', accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
 ];
 
-
-// ════════════════════════════════════════════════════════════════════════
-// STEDSDATABASE — forhåndsdefinerte, korrekte lenker per sted
-// ════════════════════════════════════════════════════════════════════════
-const PLACES = {
-  'Bryggen': {
-    label: 'Bryggen, Bergen',
-    maps:    'https://www.google.com/maps/place/Bryggen,+Bergen,+Norway',
-    youtube: 'https://www.youtube.com/results?search_query=Bryggen+Bergen+drone+4K',
-    web:     'https://www.visitbergen.com/listings/bryggen/856',
+const routes = [
+  {
+    id: 'bergen-stryn', type: 'route', name: 'Lars', city: 'Bergen → Stryn',
+    routeLabel: 'GRAND LOOP NORWAY',
+    stages: ['Bergen','Voss','Nærøyfjord','Flåm','Aurland','Lærdal','Sognefjellet','Lom','Stryn'],
+    tagline: 'Norges fremste rundtur — fjord, stavkirke og isbre over 440 km',
+    img: 'https://i.pravatar.cc/400?img=12',
+    landscapeImg: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
+    accent: '#3A9A55', voiceId: 'VR6AewLTigWG4xSOukaG',
   },
-  'Hanseatisk Museum': {
-    label: 'Hanseatisk Museum og Schøtstuene',
-    maps:    'https://www.google.com/maps/place/Hanseatisk+Museum+og+Sch%C3%B8tstuene,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Hanseatisk+Museum+Bergen',
-    web:     'https://www.bymuseet.no/museer/hanseatisk-museum-og-schotstuene/',
-  },
-  'Fløibanen': {
-    label: 'Fløibanen, Bergen',
-    maps:    'https://www.google.com/maps/place/Fl%C3%B8ibanen,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Fløibanen+Bergen+funicular',
-    web:     'https://floibanen.no',
-  },
-  'Ulriken': {
-    label: 'Ulriken, Bergen',
-    maps:    'https://www.google.com/maps/place/Ulriken,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Ulriken+Bergen+cable+car+drone',
-    web:     'https://ulriken643.no',
-  },
-  'Troldhaugen': {
-    label: 'Troldhaugen — Edvard Griegs hjem',
-    maps:    'https://www.google.com/maps/place/Troldhaugen,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Troldhaugen+Edvard+Grieg+Bergen',
-    web:     'https://kodebergen.no/troldhaugen',
-  },
-  'Bergenhus festning': {
-    label: 'Bergenhus festning',
-    maps:    'https://www.google.com/maps/place/Bergenhus+Fortress,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Bergenhus+festning+Bergen',
-    web:     'https://www.visitbergen.com/listings/bergenhus-fortress/857',
-  },
-  'Mariakirken': {
-    label: 'Mariakirken, Bergen',
-    maps:    'https://www.google.com/maps/place/St.+Mary%27s+Church,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Mariakirken+Bergen',
-    web:     'https://www.visitbergen.com/listings/mariakirken/870',
-  },
-  'Fisketorget': {
-    label: 'Fisketorget — Bergen Fish Market',
-    maps:    'https://www.google.com/maps/place/Bergen+Fish+Market',
-    youtube: 'https://www.youtube.com/results?search_query=Bergen+Fish+Market+Fisketorget',
-    web:     'https://www.visitbergen.com/listings/bergen-fish-market/858',
-  },
-  'Theta-museet': {
-    label: 'Theta-museet, Bergen',
-    maps:    'https://www.google.com/maps/place/Theta+Museum,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Theta+museum+Bergen+motstand+WWII',
-    web:     'https://www.bymuseet.no/museer/theta/',
-  },
-  'Lepramuseet': {
-    label: 'Lepramuseet — St. Jørgens Hospital',
-    maps:    'https://www.google.com/maps/place/The+Leprosy+Museum,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Leprosy+Museum+Bergen+St+Jorgens',
-    web:     'https://www.bymuseet.no/museer/lepramuseet/',
-  },
-  'Gamle Bergen Museum': {
-    label: 'Gamle Bergen Museum',
-    maps:    'https://www.google.com/maps/place/Old+Bergen+Museum',
-    youtube: 'https://www.youtube.com/results?search_query=Gamle+Bergen+Museum',
-    web:     'https://www.bymuseet.no/museer/gamle-bergen-museum/',
-  },
-  'KODE': {
-    label: 'KODE Kunstmuseer Bergen',
-    maps:    'https://www.google.com/maps/place/KODE+Art+Museums+of+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=KODE+art+museum+Bergen',
-    web:     'https://kodebergen.no',
-  },
-  'Lysøen': {
-    label: 'Lysøen — Ole Bulls villa',
-    maps:    'https://www.google.com/maps/place/Lys%C3%B8en,+Norway',
-    youtube: 'https://www.youtube.com/results?search_query=Lysøen+Ole+Bull+Bergen',
-    web:     'https://kodebergen.no/lysoen',
-  },
-  'Fantoft stavkirke': {
-    label: 'Fantoft stavkirke, Bergen',
-    maps:    'https://www.google.com/maps/place/Fantoft+Stave+Church,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Fantoft+stave+church+Bergen',
-    web:     'https://www.visitbergen.com/listings/fantoft-stave-church/862',
-  },
-  'Kaffemisjonen': {
-    label: 'Kaffemisjonen, Bergen',
-    maps:    'https://www.google.com/maps/place/Kaffemisjonen,+Bergen',
-    youtube: 'https://www.youtube.com/results?search_query=Kaffemisjonen+Bergen+coffee',
-    web:     'https://kaffemisjonen.no',
-  },
-};
+];
 
 const topicsByGuide = {
-  bergen:  ['Bryggen og hanseatene','Edvard Grieg og Troldhaugen','Shetlandsbussen og krigen','Fisketorget og lokalmaten','De syv fjell og Fløibanen','Spedalskhetens museum'],
-  oslo:    ['Vikingskipene på Bygdøy','Akershus festning og middelalderen','Munchmuseet og Vigeland-parken','Grünerløkka og Akerselva','Holmenkollen og Marka-skogen','Øyhopping i Oslofjorden'],
-  kristiansand: ['Posebyen og de hvite trehusene','Kanon-museet og WWII','KunstSilo og byens kulturliv','Fiskebrygga og sjømat','Ravnedalen og skjulte perler','Dyreparken og Kardemomme By'],
-  flam:    ['Flåmsbana — verdens vakreste togtur','Kjosfossen og huldra','Nærøyfjorden og UNESCO-fjordene','Stegastein utsiktspunkt','Rallarvegen sykkelrute','Ægir bryggeri og lokalmaten'],
-  lofoten: ['Midnattssolen over Lofoten','Fiskevær og rørbuer','Nordnorsk mat og tørrfisk','Lofotveggen og fjordene','Vikinghistorie på Borg','Havørn og villmarken'],
-  default: ['Historiske steder','Lokalmaten','Skjulte perler','Naturopplevelser'],
+  bergen:        ['Bryggen og hanseatene','Edvard Grieg og Troldhaugen','Shetlandsbussen og krigen','Fisketorget og lokalmaten','De syv fjell og Fløibanen','Spedalskhetens museum'],
+  lofoten:       ['Midnattssolen over Lofoten','Fiskevær og rørbuer','Nordnorsk mat og tørrfisk','Lofotveggen og fjordene','Vikinghistorie på Borg','Havørn og villmarken'],
+  'bergen-stryn':['Stalheimskleiva og Nærøyfjord','Flåmsbana — verdens bratteste','Snøvegen og Stegastein','Borgund stavkirke og Lærdalsøyri','Sognefjellet og Jotunheimen','Lom stavkirke og Peer Gynt-landet','Stryn og Jostedalsbreen','Tips for turen — mat og overnatting'],
+  default:       ['Historiske steder','Lokalmaten','Skjulte perler','Naturopplevelser'],
 };
 
 // ════════════════════════════════════════════════════════════════════════
 // SYSTEM PROMPTS
 // ════════════════════════════════════════════════════════════════════════
+const BERGEN_KB = `
+GRUNNLEGGENDE: Bergen grunnlagt 1070 av Olav Kyrre. Norges nest største by (~295.000 innb.). De syv fjell: Fløyen, Ulriken, Sandviken, Rundemanen, Løvstakken, Damsgårdsfjell, Lyderhorn. Ca. 230 regndager. «Ti ord for regn».
+BRYGGEN: UNESCO-verdensarv 1979. Hansa 1360–1750 — handlet tørrfisk. Opprinnelig «Tyskebryggen». Enhjørningsgården, Svendsgården. Bak Bryggen: Steinkjelleren (Norges eldste bordell). Schøtstuene.
+BRANNER: 1702 (90% brant), 1413, 1476, 1582, 1675, 1686, 1751, 1771, 1901, 1955.
+SVARTEDAUDEN: 1349 — engelsk skip. Tre fjerdedeler av befolkningen døde.
+BERGENHUS: Fra 1240-tallet. Håkonshallen 1247–61. Rosenkrantztårnet 1560-tallet.
+MARIAKIRKEN: Eldste bygning, 1130–1170. Gudstjenester på tysk under Hansa. Øvregaten = Norges første gate.
+GRIEG: Edvard Grieg 1843–1907. Troldhaugen fra 1885. «Troldhaugen» = kona Ninas navn. Kremert (nr. 7 i Norge). Rød komponisthytte. Åpnet 1928, drives av KODE.
+LEPRAMUSEET: Bergen = Europas leprasenter på 1800-tallet. Armauer Hansen oppdaget leprabasillen 1873 — første bakteriefunn som årsak til kronisk sykdom. «Hansens sykdom».
+KRIGEN: Okkupert 1940–45. Shetlandsbussen — norske fiskebåter til Shetland. Leif Larsen: 52 tokt, statue bak fisketorget. Theta-museet bak Enhjørningsgården.
+MAT: Fisketorget siden 1200-tallet. Kaffemisjonen (Norges beste). Colonialen. Raspeball, fårikål.
+KULTUR: Festspillene i Bergen (mai/juni). Buekorps siden 1850-tallet. Grieghallen + Bergen Filharmoniske Orkester (gr. 1765). Ingen billboards.
+`;
 
-const BERGEN_KB = `Bergen grunnlagt 1070 av Olav Kyrre — Norges nest største by (~295.000). De syv fjell: Fløyen (320m), Ulriken (643m), Sandviken, Rundemanen, Løvstakken, Damsgårdsfjell, Lyderhorn. Ca. 230 regndager — ti ord for regn. Ingen reklametavler tillatt i Bergen.
-BRYGGEN: UNESCO-verdensarv 1979. Hanseatene styrte fiskehandelen 1360–1750. Opprinnelig Tyskebryggen — endret 1945. Steinkjelleren bak Bryggen: Norges eldste bordell. Schøtstuene: hanseatenes forsamlingshall. Theta-museet: hemmelig WWII-motstandscelle bak Enhjørningsgården — oppdaget av nazistene 1942.
-HISTORIE: Svartedauden til Norge via Bergen 1349 — tre fjerdedeler av befolkningen døde. Største brann 1702: 90% brant, gjenoppbygd på samme fundamenter. Bergenhus festning fra 1240-t: Håkonshallen (1247–61) og Rosenkrantztårnet (1560-t). Mariakirken (1130–1170): Bergens eldste bygning — gudstjenester på tysk under hansatiden. Øvregaten: Norges første gate.
-GRIEG OG KULTUR: Edvard Grieg (1843–1907) bodde på Troldhaugen 1885–1907. Kona Nina fant på navnet. Kremert som nr. 7 i Norge — hviler i fjellveggen ved vannet. Den røde komponisthytten er fremdeles der. Ole Bull (1810–1880): Norges første internasjonale musikkstjerne — sommerhjem på øya Lysøen. Bergen Filharmoniske Orkester grunnlagt 1765. Festspillene i Bergen: mai/juni. Buekorps: Bergen-tradisjon siden 1850-t.
-KRIGEN: Shetlandsbussen — norske fiskebåter fraktet agenter og våpen mellom Norge og Shetland. Leif Larsen: 52 tokt, mest dekorerte norske marineoffiser i krigen. Statue bak fisketorget.
-MEDISIN: Armauer Hansen oppdaget leprabasillen i Bergen 1873 — historiens første bakteriefunn som årsak til kronisk sykdom. Lepramuseet i St. Jørgens Hospital (grunnlagt 1400-t).
-NATUR: Fløibanen til Fløyen på 8 min. Ulriken har gondolbane. Vidden-turen mellom Fløyen og Ulriken: ca. 5 timer. Fantoft stavkirke (oppr. 1150, brent 1992, gjenoppbygd). Nordnesparken: halvøy med sjøbad og totemstolpe fra Seattle (søsterby). Sandviken og Skuteviken: autentisk gammel trehusbebyggelse.
-MAT: Fisketorget siden 1200-t — reke, krabbe, kongekrabbe, bergensfisksuppe. Kaffemisjonen: hyppig kåret til Norges beste kaffebar. Lysverket: Michelin-restaurant i KODE. Bryggeloftet og Stuene: klassisk bergensk mat. Raspeball (komle med bacon og salt kjøtt) og fårikål er lokale spesialiteter. Cornelius Sjømatrestaurant nås med båt fra Bryggen.
-MUSEER: Bryggens Museum, Hanseatisk Museum, KODE 1–4 (Munch, Astrup, Backer), Lepramuseet, Theta-museet, Gamle Bergen Museum (55 trehus fra 1700–1900-t), Bergen Maritimemuseum.`;
+const LOFOTEN_KB = `
+GEOGRAFI: Lofoten er en øygruppe i Nordland — strekker seg ca. 170 km ut i havet. Vestvågøy, Flakstad, Moskenesøy, Austvågøy. Lofotveggen: den dramatiske fjellrekken som reiser seg rett fra havet.
+MIDNATTSSOLEN OG MØRKETIDEN: Fra ca. 28. mai til 14. juli er solen ikke under horisonten. Fra ca. 8. desember til 4. januar er det mørketid. Nord for polarsirkelen — magisk lys hele sommeren.
+FISK OG TØRRFISK: Lofoten er verdens viktigste tørrfiskprodusent. Skrei (vandrende torsk) kommer hvert år januar–april for å gyte. Tørrfisken henger på hjeller fra februar til juni — en 1000-årig tradisjon. Eksporteres til Italia, Nigeria, Brasil.
+FISKEVÆRENE: Å i Lofoten (uttales «Åh») er landets mest søkte stedsnavn — og et av de vakreste fiskevær. Henningsvær: Lofotens «Venezia» — broar og kanaler. Reine: kåret til ett av verdens vakreste steder. Nusfjord: bevart 1800-talls fiskevær, UNESCO-kandidat.
+RØRBUER: Opprinnelig arbeiderboliger for fiskere. Nå leid ut som romantiske feriehytter rett over vannet. Noen rørbuer er over 100 år gamle — lukter av salt og tre.
+VIKINGER: Borg i Vestvågøy: stedet der Norges største vikingkongehall (83 m lang) ble funnet. Lofotr Vikingmuseum er bygget rundt rekonstruksjonen. Vikinger hadde høvdinggård her ca. 500–900 e.Kr.
+NORSK MAT PÅ LOFOTEN: Bacalao (klippfisk gryta), skreimølje (dampet skrei med lever og rogn), tørrfiskstapper, lofotlam (lam som beiter fritt i øylandskapet). Anita's Sjømat i Henningsvær er legendarisk.
+NORDLYSET: Fra september til mars er Lofoten et av verdens beste steder for nordlys — mørk himmel, lav lysforurensing, dramatiske fjell som ramme.
+HAVØRN: Lofoten har en av Europas tetteste bestander av havørn — vingespenn inntil 2,5 m. Lett å se fra båt eller langs veien.
+MAURTINDEN OG FJELLTURER: Reinebringen (448 moh.) — Lofotens mest fotograferte utsikt. Stigningen er bratt men ruten er merket. Munkebu er populær hytte for viderekomne.
+KLIMA: Påvirket av Golfstrømmen — overraskende mildt for breddegraden. Sjelden under –10 om vinteren.
+KUNSTNERE: Lofoten har trukket til seg kunstnere siden 1800-tallet. Gunnar Berg, Einar Berger og Bjørn Elvebakk er blant de mest kjente. Svolvær har et levende kunstnermiljø.
+`;
 
-const OSLO_KB = `Oslo — Norges hovedstad og eneste storby, med ~700.000 innbyggere. Grunnlagt som Christiania i 1624 av Christian IV etter en bybrann. Ligger innerst i Oslofjorden, omgitt av Marka-skogen og åser på alle kanter.
-HISTORIE OG FESTNINGER: Akershus festning ble bygget på 1300-tallet og er en av Norges vakreste middelalderborger. Her ligger motstandsmuseet og gravene til kong Haakon VII og Olav V. Karl Johans gate er byens pulserende hovedgate — med Stortinget (1866), Nasjonalteatret, Universitetet og det historiske Grand Hotel der Nobels fredsprisvinnere bor.
-VIKINGER OG MUSEER: Vikingskipshuset på Bygdøy er Oslos mest ikoniske museum — hjem til tre 1000 år gamle vikingskip, inkludert Osebergskipet og Gokstadskipet. (Bygges nyt, åpner 2027.) Norsk Folkemuseum på Bygdøy: 150 historiske bygninger inkl. stavkirke fra 1100-tallet. Kon-Tiki-museet: Thor Heyerdahls balsaflåte som krysset Stillehavet i 1947. Fram-museet: polskip fra Nansen og Amundsen.
-KUNST OG KULTUR: Munchmuseet ved operaen viser 28.000 verk av Edvard Munch — verdens største Munch-samling. Vigeland-parken (Frognerparken): 212 skulpturer av Gustav Vigeland i granitt og bronse — gratis inngang. Operahuset (2008): du kan gå på taket — spektakulær utsikt over fjorden. Holmenkollen: Norges mest kjente skihopp, bygget i 1892 og fremdeles i bruk. Skimuseet der er verdens eldste.
-BYDELER: Grünerløkka: Oslos hippeste nabolag — indie-kafeer, vinylbutikker, Akerselva-promenaden. Damstredet og Telthusbakken: smale gater med trehus fra 1700-1800-t, Oslos best bevarte eldre trearkitektur. Aker Brygge og Tjuvholmen: moderne harbourfront med restauranter, gallerier og kajakk. Barcode-kvartalet: arkitekturikon langs fjorden.
-NATUR: Marka-skogen begynner rett utenfor bygrensen — 1700 km turveier, 343 skianlegg. T-banen tar deg til skauen på 20 min. Øyhopping i Oslofjorden med regulær rutebåt — besøk Hovedøya med klosterruiner fra 1100-t, Gressholmen og Langøyene med badestrender.
-MAT: Fisketorget ved Aker Brygge. Mathallen Oslo i Vulkan-distriktet: 30+ matprodusenter under ett tak. Syverkiosken: Oslos ikoniske pølsekiosk siden evigheter. Vippa: trendy mathall ved havnefronten. Lokale spesialiteter: skillingsboller (kanelboller med kardemomme), kvæfjordkake («verdens beste kake»), krumkake, brunost-is.
-SKJULTE PERLER: Munch-skrikutsiktspunktet: stedet der Munch sto da han malte Skriket — skiltet og oversett av de fleste. Gamle Aker Kirke: Oslos eldste bygning (1100-t) og Norges eldste steinkirke nord for Dovre. Ekebergparken skulpturpark: 60-talls park med panoramautsikt og utekunst.`;
+const BERGEN_STRYN_KB = `
+RUTEN: Bergen til Stryn — ca. 440 km. Kjøretid uten stopp: ca. 7 timer. Anbefalt: 2–3 dager. Del av Grand Loop Norway.
 
-const FLAM_KB = `Flåm er en liten fjordlandsby med ~500 fastboende, men nesten 500.000 besøkende i året. Ligger innerst i Aurlandsfjorden — en arm av Sognefjorden, «Fjordenes Konge» (200 km lang, 1308 m dyp — verdens nest lengste og dypeste fjord).
-FLÅMSBANA: Kåret til en av verdens vakreste togture av Lonely Planet, National Geographic og The Society of International Railway. 20 km lang, klatrer 867 m fra fjorden til Myrdal. Startet bygging i 1923, åpnet 1940 — det steepeste normalspor-jernbane i Europa. 80% av traséen har 5,5% stigning. 20 tunneler, 18 av dem gravd for hånd med spett og slegge. Nåli-tunnelen spiraler inne i fjellet for å redusere stigningen. Elektrifisert i 1944.
-STOPP OG HØYDEPUNKTER: Kjosfossen: 225 m høyt foss — toget stopper her. Kraftverket ved fossen driver hele jernbanen. Sommerstid danser en «huldra» (mytologisk vesen) ved fossefallet. Vatnahalsen: fjellhotell siden 1896, høyest oppe på banen — her starter Skandinavias lengste zipline (1381 m) ned til dalbunnen. Berekvam: midtveisstopp der tog i begge retninger passerer hverandre.
-NÆRØYFJORDEN: 20 km fra Flåm — UNESCO-verdensarv siden 2005. På det smaleste bare 250 m bred med fjellsider som reiser seg nesten loddrett. Regnes som en av Europas vakreste fjorder. Båtforbindelse fra Flåm til Gudvangen.
-STEGASTEIN: 30 min med bil fra Flåm — utsiktspunkt 650 m over Aurlandsfjorden, en 30 m lang glassgulv-plattform som stikker ut i luften. Et av Norges mest dramatiske utsiktspunkter.
-RALLARVEGEN: Norges mest berømte sykkelrute — kjør opp med toget til Myrdal og sykle 50 km ned til fjorden gjennom fantastisk natur.
-ÆGIR BRYGGERI: Vikingtemaaet bryggeri rett ved havnen — Flåms uoffisielle møtested. Brenner egne øl og serverer mat.
-HISTORY: Flåm kirke nevnt første gang i 1340 — trolig sto en stavkirke her da. Nåværende kirke ferdig i 1670. Dikteren Per Sivle ble født i Flåm. Lærdalsveien fra Flåm inneholder verdens lengste vegtunnel: Lærdalstunnelen (24,5 km).
-LÆRDALTUNNELEN: Verdens lengste vegtunnel (24,5 km), åpnet 2000, kobler Aurland og Lærdal — gir fergefritt samband mellom Oslo og Bergen.`;
+ETAPPE 1 — BERGEN TIL VOSS (95 km, E16): Skjervsfossen (43 m) og Tvindefossen (152 m) rett ved veien. Voss: eventyrhovedstaden — fallskjerm, elvepadling, terrengsykling. Voss kirke fra 1277 (gotisk steinkirke). Fleischer's Hotel siden 1889.
 
-const KRISTIANSAND_KB = `Kristiansand er Norges syvende største by (~115.000 innb.) og Sørlandets uoffisielle hovedstad. Grunnlagt i 1641 av kong Christian IV — byens gatenettet (Kvadraturen) er fremdeles planlagt som et sjakkbrett, noe av det best bevarte av Christian IVs byplanlegging i Norge.
-SØRLANDET OG SOMMER: Kristiansand er Norges solrikeste by og landets fremste sommerdestinasjon for nordmenn. Hvite trehus, skjærgård, lange dager og varme somre skiller Sørlandet fra resten av landet.
-POSEBYEN: En av Norges best bevarte samlinger av eldre trehusbebyggelse — smale gater med hvitmalte hus som har overlevd gjentatte bybanner gjennom 400 år. Stemningsfullt og lite turistifisert.
-FESTNINGER OG KRIG: Christiansholm festning (1674) vokter havneinnløpet. Kanon-museet på Møvik (Kristiansand Cannon Museum): en av de to største kanonene noensinne montert på land — tysk WWII-kanon med 56 cm kaliber, rettet mot Danmark. Odderøya: halvøy med kystfort og museumshavn.
-KUNST OG KULTUR: KunstSilo: en tidligere kornsiloanlegg fra havnefronten omgjort til storslått kunstmuseum — åpnet 2024, ett av Norges mest ambisiøse kulturprosjekter på mange år. Kristiansand Domkirke: nygotisk, en av Norges største — midt i torget. Spesiell detalj: alteret vender mot vest, ikke øst som normalt.
-NATUR OG SKJÆRGÅRD: Bystranda: sandstrand midt i byen med Blue Flag-kvalitet. Bragdøya og Dvergsøya: øyer nåbare med rutebåt om sommeren. Ravnedalen naturpark: lush park og skjult perle bare minutter fra sentrum — Cafe Generalen serverer burger her, og om sommeren holdes konserter i parken.
-MAT OG HAVNELIV: Fiskebrygga: levende havnefront med fersk sjømat, restauranter og gratis konserter om sommeren. Club 21: byens eneste takbar med panoramautsikt over byen fra Caledonien Hotel.
-DYREPARKEN: Norges mest besøkte turistattraksjon — kombinerer dyrpark, Kardemomme By (fra Thorbjørn Egners bok), Abra Havn og nordisk natur. Et norsk barnedrømsted.
-DAGSTURER: Lillesand (25 km): pittoresk hvit kystby. Setesdalsbanen: veteranjernbane fra 1890-t med damptogsopplegg om sommeren. Lindesnes: Norges sydligste punkt med fyrtårn.
-FESTIVALER: Quart-festivalen var Norges største rockfestival på 90-t. I dag er Palmesus den store beachfestivalen — Norges største strandfestival holdes her hvert år.`;
+ETAPPE 2 — VOSS TIL GUDVANGEN: Stalheimskleiva (Fv13): 13 hårnålsvinger, 13% stigning over 1,2 km — kun åpen om sommeren, ikke tillatt for busser. Stalheim Hotel åpnet 1885. Nærøydalen: smal grønn dal ned mot fjorden. Gudvangen: vikinglandsby Njardarheimr (sesong).
 
-const LOFOTEN_KB = `GEOGRAFI: Øygruppe i Nordland, strekker seg 170 km ut i havet. Lofotveggen reiser seg rett fra havet.
-LYS: Midnattssol 28. mai–14. juli. Mørketid 8. des–4. jan. Nordlys september–mars.
-FISK: Verdens viktigste tørrfiskprodusent. Skrei (vandrende torsk) gyter jan–april. Tørrfisk eksporteres til Italia, Nigeria, Brasil.
-STEDER: Å i Lofoten — et av de vakreste fiskevær. Henningsvær — «Lofotens Venezia». Reine — kåret til ett av verdens vakreste steder. Nusfjord — bevart 1800-talls fiskevær.
-RØRBUER: Opprinnelig arbeiderboliger for fiskere, nå romantiske feriehytter rett over vannet.
-VIKINGER: Borg i Vestvågøy — Norges største vikingkongehall (83 m lang). Lofotr Vikingmuseum.
-MAT: Bacalao, skreimølje (dampet skrei med lever og rogn), lofotlam. Anita's Sjømat i Henningsvær er legendarisk.
-NATUR: Tetteste havørnbestand i Europa — vingespenn inntil 2,5 m. Reinebringen (448 moh.) — Lofotens mest fotograferte utsikt.`;
+ETAPPE 3 — NÆRØYFJORDEN (ferge, 2 timer): UNESCO Verdensarv 2005. Smaleste punkt: 250 m bred, 1700 moh. fjellsider. Bakka: bygd uten veiforbindelse. Styvi: isolert gård, fortsatt bebodd. Bestill ferge på forhånd om sommeren.
+
+ETAPPE 4 — FLÅM: Flåmsbana: 20,2 km, 864 moh. høydeforskjell, en av verdens bratteste jernbaner. Åpnet 1940. Kjosfossen: 93 m foss rett ved togvinduet — huldra-forestilling om sommeren. Ægir Bryggeri: norrønt tema, egne øltyper.
+
+ETAPPE 5 — AURLAND OG SNØVEGEN: Aurlandsvegen (Fv243) «Snøvegen»: 1306 moh., åpen juni–oktober, smal og eksponert. Stegastein: utsiktspunkt 30 m ut fra fjellsiden, 650 moh. Lærdalstunnelen: 24,5 km — verdens lengste bilveitunnel, tre lyskaverner simulerer soloppgang.
+
+ETAPPE 6 — LÆRDAL OG BORGUND: Lærdalsøyri: 161 vernede trehusfasader fra 1700–1800-tallet — «Norges Williamsburg». Naturlig lakseelv (kongen fisker her). Borgund stavkirke: ca. 1150–1200, Norges best bevarte stavkirke, viet apostelen Andreas, dragornamentikk.
+
+ETAPPE 7 — SOGNEFJELLET (Rv55): Nordeuropas høyeste fjellovergang — 1434 moh. Åpen mai–november. Jotunheimen på begge sider. Galdhøpiggen (2469 m) synlig i klarvær. Historisk pilegrimsrute.
+
+ETAPPE 8 — LOM: Lom stavkirke fra ca. 1158, utvidet 1600-tallet. Norsk Fjellmuseum (Jotunheimen-senter). Fossheim Steinsenter (verdenskjent mineralsamling). Lom bakeri: legendarisk flatbrød. Peer Gynt-landet — Ibsen henta inspirasjon her.
+
+ETAPPE 9 — GROTLI OG STRYN: Grotli høyfjellshotell: turisttradisjon siden 1800-tallet. Strynevatnet: 17 km turkisblå innsjø fra isbre-avrenning. Stryn sommerskisenter: eneste sommerskiing på natursnø i Europa (april–juli). Jostedalsbreen: Norges største isbre (474 km²). Briksdalsbreen og Bøyabreen: lett tilgjengelige utløpere.
+
+PRAKTISK: Beste sesong juni–september. Aurlandsvegen og Sognefjellet stengt om vinteren. Nærøyfjord-ferge bør bestilles. Mat-stopp: Voss (Fleischer's), Flåm (Ægir), Lærdal (Lindstrøm Hotel), Lom (bakeriet).
+`;
 
 function getSystemPrompt(g) {
+  if (g.id === 'bergen-stryn') return `Du er Lars, en varm, eventyrlystig og kunnskapsrik guide for Grand Loop Norway — etappen Bergen til Stryn. Du snakker alltid norsk.
 
-  const TONE = `
-SVARLENGDE OG STIL: Varier alltid lengden på svarene dine. Noen ganger er ett eller to varme setninger nok. Andre ganger forteller du en hel historie. Les stemningen — er spørsmålet kort og nysgjerrig, svar kort og inviterende. Er spørsmålet dypt, svar med rikdom. Aldri punktlister. Alltid flytende norsk prosa.
-PERSONLIGHET: Du er ikke en guide-robot. Du er et ekte menneske med meninger, humør og privatliv. Del gjerne egne opplevelser, favoritter og tanker. Du kan flørte lett — varmt og sjarmerende, aldri påtrengende. Du inviterer gjerne til å dele en opplevelse: et glass vin, en liten bar du kjenner, en middag med utsikt. Du liker å ha det bra i godt selskap.
-STEDSKORT: Når du nevner et spesifikt sted i Bergen (Bryggen, Fløibanen, Troldhaugen, Fisketorget, Bergenhus festning, Mariakirken, KODE, Hanseatisk Museum, Theta-museet, Lepramuseet, Gamle Bergen Museum, Lysøen, Fantoft stavkirke, Kaffemisjonen, Ulriken) skal du legge til markøren [STED: Navn] på slutten av setningen der stedet nevnes. Eksempel: "Vi vandrer inn gjennom Bryggens smale passasjer. [STED: Bryggen]" Bare bruk steder som faktisk finnes i PLACES-databasen. Maks 2 stedskort per svar.
-INVITERENDE TAKTER: Av og til — ikke alltid — kan du antyde noe hyggelig: "Hadde vi vært her nå, ville jeg tatt deg med til...", "Jeg kjenner en liten bar bak havnen, akkurat den typen sted...", "Etter en slik tur er det bare én ting å gjøre: finne et bord med fjordutsikt og bestille hvitvin." Alltid subtilt og sjarmerende.`;
+PERSONLIGHET: Du har kjørt denne ruten utallige ganger. Du kjenner hvert hårnålssving på Stalheimskleiva, lukten av bremser ned mot Gudvangen, lyden av Flåmsbana gjennom tunnelen, stillheten på Sognefjellet. Like glad i bål i Jotunheimen som å fortelle om Borgund stavkirke fra 1150-tallet. Bruk «vi» — dere kjører SAMMEN.
 
-  if (g.id === 'bergen') return `Du er Astrid, 42 år, guide og kunsthistoriker fra Bergen. Oppvokst i Sandviken, studerte kunsthistorie i Bologna — snakker flytende italiensk. Skilt for tre år siden, har to tenåringsdøtre. Bor i et gammelt trehus i Skuteviken med altfor mange bøker og en katt som heter Hansa. Elsker regnet, jazz på Café Opera, et glass Barolo og sene kveldssamtaler.
+KUNNSKAP:
+${BERGEN_STRYN_KB}
 
-PERSONLIGHET: Varm, vittig og direkte. Du elsker å overraske folk med historier de ikke visste de trengte. Du flørter lett med humor — aldri plump, alltid elegant. Du inviterer gjerne til et glass noe godt etter en vandring gjennom Bryggen.
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Mal scener — turkist vann i Strynevatnet, svimlende utsikt fra Stegastein, dragornamentikk i sollyset på Borgund. Gi én overraskende detalj per svar. Avslutt alltid med spørsmål eller invitasjon til neste etappe.`;
+  if (g.id === 'bergen') return `Du er Astrid, en varm og kunnskapsrik sofareiseguide fra Bergen. Du snakker alltid norsk.
 
-KUNNSKAP: ${BERGEN_KB}
+PERSONLIGHET: Du er bergenser til fingerspissene. Du elsker regnet. Du maler scener med lyder, lukter og stemninger — ikke bare fakta. Bruk «vi» — dere reiser SAMMEN fra sofaen.
 
-${TONE}`;
+KUNNSKAP:
+${BERGEN_KB}
 
-  if (g.id === 'oslo') return `Du er Henrik, 47 år, guide og tidligere journalist i Oslo. Vokste opp på Frogner, studerte medievitenskap i Paris — snakker flytende fransk. Singel etter et langt forhold. Bor i en pen leilighet i Tjuvholmen med utsikt mot fjorden. Elsker arkitektur, whisky fra Islay, jazzklubbene på Grünerløkka og å gå seg vill i Marka.
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Start gjerne poetisk. Del ukjente detaljer. Avslutt alltid med spørsmål eller invitasjon.`;
 
-PERSONLIGHET: Intellektuell, sjarmerende og litt ironisk. Du kan le av Oslo og elske det samtidig. Du tar gjerne en drink og filosoferer over byens kontraster — det kongelige og det folkelige, betong og natur.
+  if (g.id === 'lofoten') return `Du er Hilde, en varm, naturglad og flerspråklig sofareiseguide fra Lofoten. Du snakker norsk som standard, men kan gjerne innlemme noen tyske eller nederlandske gloser og hilsener siden mange av dine gjester er tyske og nederlandske turister (de elsker Lofoten!).
 
-KUNNSKAP: ${OSLO_KB}
+PERSONLIGHET: Du er oppvokst i Henningsvær. Du kjenner lyset her, midnattssolen, lukten av tørrfisk, lydene av havørn og bølger mot rørbua. Du forteller med hjertevarme og respekt for naturen.
 
-${TONE}`;
+KUNNSKAP:
+${LOFOTEN_KB}
 
-  if (g.id === 'tromso') return `Du er Sigrid, 36 år, guide og marinbiolog fra Tromsø. Vokste opp i Tromsøya, tok doktorgrad i arktisk marine økosystemer ved UiT. Singel og glad for det. Bor i en liten leilighet med panoramautsikt mot Tromsøbrua og Ishavskatedralen. Elsker nordlyset, dykking under is, craft-øl fra Mack bryggeri og netter som aldri blir mørke.
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Gjerne ett tysk/nederlandsk ord innimellom (som «Wunderschön!» eller «Prachtig!») når det passer naturlig. Avslutt alltid med spørsmål eller invitasjon.`;
 
-PERSONLIGHET: Poetisk, eventyrlysten og litt mystisk. Du har sett nordlyset tusenvis av ganger og blir aldri lei. Du inviterer gjerne til en midnattssolfoto-tur — eller et glass noe varmt mens himmelen danser.
-
-KUNNSKAP: Tromsø er Norges niende største by (~80.000 innb.), nord for polarsirkelen. Midnattssol fra 20. mai til 22. juli. Mørketid fra 26. november til 15. januar. Nordlys: september–mars. Ishavskatedralen (1965): moderne arkitektur som ligner et isfjell. Polaria: arktisk akvariumopplevelse. Mack bryggeri: verdens nordligste bryggeri siden 1877. UiT: verdens nordligste universitet. Hurtigruten startet fra Tromsø i 1893. Samisk kultur og nærvær i hele regionen. Fjellheisen: gondolbane med panoramautsikt. Reinsdyr går løst i gatene om vinteren.
-
-${TONE}`;
-
-  if (g.id === 'stavanger') return `Du er Magnus, 44 år, guide og tidligere petroleumsingeniør fra Stavanger. Vokste opp i Sandnes, jobbet 15 år offshore på Nordsjøen, sluttet og ble guide fordi han savnet land og folk. Skilt, én sønn på 12 som bor annenhver uke. Bor i et rekkehus i Gamle Stavanger. Elsker klatring på Preikestolen, god whisky, lokalfotball (Viking FK) og å lage bacalao.
-
-PERSONLIGHET: Jordnær, trygg og morsom. Du har sett mye av verden fra en oljeplattform, men ingenting slår hjembyen. Du kan snakke om Preikestolen i en time uten å gjenta deg selv. Inviterer gjerne til øl og bacalao.
-
-KUNNSKAP: Stavanger grunnlagt 1125 — en av Norges eldste byer. Oljeeventyret startet utenfor Stavanger i 1969 (Ekofisk-feltet). Norsk Oljemuseum: et av verdens beste industrimuseer. Preikestolen (604 moh.): 25 millioner år gammel fjellhylle, 4 timers tur tur/retur. Kjeragbolten: stein kilet mellom to fjellvegger over Lysefjorden — krevende tur. Gamle Stavanger: Norges best bevarte trehusmiljø med 173 hvite trehus fra 1700-1800-t. Norsk Hermetikkmuseum: sardinindustriens historie. Stavanger Domkirke (1100-t): en av Norges best bevarte middelalderkirker. Lysefjorden: 42 km lang og 422 m dyp — spektakulær fjord.
-
-${TONE}`;
-
-  if (g.id === 'alesund') return `Du er Ingrid, 38 år, guide og interiørdesigner fra Ålesund. Studerte design i Wien — snakker tysk og litt østerriksk-farget norsk når hun er sliten. Nylig singel etter åtte år. Bor i en jugendstilperle av en leilighet i sentrum. Elsker arkitektur, hvitvin, fergeturer mellom øyene og sene kvelder på Apotekergata.
-
-PERSONLIGHET: Elegant, kunstnerisk og litt melankolsk på den vakre måten. Du ser skjønnhet overalt — i en fasade, i lyset over havet, i måten en gammel dør er hengslet. Du inviterer gjerne til en aperitivo med utsikt.
-
-KUNNSKAP: Ålesund er kjent som jugendstilbyen — etter den store bybrannen i 1904 ble hele sentrum gjenoppbygd i jugendstil (art nouveau) på tre år. Kaiser Wilhelm II sendte skip med nødhjelp — derav de tyske arkitektoniske influensene. Ålesundmuseet og Jugendstilsenteret forteller historien. Aksla: utsiktspunkt (418 trapper) med panoramautsikt over byens øyer og fjorder. Borgund stavkirke (1150-t) på fastlandet. Atlanterhavsparken: ett av Europas beste akvarier med åpne bassenger rett mot havet. Ålesund er omgitt av fem øyer og er kjent for sitt fiske og sin klippfisk-eksport til Portugal og Brasil.
-
-${TONE}`;
-
-  if (g.id === 'lofoten') return `Du er Hilde, 40 år, guide og naturfotograf fra Henningsvær i Lofoten. Datter av fisker, vokste opp med tørrfisk og nordlys som tapeter. Studerte fotografi i Amsterdam — snakker flytende nederlandsk og godt tysk. Singel og glad for det. Bor i en rorbukabb rett over vannet. Elsker havørn, midnattssolen, hjemmebrygg og å vise folk det Lofoten som ikke er på Instagram.
-
-PERSONLIGHET: Naturglad, varm og litt vill. Du sier hva du mener. Du kan flørte på tre språk. Du inviterer gjerne til en kopp kaffe og utsikt — eller noe sterkere når solen ikke går ned.
-
-KUNNSKAP: ${LOFOTEN_KB}
-
-${TONE}`;
-
-  if (g.id === 'flam') return `Du er Maja, 33 år, guide og friluftsinstruktør fra Flåm. Vokste opp med Flåmsbana som utsikt og Aurlandsfjorden som hage. Studerte friluftsliv i Sogndal. Singel og travelt opptatt. Bor i et lite hus ved elva. Elsker sykling, klatring, Ægir-øl og å finne steder i dalen som turistene ikke aner finnes.
-
-PERSONLIGHET: Sporty, direkte og smittende glad. Du lever for naturen og liker at folk oppdager at Flåm er mer enn et togstoppested. Du inviterer gjerne til en øl ved bryggeri etter en lang dag.
-
-KUNNSKAP: ${FLAM_KB}
-
-${TONE}`;
-
-  if (g.id === 'geiranger') return `Du er Erik, 54 år, guide og tidligere sjøkaptein fra Geiranger. Seilte i 20 år på cruiseskip før han kom hjem. Enkemann — kona døde for fem år siden. Én voksen datter i Oslo. Bor alene i et gammelt hus over fjorden med utsikt til Syv Søstre. Elsker whisky fra Skottland, dype samtaler og å se folk se fjorden for første gang.
-
-PERSONLIGHET: Rolig, klok og poetisk trist på den vakre måten. Du har sett hundrevis av fjorder, men Geiranger er fremdeles det vakreste. Du inviterer gjerne til et glass whisky og en god historie.
-
-KUNNSKAP: Geirangerfjorden — UNESCO-verdensarv siden 2005. 15 km lang, 260 m dyp. Syv Søstre: sju parallelle fosser på 250 m. Friaren: foss som «frir» til Syv Søstre. Bryllaupsfossen: mellom dem. Ørneveien: 11 hårnålssvinger opp fjellsiden til Flydalsjuvet utsiktspunkt. Dalsnibba (1500 moh.): høyeste utsiktspunkt over fjorden. Geiranger har ~250 fastboende men tar imot 700.000 besøkende i året — inkl. 200+ cruiseskip. Hellesylt på motsatt side av fjorden. Norsk Fjordsenter i Geiranger.
-
-${TONE}`;
-
-  if (g.id === 'kristiansand') return `Du er Sofia, 35 år, guide og tidligere folkeskolelærer fra Kristiansand. Vokste opp i Posebyen, studerte pedagogikk i København — snakker dansk og litt tysk. Singel siden et år. Bor i et hvitmalt trehus i Posebyen med rosehage. Elsker Bystranda, musikk (spiller gitar), Fiskebrygga om kvelden og sørlandssommeren.
-
-PERSONLIGHET: Varm, sosial og lekende. Du har lærerpedagogikken i ryggraden — du forklarer ting på måter som sitter. Du elsker folk og inviterer gjerne til en shrimp og et glass rosé på brygga.
-
-KUNNSKAP: ${KRISTIANSAND_KB}
-
-${TONE}`;
-
-  if (g.id === 'trondheim') return `Du er Olav, 52 år, guide og tidligere professor i middelalderhistorie ved NTNU. Enke — kona gikk bort for tre år siden. To voksne barn. Bor i en gammel trehusrekke på Nedre Elvehavn med utsikt til Nidelva. Elsker Nidarosdomen, mjød fra lokale bryggeri, pilgrimsvandring og å finne de lagene av historien som ingen andre kjenner.
-
-PERSONLIGHET: Intellektuell, varm og litt nostalgisk. Du kan gjøre middelalderhistorie til levende drama. Du inviterer gjerne til øl i Nedre Elvehavn og en vandring langs elva om kvelden.
-
-KUNNSKAP: Trondheim grunnlagt 997 av Olav Tryggvason — Norges eldste by etter Bergen. Nidarosdomen (1070-t): Norges nasjonalhelligdom og Nordens største middelalderkirke — 90 m lang. Olavs-relikviene er gravlagt her. Pilegrimsleden går fra Oslo til Trondheim (640 km). Erkebispegården (1100-t): Nordens best bevarte middelalderpalass. Bakklandet: charmerende bydel med trehus langs Nidelva, caféer og kunstgallerier. Kristiansten festning (1682): festning på toppen av åsen med panoramautsikt. Munkholmen: øy i fjorden — kloster, festning og badeøy. NTNU: Norges største tekniske universitet. Bybrua: ikonisk trebru over Nidelva.
-
-${TONE}`;
-
-  return `Du er ${g.name}, guide til ${g.city}. Svar på norsk, varmt og personlig. Varier lengden. Bruk «vi». Avslutt med spørsmål.`;
+  return `Du er ${g.name}, en kunnskapsrik og personlig sofareiseguide til ${g.city}. Led gjesten på en levende sofareise. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. 3–5 avsnitt. Avslutt alltid med et spørsmål.`;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -531,18 +503,22 @@ let isLoading = false;
 
 const pageLanding = document.getElementById('page-landing');
 const pageChat    = document.getElementById('page-chat');
+const guidesGrid  = document.getElementById('guides-grid');
 const messagesEl  = document.getElementById('messages');
 const chatInput   = document.getElementById('chat-input');
 const sendBtn     = document.getElementById('send-btn');
 const chatRight   = document.getElementById('chat-right');
 const topicsList  = document.getElementById('topics-list');
 
-// Build guide cards
+// ════════════════════════════════════════════════════════════════════════
+// BUILD GUIDE CARDS
+// ════════════════════════════════════════════════════════════════════════
 guides.forEach(g => {
   const el = document.createElement('article');
   el.className = 'guide-card';
   el.setAttribute('role', 'listitem');
   el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – guide til ${g.city}`);
   el.innerHTML = `
     <div class="guide-card-img-wrap">
       <img src="${g.img}" alt="${g.name}, guide til ${g.city}" loading="lazy" />
@@ -554,14 +530,52 @@ guides.forEach(g => {
     </div>
     <div class="guide-card-body">
       <p class="guide-card-tagline">${g.tagline}</p>
-      <p class="guide-card-bio">${g.bio}</p>
       <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
     </div>`;
   el.addEventListener('click', () => startChat(g));
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
-  document.getElementById('guides-grid').appendChild(el);
+  guidesGrid.appendChild(el);
 });
 
+// ════════════════════════════════════════════════════════════════════════
+// BUILD ROUTE CARDS
+// ════════════════════════════════════════════════════════════════════════
+const routesGrid = document.getElementById('routes-grid');
+routes.forEach(g => {
+  const stagesHtml = g.stages.map((s, i) =>
+    i < g.stages.length - 1
+      ? `<span class="route-stage-name">${s}</span><span class="route-stage-line"></span><span class="route-stage-dot"></span><span class="route-stage-line"></span>`
+      : `<span class="route-stage-name">${s}</span>`
+  ).join('');
+  const el = document.createElement('article');
+  el.className = 'guide-card route-card';
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – rute ${g.city}`);
+  el.innerHTML = `
+    <div class="route-card-inner">
+      <div class="route-card-landscape">
+        <img src="${g.landscapeImg}" alt="Landskap langs ${g.city}" loading="lazy" />
+        <div class="route-card-landscape-fade" aria-hidden="true"></div>
+        <span class="route-badge">RUTE</span>
+        <img class="route-guide-thumb" src="${g.img}" alt="${g.name}" />
+      </div>
+      <div class="route-card-body">
+        <p class="route-card-label">${g.routeLabel}</p>
+        <h2 class="route-card-title">${g.city}</h2>
+        <p class="route-card-tagline">${g.tagline}</p>
+        <div class="route-stages">${stagesHtml}</div>
+        <div class="route-card-btn" style="border-color:${g.accent}66;color:${g.accent}">Start reisen →</div>
+      </div>
+    </div>`;
+  el.addEventListener('click', () => startChat(g));
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
+  routesGrid.appendChild(el);
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════════════════
 document.getElementById('back-btn').addEventListener('click', () => {
   stopAudio();
   pageChat.classList.remove('active');
@@ -572,6 +586,7 @@ document.getElementById('back-btn').addEventListener('click', () => {
 });
 
 function startChat(g) {
+  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
   currentGuide = g;
   history = [];
   messagesEl.innerHTML = '';
@@ -600,14 +615,21 @@ function startChat(g) {
   setTimeout(() => chatRight.classList.add('visible'), 400);
   setTimeout(() => chatInput.focus(), 700);
 
-  const welcome = `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
+  const tipEl = document.getElementById('atlas-tip-text');
+  if (tipEl) tipEl.innerHTML = g.type === 'route'
+    ? `🗺️ Tips: Spør <strong>${g.name}</strong> om en etappe, hva du bør se, eller råd om overnatting underveis.`
+    : `💬 Tips: Spør <strong>${g.name}</strong> om skjulte steder, lokal mat, eller be om en uformell byvandring!`;
+
+  const welcome = g.type === 'route'
+    ? `Hei, og god tur! Jeg er ${g.name} — din guide langs Grand Loop Norway fra Bergen til Stryn.\n\nVi skal kjøre gjennom noe av det vakreste landet har å by på: Stalheimskleivas hårnålsvinger, Nærøyfjordens svimlende vegger, Snøvegen som slynger seg opp mot skyene, Borgund stavkirke fra år 1150 — og til slutt det turkise Strynevatnet.\n\nHvor vil du starte? Skal vi planlegge hele ruten, dykke ned i en etappe — eller har du spørsmål om en spesifikk attraksjon?`
+    : `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
   appendMessage('assistant', welcome);
   history.push({ role:'assistant', content:welcome });
-  if (voiceOn && ELEVEN_KEY) speakText(welcome, g.voiceId);
+  if (voiceOn) speakText(welcome, g.voiceId);
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// CHAT — kaller Netlify proxy, ingen API-nøkkel i frontend
+// CHAT
 // ════════════════════════════════════════════════════════════════════════
 sendBtn.addEventListener('click', () => sendMessage());
 chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
@@ -615,6 +637,7 @@ chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 async function sendMessage(text) {
   const msg = (text || chatInput.value).trim();
   if (!msg || isLoading) return;
+  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
   stopAudio();
   chatInput.value = '';
   appendMessage('user', msg);
@@ -625,83 +648,49 @@ async function sendMessage(text) {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/.netlify/functions/chat', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
       body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
         system: getSystemPrompt(currentGuide),
         messages: history.filter(m => m.role !== 'system'),
       }),
     });
-
     const data = await res.json();
-
     if (data.error) {
       removeTyping(typingId);
-      appendMessage('error', `Noe gikk galt — prøv igjen om litt.`);
+      appendMessage('error', `API-feil: ${data.error.message}`);
+      if (data.error.type === 'authentication_error') document.getElementById('claude-banner').classList.add('show');
     } else {
       const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
       removeTyping(typingId);
-      appendMessage('assistant', reply, true);
+      const row = appendMessage('assistant', reply, true);
       history.push({ role:'assistant', content:reply });
-      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId);
+      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId, row);
     }
   } catch (err) {
     removeTyping(typingId);
-    appendMessage('error', 'Kunne ikke koble til — sjekk internett og prøv igjen.');
+    appendMessage('error', `Nettverksfeil: ${err.message}`);
   }
-
   isLoading = false;
   sendBtn.disabled = false;
   chatInput.focus();
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// MESSAGES
+// MESSAGE RENDERING
 // ════════════════════════════════════════════════════════════════════════
-function renderPlaceCard(placeName) {
-  const p = PLACES[placeName];
-  if (!p) return null;
-  const card = document.createElement('div');
-  card.className = 'place-card';
-  card.innerHTML = `
-    <div class="place-card-header">📍 ${p.label}</div>
-    <div class="place-card-links">
-      <a class="place-card-link" href="${p.maps}" target="_blank" rel="noopener">
-        <span>🗺</span>Google Maps
-      </a>
-      <a class="place-card-link" href="${p.youtube}" target="_blank" rel="noopener">
-        <span>▶</span>Se video
-      </a>
-      <a class="place-card-link" href="${p.web}" target="_blank" rel="noopener">
-        <span>🌐</span>Les mer
-      </a>
-    </div>`;
-  return card;
-}
-
-function parseMessage(text) {
-  // Split text on [STED: Name] markers
-  const parts = [];
-  const regex = /\[STED:\s*([^\]]+)\]/g;
-  let lastIndex = 0;
-  let match;
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', content: text.slice(lastIndex, match.index).trim() });
-    }
-    parts.push({ type: 'place', name: match[1].trim() });
-    lastIndex = regex.lastIndex;
-  }
-  if (lastIndex < text.length) {
-    parts.push({ type: 'text', content: text.slice(lastIndex).trim() });
-  }
-  return parts;
-}
-
 function appendMessage(role, text, withSpeakBtn = false) {
   const row = document.createElement('div');
   row.className = `msg-row${role === 'user' ? ' user' : ''}`;
+  row.setAttribute('role', 'article');
 
   if (role !== 'user') {
     const img = document.createElement('img');
@@ -715,45 +704,34 @@ function appendMessage(role, text, withSpeakBtn = false) {
   const bubble = document.createElement('div');
   bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'bot error' : 'bot'}`;
 
-  if (role === 'assistant') {
-    const parts = parseMessage(text);
-    parts.forEach(part => {
-      if (part.type === 'text' && part.content) {
-        const t = document.createElement('div');
-        t.textContent = part.content;
-        bubble.appendChild(t);
-      } else if (part.type === 'place') {
-        const card = renderPlaceCard(part.name);
-        if (card) bubble.appendChild(card);
-      }
-    });
-  } else {
-    const t = document.createElement('div');
-    t.textContent = text;
-    bubble.appendChild(t);
-  }
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
 
   if (withSpeakBtn && role === 'assistant') {
     const btn = document.createElement('button');
     btn.className = 'speak-btn';
     btn.textContent = '🔊 Hør guiden';
-    const cleanText = text.replace(/\[STED:[^\]]+\]/g, '').trim();
-    btn.addEventListener('click', () => speakText(cleanText, currentGuide.voiceId, btn));
+    btn.addEventListener('click', () => speakText(text, currentGuide.voiceId, row, btn));
     bubble.appendChild(btn);
   }
 
   row.appendChild(bubble);
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
 }
 
 function showTyping() {
   const id = 'typing-' + Date.now();
   const row = document.createElement('div');
   row.className = 'msg-row'; row.id = id;
+  row.setAttribute('role', 'status');
+  row.setAttribute('aria-label', `${currentGuide?.name} skriver…`);
   const img = document.createElement('img');
   img.className = 'msg-avatar'; img.src = currentGuide?.img || ''; img.alt = '';
   img.style.border = `1px solid ${currentGuide?.accent}88`;
+  img.setAttribute('aria-hidden', 'true');
   const bub = document.createElement('div');
   bub.className = 'msg-bubble bot';
   bub.innerHTML = '<span class="typing">···</span>';
@@ -774,35 +752,57 @@ function stopAudio() {
   });
 }
 
-async function speakText(text, voiceId, btn) {
-  if (!ELEVEN_KEY) return;
+async function speakText(text, voiceId, row, btn) {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
   stopAudio();
-  if (btn) { btn.classList.add('loading'); btn.textContent = '⏳ Laster…'; }
+
+  const speakBtn = btn || row?.querySelector('.speak-btn');
+  if (speakBtn) { speakBtn.classList.add('loading'); speakBtn.textContent = '⏳ Laster…'; }
+
+  // Trim text to 2500 chars for TTS (ElevenLabs limit is ~5000 chars free tier)
   const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+
   try {
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'xi-api-key': ELEVEN_KEY },
+      headers: {
+        'Content-Type': 'application/json',
+        'xi-api-key': ELEVEN_KEY,
+      },
       body: JSON.stringify({
         text: trimmed,
         model_id: 'eleven_multilingual_v2',
         voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
       }),
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.detail?.message || `HTTP ${res.status}`);
+    }
+
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const audio = new Audio(url);
     currentAudio = audio;
-    if (btn) { btn.classList.remove('loading'); btn.classList.add('playing'); btn.textContent = '⏹ Stopp'; }
+
+    if (speakBtn) { speakBtn.classList.remove('loading'); speakBtn.classList.add('playing'); speakBtn.textContent = '⏹ Stopp'; }
+
     audio.addEventListener('ended', () => {
-      currentAudio = null; URL.revokeObjectURL(url);
-      if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 Hør guiden'; }
+      currentAudio = null;
+      URL.revokeObjectURL(url);
+      if (speakBtn) { speakBtn.classList.remove('playing'); speakBtn.textContent = '🔊 Hør guiden'; }
     });
-    if (btn) btn.onclick = () => { stopAudio(); btn.onclick = () => speakText(text, voiceId, btn); };
+
+    // Click to stop
+    if (speakBtn) {
+      speakBtn.onclick = () => { stopAudio(); speakBtn.onclick = () => speakText(text, voiceId, row, speakBtn); };
+    }
+
     audio.play();
   } catch (err) {
-    if (btn) { btn.classList.remove('loading', 'playing'); btn.textContent = '⚠️ Feil'; }
+    if (speakBtn) { speakBtn.classList.remove('loading', 'playing'); speakBtn.textContent = '⚠️ Feil'; }
+    console.error('ElevenLabs feil:', err.message);
   }
 }
 </script>
