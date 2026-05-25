@@ -646,7 +646,7 @@ async function sendMessage(text) {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -657,51 +657,16 @@ async function sendMessage(text) {
       }),
     });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      removeTyping(typingId);
-      appendMessage('error', `API-feil: ${err?.error?.message || res.status}`);
-      isLoading = false; sendBtn.disabled = false; chatInput.focus();
-      return;
-    }
-
-    // Remove typing indicator and create empty bubble for streaming
+    const data = await res.json();
     removeTyping(typingId);
-    const row = appendStreamingMessage();
-    const textNode = row.querySelector('.stream-text');
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
-    let buffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop(); // keep incomplete line
-
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if (data === '[DONE]') break;
-        try {
-          const parsed = JSON.parse(data);
-          if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-            fullText += parsed.delta.text;
-            textNode.textContent = fullText;
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-          }
-        } catch { /* skip malformed chunks */ }
-      }
+    if (data.error) {
+      appendMessage('error', `API-feil: ${data.error.message}`);
+    } else {
+      const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
+      const row = appendMessage('assistant', reply, true);
+      history.push({ role:'assistant', content:reply });
+      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId, row);
     }
-
-    // Finalize: add speak button, save to history
-    finalizeStreamingMessage(row, fullText);
-    history.push({ role:'assistant', content:fullText });
-    if (voiceOn && ELEVEN_KEY) speakText(fullText, currentGuide.voiceId, row);
 
   } catch (err) {
     removeTyping(typingId);
@@ -715,38 +680,6 @@ async function sendMessage(text) {
 // ════════════════════════════════════════════════════════════════════════
 // MESSAGE RENDERING
 // ════════════════════════════════════════════════════════════════════════
-function appendStreamingMessage() {
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  row.setAttribute('role', 'article');
-
-  const img = document.createElement('img');
-  img.className = 'msg-avatar';
-  img.src = currentGuide?.img || '';
-  img.alt = currentGuide?.name || '';
-  img.style.border = `1px solid ${currentGuide?.accent || '#C9A84C'}88`;
-  row.appendChild(img);
-
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble bot';
-
-  const textNode = document.createElement('div');
-  textNode.className = 'stream-text';
-  bubble.appendChild(textNode);
-  row.appendChild(bubble);
-  messagesEl.appendChild(row);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return row;
-}
-
-function finalizeStreamingMessage(row, fullText) {
-  const bubble = row.querySelector('.msg-bubble');
-  const btn = document.createElement('button');
-  btn.className = 'speak-btn';
-  btn.textContent = '🔊 Hør guiden';
-  btn.addEventListener('click', () => speakText(fullText, currentGuide.voiceId, row, btn));
-  bubble.appendChild(btn);
-}
 function appendMessage(role, text, withSpeakBtn = false) {
   const row = document.createElement('div');
   row.className = `msg-row${role === 'user' ? ' user' : ''}`;
