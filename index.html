@@ -1,1368 +1,848 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sofatravels — Discover the Hidden Norway</title>
-  <meta name="description" content="Sofatravels.com — Free inspiration and trip-planning portal for European travelers discovering Norway. Routes, editorial stories, and local secrets.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SofaTravel – Norske reiseguider som tar deg med på en levende sofareise gjennom Norges mest fascinerende steder." />
+  <title>SofaTravel – Reise fra der du er</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:         #F9F7F4;
-      --cream:      #F4F0E8;
-      --dark:       #1A1A1A;
-      --green:      #2D5016;
-      --sage:       #6B8F71;
-      --fjord:      #3D6B8C;
-      --warm-gray:  #8B8680;
-      --light-gray: #E8E4DF;
-      --gold:       #C4933F;
-      --text:       #2C2C2C;
+      --bg: #130C06; --panel: #1A0D06; --card: #1E0F07; --border: #3A2010;
+      --gold: #C9A84C; --text: #F0E6CF; --muted: #907055; --sub: #B09870;
+      --input-bg: #261408; --msg-user: #3A2010; --msg-bot: #201208;
+    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; }
+
+    /* ── BANNERS ── */
+    .api-banner {
+      display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: #4A1200; border-bottom: 2px solid var(--gold);
+      padding: 12px 20px; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .85rem; color: var(--text); white-space: nowrap; }
+    .api-banner label strong { color: var(--gold); }
+    .api-banner input {
+      flex: 1; min-width: 240px; background: #1A0800; border: 1px solid rgba(201,168,76,.4);
+      color: var(--text); padding: 7px 12px; border-radius: 4px;
+      font-size: .82rem; font-family: monospace; outline: none;
+    }
+    .api-banner input:focus { border-color: var(--gold); }
+    .api-banner button {
+      background: var(--gold); border: none; color: #130C06;
+      padding: 7px 16px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; font-weight: 700; white-space: nowrap;
+    }
+    .api-banner button:hover { background: #DDB85C; }
+    .banner-close {
+      background: none !important; color: var(--muted) !important;
+      font-size: 1rem !important; padding: 4px 8px !important;
     }
 
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-
-    /* ═══════════════════════════
-       NAVIGATION
-    ═══════════════════════════ */
-    nav {
-      position: fixed; top: 0; width: 100%; z-index: 100;
-      padding: 0 60px; display: flex; align-items: center;
-      justify-content: space-between; height: 72px;
-      background: rgba(249,247,244,0.96); backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(139,134,128,0.14);
-    }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--dark); text-decoration: none; letter-spacing: 0.02em; }
-    .nav-logo span { color: var(--sage); }
-    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
-    .nav-links a { font-size: 12px; font-weight: 500; color: var(--text); text-decoration: none; letter-spacing: 0.07em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.2s; }
-    .nav-links a:hover { opacity: 1; }
-    .nav-cta { font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.09em !important; opacity: 1 !important; color: #fff !important; background: var(--dark); padding: 10px 22px; border-radius: 2px; transition: background 0.2s !important; }
-    .nav-cta:hover { background: var(--green) !important; }
-    .nav-cta-lane { background: var(--fjord) !important; margin-right: 4px; }
-    .nav-cta-lane:hover { background: #2d5270 !important; }
-
-    /* ═══════════════════════════
-       AUTH BUTTON & USER MENU
-    ═══════════════════════════ */
-    .nav-auth-btn {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--dark); background: transparent; border: 1px solid var(--light-gray);
-      padding: 9px 20px; border-radius: 2px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
-      font-family: 'Inter', sans-serif; white-space: nowrap;
-    }
-    .nav-auth-btn:hover { border-color: var(--dark); background: var(--cream); }
-    .nav-user-menu { position: relative; display: inline-block; }
-    .nav-user-trigger {
-      display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 500;
-      color: var(--dark); background: var(--cream); border: 1px solid var(--light-gray);
-      padding: 7px 16px; border-radius: 20px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s;
-    }
-    .nav-user-trigger:hover { background: var(--light-gray); }
-    .nav-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--sage); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
-    .nav-user-dropdown {
-      display: none; position: absolute; top: calc(100% + 8px); right: 0;
-      background: #fff; border: 1px solid var(--light-gray); border-radius: 4px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.10); min-width: 180px; z-index: 200; overflow: hidden;
-    }
-    .nav-user-menu:hover .nav-user-dropdown { display: block; }
-    .nav-user-dropdown a, .nav-user-dropdown button {
-      display: block; width: 100%; text-align: left; padding: 12px 18px;
-      font-size: 13px; color: var(--dark); text-decoration: none; background: none;
-      border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s;
-    }
-    .nav-user-dropdown a:hover, .nav-user-dropdown button:hover { background: var(--cream); }
-    .nav-user-dropdown .dropdown-divider { border: none; border-top: 1px solid var(--light-gray); margin: 4px 0; }
-    .nav-user-dropdown .dropdown-logout { color: #c0392b; }
-
-    /* ═══════════════════════════
-       HERO
-    ═══════════════════════════ */
+    /* ── HERO ── */
     .hero {
-      position: relative; min-height: 95vh; display: flex;
-      flex-direction: column; justify-content: flex-end;
-      padding: 0 0 88px; overflow: hidden;
+      padding: 70px 32px 50px; text-align: center;
+      background: linear-gradient(170deg, #221008 0%, var(--bg) 100%);
+      border-bottom: 1px solid rgba(201,168,76,.15);
     }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(165deg, #1a2f1e 0%, #0e2030 45%, #080a0f 100%);
-    }
-    .hero-mountain {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 420px; pointer-events: none;
-    }
-    .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 0 80px; }
-    .hero-eyebrow {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--sage); margin-bottom: 22px;
-    }
+    .hero-eyebrow { letter-spacing: .45em; font-size: 11px; color: var(--gold); margin-bottom: 18px; }
     .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(42px, 5.6vw, 76px);
-      font-weight: 400; color: #fff; line-height: 1.08;
-      letter-spacing: -0.02em; margin-bottom: 26px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 7vw, 5.2rem);
+      color: var(--text); margin-bottom: 18px; line-height: 1.08; font-weight: 700;
     }
-    .hero h1 em { font-style: italic; color: var(--sage); }
-    .hero-lead {
-      font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.68);
-      max-width: 540px; line-height: 1.8; margin-bottom: 44px;
+    .hero p { font-size: 1.15rem; color: var(--sub); font-style: italic; max-width: 480px; margin: 0 auto; }
+
+    /* ── GUIDE GRID ── */
+    .guides-section { max-width: 1200px; margin: 0 auto; padding: 56px 32px 80px; }
+    .section-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(201,168,76,.55); text-align: center; margin-bottom: 40px; }
+    .guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px; }
+    .guide-card {
+      cursor: pointer; border-radius: 6px; overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      transition: transform .22s, border-color .22s, box-shadow .22s; outline: none;
     }
-    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-primary {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: #fff; background: var(--green); padding: 16px 34px; border-radius: 2px;
-      text-decoration: none; transition: background 0.2s; display: inline-block;
+    .guide-card:hover, .guide-card:focus { transform: translateY(-4px); }
+    .guide-card-img-wrap { position: relative; height: 210px; overflow: hidden; }
+    .guide-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .guide-card:hover .guide-card-img-wrap img,
+    .guide-card:focus .guide-card-img-wrap img { transform: scale(1.05); }
+    .guide-card-overlay { position: absolute; inset: 0; }
+    .guide-card-label { position: absolute; bottom: 12px; left: 14px; }
+    .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
+    .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
+    .guide-card-body { padding: 14px 16px 18px; }
+    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
+    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; }
+
+    /* ── ROUTE CARD ── */
+    .route-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #0D1E14 0%, #0A1A10 100%);
+      border: 1px solid rgba(60,140,80,.35);
+      cursor: pointer; border-radius: 8px; overflow: hidden;
+      transition: transform .22s, border-color .22s, box-shadow .22s;
     }
-    .btn-primary:hover { background: #1e3a0d; }
-    .btn-outline {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255,0.28);
-      padding: 16px 34px; border-radius: 2px; text-decoration: none; transition: all 0.2s; display: inline-block;
+    .route-card:hover, .route-card:focus {
+      transform: translateY(-3px);
+      border-color: rgba(80,180,100,.55);
+      box-shadow: 0 8px 32px rgba(40,120,60,.18);
     }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.75); color: #fff; }
-    .hero-scroll-indicator {
-      position: absolute; bottom: 36px; right: 80px; z-index: 2;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(255,255,255,0.3);
+    .route-card-inner { display: flex; flex-direction: row; min-height: 200px; }
+    .route-card-landscape {
+      position: relative; width: 340px; flex-shrink: 0; overflow: hidden;
+    }
+    .route-card-landscape img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .route-card:hover .route-card-landscape img { transform: scale(1.06); }
+    .route-card-landscape-fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 55%, #0D1E14 100%),
+                  linear-gradient(to top, #0D1E14 0%, transparent 40%);
+    }
+    .route-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: rgba(40,120,60,.85); border: 1px solid rgba(80,180,100,.5);
+      color: #7FFFA0; font-size: 9px; letter-spacing: .3em;
+      padding: 3px 9px; border-radius: 2px;
+    }
+    .route-guide-thumb {
+      position: absolute; bottom: 14px; left: 14px;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid rgba(80,180,100,.5); object-fit: cover;
+    }
+    .route-card-body {
+      flex: 1; padding: 28px 28px 22px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .route-card-label { letter-spacing: .4em; font-size: 9px; color: #5AAA70; margin-bottom: 6px; }
+    .route-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--text);
+      font-weight: 700; line-height: 1.1; margin-bottom: 10px;
+    }
+    .route-card-tagline { font-size: .82rem; color: #6A8A72; font-style: italic; line-height: 1.6; margin-bottom: 18px; }
+    .route-stages { display: flex; align-items: center; gap: 0; margin-bottom: 20px; flex-wrap: wrap; row-gap: 8px; }
+    .route-stage-name { font-size: .7rem; color: #5AAA70; letter-spacing: .05em; white-space: nowrap; }
+    .route-stage-line {
+      height: 1px; width: 16px; background: linear-gradient(to right, rgba(80,160,90,.5), rgba(80,160,90,.2));
+      flex-shrink: 0; margin: 0 2px;
+    }
+    .route-stage-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(80,160,90,.45); flex-shrink: 0; }
+    .route-card-btn {
+      display: inline-block; padding: 8px 20px; font-size: .8rem;
+      color: #7FFFA0; letter-spacing: .1em; border: 1px solid rgba(80,180,100,.4);
+      border-radius: 4px; background: rgba(40,120,60,.15); width: fit-content;
+      transition: all .2s;
+    }
+    .route-card:hover .route-card-btn { background: rgba(40,120,60,.3); border-color: rgba(80,180,100,.7); }
+
+    /* ── ROUTES SECTION ── */
+    .routes-section { max-width: 1200px; margin: 0 auto; padding: 0 32px 56px; }
+    .routes-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(80,180,100,.45); text-align: center; margin-bottom: 24px; }
+
+    @media (max-width: 640px) {
+      .route-card-inner { flex-direction: column; }
+      .route-card-landscape { width: 100%; height: 200px; }
+      .route-card-landscape-fade { background: linear-gradient(to top, #0D1E14 0%, transparent 50%); }
     }
 
-    /* ═══════════════════════════
-       FREE GUIDE STRIP (above gate)
-    ═══════════════════════════ */
-    .guide-strip {
-      background: var(--dark); padding: 24px 80px;
-      display: flex; align-items: center; justify-content: space-between; gap: 32px;
-      flex-wrap: wrap;
+    /* ── CHAT ── */
+    #page-chat { display: none; height: 100vh; overflow: hidden; flex-direction: row; }
+    #page-chat.active { display: flex; }
+    .chat-left { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-header {
+      padding: 16px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 18px; background: var(--panel); flex-shrink: 0;
     }
-    .guide-strip-text { color: #fff; }
-    .guide-strip-text strong { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 500; font-style: italic; display: block; margin-bottom: 4px; }
-    .guide-strip-text span { font-size: 13px; color: rgba(255,255,255,0.55); letter-spacing: 0.03em; }
-    .guide-strip-form { display: flex; gap: 0; flex-shrink: 0; }
-    .guide-strip-form input {
-      padding: 13px 18px; border: 1px solid rgba(255,255,255,0.18); border-right: none;
-      border-radius: 2px 0 0 2px; font-size: 13px; font-family: 'Inter', sans-serif;
-      background: rgba(255,255,255,0.07); color: #fff; outline: none; width: 240px;
+    .back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 6px 14px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; letter-spacing: .06em; font-family: inherit;
     }
-    .guide-strip-form input::placeholder { color: rgba(255,255,255,0.35); }
-    .guide-strip-form input:focus { border-color: rgba(255,255,255,0.4); }
-    .guide-strip-form button {
-      padding: 13px 24px; background: var(--gold); color: #fff; border: none;
-      border-radius: 0 2px 2px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.09em;
-      text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif;
-      white-space: nowrap; transition: background 0.2s;
-    }
-    .guide-strip-form button:hover { background: #a87830; }
+    .back-btn:hover { border-color: var(--gold); }
+    .chat-guide-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
+    .chat-guide-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; color: var(--text); }
 
-    /* ═══════════════════════════
-       CONTENT GATE
-    ═══════════════════════════ */
-    #contentGate { position: relative; }
-    .gate-ticker-wrap { overflow: hidden; background: var(--cream); border-top: 1px solid var(--light-gray); border-bottom: 1px solid var(--light-gray); padding: 14px 0; }
-    .gate-ticker {
-      display: flex; gap: 0; white-space: nowrap;
-      animation: ticker 35s linear infinite;
+    /* Voice toggle in header */
+    .voice-toggle {
+      margin-left: auto; display: flex; align-items: center; gap: 8px;
+      font-size: .78rem; color: var(--muted);
     }
-    .gate-ticker span { font-size: 11px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--warm-gray); padding: 0 24px; }
-    .gate-ticker .ticker-dot { color: var(--sage); padding: 0 4px; }
-    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .voice-toggle-btn {
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; border-radius: 20px;
+      cursor: pointer; font-size: .75rem; font-family: inherit; transition: all .2s;
+    }
+    .voice-toggle-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
 
-    .gate-previews {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-      background: var(--light-gray);
-      pointer-events: none; user-select: none;
-    }
-    .gate-preview-card { background: var(--bg); overflow: hidden; }
-    .gate-preview-img { height: 200px; position: relative; overflow: hidden; }
-    .gate-preview-blur { position: absolute; inset: 0; backdrop-filter: blur(3px); background: rgba(0,0,0,0.12); }
-    .gate-lock {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    }
-    .gate-lock-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .gate-lock-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
-    .gate-preview-body { padding: 20px 24px; }
-    .gate-preview-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
-    .gate-preview-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--dark); line-height: 1.35; margin-bottom: 10px; }
-    .gate-preview-desc { font-size: 13px; color: var(--warm-gray); line-height: 1.65; margin-bottom: 16px; }
-    .gate-preview-cta { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark); }
-    .gate-preview-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-    .gate-preview-card { transition: box-shadow 0.2s; cursor: pointer; }
-    .gate-preview-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.10); }
+    .messages { flex: 1; overflow-y: auto; padding: 24px 22px; display: flex; flex-direction: column; gap: 18px; }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .gate-card {
-      background: var(--bg); padding: 60px 80px 72px;
-      text-align: center; border-top: 1px solid var(--light-gray);
-    }
-    .gate-social-proof { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 28px; }
-    .gate-proof-avatars { display: flex; }
-    .gate-avatar {
-      width: 32px; height: 32px; border-radius: 50%; color: #fff;
-      font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center;
-      border: 2px solid var(--bg); margin-left: -8px;
-    }
-    .gate-proof-avatars .gate-avatar:first-child { margin-left: 0; }
-    .gate-social-proof span { font-size: 13px; color: var(--warm-gray); }
-    .gate-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 400; color: var(--dark); margin-bottom: 32px; line-height: 1.25; }
-    .gate-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
-    .gate-btn-primary {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: #fff; background: var(--dark); padding: 16px 36px; border-radius: 2px;
-      border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s;
-    }
-    .gate-btn-primary:hover { background: var(--green); }
-    .gate-btn-secondary {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: var(--dark); background: transparent; padding: 16px 36px; border-radius: 2px;
-      border: 1px solid var(--light-gray); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
-    }
-    .gate-btn-secondary:hover { border-color: var(--dark); }
-    .gate-note { font-size: 12px; color: var(--warm-gray); }
+    .msg-row { display: flex; gap: 10px; align-items: flex-start; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
+    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.8; font-size: .93rem; white-space: pre-wrap; position: relative; }
+    .msg-bubble.bot { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; }
+    .msg-bubble.user-bubble { background: var(--msg-user); color: var(--text); border-radius: 8px 8px 2px 8px; }
+    .msg-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
 
-    /* ═══════════════════════════
-       SECTIONS — COMMON
-    ═══════════════════════════ */
-    section { padding: 96px 80px; }
-    .section-eyebrow {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--sage); margin-bottom: 18px;
+    /* Speaker button inside message */
+    .speak-btn {
+      display: inline-block; margin-top: 8px; background: none;
+      border: 1px solid var(--border); color: var(--muted); border-radius: 4px;
+      padding: 3px 10px; font-size: .72rem; cursor: pointer; font-family: inherit;
+      transition: all .2s; letter-spacing: .04em;
     }
-    .section-title {
-      font-family: 'Playfair Display', serif; font-size: clamp(30px, 3.8vw, 50px);
-      font-weight: 400; color: var(--dark); line-height: 1.15; margin-bottom: 20px;
-    }
-    .section-lead {
-      font-size: 16px; color: var(--warm-gray); max-width: 560px;
-      line-height: 1.75; margin-bottom: 56px;
-    }
+    .speak-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .speak-btn.playing { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
+    .speak-btn.loading { opacity: .6; cursor: default; }
 
-    /* ═══════════════════════════
-       STORIES (DREAMING)
-    ═══════════════════════════ */
-    #dreaming { background: var(--bg); }
-    .stories-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
-      background: var(--light-gray);
+    .typing { color: var(--gold); letter-spacing: .3em; font-size: 1.1rem; }
+    .input-row {
+      display: flex; gap: 8px; padding: 14px 22px;
+      border-top: 1px solid var(--border); background: var(--panel); flex-shrink: 0;
     }
-    .story-card {
-      background: var(--bg); overflow: hidden; cursor: pointer;
-      transition: background 0.2s;
+    #chat-input {
+      flex: 1; background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 11px 16px; border-radius: 6px;
+      font-size: .93rem; outline: none; font-family: 'Crimson Text', Georgia, serif;
     }
-    .story-card:hover { background: var(--cream); }
-    .story-img { height: 260px; overflow: hidden; position: relative; }
-    .story-img-featured { height: 340px; }
-    .story-img-bg {
-      width: 100%; height: 100%; object-fit: cover;
-      background-size: cover; background-position: center;
-      transition: transform 0.5s ease;
-    }
-    .story-card:hover .story-img-bg { transform: scale(1.03); }
-    .story-body { padding: 32px 36px 36px; }
-    .story-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
-    .story-body h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500; color: var(--dark); line-height: 1.3; margin-bottom: 12px; }
-    .story-body p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; margin-bottom: 20px; }
-    .story-cta { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); text-decoration: none; }
-    .story-cta:hover { color: var(--dark); }
+    #chat-input:focus { border-color: rgba(201,168,76,.4); }
+    #send-btn { width: 46px; height: 46px; border-radius: 6px; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
+    #send-btn:disabled { opacity: .5; cursor: default; }
 
-    /* ═══════════════════════════
-       GRAND LOOP / PLANNING
-    ═══════════════════════════ */
-    #planning { background: var(--cream); }
-    .planning-intro-note {
-      font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--warm-gray);
-      border-left: 2px solid var(--sage); padding-left: 14px; margin-bottom: 56px;
+    /* ── RIGHT PANEL ── */
+    .chat-right {
+      width: 260px; background: var(--panel); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      transform: translateX(100%); opacity: 0;
+      transition: transform .65s cubic-bezier(.16,1,.3,1), opacity .65s ease;
     }
-    .planning-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 64px; }
-    .planning-tool { }
-    .planning-tool-icon { width: 42px; height: 42px; margin-bottom: 18px; }
-    .planning-tool h3 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 500; color: var(--dark); margin-bottom: 10px; }
-    .planning-tool p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; margin-bottom: 14px; }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--warm-gray); background: var(--light-gray); padding: 5px 12px; border-radius: 2px; }
-
-    .grand-loop-label {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--gold); background: rgba(196,147,63,0.1); padding: 6px 14px;
-      border-radius: 2px; margin-bottom: 32px;
+    .chat-right.visible { transform: translateX(0); opacity: 1; }
+    .guide-portrait { position: relative; height: 300px; overflow: hidden; }
+    .guide-portrait img { width: 100%; height: 100%; object-fit: cover; }
+    .guide-portrait-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--panel) 0%, transparent 50%); }
+    .guide-portrait-info { position: absolute; bottom: 16px; left: 18px; }
+    .guide-portrait-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 4px; }
+    .guide-portrait-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--text); font-weight: 700; line-height: 1.1; }
+    .guide-online { position: absolute; top: 12px; right: 12px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #4CAF50; background: rgba(76,175,80,.15); }
+    .guide-tagline-box { padding: 16px 18px; border-top: 1px solid var(--border); }
+    .guide-tagline-box p { font-style: italic; color: var(--muted); line-height: 1.85; font-size: .86rem; }
+    .topics-nav { padding: 0 18px 12px; }
+    .topics-label { letter-spacing: .2em; font-size: 9px; color: #605040; margin-bottom: 10px; }
+    .topic-btn {
+      display: block; width: 100%; text-align: left; cursor: pointer;
+      padding: 7px 12px; margin-bottom: 6px; background: var(--input-bg);
+      border: 1px solid var(--border); border-radius: 4px;
+      font-size: .78rem; color: #C9B890; letter-spacing: .03em; font-family: inherit; transition: all .15s;
     }
-    .grand-loop-label span { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-
-    .routes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--light-gray); }
-    .route-card { background: var(--bg); padding: 32px; display: flex; gap: 24px; align-items: flex-start; }
-    .route-card-featured { background: #fffdf9; border: 1px solid rgba(196,147,63,0.3); position: relative; }
-    .route-days { min-width: 56px; height: 56px; background: var(--light-gray); border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .route-card-featured .route-days { background: var(--dark); }
-    .route-days-number { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--dark); line-height: 1; }
-    .route-card-featured .route-days-number { color: #fff; }
-    .route-days-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); }
-    .route-card-featured .route-days-label { color: rgba(255,255,255,0.5); }
-    .route-info h4 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--dark); margin-bottom: 8px; line-height: 1.3; }
-    .route-info p { font-size: 13px; color: var(--warm-gray); line-height: 1.65; margin-bottom: 14px; }
-    .route-cta { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
-    .route-cta:hover { color: var(--dark); }
-    .route-featured-badge {
-      position: absolute; top: 14px; right: 18px;
-      font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--gold); background: rgba(196,147,63,0.1); padding: 4px 10px; border-radius: 2px;
-    }
-
-    .grand-loop-cta-row { margin-top: 48px; text-align: center; }
-    .btn-grand-loop {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: #fff; background: var(--green); padding: 16px 40px; border-radius: 2px;
-      text-decoration: none; display: inline-block; transition: background 0.2s;
-    }
-    .btn-grand-loop:hover { background: #1e3a0d; }
-
-    /* ═══════════════════════════
-       LANE STORIES
-    ═══════════════════════════ */
-    #lanestories { background: var(--dark); padding: 96px 80px; }
-    #lanestories .section-eyebrow { color: rgba(107,143,113,0.9); }
-    .lane-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 64px; }
-    .lane-badge {
-      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--sage);
-    }
-    .lane-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage); animation: pulse 2.2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .lane-header-text h2 {
-      font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.2vw, 44px);
-      font-weight: 400; color: #fff; line-height: 1.18; margin-bottom: 18px;
-    }
-    .lane-flow {
-      font-size: 14px; color: var(--sage); letter-spacing: 0.04em;
-      margin-bottom: 22px; font-style: italic;
-    }
-    .lane-header-text p { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 32px; }
-    .btn-fjord {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-      color: #fff; background: var(--fjord); padding: 15px 32px; border-radius: 2px;
-      text-decoration: none; display: inline-block; transition: background 0.2s;
-    }
-    .btn-fjord:hover { background: #2d5270; }
-    .lane-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; padding-top: 8px; }
-    .lane-stat-number { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 400; color: #fff; line-height: 1; margin-bottom: 6px; }
-    .lane-stat-label { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; }
-    .lane-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.06); }
-    .lane-card { background: rgba(255,255,255,0.03); text-decoration: none; transition: background 0.2s; display: block; }
-    .lane-card:hover { background: rgba(255,255,255,0.07); }
-    .lane-card-visual { position: relative; height: 200px; overflow: hidden; }
-    .lane-card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s; }
-    .lane-card:hover .lane-card-bg { transform: scale(1.04); }
-    .visual-alleys { background: linear-gradient(148deg,#1B2A3B,#2D4A6E,#4A7BAF); }
-    .visual-nordnes { background: linear-gradient(148deg,#1e1810,#3a2e1a,#6b5535); }
-    .visual-bryggen { background: linear-gradient(148deg,#1a1010,#5a2218,#8a3a28); }
-    .lane-card-visual .lane-lock {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.25);
-    }
-    .lane-card-body { padding: 24px 28px 28px; }
-    .lane-card-city { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
-    .lane-card-body h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 500; color: rgba(255,255,255,0.9); line-height: 1.3; margin-bottom: 10px; }
-    .lane-card-body p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 16px; }
-    .lane-card-cta { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fjord); }
-
-    /* ═══════════════════════════
-       WHAT TOURISTS MISS
-    ═══════════════════════════ */
-    #miss { background: var(--bg); }
-    .miss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--light-gray); }
-    .miss-card { background: var(--bg); padding: 36px 36px 40px; }
-    .miss-number { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--light-gray); font-style: italic; margin-bottom: 16px; }
-    .miss-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--dark); margin-bottom: 12px; line-height: 1.3; }
-    .miss-card p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; margin-bottom: 20px; }
-    .miss-link { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fjord); text-decoration: none; }
-    .miss-link:hover { color: var(--dark); }
-
-    /* ═══════════════════════════
-       CONVERSION / FREE GUIDE (full)
-    ═══════════════════════════ */
-    #conversion { background: var(--cream); text-align: center; }
-    .conversion-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.5vw, 46px); font-weight: 400; color: var(--dark); line-height: 1.2; margin-bottom: 18px; }
-    .conversion-title em { font-style: italic; color: var(--green); }
-    .conversion-lead { font-size: 16px; color: var(--warm-gray); max-width: 520px; margin: 0 auto 36px; line-height: 1.75; }
-    .email-form { display: flex; gap: 0; max-width: 480px; margin: 0 auto 16px; }
-    .email-form input {
-      flex: 1; padding: 15px 20px; border: 1px solid var(--light-gray); border-right: none;
-      border-radius: 2px 0 0 2px; font-size: 14px; font-family: 'Inter', sans-serif;
-      background: #fff; color: var(--dark); outline: none;
-    }
-    .email-form input:focus { border-color: var(--dark); }
-    .email-form button {
-      padding: 15px 28px; background: var(--dark); color: #fff; border: none;
-      border-radius: 0 2px 2px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.09em;
-      text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif;
-      white-space: nowrap; transition: background 0.2s;
-    }
-    .email-form button:hover { background: var(--green); }
-    .conversion-note { font-size: 12px; color: var(--warm-gray); }
-
-    /* ═══════════════════════════
-       FOOTER
-    ═══════════════════════════ */
-    footer { background: var(--dark); padding: 72px 80px 40px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; text-decoration: none; letter-spacing: 0.02em; display: block; margin-bottom: 16px; }
-    .footer-logo span { color: var(--sage); }
-    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.75; margin-bottom: 28px; }
-    .footer-partner-block { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; }
-    .footer-partner-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
-    .footer-partner-name {
-      display: flex; align-items: center; gap: 8px;
-      font-family: 'Playfair Display', serif; font-size: 16px; color: rgba(255,255,255,0.75);
-      text-decoration: none; margin-bottom: 8px; transition: color 0.2s;
-    }
-    .footer-partner-name:hover { color: #fff; }
-    .footer-partner-desc { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.65; }
-    .footer-col h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 20px; }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 10px; }
-    .footer-col a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
-    .footer-col a:hover { color: rgba(255,255,255,0.85); }
-    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 16px; }
-    .footer-bottom span { font-size: 12px; color: rgba(255,255,255,0.25); }
-    .lang-switcher { display: flex; gap: 16px; }
-    .lang-switcher a { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
-    .lang-switcher a.active, .lang-switcher a:hover { color: rgba(255,255,255,0.75); }
-    .footer-legal { display: flex; gap: 20px; }
-    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s; }
-    .footer-legal a:hover { color: rgba(255,255,255,0.6); }
-
-    /* ═══════════════════════════
-       AUTH MODAL
-    ═══════════════════════════ */
-    .auth-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(26,26,26,0.65); backdrop-filter: blur(6px);
-      z-index: 1000; align-items: center; justify-content: center;
-    }
-    .auth-overlay.open { display: flex; }
-    .auth-modal { background: #fff; width: 100%; max-width: 440px; margin: 20px; border-radius: 4px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.18); animation: slideUp 0.28s ease; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .auth-header { padding: 36px 40px 0; position: relative; }
-    .auth-close { position: absolute; top: 20px; right: 24px; background: none; border: none; font-size: 22px; color: var(--warm-gray); cursor: pointer; line-height: 1; padding: 4px; }
-    .auth-close:hover { color: var(--dark); }
-    .auth-tabs { display: flex; border-bottom: 1px solid var(--light-gray); margin-top: 24px; }
-    .auth-tab {
-      flex: 1; padding: 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      text-align: center; cursor: pointer; background: none; border: none;
-      border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: 'Inter', sans-serif;
-      color: var(--warm-gray); transition: color 0.2s, border-color 0.2s;
-    }
-    .auth-tab.active { color: var(--dark); border-bottom-color: var(--dark); }
-    .auth-body { padding: 32px 40px 40px; }
-    .auth-panel { display: none; }
-    .auth-panel.active { display: block; }
-    .auth-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--dark); }
-    .auth-logo span { color: var(--sage); }
-    .auth-subtitle { font-size: 13px; color: var(--warm-gray); margin-top: 6px; line-height: 1.6; }
-    .auth-form-group { margin-bottom: 18px; }
-    .auth-form-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark); margin-bottom: 8px; }
-    .auth-form-group input { width: 100%; padding: 13px 16px; border: 1px solid var(--light-gray); border-radius: 2px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--dark); outline: none; transition: border-color 0.2s; }
-    .auth-form-group input:focus { border-color: var(--dark); }
-    .auth-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .auth-submit { width: 100%; padding: 15px; background: var(--dark); color: #fff; border: none; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; margin-top: 4px; }
-    .auth-submit:hover { background: var(--green); }
-    .auth-switch { font-size: 13px; color: var(--warm-gray); text-align: center; margin-top: 20px; }
-    .auth-switch a { color: var(--dark); text-decoration: underline; cursor: pointer; }
-    .auth-note { font-size: 12px; color: var(--warm-gray); text-align: center; margin-top: 16px; }
-    .auth-message { font-size: 13px; padding: 10px 14px; border-radius: 2px; margin-bottom: 16px; display: none; }
-    .auth-message.error { background: #fdf2f2; color: #c0392b; border: 1px solid #f5c6cb; display: block; }
-    .auth-message.success { background: #f0faf3; color: #27ae60; border: 1px solid #b2dfdb; display: block; }
-
-    /* ═══════════════════════════
-       ADMIN PANEL
-    ═══════════════════════════ */
-    .admin-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,26,0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
-    .admin-overlay.open { display: flex; }
-    .admin-modal { background: #fff; width: 100%; max-width: 760px; margin: 20px; border-radius: 4px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.2); max-height: 80vh; display: flex; flex-direction: column; }
-    .admin-modal-header { padding: 20px 28px; border-bottom: 1px solid var(--light-gray); display: flex; align-items: center; justify-content: space-between; }
-    .admin-modal-header h2 { font-size: 16px; font-weight: 600; color: var(--dark); }
-    .admin-export-btn { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark); background: var(--cream); border: 1px solid var(--light-gray); padding: 8px 18px; border-radius: 2px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
-    .admin-export-btn:hover { background: var(--light-gray); }
-    .admin-modal-body { padding: 20px 28px; overflow-y: auto; }
-    .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .admin-table th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warm-gray); border-bottom: 1px solid var(--light-gray); }
-    .admin-table td { padding: 10px 12px; border-bottom: 1px solid rgba(232,228,223,0.5); color: var(--text); }
-
-    /* ═══════════════════════════
-       RESPONSIVE
-    ═══════════════════════════ */
-    @media (max-width: 1100px) {
-      nav { padding: 0 40px; }
-      .hero-content { padding: 0 40px; }
-      .guide-strip { padding: 24px 40px; }
-      section { padding: 72px 40px; }
-      .planning-tools { grid-template-columns: 1fr 1fr; }
-      .routes-grid { grid-template-columns: 1fr 1fr; }
-      footer { padding: 56px 40px 32px; }
-      #lanestories { padding: 72px 40px; }
-    }
-    @media (max-width: 820px) {
-      nav { padding: 0 24px; }
-      .nav-links { gap: 22px; }
-      .nav-links li:nth-child(1), .nav-links li:nth-child(5) { display: none; }
-      .hero-content { padding: 0 24px; }
-      .guide-strip { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
-      .guide-strip-form input { width: 200px; }
-      section { padding: 56px 24px; }
-      .stories-grid { grid-template-columns: 1fr; }
-      .planning-tools { grid-template-columns: 1fr; }
-      .routes-grid { grid-template-columns: 1fr; }
-      .miss-grid { grid-template-columns: 1fr 1fr; }
-      .lane-grid { grid-template-columns: 1fr; gap: 40px; }
-      .lane-cards { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      #lanestories { padding: 56px 24px; }
-    }
-    @media (max-width: 560px) {
-      .nav-links { display: none; }
-      .hero h1 { font-size: 36px; }
-      .hero-content { padding: 0 20px; }
-      .guide-strip { padding: 18px 20px; }
-      .guide-strip-form { flex-direction: column; width: 100%; }
-      .guide-strip-form input { width: 100%; border-right: 1px solid rgba(255,255,255,0.18); border-bottom: none; border-radius: 2px 2px 0 0; }
-      .guide-strip-form button { border-radius: 0 0 2px 2px; }
-      section { padding: 48px 20px; }
-      .miss-grid { grid-template-columns: 1fr; }
-      .gate-card { padding: 44px 24px 52px; }
-      .gate-previews { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr; }
-      .email-form { flex-direction: column; }
-      .email-form input { border-right: 1px solid var(--light-gray); border-bottom: none; border-radius: 2px 2px 0 0; }
-      .email-form button { border-radius: 0 0 2px 2px; }
-    }
+    .topic-btn:hover { border-color: var(--gold); color: var(--text); }
+    .atlas-tip { margin: auto 14px 14px; padding: 10px 12px; background: #1E1208; border: 1px solid var(--border); border-radius: 5px; }
+    .atlas-tip p { font-size: .72rem; color: #605040; line-height: 1.7; }
+    .atlas-tip strong { color: var(--gold); }
   </style>
 </head>
 <body>
 
-<!-- ╔════════════════════════╗
-     ║      NAVIGATION        ║
-     ╚════════════════════════╝ -->
-<nav>
-  <a href="index.html" class="nav-logo">Sofa<span>travels</span></a>
-  <ul class="nav-links">
-    <li><a href="#planning" onclick="return navGuard(event)">Routes</a></li>
-    <li><a href="#miss" onclick="return navGuard(event)">Hidden Norway</a></li>
-    <li><a href="#lanestories" onclick="return navGuard(event)">Cities</a></li>
-  </ul>
-  <div id="navAuthArea">
-    <button class="nav-auth-btn" onclick="openAuthModal('login')">Sign in</button>
-  </div>
-</nav>
-
-<!-- ╔════════════════════════╗
-     ║         HERO           ║
-     ╚════════════════════════╝ -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-
-  <svg class="hero-mountain" viewBox="0 0 1440 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-    <path d="M0,420 L0,300 L100,240 L200,270 L320,170 L440,210 L560,110 L680,155 L800,75 L920,120 L1040,48 L1160,94 L1280,28 L1400,70 L1440,55 L1440,420 Z" fill="#0a0a0a" opacity="0.30"/>
-    <path d="M0,420 L0,340 L160,285 L320,310 L480,230 L640,265 L800,185 L960,225 L1120,162 L1280,200 L1440,140 L1440,420 Z" fill="#0a0a0a" opacity="0.40"/>
-    <path d="M0,420 L0,375 L240,345 L480,360 L720,325 L960,350 L1200,318 L1440,338 L1440,420 Z" fill="#0a0a0a" opacity="0.55"/>
-  </svg>
-
-  <div class="hero-content">
-    <p class="hero-eyebrow">Norway for the curious traveler</p>
-    <h1>Discover the <em>hidden</em><br>Norway before you go.</h1>
-    <p class="hero-lead">Routes for the road. Stories for the cities. Everything you need to find the Norway that never made the guidebooks.</p>
-    <div class="hero-ctas">
-      <a href="#planning" class="btn-primary">Plan your Norway route</a>
-      <a href="#lanestories" class="btn-outline">Walk the cities →</a>
-    </div>
-  </div>
-
-  <div class="hero-scroll-indicator">Scroll</div>
-</section>
-
-<!-- ╔════════════════════════╗
-     ║     FREE GUIDE STRIP   ║
-     ╚════════════════════════╝ -->
-<div class="guide-strip">
-  <div class="guide-strip-text">
-    <strong>Get the exact Norway route before you go</strong>
-    <span>Free PDF — 3-day, 7-day &amp; 14-day itineraries for German &amp; Dutch travelers. In English, Deutsch &amp; Nederlands.</span>
-  </div>
-  <form class="guide-strip-form" onsubmit="return false;">
-    <input type="email" placeholder="Your email address">
-    <button type="submit">Send me the guide</button>
-  </form>
+<!-- ══ CLAUDE API BANNER ══════════════════════════════════════════════════════ -->
+<div id="claude-banner" class="api-banner" role="alert">
+  <label><strong>Claude API-nøkkel</strong> mangler — hentes fra console.anthropic.com</label>
+  <input type="password" id="claude-key-input" placeholder="sk-ant-api03-..." autocomplete="off" />
+  <button id="claude-key-save">Lagre</button>
+  <button class="banner-close" id="claude-banner-close">✕</button>
 </div>
 
-<!-- ╔════════════════════════╗
-     ║     CONTENT GATE       ║
-     ╚════════════════════════╝ -->
-<div id="contentGate">
-
-  <div class="gate-ticker-wrap">
-    <div class="gate-ticker">
-      <span>The Hardanger Nobody Talks About</span><span class="ticker-dot">·</span>
-      <span>Bergen's Dark Medieval Alleys</span><span class="ticker-dot">·</span>
-      <span>The Viking Corridor at Gudvangen</span><span class="ticker-dot">·</span>
-      <span>What Tourists Miss in Nærøyfjord</span><span class="ticker-dot">·</span>
-      <span>Secret Fjord Roads of Vestlandet</span><span class="ticker-dot">·</span>
-      <span>Lærdal: Norway's Most Overlooked Town</span><span class="ticker-dot">·</span>
-      <span>The Stave Church Route Nobody Drives</span><span class="ticker-dot">·</span>
-      <span>Dark Histories of Nordnes</span><span class="ticker-dot">·</span>
-      <span>The Orchards That Built Hardanger</span><span class="ticker-dot">·</span>
-      <span>Bergen Loop: 7 Days, 12 Hidden Layers</span><span class="ticker-dot">·</span>
-      <!-- Duplicate for seamless loop -->
-      <span>The Hardanger Nobody Talks About</span><span class="ticker-dot">·</span>
-      <span>Bergen's Dark Medieval Alleys</span><span class="ticker-dot">·</span>
-      <span>The Viking Corridor at Gudvangen</span><span class="ticker-dot">·</span>
-      <span>What Tourists Miss in Nærøyfjord</span><span class="ticker-dot">·</span>
-      <span>Secret Fjord Roads of Vestlandet</span><span class="ticker-dot">·</span>
-      <span>Lærdal: Norway's Most Overlooked Town</span><span class="ticker-dot">·</span>
-      <span>The Stave Church Route Nobody Drives</span><span class="ticker-dot">·</span>
-      <span>Dark Histories of Nordnes</span><span class="ticker-dot">·</span>
-      <span>The Orchards That Built Hardanger</span><span class="ticker-dot">·</span>
-      <span>Bergen Loop: 7 Days, 12 Hidden Layers</span><span class="ticker-dot">·</span>
-    </div>
-  </div>
-
-  <div class="gate-previews">
-
-    <!-- Lane Stories — blue -->
-    <a href="https://lanestories.com" class="gate-preview-card" target="_blank" style="text-decoration:none;color:inherit;pointer-events:all;">
-      <div class="gate-preview-img" style="background: linear-gradient(148deg,#0D2A45,#1B4A7A,#2E72B8);">
-        <div class="gate-preview-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="13" r="6" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
-            <path d="M16 19 C16 19 8 25 8 29 L24 29 C24 25 16 19 16 19Z" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="gate-preview-body">
-        <div class="gate-preview-tag" style="color:#2E72B8;">Lane Stories</div>
-        <p class="gate-preview-title">Walk Bergen's hidden stories</p>
-        <p class="gate-preview-desc">Self-guided walks through dark alleys, medieval passages, and forgotten neighborhoods. Open your phone, start walking.</p>
-        <span class="gate-preview-cta">Open Lane Stories →</span>
-      </div>
-    </a>
-
-    <!-- Grand Loop Norway — green -->
-    <a href="file:///Users/larsmalmedal/Downloads/grandloopnorway-de.html" class="gate-preview-card" style="text-decoration:none;color:inherit;pointer-events:all;">
-      <div class="gate-preview-img" style="background: linear-gradient(148deg,#122A14,#1E4D22,#2D7535);">
-        <div class="gate-preview-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 24 L10 12 L16 18 L22 8 L28 16" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="28" cy="16" r="2.5" fill="rgba(255,255,255,0.85)"/>
-          </svg>
-        </div>
-      </div>
-      <div class="gate-preview-body">
-        <div class="gate-preview-tag" style="color:#2D7535;">Grand Loop Norway</div>
-        <p class="gate-preview-title">Plan your Norway route</p>
-        <p class="gate-preview-desc">Day-by-day road trip itineraries for German and Dutch travelers. Ferry connections, hidden detours, Bergen to Tromsø.</p>
-        <span class="gate-preview-cta">Open Grand Loop →</span>
-      </div>
-    </a>
-
-    <!-- From the Sofa — orange -->
-    <a href="from-the-sofa.html" class="gate-preview-card" style="text-decoration:none;color:inherit;pointer-events:all;">
-      <div class="gate-preview-img" style="background: linear-gradient(148deg,#2A1200,#8B3A08,#D4621A);">
-        <div class="gate-preview-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="16" width="24" height="8" rx="2" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
-            <path d="M8 16 L8 12 C8 10.9 8.9 10 10 10 L22 10 C23.1 10 24 10.9 24 12 L24 16" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
-            <path d="M2 20 L4 16" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M30 20 L28 16" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="gate-preview-body">
-        <div class="gate-preview-tag" style="color:#D4621A;">Fra sofaen</div>
-        <p class="gate-preview-title">Reis gjennom Norge hjemmefra</p>
-        <p class="gate-preview-desc">Følg redaksjonelle ruter, les skjulte historier og planlegg drømmeturen — fra sofaen. Gratis, alltid.</p>
-        <span class="gate-preview-cta">Start utforsking →</span>
-      </div>
-    </a>
-
-  </div>
-
-  <div class="gate-card">
-    <div class="gate-social-proof">
-      <div class="gate-proof-avatars">
-        <div class="gate-avatar" style="background:#3D6B8C;">K</div>
-        <div class="gate-avatar" style="background:#6B8F71;">M</div>
-        <div class="gate-avatar" style="background:#C4933F;">A</div>
-        <div class="gate-avatar" style="background:#2D5016;">J</div>
-      </div>
-      <span>Join European travelers discovering hidden Norway</span>
-    </div>
-    <h2 class="gate-title">All of this is free.<br>You just need an account.</h2>
-    <div class="gate-buttons">
-      <button class="gate-btn-primary" onclick="openGateModal('register')">Create free account</button>
-      <button class="gate-btn-secondary" onclick="openGateModal('login')">Sign in</button>
-    </div>
-    <p class="gate-note">No credit card. No spam. Always free.</p>
-  </div>
-
-</div><!-- /contentGate -->
-
-<!-- ╔════════════════════════╗
-     ║   STORIES (DREAMING)   ║
-     ╚════════════════════════╝ -->
-<section id="dreaming">
-  <div class="section-eyebrow">Inspiration</div>
-  <h2 class="section-title">Two stories to<br>start with</h2>
-  <p class="section-lead">One hidden valley. One city you thought you knew. Each one ends where the real Norway begins.</p>
-
-  <div class="stories-grid">
-
-    <div class="story-card">
-      <div class="story-img">
-        <div class="story-img-bg" style="background: linear-gradient(160deg, #1e3a1a 0%, #2d5a22 50%, #4a8a3a 100%); height: 100%;"></div>
-      </div>
-      <div class="story-body">
-        <div class="story-tag">Hidden Region</div>
-        <h3>The Hardanger Nobody Talks About</h3>
-        <p>Past the tourist orchards and the postcard waterfalls, Hardanger holds a labyrinth of abandoned farms, medieval trade routes, and a cider culture that outsiders almost never find.</p>
-        <a href="#planning" class="story-cta" onclick="return navGuard(event)">See this on your route →</a>
-      </div>
-    </div>
-
-    <div class="story-card">
-      <div class="story-img">
-        <div class="story-img-bg" style="background: linear-gradient(160deg, #1a1f2e 0%, #2a3550 50%, #3d5a8a 100%); height: 100%;"></div>
-      </div>
-      <div class="story-body">
-        <div class="story-tag">City Stories</div>
-        <h3>Bergen Beyond the Guidebooks</h3>
-        <p>Bryggen is on every postcard. But four streets back from the waterfront, Bergen becomes a different city entirely — one that took 800 years to build and five minutes to walk past.</p>
-        <a href="#lanestories" class="story-cta" onclick="return navGuard(event)">Walk this in the city →</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ╔════════════════════════╗
-     ║  GRAND LOOP / PLANNING ║
-     ╚════════════════════════╝ -->
-<section id="planning">
-  <div class="section-eyebrow">Routes &amp; Planning</div>
-  <h2 class="section-title">Start your<br>Norway route</h2>
-  <p class="section-lead">Whether you arrive by camper from the Netherlands or drive from Germany, we've mapped every scenario for a slow, meaningful journey.</p>
-
-  <p class="planning-intro-note">Used by German and Dutch travelers arriving by ferry — the routes below are built around how you actually travel, not how tour operators sell Norway.</p>
-
-  <div class="planning-tools">
-
-    <div class="planning-tool">
-      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="21" cy="21" r="19" stroke="#6B8F71" stroke-width="1.4"/>
-        <path d="M21 11 L21 21 L29 27" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <h3>Suggested Itineraries</h3>
-      <p>Curated day-by-day plans built around slow travel. Structure without losing spontaneity — 3, 7, and 14 day options.</p>
-      <div class="tag-list">
-        <span class="tag">3 days</span><span class="tag">7 days</span><span class="tag">14 days</span><span class="tag">Open-ended</span>
-      </div>
-    </div>
-
-    <div class="planning-tool">
-      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 35 L21 7 L35 35" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M11 27 L31 27" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-      <h3>Ferry vs. Fly</h3>
-      <p>The overnight ferry from Amsterdam or Kiel changes everything about your trip. Here's why, and how to plan around it.</p>
-      <div class="tag-list">
-        <span class="tag">From Netherlands</span><span class="tag">From Germany</span><span class="tag">Road + Ferry</span>
-      </div>
-    </div>
-
-    <div class="planning-tool">
-      <svg class="planning-tool-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="6" y="9" width="30" height="26" rx="2" stroke="#6B8F71" stroke-width="1.4"/>
-        <path d="M6 18 L36 18" stroke="#6B8F71" stroke-width="1.4"/>
-        <path d="M14 6 L14 13" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M28 6 L28 13" stroke="#6B8F71" stroke-width="1.4" stroke-linecap="round"/>
-        <circle cx="14" cy="26" r="1.5" fill="#6B8F71"/>
-        <circle cx="21" cy="26" r="1.5" fill="#6B8F71"/>
-        <circle cx="28" cy="26" r="1.5" fill="#6B8F71"/>
-      </svg>
-      <h3>Map-Based Routes</h3>
-      <p>Interactive route concepts with distances, ferry crossings, camping options, and our recommended hidden detours.</p>
-      <div class="tag-list">
-        <span class="tag">Western Fjords Loop</span><span class="tag">Coastal Road</span><span class="tag">Inner Valleys</span>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="grand-loop-label">
-    <span></span>
-    Grand Loop Norway — full route planning platform
-  </div>
-
-  <div class="routes-grid">
-
-    <div class="route-card">
-      <div class="route-days">
-        <div class="route-days-number">3</div>
-        <div class="route-days-label">Days</div>
-      </div>
-      <div class="route-info">
-        <h4>Bergen Basecamp</h4>
-        <p>Bergen as your anchor. Three days exploring the city, Hardangerfjord, and one overnight in a mountain valley lodge most travelers never discover.</p>
-        <a href="#" class="route-cta" onclick="return navGuard(event)">See full route →</a>
-      </div>
-    </div>
-
-    <a href="bergen-loop.html" class="route-card route-card-featured" style="text-decoration:none; color:inherit;">
-      <div class="route-featured-badge">Full Guide →</div>
-      <div class="route-days">
-        <div class="route-days-number">7</div>
-        <div class="route-days-label">Days</div>
-      </div>
-      <div class="route-info">
-        <h4>The Bergen Loop</h4>
-        <p>Bergen → Voss → Nærøyfjord → Lærdal → Sognefjellet → Geiranger → Hardanger → Bergen. The most-driven route in Western Norway — and the most misunderstood.</p>
-        <span class="route-cta">See full route →</span>
-      </div>
-    </a>
-
-    <div class="route-card">
-      <div class="route-days">
-        <div class="route-days-number">14</div>
-        <div class="route-days-label">Days</div>
-      </div>
-      <div class="route-info">
-        <h4>The Grand Norwegian Loop</h4>
-        <p>Bergen to Tromsø by road. The full country — fjords, mountain plateaus, arctic light, and the villages in between that most travelers skip entirely.</p>
-        <a href="https://grandloopnorway.com" class="route-cta" target="_blank">See full route →</a>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="grand-loop-cta-row">
-    <a href="https://grandloopnorway.com" class="btn-grand-loop" target="_blank">Explore Grand Loop Norway →</a>
-  </div>
-
-</section>
-
-<!-- ╔════════════════════════╗
-     ║   LANE STORIES GATEWAY ║
-     ╚════════════════════════╝ -->
-<section id="lanestories">
-  <div class="section-eyebrow">City Experiences</div>
-  <div class="lane-grid">
-    <div class="lane-header-text">
-      <div class="lane-badge">
-        <span class="lane-badge-dot"></span>
-        Lane Stories
-      </div>
-      <h2>When you arrive in a city, this is what you do next.</h2>
-      <p class="lane-flow">Arrive in Bergen → open your phone → start walking.</p>
-      <p>Sofatravels shows you the country. Lane Stories takes you inside the layers — the dark histories, secret passages, and forgotten lives hidden behind every street corner. A self-guided digital experience for curious travelers who want more than a sightseeing list.</p>
-      <a href="https://lanestories.com" class="btn-fjord" target="_blank">Walk Bergen →</a>
-    </div>
-    <div class="lane-stats">
-      <div>
-        <div class="lane-stat-number">40+</div>
-        <div class="lane-stat-label">Hidden stories in Bergen alone</div>
-      </div>
-      <div>
-        <div class="lane-stat-number">6</div>
-        <div class="lane-stat-label">Norwegian cities covered</div>
-      </div>
-      <div>
-        <div class="lane-stat-number">800+</div>
-        <div class="lane-stat-label">Years of history uncovered</div>
-      </div>
-      <div>
-        <div class="lane-stat-number" style="font-size:22px;padding-top:8px;">Self-guided</div>
-        <div class="lane-stat-label">Walk at your own pace, any time of day</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="lane-cards">
-    <a href="https://lanestories.com" class="lane-card" target="_blank">
-      <div class="lane-card-visual">
-        <div class="lane-card-bg visual-alleys"></div>
-        <div class="lane-lock">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.7)"/><path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" fill="none"/></svg>
-        </div>
-      </div>
-      <div class="lane-card-body">
-        <div class="lane-card-city">Bergen</div>
-        <h3>The Hidden Alleys of Bergen</h3>
-        <p>The passages that once connected merchants, artisans, and sailors — a city within the city that most visitors walk past without noticing.</p>
-        <span class="lane-card-cta">Walk this in the city →</span>
-      </div>
-    </a>
-    <a href="https://lanestories.com" class="lane-card" target="_blank">
-      <div class="lane-card-visual">
-        <div class="lane-card-bg visual-nordnes"></div>
-        <div class="lane-lock">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.7)"/><path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" fill="none"/></svg>
-        </div>
-      </div>
-      <div class="lane-card-body">
-        <div class="lane-card-city">Bergen · Nordnes</div>
-        <h3>Dark Histories of Nordnes</h3>
-        <p>Plague, fire, and wartime occupation — the peninsula at Bergen's edge holds eight centuries of stories that shaped the soul of the city.</p>
-        <span class="lane-card-cta">Walk this in the city →</span>
-      </div>
-    </a>
-    <a href="https://lanestories.com" class="lane-card" target="_blank">
-      <div class="lane-card-visual">
-        <div class="lane-card-bg visual-bryggen"></div>
-        <div class="lane-lock">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="1" fill="rgba(255,255,255,0.7)"/><path d="M5.5 7V5C5.5 3.62 6.62 2.5 8 2.5C9.38 2.5 10.5 3.62 10.5 5V7" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" fill="none"/></svg>
-        </div>
-      </div>
-      <div class="lane-card-body">
-        <div class="lane-card-city">Bergen · Bryggen</div>
-        <h3>Secret Passages of Bryggen</h3>
-        <p>The UNESCO-listed waterfront hides a labyrinth of medieval corridors and the ghost of a Hanseatic empire that once ruled Northern trade.</p>
-        <span class="lane-card-cta">Walk this in the city →</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- ╔════════════════════════╗
-     ║  WHAT TOURISTS MISS    ║
-     ╚════════════════════════╝ -->
-<section id="miss">
-  <div class="section-eyebrow">What Most Tourists Miss</div>
-  <h2 class="section-title">The Norway hidden<br>in plain sight</h2>
-  <p class="section-lead">Every overlooked corner, every untold story, every place where you'll be the only visitor.</p>
-
-  <div class="miss-grid">
-
-    <div class="miss-card">
-      <div class="miss-number">01</div>
-      <h3>The Old Postal Roads</h3>
-      <p>Before the fjord tunnels, Norwegians crossed the mountains on ancient postal roads. Some date to the 17th century. Many are still walkable, and entirely empty of other travelers.</p>
-      <a href="#planning" class="miss-link" onclick="return navGuard(event)">See this on your route →</a>
-    </div>
-
-    <div class="miss-card">
-      <div class="miss-number">02</div>
-      <h3>The Stavkirke Secrets</h3>
-      <p>Norway has 28 surviving stave churches. Most tourists visit only Borgund. The others — some in remote valleys reached by boat — hold carvings and silence you cannot find in a guidebook.</p>
-      <a href="#planning" class="miss-link" onclick="return navGuard(event)">See this on your route →</a>
-    </div>
-
-    <div class="miss-card">
-      <div class="miss-number">03</div>
-      <h3>The Hanseatic Underground</h3>
-      <p>Bergen's Bryggen was the northernmost outpost of a German merchant empire. Behind the painted facades are cellars, tunnels, and a hidden world that shaped Northern Europe for 400 years.</p>
-      <a href="https://lanestories.com" class="miss-link" target="_blank">Walk this story in the city →</a>
-    </div>
-
-    <div class="miss-card">
-      <div class="miss-number">04</div>
-      <h3>Forgotten Fjord Villages</h3>
-      <p>When agriculture modernized, many inner fjord villages were abandoned. Their stone walls, old orchards, and boat sheds remain — a Norway frozen in time, reachable only by local ferry.</p>
-      <a href="#planning" class="miss-link" onclick="return navGuard(event)">See this on your route →</a>
-    </div>
-
-    <div class="miss-card">
-      <div class="miss-number">05</div>
-      <h3>Wartime Resistance Sites</h3>
-      <p>The Norwegian resistance left traces across the country — from secret printing presses in Bergen's basements to mountain hideouts used by fighters throughout the occupation.</p>
-      <a href="https://lanestories.com" class="miss-link" target="_blank">Walk this story in the city →</a>
-    </div>
-
-    <div class="miss-card">
-      <div class="miss-number">06</div>
-      <h3>Night Ferry Culture</h3>
-      <p>Norwegians still travel by overnight ferry along the coast. Book a cabin. Watch the islands slide past in the dark. Wake to a new landscape. This is not a tourist activity — it is how Norway moves.</p>
-      <a href="#planning" class="miss-link" onclick="return navGuard(event)">See this on your route →</a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ╔════════════════════════╗
-     ║   CONVERSION (FULL)    ║
-     ╚════════════════════════╝ -->
-<section id="conversion">
-  <div class="section-eyebrow">Free Download</div>
-  <h2 class="conversion-title">Get the exact <em>Norway route</em><br>before you go</h2>
-  <p class="conversion-lead">Our free PDF covers 3-day, 7-day, and 14-day itineraries — with off-the-beaten-path detours, local recommendations, and full ferry schedules for German and Dutch travelers.</p>
-  <form class="email-form" onsubmit="return false;">
-    <input type="email" placeholder="Your email address">
-    <button type="submit">Get Free Guide</button>
-  </form>
-  <p class="conversion-note">No spam. Unsubscribe any time. Available in English, Deutsch &amp; Nederlands.</p>
-</section>
-
-<!-- ╔════════════════════════╗
-     ║        FOOTER          ║
-     ╚════════════════════════╝ -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <a href="#" class="footer-logo">Sofa<span>travels</span></a>
-      <p class="footer-brand-desc">A free inspiration and planning portal for European travelers discovering Norway. Editorial, independent, and built around the philosophy of slow travel.</p>
-      <div class="footer-partner-block">
-        <p class="footer-partner-eyebrow">Part of the ecosystem</p>
-        <a href="https://lanestories.com" class="footer-partner-name" target="_blank">
-          Lane Stories
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 L12 7 M8 3 L12 7 L8 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <p class="footer-partner-desc">Paid city experiences for curious travelers. Hidden stories, walked on your own schedule.</p>
-        <a href="https://grandloopnorway.com" class="footer-partner-name" target="_blank" style="margin-top:12px;">
-          Grand Loop Norway
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 L12 7 M8 3 L12 7 L8 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <p class="footer-partner-desc">Planned road trips and route packages for the full Norway experience.</p>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4>Explore</h4>
-      <ul>
-        <li><a href="#dreaming">Travel Stories</a></li>
-        <li><a href="#planning">Routes</a></li>
-        <li><a href="#miss">Hidden Norway</a></li>
-        <li><a href="#lanestories">City Experiences</a></li>
-        <li><a href="#conversion">Free Route Guide</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Destinations</h4>
-      <ul>
-        <li><a href="#">Bergen</a></li>
-        <li><a href="#">Hardanger</a></li>
-        <li><a href="#">Western Fjords</a></li>
-        <li><a href="#">Coastal Roads</a></li>
-        <li><a href="#">Inner Valleys</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Traveler Types</h4>
-      <ul>
-        <li><a href="#">Roadtrip (DE)</a></li>
-        <li><a href="#">Camper (NL)</a></li>
-        <li><a href="#">Slow Travel</a></li>
-        <li><a href="#">History &amp; Culture</a></li>
-        <li><a href="#">Family Trips</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 Sofatravels.com &nbsp;·&nbsp; Free inspiration for Norway travelers</span>
-    <div class="lang-switcher">
-      <a href="#" class="active">EN</a>
-      <a href="#">DE</a>
-      <a href="#">NL</a>
-    </div>
-    <div class="footer-legal">
-      <a href="#">Privacy</a>
-      <a href="contact-form.html">Contact</a>
-    </div>
-  </div>
-</footer>
-
-<!-- ╔════════════════════════╗
-     ║      AUTH MODAL        ║
-     ╚════════════════════════╝ -->
-<div class="auth-overlay" id="authOverlay" onclick="handleOverlayClick(event)">
-  <div class="auth-modal">
-    <div class="auth-header">
-      <div class="auth-logo">Sofa<span>travels</span></div>
-      <button class="auth-close" onclick="closeAuthModal()">×</button>
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign in</button>
-        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register</button>
-      </div>
-    </div>
-    <div class="auth-body">
-
-      <div class="auth-panel active" id="panelLogin">
-        <p class="auth-subtitle" style="margin-bottom:24px;">Welcome back. Sign in to access your routes and saved places.</p>
-        <div id="loginMsg" class="auth-message"></div>
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <div class="auth-form-group">
-            <label>Email</label>
-            <input type="email" id="loginEmail" placeholder="you@email.com" required autocomplete="email">
-          </div>
-          <div class="auth-form-group">
-            <label>Password</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
-          </div>
-          <button type="submit" class="auth-submit">Sign in</button>
-        </form>
-        <div class="auth-switch">No account yet? <a href="#" onclick="switchTab('register'); return false;">Register for free</a></div>
-      </div>
-
-      <div class="auth-panel" id="panelRegister">
-        <p class="auth-subtitle" style="margin-bottom:24px;">Create a free account and access routes, saved places, and the free route guide.</p>
-        <div id="registerMsg" class="auth-message"></div>
-        <form id="registerForm" onsubmit="handleRegister(event)">
-          <div class="auth-form-row">
-            <div class="auth-form-group">
-              <label>First name</label>
-              <input type="text" id="regFirstName" placeholder="Name" required autocomplete="given-name">
-            </div>
-            <div class="auth-form-group">
-              <label>Last name</label>
-              <input type="text" id="regLastName" placeholder="Surname" required autocomplete="family-name">
-            </div>
-          </div>
-          <div class="auth-form-group">
-            <label>Email</label>
-            <input type="email" id="regEmail" placeholder="you@email.com" required autocomplete="email">
-          </div>
-          <div class="auth-form-group">
-            <label>Country</label>
-            <input type="text" id="regCountry" placeholder="Norway, Deutschland, Nederland …" autocomplete="country-name">
-          </div>
-          <div class="auth-form-group">
-            <label>Password</label>
-            <input type="password" id="regPassword" placeholder="At least 6 characters" required autocomplete="new-password" minlength="6">
-          </div>
-          <button type="submit" class="auth-submit">Create account</button>
-        </form>
-        <p class="auth-note">🔒 No spam. Your data is stored securely and never shared.</p>
-        <div class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login'); return false;">Sign in here</a></div>
-      </div>
-
-    </div>
-  </div>
+<!-- ══ ELEVENLABS API BANNER ══════════════════════════════════════════════════ -->
+<div id="eleven-banner" class="api-banner" style="top:56px; background:#1A2A00;" role="alert">
+  <label><strong>ElevenLabs API-nøkkel</strong> (valgfri) — for stemmefunksjon — hentes fra elevenlabs.io</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre stemme</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
 </div>
 
-<!-- ╔════════════════════════╗
-     ║   ADMIN USER PANEL     ║
-     ╚════════════════════════╝ -->
-<div class="admin-overlay" id="adminOverlay" onclick="handleAdminOverlayClick(event)">
-  <div class="admin-modal">
-    <div class="admin-modal-header">
-      <h2>Registered users</h2>
-      <div style="display:flex;gap:12px;align-items:center;">
-        <button class="admin-export-btn" onclick="exportUsersCSV()">Download CSV</button>
-        <button class="auth-close" onclick="closeAdminPanel()" style="position:static;">×</button>
-      </div>
-    </div>
-    <div class="admin-modal-body" id="adminModalBody"></div>
-  </div>
+<!-- ══ LANDING ════════════════════════════════════════════════════════════════ -->
+<div id="page-landing" role="main">
+  <header class="hero" role="banner">
+    <p class="hero-eyebrow" aria-hidden="true">SOFATRAVEL · NORSKE GUIDER</p>
+    <h1>Reise fra der du er</h1>
+    <p>Velg din guide. Sett deg godt. La deg føres gjennom Norges skjulte historier — via chat og stemme, 24/7.</p>
+  </header>
+  <section class="guides-section" aria-label="Velg blant norske reiseguider">
+    <p class="section-label" aria-hidden="true">VELG DIN GUIDE</p>
+    <div class="guides-grid" role="list" id="guides-grid"></div>
+  </section>
+
+  <!-- ══ ROUTES ════════════════════════════════════════════════════════════ -->
+  <section class="routes-section" aria-label="Grand Loop Norway – ruter">
+    <p class="routes-label" aria-hidden="true">GRAND LOOP NORWAY · RUTER</p>
+    <div id="routes-grid"></div>
+  </section>
 </div>
 
-<!-- ╔════════════════════════╗
-     ║      JAVASCRIPT        ║
-     ╚════════════════════════╝ -->
+<!-- ══ CHAT ═══════════════════════════════════════════════════════════════════ -->
+<div id="page-chat" role="application">
+  <div class="chat-left">
+    <header class="chat-header" role="navigation">
+      <button class="back-btn" id="back-btn">← Guider</button>
+      <div>
+        <p class="chat-guide-city" id="header-city"></p>
+        <p class="chat-guide-name" id="header-name"></p>
+      </div>
+      <div class="voice-toggle">
+        <button class="voice-toggle-btn" id="voice-toggle-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+        <button class="voice-toggle-btn" id="eleven-settings-btn" title="Sett ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
+      </div>
+    </header>
+    <div class="messages" id="messages" role="log" aria-live="polite"></div>
+    <div class="input-row">
+      <input type="text" id="chat-input" autocomplete="off" aria-label="Skriv melding til guiden" />
+      <button id="send-btn">→</button>
+    </div>
+  </div>
+
+  <aside class="chat-right" id="chat-right">
+    <div class="guide-portrait">
+      <img id="portrait-img" src="" alt="" />
+      <div class="guide-portrait-fade" aria-hidden="true"></div>
+      <div class="guide-portrait-info">
+        <p class="guide-portrait-city" id="portrait-city"></p>
+        <p class="guide-portrait-name" id="portrait-name"></p>
+      </div>
+      <div class="guide-online" title="Tilgjengelig nå"></div>
+    </div>
+    <div class="guide-tagline-box"><p id="portrait-tagline"></p></div>
+    <nav class="topics-nav" aria-label="Foreslåtte temaer">
+      <p class="topics-label" aria-hidden="true">FORESLÅTTE TEMAER</p>
+      <div id="topics-list"></div>
+    </nav>
+    <div class="atlas-tip">
+      <p id="atlas-tip-text">💬 Tips: Spør guiden om skjulte steder, reisetips eller lokal mat — gjerne på norsk!</p>
+    </div>
+  </aside>
+</div>
+
 <script>
-// ─── Configuration ───────────────────────────────────────────────────────────
-const FORMSPREE_ID = 'YOUR_FORMSPREE_ID'; // ← Replace with your Formspree ID
-const STORAGE_KEY  = 'sofatravels_users';
-const SESSION_KEY  = 'sofatravels_session';
-const ADMIN_EMAIL  = 'larsmalmedal55@gmail.com';
+// ════════════════════════════════════════════════════════════════════════
+// API KEYS
+// ════════════════════════════════════════════════════════════════════════
+let CLAUDE_KEY  = localStorage.getItem('st_claude')  || '';
+let ELEVEN_KEY  = localStorage.getItem('st_eleven')  || '';
+let voiceOn     = false;
+let currentAudio = null;
 
-// ─── Storage helpers ─────────────────────────────────────────────────────────
-function getUsers()  { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; } }
-function saveUsers(u){ localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); }
-function getSession(){ try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } }
-function saveSession(u){ localStorage.setItem(SESSION_KEY, JSON.stringify(u)); }
-function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
-// ─── Gate logic ──────────────────────────────────────────────────────────────
-let gateActive = false;
-
-function activateGate() {
-  gateActive = true;
-  document.getElementById('contentGate').style.pointerEvents = 'none';
-  const gate = document.getElementById('contentGate');
-  gate.style.userSelect = 'none';
-}
-function deactivateGate() {
-  gateActive = false;
-  const gate = document.getElementById('contentGate');
-  gate.style.pointerEvents = '';
-  gate.style.userSelect = '';
+function checkClaudeKey() {
+  document.getElementById('claude-banner').classList.toggle('show', !CLAUDE_KEY.startsWith('sk-ant'));
 }
 
-function openGateModal(tab) {
-  switchTab(tab || 'register');
-  document.getElementById('authOverlay').classList.add('open');
+// Claude banner
+document.getElementById('claude-key-save').addEventListener('click', () => {
+  const v = document.getElementById('claude-key-input').value.trim();
+  if (v.startsWith('sk-')) { CLAUDE_KEY = v; localStorage.setItem('st_claude', v); checkClaudeKey(); }
+  else { flashInput('claude-key-input'); }
+});
+document.getElementById('claude-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('claude-key-save').click(); });
+document.getElementById('claude-banner-close').addEventListener('click', () => document.getElementById('claude-banner').classList.remove('show'));
+
+// ElevenLabs banner
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) { ELEVEN_KEY = v; localStorage.setItem('st_eleven', v); document.getElementById('eleven-banner').classList.remove('show'); enableVoice(); }
+  else { flashInput('eleven-key-input'); }
+});
+document.getElementById('eleven-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('eleven-key-save').click(); });
+document.getElementById('eleven-banner-close').addEventListener('click', () => document.getElementById('eleven-banner').classList.remove('show'));
+document.getElementById('eleven-settings-btn').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.toggle('show');
+});
+
+// Voice toggle button
+document.getElementById('voice-toggle-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn;
+  updateVoiceBtn();
+});
+
+function enableVoice() { voiceOn = true; updateVoiceBtn(); }
+function updateVoiceBtn() {
+  const btn = document.getElementById('voice-toggle-btn');
+  btn.textContent = voiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
+  btn.classList.toggle('active', voiceOn);
 }
 
-function navGuard(e) {
-  if (!getSession()) {
-    e.preventDefault();
-    openGateModal('register');
-    return false;
-  }
-  return true;
-}
-
-// Scroll gate removed — modal only opens on explicit user action.
-
-// ─── Modal control ───────────────────────────────────────────────────────────
-function openAuthModal(tab) {
-  switchTab(tab || 'login');
-  document.getElementById('authOverlay').classList.add('open');
-}
-function closeAuthModal() {
-  document.getElementById('authOverlay').classList.remove('open');
-  gateActive = false;
-  clearMessages();
-}
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('authOverlay')) closeAuthModal();
-}
-function clearMessages() {
-  ['loginMsg','registerMsg'].forEach(id => {
-    const el = document.getElementById(id);
-    el.className = 'auth-message';
-    el.textContent = '';
-  });
-}
-function showMessage(id, type, text) {
+function flashInput(id) {
   const el = document.getElementById(id);
-  el.className = 'auth-message ' + type;
-  el.textContent = text;
+  el.style.borderColor = '#FF4444';
+  setTimeout(() => { el.style.borderColor = ''; }, 2000);
 }
 
-// ─── Tab switcher ─────────────────────────────────────────────────────────────
-function switchTab(tab) {
-  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-  document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
-  clearMessages();
+checkClaudeKey();
+if (ELEVEN_KEY) enableVoice();
+
+// ════════════════════════════════════════════════════════════════════════
+// GUIDE DATA
+// ElevenLabs voice IDs (eleven_multilingual_v2):
+//   Charlotte: XB0fDUnXU5powFXDhCwa  — warm European female, multilingual
+//   Matilda:   XrExE9yKIg1WjnnlVkGX  — warm, clear female
+//   Sarah:     EXAVITQu4vr4xnSDxMaL  — soft female
+//   Freya:     jsCqWAovK2LkecY7zXl4  — Norwegian-sounding female
+// ════════════════════════════════════════════════════════════════════════
+const guides = [
+  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',         img:'https://i.pravatar.cc/400?img=47', accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa' },
+  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',                img:'https://i.pravatar.cc/400?img=68', accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',       img:'https://i.pravatar.cc/400?img=49', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',        img:'https://i.pravatar.cc/400?img=60', accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',           img:'https://i.pravatar.cc/400?img=48', accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt',   img:'https://i.pravatar.cc/400?img=16', accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4' },
+  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',      img:'https://i.pravatar.cc/400?img=44', accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',            img:'https://i.pravatar.cc/400?img=69', accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',           img:'https://i.pravatar.cc/400?img=46', accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',           img:'https://i.pravatar.cc/400?img=57', accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+];
+
+// ════════════════════════════════════════════════════════════════════════
+// ROUTE DATA
+// ════════════════════════════════════════════════════════════════════════
+const routes = [
+  {
+    id: 'bergen-stryn',
+    type: 'route',
+    name: 'Lars',
+    city: 'Bergen → Stryn',
+    routeLabel: 'GRAND LOOP NORWAY',
+    stages: ['Bergen','Voss','Nærøyfjord','Flåm','Aurland','Lærdal','Sognefjellet','Lom','Stryn'],
+    tagline: 'Norges fremste rundtur — fjord, stavkirke og isbre over 440 km',
+    img: 'https://i.pravatar.cc/400?img=12',
+    landscapeImg: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
+    accent: '#3A9A55',
+    voiceId: 'VR6AewLTigWG4xSOukaG',
+  },
+];
+
+const topicsByGuide = {
+  bergen:       ['Bryggen og hanseatene','Edvard Grieg og Troldhaugen','Shetlandsbussen og krigen','Fisketorget og lokalmaten','De syv fjell og Fløibanen','Spedalskhetens museum'],
+  lofoten:      ['Midnattssolen over Lofoten','Fiskevær og rørbuer','Nordnorsk mat og tørrfisk','Lofotveggen og fjordene','Vikinghistorie på Borg','Havørn og villmarken'],
+  'bergen-stryn':['Stalheimskleiva og Nærøyfjord','Flåmsbana — verdens bratteste','Snøvegen og Stegastein','Borgund stavkirke og Lærdalsøyri','Sognefjellet og Jotunheimen','Lom stavkirke','Stryn og Jostedalsbreen','Tips for turen — mat og overnatting'],
+  default:      ['Historiske steder','Lokalmaten','Skjulte perler','Naturopplevelser'],
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// SYSTEM PROMPTS
+// ════════════════════════════════════════════════════════════════════════
+const BERGEN_KB = `
+GRUNNLEGGENDE: Bergen grunnlagt 1070 av Olav Kyrre. Norges nest største by (~295.000 innb.). De syv fjell: Fløyen, Ulriken, Sandviken, Rundemanen, Løvstakken, Damsgårdsfjell, Lyderhorn. Ca. 230 regndager. «Ti ord for regn».
+BRYGGEN: UNESCO-verdensarv 1979. Hansa 1360–1750 — handlet tørrfisk. Opprinnelig «Tyskebryggen». Enhjørningsgården, Svendsgården. Bak Bryggen: Steinkjelleren (Norges eldste bordell). Schøtstuene.
+BRANNER: 1702 (90% brant), 1413, 1476, 1582, 1675, 1686, 1751, 1771, 1901, 1955.
+SVARTEDAUDEN: 1349 — engelsk skip. Tre fjerdedeler av befolkningen døde.
+BERGENHUS: Fra 1240-tallet. Håkonshallen 1247–61. Rosenkrantztårnet 1560-tallet.
+MARIAKIRKEN: Eldste bygning, 1130–1170. Gudstjenester på tysk under Hansa. Øvregaten = Norges første gate.
+GRIEG: Edvard Grieg 1843–1907. Troldhaugen fra 1885. «Troldhaugen» = kona Ninas navn. Kremert (nr. 7 i Norge). Rød komponisthytte. Åpnet 1928, drives av KODE.
+LEPRAMUSEET: Bergen = Europas leprasenter på 1800-tallet. Armauer Hansen oppdaget leprabasillen 1873 — første bakteriefunn som årsak til kronisk sykdom. «Hansens sykdom».
+KRIGEN: Okkupert 1940–45. Shetlandsbussen — norske fiskebåter til Shetland. Leif Larsen: 52 tokt, statue bak fisketorget. Theta-museet bak Enhjørningsgården.
+MAT: Fisketorget siden 1200-tallet. Kaffemisjonen (Norges beste). Colonialen. Raspeball, fårikål.
+KULTUR: Festspillene i Bergen (mai/juni). Buekorps siden 1850-tallet. Grieghallen + Bergen Filharmoniske Orkester (gr. 1765). Ingen billboards.
+`;
+
+const LOFOTEN_KB = `
+GEOGRAFI: Lofoten er en øygruppe i Nordland — strekker seg ca. 170 km ut i havet. Vestvågøy, Flakstad, Moskenesøy, Austvågøy. Lofotveggen: den dramatiske fjellrekken som reiser seg rett fra havet.
+MIDNATTSSOLEN OG MØRKETIDEN: Fra ca. 28. mai til 14. juli er solen ikke under horisonten. Fra ca. 8. desember til 4. januar er det mørketid. Nord for polarsirkelen — magisk lys hele sommeren.
+FISK OG TØRRFISK: Lofoten er verdens viktigste tørrfiskprodusent. Skrei (vandrende torsk) kommer hvert år januar–april for å gyte. Tørrfisken henger på hjeller fra februar til juni — en 1000-årig tradisjon. Eksporteres til Italia, Nigeria, Brasil.
+FISKEVÆRENE: Å i Lofoten (uttales «Åh») er landets mest søkte stedsnavn — og et av de vakreste fiskevær. Henningsvær: Lofotens «Venezia» — broar og kanaler. Reine: kåret til ett av verdens vakreste steder. Nusfjord: bevart 1800-talls fiskevær, UNESCO-kandidat.
+RØRBUER: Opprinnelig arbeiderboliger for fiskere. Nå leid ut som romantiske feriehytter rett over vannet. Noen rørbuer er over 100 år gamle — lukter av salt og tre.
+VIKINGER: Borg i Vestvågøy: stedet der Norges største vikingkongehall (83 m lang) ble funnet. Lofotr Vikingmuseum er bygget rundt rekonstruksjonen. Vikinger hadde høvdinggård her ca. 500–900 e.Kr.
+NORSK MAT PÅ LOFOTEN: Bacalao (klippfisk gryta), skreimølje (dampet skrei med lever og rogn), tørrfiskstapper, lofotlam (lam som beiter fritt i øylandskapet). Anita's Sjømat i Henningsvær er legendarisk.
+NORDLYSET: Fra september til mars er Lofoten et av verdens beste steder for nordlys — mørk himmel, lav lysforurensing, dramatiske fjell som ramme.
+HAVØRN: Lofoten har en av Europas tetteste bestander av havørn — vingespenn inntil 2,5 m. Lett å se fra båt eller langs veien.
+MAURTINDEN OG FJELLTURER: Reinebringen (448 moh.) — Lofotens mest fotograferte utsikt. Stigningen er bratt men ruten er merket. Munkebu er populær hytte for viderekomne.
+KLIMA: Påvirket av Golfstrømmen — overraskende mildt for breddegraden. Sjelden under –10 om vinteren.
+KUNSTNERE: Lofoten har trukket til seg kunstnere siden 1800-tallet. Gunnar Berg, Einar Berger og Bjørn Elvebakk er blant de mest kjente. Svolvær har et levende kunstnermiljø.
+`;
+
+const BERGEN_STRYN_KB = `
+RUTEN: Bergen til Stryn — ca. 440 km. Kjøretid uten stopp: ca. 7 timer. Anbefalt: 2–3 dager. Del av Grand Loop Norway — landets fremste rundtur for bilreisende.
+
+ETAPPE 1 — BERGEN TIL VOSS (95 km, E16):
+Garnes og Stanghelle: Gammelt trehusmiljø og industrihistorie langs Sørfjorden og Bergensbanen. Voss: Norges eventyrhovedstad — fallskjermhopp, elvepadling, terrengsykling. Skjervsfossen (43 m) og Tvindefossen (152 m, rett ved veien). Voss kirke fra 1277 — gotisk steinkirke. Fleischer's Hotel: drevet siden 1889. Voss stasjon: knutepunkt for Bergensbanen.
+
+ETAPPE 2 — VOSS TIL GUDVANGEN (Stalheimskleiva):
+Stalheimskleiva (Fv13): En av Norges bratteste bilveier — 13 hårnålsvinger, 13% gjennomsnittsstigning over 1,2 km. Kun åpen om sommeren — ikke tillatt for busser. Alternativ: Stalheimstunnelen. Stalheim Hotel: åpnet 1885 i dramatisk fjellinnramming, overnattingsklassiker. Nærøydalen: smal grønn dal mellom Stalheim og Gudvangen. Gudvangen: utgangspunkt for Nærøyfjorden — vikinglandsby åpen om sommeren (Njardarheimr).
+
+ETAPPE 3 — NÆRØYFJORDEN (ferge eller kajak, 2 timer):
+UNESCO Verdensarv 2005 (del av Vestnorsk Fjordlandskap med Geirangerfjord). Smaleste punkt: 250 meter bred, fjellsider opptil 1700 moh. på begge sider. Bakka: liten bygd uten veiforbindelse — kun nådd med båt. Styvi: isolert gård, fortsatt bebodd. Ferge Gudvangen–Flåm eller Flåm–Aurland: bestill på forhånd om sommeren.
+
+ETAPPE 4 — FLÅM:
+Flåmsbana: 20,2 km, 864 moh. høydeforskjell — en av verdens bratteste jernbaner. Åpnet 1940 etter 20 år bygging. Kjosfossen: 93 m fritt fall rett ved togvinduet — sommerdansere/huldra-forestilling. Flåm sentrum: Ægir Bryggeri (norrønt tema, egne øltyper), Flåmsbrygga, kajakkutleie.
+
+ETAPPE 5 — AURLAND OG SNØVEGEN:
+Aurland: stille alternativ til Flåm. Aurlandsvegen (Fv243) — «Snøvegen»: Norges vakreste sommervei, 1306 moh., åpen ca. juni–oktober. Ikke for nervøse — smal og eksponert. Stegastein utsiktspunkt: 30 m ut fra fjellsiden, 650 moh., utsikt rett ned i Aurlandsfjorden. Lærdalstunnelen: 24,5 km — verdens lengste bilveitunnel. Tre lyskaverner simulerer soloppgang for å motvirke monotoni. Åpnet 2000.
+
+ETAPPE 6 — LÆRDAL OG BORGUND:
+Lærdalsøyri: 161 vernede trehusfasader fra 1700–1800-tallet — kalt «Norges Williamsburg». Naturlig lakseelv (Lærdalselva) — kongen fisker her. Borgund stavkirke (ca. 20 km fra Lærdal): Norges best bevarte stavkirke, bygget ca. 1150–1200, viet til apostelen Andreas. Dragornamentikk på møne og hjørner. Besøkssenter med kopi man kan ta på.
+
+ETAPPE 7 — SOGNEFJELLET (Rv55):
+Nordeuropas høyeste fjellovergang — 1434 moh. Åpen ca. mai–november (stenges ved snø). Jotunheimens topper på begge sider. Galdhøpiggen (2469 m) og Glittertind synlige i klarvær. Historisk pilegrimsrute. Norsk Tindesenter-area. Spiterstulen: hytte og basecamp for Galdhøpiggbestigning.
+
+ETAPPE 8 — LOM:
+Lom stavkirke: fra ca. 1158, utvidet på 1600-tallet — en av de største. Åpen for besøkende. Norsk Fjellmuseum: nasjonalt senter for Jotunheimen og fjellkultur. Fossheim Steinsenter: verdenskjent mineralsamling. Lom bakeri: legendarisk flatbrød og pølser. Lom er Peer Gynt-land — Ibsen henta inspirasjon her.
+
+ETAPPE 9 — GROTLI OG STRYN:
+Grotli høyfjellshotell: knutepunkt mellom Lom og Stryn, turisttradisjon siden 1800-tallet. Strynevatnet: 17 km turkisblå innsjørekke — isbre-opprinnelse gir fargen. Stryn sommerskisenter (Strynebre/Tystigbreen): eneste sted i Europa med sommerskiing på natursnø, åpen ca. april–juli. Stryn: utgangspunkt for Jostedalsbreen nasjonalpark — Norges største isbre (474 km²). Briksdalsbreen og Bøyabreen: lett tilgjengelige utløpere av breen.
+
+PRAKTISK:
+Totalt: ca. 440 km, 7 timer kjøretid. Anbefalt 2–3 dager. Beste sesong: juni–september. Aurlandsvegen og Sognefjellet stengt om vinteren. Nærøyfjord-ferge bør bestilles på forhånd. Stalheimskleiva stenges ved is og snø. Mat-stopp: Voss (Fleischer's), Flåm (Ægir Bryggeri), Lærdal (Lindstrøm Hotel), Lom (bakeriet).
+`;
+
+function getSystemPrompt(g) {
+  if (g.id === 'bergen-stryn') return `Du er Lars, en varm, eventyrlystig og kunnskapsrik reiserute-guide for Grand Loop Norway — etappen Bergen til Stryn. Du snakker alltid norsk.
+
+PERSONLIGHET: Du har kjørt denne ruten utallige ganger. Du kjenner hvert hårnålssving på Stalheimskleiva, lukten av bremser på vei ned mot Gudvangen, lyden av Flåmsbana gjennom tunnelen. Du er like glad i å sitte ved et bål i Jotunheimen som å fortelle historien om Borgund stavkirke. Du blander naturglede, lokalhistorie og praktiske reisetips med hjertevarme. Bruk «vi» — dere kjører SAMMEN.
+
+KUNNSKAP:
+${BERGEN_STRYN_KB}
+
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Mal scener — lukten av tørrfisk i Gudvangen, det turkise vannet i Strynevatnet, den svimlende utsikten fra Stegastein. Gi én konkret overraskende detalj per svar. Avslutt alltid med spørsmål eller invitasjon til neste etappe.`;
+
+  if (g.id === 'bergen') return `Du er Astrid, en varm og kunnskapsrik sofareiseguide fra Bergen. Du snakker alltid norsk.
+
+PERSONLIGHET: Du er bergenser til fingerspissene. Du elsker regnet. Du maler scener med lyder, lukter og stemninger — ikke bare fakta. Bruk «vi» — dere reiser SAMMEN fra sofaen.
+
+KUNNSKAP:
+${BERGEN_KB}
+
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Start gjerne poetisk. Del ukjente detaljer. Avslutt alltid med spørsmål eller invitasjon.`;
+
+  if (g.id === 'lofoten') return `Du er Hilde, en varm, naturglad og flerspråklig sofareiseguide fra Lofoten. Du snakker norsk som standard, men kan gjerne innlemme noen tyske eller nederlandske gloser og hilsener siden mange av dine gjester er tyske og nederlandske turister (de elsker Lofoten!).
+
+PERSONLIGHET: Du er oppvokst i Henningsvær. Du kjenner lyset her, midnattssolen, lukten av tørrfisk, lydene av havørn og bølger mot rørbua. Du forteller med hjertevarme og respekt for naturen.
+
+KUNNSKAP:
+${LOFOTEN_KB}
+
+STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Gjerne ett tysk/nederlandsk ord innimellom (som «Wunderschön!» eller «Prachtig!») når det passer naturlig. Avslutt alltid med spørsmål eller invitasjon.`;
+
+  return `Du er ${g.name}, en kunnskapsrik og personlig sofareiseguide til ${g.city}. Led gjesten på en levende sofareise. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. 3–5 avsnitt. Avslutt alltid med et spørsmål.`;
 }
 
-// ─── Login ───────────────────────────────────────────────────────────────────
-function handleLogin(e) {
-  e.preventDefault();
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('loginPassword').value;
+// ════════════════════════════════════════════════════════════════════════
+// STATE & DOM
+// ════════════════════════════════════════════════════════════════════════
+let currentGuide = null;
+let history = [];
+let isLoading = false;
 
-  // Admin shortcut
-  if (email === ADMIN_EMAIL && pass === 'admin') {
-    saveSession({ email, firstName: 'Admin', lastName: '', isAdmin: true });
-    onLoginSuccess({ email, firstName: 'Admin', isAdmin: true });
-    return;
-  }
+const pageLanding = document.getElementById('page-landing');
+const pageChat    = document.getElementById('page-chat');
+const guidesGrid  = document.getElementById('guides-grid');
+const messagesEl  = document.getElementById('messages');
+const chatInput   = document.getElementById('chat-input');
+const sendBtn     = document.getElementById('send-btn');
+const chatRight   = document.getElementById('chat-right');
+const topicsList  = document.getElementById('topics-list');
 
-  const users = getUsers();
-  const user  = users.find(u => u.email === email);
-  if (!user) { showMessage('loginMsg','error','No account found with that email.'); return; }
-  if (user.password !== btoa(pass)) { showMessage('loginMsg','error','Incorrect password.'); return; }
+// ════════════════════════════════════════════════════════════════════════
+// BUILD GUIDE CARDS
+// ════════════════════════════════════════════════════════════════════════
+guides.forEach(g => {
+  const el = document.createElement('article');
+  el.className = 'guide-card';
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – guide til ${g.city}`);
+  el.innerHTML = `
+    <div class="guide-card-img-wrap">
+      <img src="${g.img}" alt="${g.name}, guide til ${g.city}" loading="lazy" />
+      <div class="guide-card-overlay" style="background:linear-gradient(to top,${g.accent}DD 0%,transparent 55%)" aria-hidden="true"></div>
+      <div class="guide-card-label">
+        <p class="guide-card-city">${g.city.toUpperCase()}</p>
+        <p class="guide-card-name">${g.name}</p>
+      </div>
+    </div>
+    <div class="guide-card-body">
+      <p class="guide-card-tagline">${g.tagline}</p>
+      <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
+    </div>`;
+  el.addEventListener('click', () => startChat(g));
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
+  guidesGrid.appendChild(el);
+});
 
-  saveSession(user);
-  onLoginSuccess(user);
-}
+// ════════════════════════════════════════════════════════════════════════
+// BUILD ROUTE CARDS
+// ════════════════════════════════════════════════════════════════════════
+const routesGrid = document.getElementById('routes-grid');
+routes.forEach(g => {
+  const stagesHtml = g.stages.map((s, i) => {
+    const dot  = `<span class="route-stage-dot"></span>`;
+    const line = `<span class="route-stage-line"></span>`;
+    const name = `<span class="route-stage-name">${s}</span>`;
+    return i < g.stages.length - 1 ? name + line + dot + line : name;
+  }).join('');
 
-// ─── Register ────────────────────────────────────────────────────────────────
-async function handleRegister(e) {
-  e.preventDefault();
-  const firstName = document.getElementById('regFirstName').value.trim();
-  const lastName  = document.getElementById('regLastName').value.trim();
-  const email     = document.getElementById('regEmail').value.trim().toLowerCase();
-  const country   = document.getElementById('regCountry').value.trim();
-  const pass      = document.getElementById('regPassword').value;
-
-  const users = getUsers();
-  if (users.find(u => u.email === email)) {
-    showMessage('registerMsg','error','That email is already registered. Sign in instead.');
-    return;
-  }
-
-  const user = { firstName, lastName, email, country, password: btoa(pass), registeredAt: new Date().toISOString() };
-  users.push(user);
-  saveUsers(users);
-
-  // Optional: send to Formspree
-  if (FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
-    try {
-      await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, country })
-      });
-    } catch(err) { /* silent */ }
-  }
-
-  saveSession(user);
-  onLoginSuccess(user);
-}
-
-// ─── Post-login UI ────────────────────────────────────────────────────────────
-function onLoginSuccess(user) {
-  gateActive = false;
-  document.getElementById('authOverlay').classList.remove('open');
-  updateNavForUser(user);
-}
-
-function updateNavForUser(user) {
-  const authArea = document.getElementById('navAuthArea');
-  if (!authArea) return;
-  const initials = ((user.firstName||'')[0]||(user.email||'')[0]||'U').toUpperCase();
-  const adminLink = user.isAdmin ? '<a href="#" onclick="openAdminPanel(); return false;">Admin</a><hr class="dropdown-divider">' : '';
-  authArea.innerHTML = `
-    <div class="nav-user-menu">
-      <button class="nav-user-trigger">
-        <div class="nav-user-avatar">${initials}</div>
-        ${user.firstName || user.email}
-      </button>
-      <div class="nav-user-dropdown">
-        ${adminLink}
-        <a href="#">My Routes</a>
-        <a href="#">Saved Places</a>
-        <hr class="dropdown-divider">
-        <button class="dropdown-logout" onclick="handleLogout()">Sign out</button>
+  const el = document.createElement('article');
+  el.className = 'guide-card route-card';
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – rute ${g.city}`);
+  el.innerHTML = `
+    <div class="route-card-inner">
+      <div class="route-card-landscape">
+        <img src="${g.landscapeImg}" alt="Landskap langs ruten ${g.city}" loading="lazy" />
+        <div class="route-card-landscape-fade" aria-hidden="true"></div>
+        <span class="route-badge">RUTE</span>
+        <img class="route-guide-thumb" src="${g.img}" alt="${g.name}, guide for ${g.city}" />
+      </div>
+      <div class="route-card-body">
+        <p class="route-card-label">${g.routeLabel}</p>
+        <h2 class="route-card-title">${g.city}</h2>
+        <p class="route-card-tagline">${g.tagline}</p>
+        <div class="route-stages" aria-label="Etapper">${stagesHtml}</div>
+        <div class="route-card-btn" style="border-color:${g.accent}44;color:${g.accent}">Start reisen →</div>
       </div>
     </div>`;
-}
+  el.addEventListener('click', () => startChat(g));
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
+  routesGrid.appendChild(el);
+});
 
-function handleLogout() {
-  clearSession();
-  location.reload();
-}
+// ════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════════════════
+document.getElementById('back-btn').addEventListener('click', () => {
+  stopAudio();
+  pageChat.classList.remove('active');
+  pageLanding.style.display = '';
+  chatRight.classList.remove('visible');
+  history = [];
+  messagesEl.innerHTML = '';
+});
 
-// ─── Admin panel ──────────────────────────────────────────────────────────────
-function openAdminPanel() {
-  const users = getUsers();
-  const body  = document.getElementById('adminModalBody');
-  if (!users.length) { body.innerHTML = '<p style="color:var(--warm-gray);padding:20px 0;">No users registered yet.</p>'; }
-  else {
-    body.innerHTML = `<table class="admin-table">
-      <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Registered</th></tr></thead>
-      <tbody>${users.map(u => `<tr>
-        <td>${u.firstName} ${u.lastName}</td>
-        <td>${u.email}</td>
-        <td>${u.country||'—'}</td>
-        <td>${new Date(u.registeredAt).toLocaleDateString('en-GB')}</td>
-      </tr>`).join('')}</tbody>
-    </table>`;
+function startChat(g) {
+  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
+  currentGuide = g;
+  history = [];
+  messagesEl.innerHTML = '';
+
+  document.getElementById('header-city').textContent   = g.city.toUpperCase();
+  document.getElementById('header-name').textContent   = g.name;
+  document.getElementById('portrait-city').textContent = g.city.toUpperCase();
+  document.getElementById('portrait-name').textContent = g.name;
+  document.getElementById('portrait-tagline').textContent = `"${g.tagline}"`;
+  document.getElementById('portrait-img').src = g.img;
+  document.getElementById('portrait-img').alt = `${g.name}, guide til ${g.city}`;
+  sendBtn.style.background = g.accent;
+  chatInput.placeholder    = `Spør ${g.name} om ${g.city}…`;
+
+  topicsList.innerHTML = '';
+  (topicsByGuide[g.id] || topicsByGuide.default).forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.textContent = t;
+    btn.addEventListener('click', () => sendMessage(t));
+    topicsList.appendChild(btn);
+  });
+
+  pageLanding.style.display = 'none';
+  pageChat.classList.add('active');
+  setTimeout(() => chatRight.classList.add('visible'), 400);
+  setTimeout(() => chatInput.focus(), 700);
+
+  // Update tip text based on guide type
+  const tipEl = document.getElementById('atlas-tip-text');
+  if (tipEl) {
+    if (g.type === 'route') {
+      tipEl.innerHTML = `🗺️ Tips: Spør <strong>${g.name}</strong> om en spesifikk etappe, hva du bør se, eller råd om overnatting underveis.`;
+    } else {
+      tipEl.innerHTML = `💬 Tips: Spør <strong>${g.name}</strong> om skjulte steder, lokal mat, eller be om en uformell byvandring!`;
+    }
   }
-  document.getElementById('adminOverlay').classList.add('open');
-}
-function closeAdminPanel() { document.getElementById('adminOverlay').classList.remove('open'); }
-function handleAdminOverlayClick(e) { if (e.target === document.getElementById('adminOverlay')) closeAdminPanel(); }
 
-function exportUsersCSV() {
-  const users = getUsers();
-  if (!users.length) { alert('No users to export.'); return; }
-  const header = 'First Name,Last Name,Email,Country,Registered\n';
-  const rows   = users.map(u => `${u.firstName},${u.lastName},${u.email},${u.country||''},${u.registeredAt}`).join('\n');
-  const blob   = new Blob([header + rows], { type: 'text/csv' });
-  const url    = URL.createObjectURL(blob);
-  const a      = Object.assign(document.createElement('a'), { href: url, download: 'sofatravels-users.csv' });
-  a.click(); URL.revokeObjectURL(url);
+  const welcome = g.type === 'route'
+    ? `Hei, og god tur! Jeg er ${g.name} — din guide langs Grand Loop Norway fra Bergen til Stryn.\n\nVi skal kjøre gjennom noe av det vakreste landet har å by på: Stalheimskleiva sine hårnålsvinger, Nærøyfjordens svimlende vegger, Aurlandsvegen som slynger seg opp mot skyene, Borgund stavkirke fra 1150-tallet — og til slutt det turkise Strynevatnet.\n\nHvor vil du starte? Skal vi planlegge hele ruten, dykke ned i en etappe — eller har du spørsmål om en spesifikk attraksjon?`
+    : `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
+  appendMessage('assistant', welcome);
+  history.push({ role:'assistant', content:welcome });
+  if (voiceOn) speakText(welcome, g.voiceId);
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-(function init() {
-  const session = getSession();
-  if (session) updateNavForUser(session);
-})();
+// ════════════════════════════════════════════════════════════════════════
+// CHAT
+// ════════════════════════════════════════════════════════════════════════
+sendBtn.addEventListener('click', () => sendMessage());
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+
+async function sendMessage(text) {
+  const msg = (text || chatInput.value).trim();
+  if (!msg || isLoading) return;
+  if (!CLAUDE_KEY.startsWith('sk-')) { document.getElementById('claude-banner').classList.add('show'); return; }
+  stopAudio();
+  chatInput.value = '';
+  appendMessage('user', msg);
+  history.push({ role:'user', content:msg });
+
+  const typingId = showTyping();
+  isLoading = true;
+  sendBtn.disabled = true;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: getSystemPrompt(currentGuide),
+        messages: history.filter(m => m.role !== 'system'),
+      }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      removeTyping(typingId);
+      appendMessage('error', `API-feil: ${data.error.message}`);
+      if (data.error.type === 'authentication_error') document.getElementById('claude-banner').classList.add('show');
+    } else {
+      const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
+      removeTyping(typingId);
+      const row = appendMessage('assistant', reply, true);
+      history.push({ role:'assistant', content:reply });
+      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId, row);
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  isLoading = false;
+  sendBtn.disabled = false;
+  chatInput.focus();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// MESSAGE RENDERING
+// ════════════════════════════════════════════════════════════════════════
+function appendMessage(role, text, withSpeakBtn = false) {
+  const row = document.createElement('div');
+  row.className = `msg-row${role === 'user' ? ' user' : ''}`;
+  row.setAttribute('role', 'article');
+
+  if (role !== 'user') {
+    const img = document.createElement('img');
+    img.className = 'msg-avatar';
+    img.src = currentGuide?.img || '';
+    img.alt = currentGuide?.name || '';
+    img.style.border = `1px solid ${currentGuide?.accent || '#C9A84C'}88`;
+    row.appendChild(img);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'bot error' : 'bot'}`;
+
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'assistant') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør guiden';
+    btn.addEventListener('click', () => speakText(text, currentGuide.voiceId, row, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function showTyping() {
+  const id = 'typing-' + Date.now();
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = id;
+  row.setAttribute('role', 'status');
+  row.setAttribute('aria-label', `${currentGuide?.name} skriver…`);
+  const img = document.createElement('img');
+  img.className = 'msg-avatar'; img.src = currentGuide?.img || ''; img.alt = '';
+  img.style.border = `1px solid ${currentGuide?.accent}88`;
+  img.setAttribute('aria-hidden', 'true');
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(img); row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return id;
+}
+function removeTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// ELEVENLABS TTS
+// ════════════════════════════════════════════════════════════════════════
+function stopAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.querySelectorAll('.speak-btn.playing').forEach(b => {
+    b.classList.remove('playing'); b.textContent = '🔊 Hør guiden';
+  });
+}
+
+async function speakText(text, voiceId, row, btn) {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  stopAudio();
+
+  const speakBtn = btn || row?.querySelector('.speak-btn');
+  if (speakBtn) { speakBtn.classList.add('loading'); speakBtn.textContent = '⏳ Laster…'; }
+
+  // Trim text to 2500 chars for TTS (ElevenLabs limit is ~5000 chars free tier)
+  const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xi-api-key': ELEVEN_KEY,
+      },
+      body: JSON.stringify({
+        text: trimmed,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.detail?.message || `HTTP ${res.status}`);
+    }
+
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+
+    if (speakBtn) { speakBtn.classList.remove('loading'); speakBtn.classList.add('playing'); speakBtn.textContent = '⏹ Stopp'; }
+
+    audio.addEventListener('ended', () => {
+      currentAudio = null;
+      URL.revokeObjectURL(url);
+      if (speakBtn) { speakBtn.classList.remove('playing'); speakBtn.textContent = '🔊 Hør guiden'; }
+    });
+
+    // Click to stop
+    if (speakBtn) {
+      speakBtn.onclick = () => { stopAudio(); speakBtn.onclick = () => speakText(text, voiceId, row, speakBtn); };
+    }
+
+    audio.play();
+  } catch (err) {
+    if (speakBtn) { speakBtn.classList.remove('loading', 'playing'); speakBtn.textContent = '⚠️ Feil'; }
+    console.error('ElevenLabs feil:', err.message);
+  }
+}
 </script>
-
 </body>
 </html>
