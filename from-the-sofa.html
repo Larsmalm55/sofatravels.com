@@ -76,7 +76,16 @@
     .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
     .guide-card-body { padding: 14px 16px 18px; }
     .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
-    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; }
+    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; flex: 1; }
+    .guide-card-actions { display: flex; gap: 8px; align-items: stretch; }
+    .guide-yt-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; flex-shrink: 0;
+      background: rgba(255,0,0,.15); border: 1px solid rgba(255,80,80,.25);
+      border-radius: 4px; color: #FF6B6B; font-size: .9rem;
+      text-decoration: none; transition: background .2s, border-color .2s;
+    }
+    .guide-yt-btn:hover { background: rgba(255,0,0,.3); border-color: rgba(255,80,80,.6); }
 
     /* ── ROUTE CARD ── */
     .route-card {
@@ -369,7 +378,7 @@ if (ELEVEN_KEY) enableVoice();
 //   Freya:     jsCqWAovK2LkecY7zXl4  — Norwegian-sounding female
 // ════════════════════════════════════════════════════════════════════════
 const guides = [
-  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',         img:'Astrid, bergen.jpeg', accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa' },
+  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',         img:'Astrid, bergen.jpeg', accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa', youtubeUrl:'https://www.youtube.com/watch?v=qtRqqK_RJUo' },
   { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',                img:'Henrik Oslo.jpeg', accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG' },
   { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',       img:'Sigrid - Tromsø.jpeg', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX' },
   { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',        img:'Magnus - Stavanger.jpeg', accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
@@ -530,9 +539,15 @@ guides.forEach(g => {
     </div>
     <div class="guide-card-body">
       <p class="guide-card-tagline">${g.tagline}</p>
-      <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
+      <div class="guide-card-actions">
+        <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
+        ${g.youtubeUrl ? `<a class="guide-yt-btn" href="${g.youtubeUrl}" target="_blank" rel="noopener" title="Se video om ${g.city}" aria-label="Se video om ${g.city} på YouTube">▶</a>` : ''}
+      </div>
     </div>`;
-  el.addEventListener('click', () => startChat(g));
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('.guide-yt-btn')) return; // don't open chat when clicking YouTube
+    startChat(g);
+  });
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
   guidesGrid.appendChild(el);
 });
@@ -656,6 +671,13 @@ async function sendMessage(text) {
         messages: history.filter(m => m.role !== 'system'),
       }),
     });
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      removeTyping(typingId);
+      appendMessage('error', `Serverfeil ${res.status} — sjekk at netlify/functions/chat.js er pushet til repoet.`);
+      isLoading = false; sendBtn.disabled = false; chatInput.focus();
+      return;
+    }
 
     const data = await res.json();
     removeTyping(typingId);
