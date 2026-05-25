@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Grand Loop Norway – Bergen til Stryn. 440 km gjennom Norges vakreste landskap med AI-guide Lars." />
+  <title>Grand Loop Norway – SofaTravel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080E0A;
+      --panel:  #0D1610;
+      --card:   #0F1A12;
+      --border: #1E3A22;
+      --green:  #3A9A55;
+      --green2: #5ABB70;
+      --gold:   #C9A84C;
+      --text:   #E8F0E2;
+      --muted:  #5A8060;
+      --sub:    #8AAA88;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Text', Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 48px;
+      background: linear-gradient(to bottom, rgba(8,14,10,.97) 0%, transparent 100%);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--gold); letter-spacing: .06em;
+      text-decoration: none;
+    }
+    .nav-back {
+      font-size: .78rem; letter-spacing: .14em; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-back:hover { color: var(--green2); }
+    .nav-cta {
+      font-size: .78rem; letter-spacing: .12em;
+      color: var(--bg); background: var(--green);
+      padding: 8px 20px; border-radius: 3px;
+      text-decoration: none; font-weight: 600;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--green2); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 100vh; min-height: 600px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1600&q=85') center/cover no-repeat;
+      transform: scale(1.05);
+      animation: hero-zoom 18s ease-in-out infinite alternate;
+    }
+    @keyframes hero-zoom {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1.12); }
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(8,14,10,.97) 0%,
+        rgba(8,14,10,.55) 40%,
+        rgba(8,14,10,.2) 70%,
+        rgba(8,14,10,.4) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 64px 72px; max-width: 780px;
+    }
+    .hero-eyebrow {
+      letter-spacing: .5em; font-size: 10px; color: rgba(90,187,112,.7);
+      margin-bottom: 20px; display: block;
+      animation: fade-up .8s ease both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700; line-height: 1.0; color: var(--text);
+      margin-bottom: 20px;
+      animation: fade-up .8s .15s ease both;
+    }
+    .hero-title em { font-style: italic; color: var(--green2); }
+    .hero-stats {
+      display: flex; gap: 36px; margin-bottom: 36px;
+      animation: fade-up .8s .3s ease both;
+    }
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; color: var(--text); display: block; line-height: 1;
+    }
+    .hero-stat-label { font-size: .75rem; color: var(--muted); letter-spacing: .15em; display: block; margin-top: 4px; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green); color: var(--bg);
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem; font-weight: 600; letter-spacing: .1em;
+      padding: 14px 36px; border-radius: 3px;
+      text-decoration: none; transition: background .2s, transform .2s;
+      animation: fade-up .8s .45s ease both;
+    }
+    .hero-cta:hover { background: var(--green2); transform: translateY(-2px); }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── ROUTE LINE ── */
+    .route-line-section {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 64px; overflow-x: auto;
+    }
+    .route-line {
+      display: flex; align-items: center; gap: 0;
+      min-width: max-content;
+    }
+    .route-stop { display: flex; flex-direction: column; align-items: center; }
+    .route-stop-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--green); border: 2px solid var(--green2);
+      flex-shrink: 0; margin-bottom: 8px;
+    }
+    .route-stop-dot.start, .route-stop-dot.end {
+      width: 14px; height: 14px;
+      background: var(--green2);
+    }
+    .route-stop-name { font-size: .72rem; color: var(--green2); letter-spacing: .08em; white-space: nowrap; }
+    .route-stop-km { font-size: .65rem; color: var(--muted); margin-top: 2px; }
+    .route-connector {
+      height: 2px; width: 60px; flex-shrink: 0;
+      background: linear-gradient(to right, rgba(58,154,85,.6), rgba(58,154,85,.3));
+      margin-bottom: 20px;
+    }
+
+    /* ── INTRO ── */
+    .intro-section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 64px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    .intro-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 400; font-style: italic;
+      color: var(--text); margin-bottom: 24px; line-height: 1.2;
+    }
+    .intro-text p {
+      font-size: 1.05rem; color: var(--sub); line-height: 1.9;
+      margin-bottom: 16px;
+    }
+    .intro-facts { padding-top: 8px; }
+    .fact-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 14px 0; border-bottom: 1px solid rgba(30,58,34,.6);
+    }
+    .fact-label { font-size: .78rem; letter-spacing: .12em; color: var(--muted); }
+    .fact-value { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--text); text-align: right; }
+
+    /* ── ETAPPER ── */
+    .etapper-section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 64px 100px;
+    }
+    .section-eyebrow {
+      letter-spacing: .45em; font-size: 9.5px;
+      color: rgba(90,187,112,.4); margin-bottom: 14px; display: block;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--text); font-weight: 400; font-style: italic;
+      margin-bottom: 48px;
+    }
+
+    .etapper-grid { display: flex; flex-direction: column; gap: 2px; }
+    .etappe {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden;
+      transition: border-color .2s;
+    }
+    .etappe:hover { border-color: rgba(58,154,85,.4); }
+    .etappe-header {
+      display: flex; align-items: center; gap: 20px;
+      padding: 20px 24px; cursor: pointer;
+    }
+    .etappe-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: rgba(58,154,85,.3);
+      width: 28px; flex-shrink: 0; line-height: 1;
+    }
+    .etappe-route {
+      flex: 1;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--text);
+    }
+    .etappe-route span { color: var(--green); }
+    .etappe-meta { font-size: .75rem; color: var(--muted); letter-spacing: .08em; white-space: nowrap; }
+    .etappe-arrow { color: var(--muted); font-size: .8rem; transition: transform .2s; }
+    .etappe.open .etappe-arrow { transform: rotate(90deg); }
+    .etappe-body {
+      display: none; padding: 0 24px 22px 72px;
+      font-size: .92rem; color: var(--sub); line-height: 1.85;
+      border-top: 1px solid rgba(30,58,34,.4);
+      padding-top: 18px;
+    }
+    .etappe.open .etappe-body { display: block; }
+    .etappe-highlight {
+      display: inline-block; margin-top: 12px;
+      font-size: .72rem; letter-spacing: .15em; color: var(--green);
+      background: rgba(58,154,85,.1); border: 1px solid rgba(58,154,85,.25);
+      padding: 3px 10px; border-radius: 2px;
+    }
+
+    /* ── GUIDE INTRO ── */
+    .guide-section {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 64px;
+      display: flex; gap: 60px; align-items: center;
+    }
+    .guide-img-wrap {
+      flex-shrink: 0; width: 200px; height: 200px;
+      border-radius: 50%; overflow: hidden;
+      border: 2px solid rgba(58,154,85,.3);
+    }
+    .guide-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .guide-text { flex: 1; }
+    .guide-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; color: var(--text); font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .guide-text .guide-subtitle {
+      letter-spacing: .25em; font-size: .75rem; color: var(--green);
+      margin-bottom: 20px; display: block;
+    }
+    .guide-text p {
+      font-size: 1rem; color: var(--sub); line-height: 1.9; margin-bottom: 24px;
+      font-style: italic;
+    }
+    .guide-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green); color: var(--bg);
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem; font-weight: 600; letter-spacing: .1em;
+      padding: 13px 32px; border-radius: 3px;
+      text-decoration: none; transition: background .2s;
+    }
+    .guide-cta:hover { background: var(--green2); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(30,58,34,.4);
+      padding: 36px 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: rgba(201,168,76,.35); }
+    .footer-back { font-size: .75rem; color: var(--muted); text-decoration: none; letter-spacing: .1em; }
+    .footer-back:hover { color: var(--green2); }
+    .footer-copy { font-size: .7rem; color: var(--muted); opacity: .4; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 18px 24px; }
+      .hero-content { padding: 0 28px 60px; }
+      .hero-stats { gap: 24px; }
+      .route-line-section { padding: 24px 28px; }
+      .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 28px; }
+      .etapper-section { padding: 0 28px 80px; }
+      .guide-inner { flex-direction: column; padding: 56px 28px; }
+      footer { flex-direction: column; align-items: flex-start; padding: 32px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<nav role="navigation">
+  <a href="/" class="nav-logo">SofaTravel</a>
+  <a href="/" class="nav-back">← Tilbake</a>
+  <a href="/from-the-sofa.html" class="nav-cta">Start med Lars →</a>
+</nav>
+
+<!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
+<section class="hero" role="banner">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">GRAND LOOP NORWAY · SOFATRAVEL</span>
+    <h1 class="hero-title">
+      Bergen<br>
+      <em>til Stryn</em>
+    </h1>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-num">440</span>
+        <span class="hero-stat-label">KM</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">9</span>
+        <span class="hero-stat-label">ETAPPER</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">2–3</span>
+        <span class="hero-stat-label">DAGER</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">1</span>
+        <span class="hero-stat-label">GUIDE</span>
+      </div>
+    </div>
+    <a href="/from-the-sofa.html" class="hero-cta">Start reisen med Lars →</a>
+  </div>
+</section>
+
+<!-- ══ ROUTE LINE ════════════════════════════════════════════════════════ -->
+<div class="route-line-section" role="navigation" aria-label="Ruteoversikt">
+  <div class="route-line">
+    <div class="route-stop">
+      <div class="route-stop-dot start"></div>
+      <span class="route-stop-name">BERGEN</span>
+      <span class="route-stop-km">Start</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">VOSS</span>
+      <span class="route-stop-km">95 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">NÆRØYFJORD</span>
+      <span class="route-stop-km">120 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">FLÅM</span>
+      <span class="route-stop-km">145 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">AURLAND</span>
+      <span class="route-stop-km">155 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">LÆRDAL</span>
+      <span class="route-stop-km">195 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">SOGNEFJELLET</span>
+      <span class="route-stop-km">280 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot"></div>
+      <span class="route-stop-name">LOM</span>
+      <span class="route-stop-km">340 km</span>
+    </div>
+    <div class="route-connector"></div>
+    <div class="route-stop">
+      <div class="route-stop-dot end"></div>
+      <span class="route-stop-name">STRYN</span>
+      <span class="route-stop-km">440 km</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INTRO ══════════════════════════════════════════════════════════════ -->
+<section class="intro-section" aria-labelledby="intro-title">
+  <div class="intro-text">
+    <h2 id="intro-title">Norges vakreste veier, fortalt av noen som kjenner dem.</h2>
+    <p>Grand Loop Norway Bergen–Stryn er ikke bare en kjøretur — det er en reise gjennom 1000 år med norsk historie, fra hanseatiske kaianlegg i Bergen til vikinghøvdingens hall ved Borgund.</p>
+    <p>Stalheimskleivas 13 hårnålsvinger. Nærøyfjordens 250 meter brede sund. Snøvegens eksponerte kant over Aurlandsfjorden. Sognefjellets tomme vidde 1434 moh. Og til slutt det turkise Strynevatnet — farget av isbre.</p>
+    <p>Lars kjenner hvert av disse stedene. Han forteller mens du kjører — eller rett fra sofaen din.</p>
+  </div>
+  <div class="intro-facts" role="list">
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">TOTAL DISTANSE</span>
+      <span class="fact-value">ca. 440 km</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">KJØRETID UTEN STOPP</span>
+      <span class="fact-value">ca. 7 timer</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">ANBEFALT REISETID</span>
+      <span class="fact-value">2–3 dager</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">BESTE SESONG</span>
+      <span class="fact-value">Juni – September</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">UNESCO-STEDER</span>
+      <span class="fact-value">1 (Nærøyfjord)</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">STAVKIRKER</span>
+      <span class="fact-value">2 (Borgund + Lom)</span>
+    </div>
+    <div class="fact-row" role="listitem">
+      <span class="fact-label">FJORDER KRYSSET</span>
+      <span class="fact-value">3</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ETAPPER ════════════════════════════════════════════════════════════ -->
+<section class="etapper-section" aria-labelledby="etapper-title">
+  <span class="section-eyebrow">ETAPPE FOR ETAPPE</span>
+  <h2 id="etapper-title" class="section-title">Hva venter deg underveis</h2>
+
+  <div class="etapper-grid">
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">1</span>
+        <span class="etappe-route">Bergen <span>→</span> Voss</span>
+        <span class="etappe-meta">95 km · E16</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Ruten langs E16 følger Bergensbanen gjennom Sørfjorden. Stopp ved Skjervsfossen (43 m) og Tvindefossen (152 m) — begge rett ved veien. Voss er Norges eventyrhovedstad: fallskjermhopp, elvepadling og terrengsykling. Voss kirke fra 1277 er en av de eldste gotiske steinkirkene i landet.
+        <span class="etappe-highlight">✦ Fleischer's Hotel siden 1889</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">2</span>
+        <span class="etappe-route">Voss <span>→</span> Gudvangen via Stalheimskleiva</span>
+        <span class="etappe-meta">25 km · Fv13</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Stalheimskleiva er en av Norges bratteste bilveier: 13 hårnålsvinger, 13 % stigning over 1,2 km. Kun åpen om sommeren — busser er ikke tillatt. Stalheim Hotel øverst har servert reisende siden 1885 med utsikt rett ned i stupet. Nærøydalen er en smal, grønn dal mellom kleiva og fjorden.
+        <span class="etappe-highlight">✦ Kun sommervei — kontroller åpningstider</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">3</span>
+        <span class="etappe-route">Nærøyfjorden <span>→</span> Flåm</span>
+        <span class="etappe-meta">2 timer · Ferge</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Nærøyfjorden er UNESCO Verdensarv siden 2005. Smaleste punkt: 250 meter bred, med fjellsider som reiser seg 1700 moh. på begge sider. Bygda Bakka nås kun med båt. Styvi er en isolert gård som fortsatt er bebodd. Bestill ferge i god tid om sommeren.
+        <span class="etappe-highlight">✦ UNESCO Verdensarv 2005</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">4</span>
+        <span class="etappe-route">Flåm <span>→</span> Aurland via Snøvegen</span>
+        <span class="etappe-meta">30 km · Fv243</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Flåmsbana er en av verdens bratteste jernbaner: 20,2 km, 864 moh. høydeforskjell, åpnet 1940. Kjosfossen foss (93 m) ses rett fra togvinduet. Ægir Bryggeri i Flåm sentrum brygger øl med norrønt tema. Aurlandsvegen — Snøvegen — slynger seg opp til 1306 moh., åpen ca. juni–oktober. Stegastein utsiktspunkt stikker 30 m ut fra fjellsiden i 650 moh.
+        <span class="etappe-highlight">✦ Stegastein — 650 moh. over fjorden</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">5</span>
+        <span class="etappe-route">Aurland <span>→</span> Lærdal</span>
+        <span class="etappe-meta">40 km · Lærdalstunnelen</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Lærdalstunnelen er verdens lengste bilveitunnel: 24,5 km, åpnet 2000. Tre lyskaverner er bygget inn i tunnelen for å gi inntrykk av soloppgang og motvirke monotoni. Lærdalsøyri sentrum har 161 vernede trehusfasader fra 1700–1800-tallet — kalt «Norges Williamsburg». Lærdalselva er en av Norges beste lakseelver.
+        <span class="etappe-highlight">✦ Verdens lengste bilveitunnel · 24,5 km</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">6</span>
+        <span class="etappe-route">Lærdal <span>→</span> Borgund stavkirke</span>
+        <span class="etappe-meta">20 km · avkjøring</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Borgund stavkirke er Norges best bevarte stavkirke, bygget ca. 1150–1200 og viet til apostelen Andreas. Dragornamentikk pryder mønene og hjørnene. Besøkssenteret har en full kopi man kan ta på. Filefjellveien er gammel kongevei og pilegrimsrute mellom Bergen og Oslo.
+        <span class="etappe-highlight">✦ Norges best bevarte stavkirke — 1150 e.Kr.</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">7</span>
+        <span class="etappe-route">Sognefjellet</span>
+        <span class="etappe-meta">Rv55 · 1434 moh.</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Nordeuropas høyeste fjellovergang på 1434 moh. Åpen ca. mai–november. Jotunheimen nasjonalpark på begge sider. Galdhøpiggen (2469 m) og Glittertind er synlige i klarvær. Historisk pilegrimsrute. Spiterstulen er basecamp for bestigning av Galdhøpiggen.
+        <span class="etappe-highlight">✦ Nordeuropas høyeste fjellovergang</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">8</span>
+        <span class="etappe-route">Lom</span>
+        <span class="etappe-meta">Stopp · Jotunheimen</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Lom stavkirke fra ca. 1158, utvidet på 1600-tallet, er en av de største. Norsk Fjellmuseum er nasjonalt senter for Jotunheimen. Fossheim Steinsenter har en verdenskjent mineralsamling. Lom bakeri er legendarisk for flatbrød. Lom er Peer Gynt-landet — Ibsen hentet inspirasjon her.
+        <span class="etappe-highlight">✦ Lom bakeri — legendarisk flatbrød siden 1896</span>
+      </div>
+    </div>
+
+    <div class="etappe">
+      <div class="etappe-header" onclick="toggleEtappe(this)">
+        <span class="etappe-num">9</span>
+        <span class="etappe-route">Grotli <span>→</span> Stryn</span>
+        <span class="etappe-meta">100 km · Mål</span>
+        <span class="etappe-arrow">›</span>
+      </div>
+      <div class="etappe-body">
+        Grotli høyfjellshotell har vært knutepunkt for reisende siden 1800-tallet. Strynevatnet er 17 km langt og turkisblått fra isbre-avrenning. Stryn Sommerskisenter er det eneste stedet i Europa med sommerskiing på natursnø (april–juli). Jostedalsbreen er Norges største isbre (474 km²). Briksdalsbreen og Bøyabreen er lett tilgjengelige utløpere.
+        <span class="etappe-highlight">✦ Sommerskiing på natursnø — eneste i Europa</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ GUIDE ═══════════════════════════════════════════════════════════════ -->
+<section class="guide-section" aria-labelledby="guide-title">
+  <div class="guide-inner">
+    <div class="guide-img-wrap">
+      <img src="https://i.pravatar.cc/400?img=12" alt="Lars, guide for Grand Loop Norway" />
+    </div>
+    <div class="guide-text">
+      <h3 id="guide-title">Lars</h3>
+      <span class="guide-subtitle">GRAND LOOP NORWAY · REISEGUIDE</span>
+      <p>Lars har kjørt Bergen–Stryn mer ganger enn han husker. Han kjenner lukten av bremser på vei ned Stalheimskleiva, stillheten på Sognefjellet ved soloppgang, og nøyaktig hvilket punkt på Snøvegen fjorden åpner seg under deg.</p>
+      <p>Han forteller mens du kjører — eller fra sofaen din. Spør om etapper, steder, mat eller overnatting. Han svarer i rik, levende prosa.</p>
+      <a href="/from-the-sofa.html" class="guide-cta">Start samtalen med Lars →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════════════════ -->
+<footer role="contentinfo">
+  <span class="footer-logo">SofaTravel</span>
+  <a href="/" class="footer-back">← Tilbake til forsiden</a>
+  <span class="footer-copy">© 2026 SofaTravel · Grand Loop Norway</span>
+</footer>
+
+<script>
+function toggleEtappe(header) {
+  const etappe = header.parentElement;
+  etappe.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

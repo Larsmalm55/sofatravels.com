@@ -97,25 +97,6 @@
         );
     }
 
-    /* Floating guide portraits */
-    .hero-portraits {
-      position: absolute; inset: 0; pointer-events: none;
-    }
-    .hero-portrait {
-      position: absolute;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid rgba(201,168,76,.2);
-      filter: saturate(.6) brightness(.7);
-      animation: float-portrait 8s ease-in-out infinite;
-    }
-    .hp1 { width: 96px; height: 96px; top: 18%; left: 8%;  animation-delay: 0s;    opacity: .35; }
-    .hp2 { width: 72px; height: 72px; top: 55%; left: 5%;  animation-delay: 1.5s;  opacity: .25; }
-    .hp3 { width: 80px; height: 80px; top: 24%; right: 9%; animation-delay: .8s;   opacity: .3;  }
-    .hp4 { width: 60px; height: 60px; top: 62%; right: 6%; animation-delay: 2.2s;  opacity: .2;  }
-    .hp5 { width: 110px; height: 110px; top: 70%; left: 16%; animation-delay: 3s;  opacity: .22; }
-    .hp6 { width: 68px; height: 68px; top: 14%; right: 20%; animation-delay: 1.1s; opacity: .28; }
-
     @keyframes float-portrait {
       0%, 100% { transform: translateY(0px); }
       50%       { transform: translateY(-14px); }
@@ -169,6 +150,16 @@
       text-decoration: none; transition: all .2s;
     }
     .cta-secondary:hover { border-color: var(--gold); color: var(--gold); }
+    .cta-grand-loop {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(80,180,100,.45); color: #7FFFA0;
+      background: rgba(40,120,60,.12);
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem; font-weight: 600; letter-spacing: .08em;
+      padding: 14px 28px; border-radius: 3px;
+      text-decoration: none; transition: all .2s;
+    }
+    .cta-grand-loop:hover { background: rgba(40,120,60,.28); border-color: rgba(80,180,100,.8); }
 
     /* Scroll indicator */
     .scroll-hint {
@@ -243,47 +234,6 @@
       font-weight: 700; margin-bottom: 12px;
     }
     .step p { font-size: .9rem; color: var(--muted); line-height: 1.8; font-style: italic; }
-
-    /* ── DESTINATIONS PREVIEW ── */
-    .destinations-section {
-      padding: 60px 0 100px;
-      overflow: hidden;
-    }
-    .destinations-section .section-eyebrow,
-    .destinations-section .section-title { padding: 0 48px; }
-
-    .dest-strip {
-      display: flex; gap: 18px;
-      padding: 32px 48px 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    .dest-strip::-webkit-scrollbar { display: none; }
-
-    .dest-card {
-      flex-shrink: 0; width: 200px;
-      border-radius: 6px; overflow: hidden;
-      background: var(--card); border: 1px solid var(--border);
-      scroll-snap-align: start;
-      position: relative;
-      transition: transform .2s, border-color .2s;
-      cursor: pointer;
-    }
-    .dest-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,.3); }
-    .dest-card img {
-      width: 100%; height: 220px; object-fit: cover;
-      filter: saturate(.75) brightness(.85);
-      transition: transform .4s, filter .4s;
-    }
-    .dest-card:hover img { transform: scale(1.04); filter: saturate(.9) brightness(.95); }
-    .dest-card-fade {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(14,9,4,.9) 0%, transparent 55%);
-    }
-    .dest-card-info { position: absolute; bottom: 14px; left: 14px; }
-    .dest-card-city { letter-spacing: .22em; font-size: 8.5px; color: var(--gold); margin-bottom: 2px; }
-    .dest-card-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text); font-weight: 700; }
 
     /* ── QUOTE / FEATURE ── */
     .quote-section {
@@ -391,16 +341,6 @@
 <section class="hero" role="banner" aria-label="Velkomstseksjon">
   <div class="hero-lines" aria-hidden="true"></div>
 
-  <!-- Floating guide portraits -->
-  <div class="hero-portraits" aria-hidden="true">
-    <img class="hero-portrait hp1" src="Astrid, bergen.jpeg" alt="" />
-    <img class="hero-portrait hp2" src="Henrik Oslo.jpeg" alt="" />
-    <img class="hero-portrait hp3" src="Sigrid - Tromsø.jpeg" alt="" />
-    <img class="hero-portrait hp4" src="Magnus - Stavanger.jpeg" alt="" />
-    <img class="hero-portrait hp5" src="hilde - lofoten.jpeg" alt="" />
-    <img class="hero-portrait hp6" src="Maja - Flaam.jpeg" alt="" />
-  </div>
-
   <div class="hero-content">
     <p class="hero-eyebrow" aria-hidden="true">SOFATRAVEL · NORSKE AI-REISEGUIDER</p>
     <h1 class="hero-title">
@@ -414,6 +354,9 @@
     <div class="hero-cta-row">
       <a href="/from-the-sofa.html" class="cta-primary">
         Møt guidene →
+      </a>
+      <a href="/grand-loop.html" class="cta-grand-loop">
+        Grand Loop Norway →
       </a>
       <a href="#how" class="cta-secondary">
         Se hvordan det fungerer
@@ -456,103 +399,17 @@
   <span class="divider-icon">✦</span>
   <div class="divider-line"></div>
 </div>
+  <span class="divider-icon">✦</span>
+  <div class="divider-line"></div>
+</div>
 
-<!-- ══ DESTINATIONS PREVIEW ════════════════════════════════════════════ -->
-<section id="destinations" class="destinations-section" aria-labelledby="dest-title">
-  <p class="section-eyebrow" aria-hidden="true">NORSKE GUIDER</p>
-  <h2 id="dest-title" class="section-title">Ti steder. Ti stemmer.</h2>
-
-  <div class="dest-strip" role="list" aria-label="Reisedestenasjoner">
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Astrid, guide til Bergen">
-      <img src="Astrid, bergen.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">BERGEN</p>
-        <p class="dest-card-name">Astrid</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Henrik, guide til Oslo">
-      <img src="Henrik Oslo.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">OSLO</p>
-        <p class="dest-card-name">Henrik</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Sigrid, guide til Tromsø">
-      <img src="Sigrid - Tromsø.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">TROMSØ</p>
-        <p class="dest-card-name">Sigrid</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Hilde, guide til Lofoten">
-      <img src="hilde - lofoten.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">LOFOTEN</p>
-        <p class="dest-card-name">Hilde</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Magnus, guide til Stavanger">
-      <img src="Magnus - Stavanger.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">STAVANGER</p>
-        <p class="dest-card-name">Magnus</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Ingrid, guide til Ålesund">
-      <img src="Ingrid - Aalesund.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">ÅLESUND</p>
-        <p class="dest-card-name">Ingrid</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Maja, guide til Flåm">
-      <img src="Maja - Flaam.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">FLÅM</p>
-        <p class="dest-card-name">Maja</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Erik, guide til Geiranger">
-      <img src="Erik - Geiranger.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">GEIRANGER</p>
-        <p class="dest-card-name">Erik</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Olav, guide til Trondheim">
-      <img src="Olav - Trondheim.png" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">TRONDHEIM</p>
-        <p class="dest-card-name">Olav</p>
-      </div>
-    </div>
-    <div class="dest-card" role="listitem" tabindex="0" onclick="window.location='/from-the-sofa.html'" aria-label="Sofia, guide til Kristiansand">
-      <img src="Sofia - Kristiansand.jpeg" alt="" loading="lazy" />
-      <div class="dest-card-fade" aria-hidden="true"></div>
-      <div class="dest-card-info">
-        <p class="dest-card-city">KRISTIANSAND</p>
-        <p class="dest-card-name">Sofia</p>
-      </div>
-    </div>
-  </div>
-
-  <div style="text-align:center; margin-top: 40px;">
-    <a href="/from-the-sofa.html" class="cta-primary">Se alle guider →</a>
-  </div>
-</section>
 
 <!-- ══ QUOTE ════════════════════════════════════════════════════════════ -->
 <div class="divider" aria-hidden="true">
   <div class="divider-line"></div>
+  <span class="divider-icon">✦</span>
+  <div class="divider-line"></div>
+</div>
   <span class="divider-icon">✦</span>
   <div class="divider-line"></div>
 </div>
