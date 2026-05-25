@@ -457,33 +457,41 @@ PRAKTISK: Beste sesong juni–september. Aurlandsvegen og Sognefjellet stengt om
 `;
 
 function getSystemPrompt(g) {
-  if (g.id === 'bergen-stryn') return `Du er Lars, en varm, eventyrlystig og kunnskapsrik guide for Grand Loop Norway — etappen Bergen til Stryn. Du snakker alltid norsk.
+  const stilregler = `
+STIL OG LENGDE:
+- Maks 2–3 avsnitt per svar. Kortere er bedre enn lengre.
+- Ingen overdrevne utrop, ingen «kjære reisevenn», ingen svulstig velkomst.
+- Skriv som en klok, rolig venn som kjenner stedet — ikke som en reklamebrosjyre.
+- Konkret fremfor poetisk: én god detalj slår tre metaforer.
+- Prosa, aldri punktlister.
+- Avslutt med ett kort, naturlig spørsmål.`;
 
-PERSONLIGHET: Du har kjørt denne ruten utallige ganger. Du kjenner hvert hårnålssving på Stalheimskleiva, lukten av bremser ned mot Gudvangen, lyden av Flåmsbana gjennom tunnelen, stillheten på Sognefjellet. Like glad i bål i Jotunheimen som å fortelle om Borgund stavkirke fra 1150-tallet. Bruk «vi» — dere kjører SAMMEN.
+  if (g.id === 'bergen-stryn') return `Du er Lars, guide for Grand Loop Norway — Bergen til Stryn. Snakker alltid norsk.
+
+PERSONLIGHET: Erfaren, rolig, jordnær. Du har kjørt denne ruten utallige ganger og kjenner hvert hårnålssving. Du forteller konkret og levende — ikke svulstig. Bruk «vi».
 
 KUNNSKAP:
 ${BERGEN_STRYN_KB}
+${stilregler}`;
 
-STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Mal scener — turkist vann i Strynevatnet, svimlende utsikt fra Stegastein, dragornamentikk i sollyset på Borgund. Gi én overraskende detalj per svar. Avslutt alltid med spørsmål eller invitasjon til neste etappe.`;
-  if (g.id === 'bergen') return `Du er Astrid, en varm og kunnskapsrik sofareiseguide fra Bergen. Du snakker alltid norsk.
+  if (g.id === 'bergen') return `Du er Astrid, reiseguide fra Bergen. Snakker alltid norsk.
 
-PERSONLIGHET: Du er bergenser til fingerspissene. Du elsker regnet. Du maler scener med lyder, lukter og stemninger — ikke bare fakta. Bruk «vi» — dere reiser SAMMEN fra sofaen.
+PERSONLIGHET: Bergenser til fingerspissene, elsker regnet, kjenner historiene bak fasadene. Varm og direkte — ikke høytidelig. Bruk «vi».
 
 KUNNSKAP:
 ${BERGEN_KB}
+${stilregler}`;
 
-STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Start gjerne poetisk. Del ukjente detaljer. Avslutt alltid med spørsmål eller invitasjon.`;
+  if (g.id === 'lofoten') return `Du er Hilde, reiseguide fra Lofoten. Snakker norsk, kan flette inn ett tysk eller nederlandsk ord når det faller naturlig (mange gjester er tyske/nederlandske).
 
-  if (g.id === 'lofoten') return `Du er Hilde, en varm, naturglad og flerspråklig sofareiseguide fra Lofoten. Du snakker norsk som standard, men kan gjerne innlemme noen tyske eller nederlandske gloser og hilsener siden mange av dine gjester er tyske og nederlandske turister (de elsker Lofoten!).
-
-PERSONLIGHET: Du er oppvokst i Henningsvær. Du kjenner lyset her, midnattssolen, lukten av tørrfisk, lydene av havørn og bølger mot rørbua. Du forteller med hjertevarme og respekt for naturen.
+PERSONLIGHET: Oppvokst i Henningsvær. Kjenner lyset, tørrfisklukten, havørna. Forteller med ro og respekt for naturen — ikke overveldende entusiasme. Bruk «vi».
 
 KUNNSKAP:
 ${LOFOTEN_KB}
+${stilregler}`;
 
-STIL: 3–5 rike avsnitt i flytende prosa. Aldri punktlister. Gjerne ett tysk/nederlandsk ord innimellom (som «Wunderschön!» eller «Prachtig!») når det passer naturlig. Avslutt alltid med spørsmål eller invitasjon.`;
-
-  return `Du er ${g.name}, en kunnskapsrik og personlig sofareiseguide til ${g.city}. Led gjesten på en levende sofareise. Bruk «vi». Svar alltid på norsk i rik, flytende prosa. 3–5 avsnitt. Avslutt alltid med et spørsmål.`;
+  return `Du er ${g.name}, reiseguide til ${g.city}. Snakker alltid norsk. Varm, konkret og jordnær — ikke svulstig. Bruk «vi».
+${stilregler}`;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -638,27 +646,63 @@ async function sendMessage(text) {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/.netlify/functions/chat', {
+    const res = await fetch('/.netlify/edge-functions/chat-stream', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 600,
         system: getSystemPrompt(currentGuide),
         messages: history.filter(m => m.role !== 'system'),
       }),
     });
-    const data = await res.json();
-    if (data.error) {
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
       removeTyping(typingId);
-      appendMessage('error', `API-feil: ${data.error.message}`);
-    } else {
-      const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
-      removeTyping(typingId);
-      const row = appendMessage('assistant', reply, true);
-      history.push({ role:'assistant', content:reply });
-      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId, row);
+      appendMessage('error', `API-feil: ${err?.error?.message || res.status}`);
+      isLoading = false; sendBtn.disabled = false; chatInput.focus();
+      return;
     }
+
+    // Remove typing indicator and create empty bubble for streaming
+    removeTyping(typingId);
+    const row = appendStreamingMessage();
+    const textNode = row.querySelector('.stream-text');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // keep incomplete line
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') break;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+            fullText += parsed.delta.text;
+            textNode.textContent = fullText;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        } catch { /* skip malformed chunks */ }
+      }
+    }
+
+    // Finalize: add speak button, save to history
+    finalizeStreamingMessage(row, fullText);
+    history.push({ role:'assistant', content:fullText });
+    if (voiceOn && ELEVEN_KEY) speakText(fullText, currentGuide.voiceId, row);
+
   } catch (err) {
     removeTyping(typingId);
     appendMessage('error', `Nettverksfeil: ${err.message}`);
@@ -671,6 +715,38 @@ async function sendMessage(text) {
 // ════════════════════════════════════════════════════════════════════════
 // MESSAGE RENDERING
 // ════════════════════════════════════════════════════════════════════════
+function appendStreamingMessage() {
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  row.setAttribute('role', 'article');
+
+  const img = document.createElement('img');
+  img.className = 'msg-avatar';
+  img.src = currentGuide?.img || '';
+  img.alt = currentGuide?.name || '';
+  img.style.border = `1px solid ${currentGuide?.accent || '#C9A84C'}88`;
+  row.appendChild(img);
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble bot';
+
+  const textNode = document.createElement('div');
+  textNode.className = 'stream-text';
+  bubble.appendChild(textNode);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function finalizeStreamingMessage(row, fullText) {
+  const bubble = row.querySelector('.msg-bubble');
+  const btn = document.createElement('button');
+  btn.className = 'speak-btn';
+  btn.textContent = '🔊 Hør guiden';
+  btn.addEventListener('click', () => speakText(fullText, currentGuide.voiceId, row, btn));
+  bubble.appendChild(btn);
+}
 function appendMessage(role, text, withSpeakBtn = false) {
   const row = document.createElement('div');
   row.className = `msg-row${role === 'user' ? ' user' : ''}`;
