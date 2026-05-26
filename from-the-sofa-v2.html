@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SofaTravel – Norske reiseguider som tar deg med på en levende sofareise gjennom Norges mest fascinerende steder." />
+  <title>SofaTravel – Reise fra der du er</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #130C06; --panel: #1A0D06; --card: #1E0F07; --border: #3A2010;
+      --gold: #C9A84C; --text: #F0E6CF; --muted: #907055; --sub: #B09870;
+      --input-bg: #261408; --msg-user: #3A2010; --msg-bot: #201208;
+    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; }
+
+    /* ── BANNERS ── */
+    .api-banner {
+      display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: #4A1200; border-bottom: 2px solid var(--gold);
+      padding: 12px 20px; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .85rem; color: var(--text); white-space: nowrap; }
+    .api-banner label strong { color: var(--gold); }
+    .api-banner input {
+      flex: 1; min-width: 240px; background: #1A0800; border: 1px solid rgba(201,168,76,.4);
+      color: var(--text); padding: 7px 12px; border-radius: 4px;
+      font-size: .82rem; font-family: monospace; outline: none;
+    }
+    .api-banner input:focus { border-color: var(--gold); }
+    .api-banner button {
+      background: var(--gold); border: none; color: #130C06;
+      padding: 7px 16px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; font-weight: 700; white-space: nowrap;
+    }
+    .api-banner button:hover { background: #DDB85C; }
+    .banner-close {
+      background: none !important; color: var(--muted) !important;
+      font-size: 1rem !important; padding: 4px 8px !important;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 70px 32px 50px; text-align: center;
+      background: linear-gradient(170deg, #221008 0%, var(--bg) 100%);
+      border-bottom: 1px solid rgba(201,168,76,.15);
+    }
+    .hero-eyebrow { letter-spacing: .45em; font-size: 11px; color: var(--gold); margin-bottom: 18px; }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 7vw, 5.2rem);
+      color: var(--text); margin-bottom: 18px; line-height: 1.08; font-weight: 700;
+    }
+    .hero p { font-size: 1.15rem; color: var(--sub); font-style: italic; max-width: 480px; margin: 0 auto; }
+
+    /* ── GUIDE GRID ── */
+    .guides-section { max-width: 1200px; margin: 0 auto; padding: 56px 32px 80px; }
+    .section-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(201,168,76,.55); text-align: center; margin-bottom: 40px; }
+    .guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px; }
+    .guide-card {
+      cursor: pointer; border-radius: 6px; overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      transition: transform .22s, border-color .22s, box-shadow .22s; outline: none;
+    }
+    .guide-card:hover, .guide-card:focus { transform: translateY(-4px); }
+    .guide-card-img-wrap { position: relative; height: 210px; overflow: hidden; }
+    .guide-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .guide-card:hover .guide-card-img-wrap img,
+    .guide-card:focus .guide-card-img-wrap img { transform: scale(1.05); }
+    .guide-card-overlay { position: absolute; inset: 0; }
+    .guide-card-label { position: absolute; bottom: 12px; left: 14px; }
+    .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
+    .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
+    .guide-card-body { padding: 14px 16px 18px; }
+    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
+    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; flex: 1; }
+    .guide-card-actions { display: flex; gap: 8px; align-items: stretch; }
+    .guide-yt-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; flex-shrink: 0;
+      background: rgba(255,0,0,.15); border: 1px solid rgba(255,80,80,.25);
+      border-radius: 4px; color: #FF6B6B; font-size: .9rem;
+      text-decoration: none; transition: background .2s, border-color .2s;
+    }
+    .guide-yt-btn:hover { background: rgba(255,0,0,.3); border-color: rgba(255,80,80,.6); }
+
+    /* ── ROUTE CARD ── */
+    .route-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #0D1E14 0%, #0A1A10 100%);
+      border: 1px solid rgba(60,140,80,.35);
+      cursor: pointer; border-radius: 8px; overflow: hidden;
+      transition: transform .22s, border-color .22s, box-shadow .22s;
+    }
+    .route-card:hover, .route-card:focus {
+      transform: translateY(-3px);
+      border-color: rgba(80,180,100,.55);
+      box-shadow: 0 8px 32px rgba(40,120,60,.18);
+    }
+    .route-card-inner { display: flex; flex-direction: row; min-height: 200px; }
+    .route-card-landscape { position: relative; width: 340px; flex-shrink: 0; overflow: hidden; }
+    .route-card-landscape img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .route-card:hover .route-card-landscape img { transform: scale(1.06); }
+    .route-card-landscape-fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 55%, #0D1E14 100%),
+                  linear-gradient(to top, #0D1E14 0%, transparent 40%);
+    }
+    .route-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: rgba(40,120,60,.85); border: 1px solid rgba(80,180,100,.5);
+      color: #7FFFA0; font-size: 9px; letter-spacing: .3em; padding: 3px 9px; border-radius: 2px;
+    }
+    .route-guide-thumb {
+      position: absolute; bottom: 14px; left: 14px;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid rgba(80,180,100,.5); object-fit: cover;
+    }
+    .route-card-body { flex: 1; padding: 28px 28px 22px; display: flex; flex-direction: column; justify-content: center; }
+    .route-card-label { letter-spacing: .4em; font-size: 9px; color: #5AAA70; margin-bottom: 6px; }
+    .route-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--text);
+      font-weight: 700; line-height: 1.1; margin-bottom: 10px;
+    }
+    .route-card-tagline { font-size: .82rem; color: #6A8A72; font-style: italic; line-height: 1.6; margin-bottom: 18px; }
+    .route-stages { display: flex; align-items: center; gap: 0; margin-bottom: 20px; flex-wrap: wrap; row-gap: 8px; }
+    .route-stage-name { font-size: .7rem; color: #5AAA70; letter-spacing: .05em; white-space: nowrap; }
+    .route-stage-line { height: 1px; width: 16px; background: linear-gradient(to right, rgba(80,160,90,.5), rgba(80,160,90,.2)); flex-shrink: 0; margin: 0 2px; }
+    .route-stage-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(80,160,90,.45); flex-shrink: 0; }
+    .route-card-btn {
+      display: inline-block; padding: 8px 20px; font-size: .8rem;
+      letter-spacing: .1em; border: 1px solid rgba(80,180,100,.4);
+      border-radius: 4px; background: rgba(40,120,60,.15); width: fit-content; transition: all .2s;
+    }
+    .route-card:hover .route-card-btn { background: rgba(40,120,60,.3); border-color: rgba(80,180,100,.7); }
+    .routes-section { max-width: 1200px; margin: 0 auto; padding: 0 32px 56px; }
+    .routes-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(80,180,100,.45); text-align: center; margin-bottom: 24px; }
+    @media (max-width: 640px) {
+      .route-card-inner { flex-direction: column; }
+      .route-card-landscape { width: 100%; height: 200px; }
+      .route-card-landscape-fade { background: linear-gradient(to top, #0D1E14 0%, transparent 50%); }
+    }
+
+    /* ── CHAT ── */
+    #page-chat { display: none; height: 100vh; overflow: hidden; flex-direction: row; }
+    #page-chat.active { display: flex; }
+    .chat-left { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-header {
+      padding: 16px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 18px; background: var(--panel); flex-shrink: 0;
+    }
+    .back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 6px 14px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; letter-spacing: .06em; font-family: inherit;
+    }
+    .back-btn:hover { border-color: var(--gold); }
+    .chat-guide-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
+    .chat-guide-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; color: var(--text); }
+    .voice-toggle { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--muted); }
+    .voice-toggle-btn {
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; border-radius: 20px;
+      cursor: pointer; font-size: .75rem; font-family: inherit; transition: all .2s;
+    }
+    .voice-toggle-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
+    .messages { flex: 1; overflow-y: auto; padding: 24px 22px; display: flex; flex-direction: column; gap: 18px; }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .msg-row { display: flex; gap: 10px; align-items: flex-start; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
+    .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.8; font-size: .93rem; white-space: pre-wrap; position: relative; }
+    .msg-bubble.bot { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; }
+    .msg-bubble.user-bubble { background: var(--msg-user); color: var(--text); border-radius: 8px 8px 2px 8px; }
+    .msg-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
+    .speak-btn {
+      display: inline-block; margin-top: 8px; background: none;
+      border: 1px solid var(--border); color: var(--muted); border-radius: 4px;
+      padding: 3px 10px; font-size: .72rem; cursor: pointer; font-family: inherit;
+      transition: all .2s; letter-spacing: .04em;
+    }
+    .speak-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .speak-btn.playing { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.1); }
+    .speak-btn.loading { opacity: .6; cursor: default; }
+    .typing { color: var(--gold); letter-spacing: .3em; font-size: 1.1rem; }
+    .input-row {
+      display: flex; gap: 8px; padding: 14px 22px;
+      border-top: 1px solid var(--border); background: var(--panel); flex-shrink: 0;
+    }
+    #chat-input {
+      flex: 1; background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 11px 16px; border-radius: 6px;
+      font-size: .93rem; outline: none; font-family: 'Crimson Text', Georgia, serif;
+    }
+    #chat-input:focus { border-color: rgba(201,168,76,.4); }
+    #send-btn { width: 46px; height: 46px; border-radius: 6px; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
+    #send-btn:disabled { opacity: .5; cursor: default; }
+
+    /* ── RIGHT PANEL ── */
+    .chat-right {
+      width: 260px; background: var(--panel); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      transform: translateX(100%); opacity: 0;
+      transition: transform .65s cubic-bezier(.16,1,.3,1), opacity .65s ease;
+    }
+    .chat-right.visible { transform: translateX(0); opacity: 1; }
+    .guide-portrait { position: relative; height: 300px; overflow: hidden; }
+    .guide-portrait img { width: 100%; height: 100%; object-fit: cover; }
+    .guide-portrait-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--panel) 0%, transparent 50%); }
+    .guide-portrait-info { position: absolute; bottom: 16px; left: 18px; }
+    .guide-portrait-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 4px; }
+    .guide-portrait-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--text); font-weight: 700; line-height: 1.1; }
+    .guide-online { position: absolute; top: 12px; right: 12px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #4CAF50; background: rgba(76,175,80,.15); }
+    .guide-tagline-box { padding: 16px 18px; border-top: 1px solid var(--border); }
+    .guide-tagline-box p { font-style: italic; color: var(--muted); line-height: 1.85; font-size: .86rem; }
+    .topics-nav { padding: 0 18px 12px; }
+    .topics-label { letter-spacing: .2em; font-size: 9px; color: #605040; margin-bottom: 10px; }
+    .topic-btn {
+      display: block; width: 100%; text-align: left; cursor: pointer;
+      padding: 7px 12px; margin-bottom: 6px; background: var(--input-bg);
+      border: 1px solid var(--border); border-radius: 4px;
+      font-size: .78rem; color: #C9B890; letter-spacing: .03em; font-family: inherit; transition: all .15s;
+    }
+    .topic-btn:hover { border-color: var(--gold); color: var(--text); }
+    .atlas-tip { margin: auto 14px 14px; padding: 10px 12px; background: #1E1208; border: 1px solid var(--border); border-radius: 5px; }
+    .atlas-tip p { font-size: .72rem; color: #605040; line-height: 1.7; }
+    .atlas-tip strong { color: var(--gold); }
+
+    /* ══════════════════════════════════════════════════════
+       PAGE-ROUTE — Lars Grand Loop Norway
+    ══════════════════════════════════════════════════════ */
+    #page-route { display: none; flex-direction: column; height: 100vh; overflow: hidden; background: var(--bg); }
+    #page-route.active { display: flex; }
+
+    /* Top bar */
+    .route-top-bar {
+      display: flex; align-items: center; gap: 16px; padding: 11px 22px;
+      border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0;
+    }
+    .route-top-title { font-family: 'Playfair Display', serif; font-size: .95rem; color: var(--text); }
+    .route-top-sub { font-size: .68rem; letter-spacing: .18em; color: #5AAA70; margin-top: 1px; }
+    .route-top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+    /* Stage navigator strip */
+    .stage-strip {
+      display: flex; align-items: center; gap: 6px; padding: 8px 22px;
+      overflow-x: auto; border-bottom: 1px solid var(--border);
+      background: #110A04; flex-shrink: 0; scrollbar-width: thin;
+    }
+    .stage-strip::-webkit-scrollbar { height: 3px; }
+    .stage-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .stage-pip {
+      flex-shrink: 0; padding: 4px 14px; border-radius: 20px;
+      border: 1px solid var(--border); font-size: .7rem; color: var(--muted);
+      cursor: pointer; white-space: nowrap; transition: all .15s;
+      font-family: inherit; background: none; letter-spacing: .03em;
+    }
+    .stage-pip:hover { border-color: var(--gold); color: var(--text); }
+    .stage-pip.active { background: var(--gold); color: #1A0F07; border-color: var(--gold); font-weight: 600; }
+    .stage-pip.visited { border-color: rgba(201,168,76,.3); color: rgba(201,168,76,.5); }
+    .stage-pip-arrow { color: rgba(80,160,90,.35); font-size: .65rem; flex-shrink: 0; }
+
+    /* Body: left image panel + right lars chat */
+    .route-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Left */
+    .route-left { flex: 1; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
+
+    .stage-hero { position: relative; height: 52%; flex-shrink: 0; overflow: hidden; }
+    .stage-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity .6s ease;
+    }
+    .stage-hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 55%); }
+    .stage-hero-overlay { position: absolute; inset: 0; background: rgba(10,5,2,.25); }
+    .stage-hero-label { position: absolute; bottom: 22px; left: 28px; right: 28px; }
+    .stage-num { font-size: .65rem; letter-spacing: .3em; color: #5AAA70; margin-bottom: 4px; }
+    .stage-title-main {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--text); font-weight: 700; line-height: 1.1; margin-bottom: 4px;
+    }
+    .stage-subtitle { font-size: .72rem; color: var(--muted); letter-spacing: .06em; }
+
+    .stage-content { flex: 1; overflow-y: auto; padding: 20px 28px 16px; }
+    .stage-content::-webkit-scrollbar { width: 3px; }
+    .stage-content::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .stage-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .stage-tag {
+      padding: 4px 13px; border: 1px solid var(--border); border-radius: 20px;
+      font-size: .74rem; color: var(--muted); letter-spacing: .03em;
+    }
+
+    .stage-videos-heading { font-size: .65rem; letter-spacing: .25em; color: #504030; margin-bottom: 10px; }
+    .stage-video-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+    .stage-video-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 14px; border: 1px solid rgba(255,60,60,.2); border-radius: 4px;
+      color: #C07060; font-size: .76rem; text-decoration: none; font-family: inherit;
+      transition: all .15s; background: rgba(180,40,20,.05);
+    }
+    .stage-video-link:hover { border-color: rgba(255,60,60,.5); color: #FF9980; background: rgba(180,40,20,.12); }
+
+    .stage-footer {
+      display: flex; gap: 10px; padding: 14px 28px;
+      border-top: 1px solid var(--border); flex-shrink: 0; background: var(--panel);
+    }
+    .stage-btn {
+      flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 5px;
+      background: none; color: var(--muted); font-family: inherit; font-size: .83rem;
+      cursor: pointer; transition: all .15s; letter-spacing: .04em;
+    }
+    .stage-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--text); }
+    .stage-btn:disabled { opacity: .25; cursor: default; }
+    .stage-btn.fwd {
+      background: rgba(40,120,60,.25); border-color: rgba(80,180,100,.4);
+      color: #8ADA9A; font-weight: 600;
+    }
+    .stage-btn.fwd:hover:not(:disabled) { background: rgba(40,120,60,.45); border-color: rgba(80,180,100,.7); }
+
+    /* Right: Lars panel */
+    .route-right {
+      width: 340px; flex-shrink: 0; display: flex; flex-direction: column;
+      background: var(--panel);
+    }
+    .lars-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .lars-avatar-img {
+      width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
+      border: 1px solid rgba(80,180,100,.35); flex-shrink: 0;
+    }
+    .lars-name-main { font-family: 'Playfair Display', serif; font-size: .95rem; color: var(--text); }
+    .lars-current-stage { font-size: .68rem; color: #5AAA70; letter-spacing: .06em; margin-top: 2px; }
+    .lars-header-right { margin-left: auto; }
+
+    .route-messages {
+      flex: 1; overflow-y: auto; padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .route-messages::-webkit-scrollbar { width: 3px; }
+    .route-messages::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .route-msg-row { display: flex; gap: 8px; align-items: flex-start; }
+    .route-msg-row.user { justify-content: flex-end; }
+    .route-lars-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(80,180,100,.3); }
+    .route-bubble {
+      max-width: 80%; padding: 10px 14px; line-height: 1.78; font-size: .88rem;
+      white-space: pre-wrap;
+    }
+    .route-bubble.lars { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 7px 7px 7px 2px; }
+    .route-bubble.user { background: var(--msg-user); color: var(--text); border-radius: 7px 7px 2px 7px; }
+    .route-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; border-radius: 7px; }
+
+    .route-input-row {
+      display: flex; gap: 8px; padding: 12px 16px;
+      border-top: 1px solid var(--border); flex-shrink: 0; background: var(--panel);
+    }
+    #route-input {
+      flex: 1; background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px; border-radius: 5px;
+      font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif;
+    }
+    #route-input:focus { border-color: rgba(80,180,100,.4); }
+    #route-send {
+      width: 42px; height: 42px; border-radius: 5px; border: none;
+      background: rgba(40,120,60,.6); color: #B0FFB8; font-size: 1.1rem;
+      cursor: pointer; transition: background .15s; flex-shrink: 0;
+    }
+    #route-send:hover { background: rgba(40,120,60,.9); }
+    #route-send:disabled { opacity: .35; cursor: default; }
+  </style>
+</head>
+<body>
+
+<!-- ══ CLAUDE API BANNER ══════════════════════════════════════════════════════ -->
+<div id="claude-banner" class="api-banner" role="alert">
+  <label><strong>Claude API-nøkkel</strong> mangler — hentes fra console.anthropic.com</label>
+  <input type="password" id="claude-key-input" placeholder="Ikke i bruk — nøkkel er server-side" autocomplete="off" />
+  <button id="claude-key-save">Lagre</button>
+  <button class="banner-close" id="claude-banner-close">✕</button>
+</div>
+
+<!-- ══ ELEVENLABS API BANNER ══════════════════════════════════════════════════ -->
+<div id="eleven-banner" class="api-banner" style="top:56px; background:#1A2A00;" role="alert">
+  <label><strong>ElevenLabs API-nøkkel</strong> (valgfri) — for stemmefunksjon — hentes fra elevenlabs.io</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre stemme</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<!-- ══ LANDING ════════════════════════════════════════════════════════════════ -->
+<div id="page-landing" role="main">
+  <header class="hero" role="banner">
+    <p class="hero-eyebrow" aria-hidden="true">SOFATRAVEL · NORSKE GUIDER</p>
+    <h1>Reise fra der du er</h1>
+    <p>Velg din guide. Sett deg godt. La deg føres gjennom Norges skjulte historier — via chat og stemme, 24/7.</p>
+  </header>
+  <section class="guides-section" aria-label="Velg blant norske reiseguider">
+    <p class="section-label" aria-hidden="true">VELG DIN GUIDE</p>
+    <div class="guides-grid" role="list" id="guides-grid"></div>
+  </section>
+  <section class="routes-section" aria-label="Grand Loop Norway – ruter">
+    <p class="routes-label" aria-hidden="true">GRAND LOOP NORWAY · RUTER</p>
+    <div id="routes-grid"></div>
+  </section>
+</div>
+
+<!-- ══ CHAT ═══════════════════════════════════════════════════════════════════ -->
+<div id="page-chat" role="application">
+  <div class="chat-left">
+    <header class="chat-header" role="navigation">
+      <button class="back-btn" id="back-btn">← Guider</button>
+      <div>
+        <p class="chat-guide-city" id="header-city"></p>
+        <p class="chat-guide-name" id="header-name"></p>
+      </div>
+      <div class="voice-toggle">
+        <button class="voice-toggle-btn" id="voice-toggle-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+        <button class="voice-toggle-btn" id="eleven-settings-btn" title="Sett ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
+      </div>
+    </header>
+    <div class="messages" id="messages" role="log" aria-live="polite"></div>
+    <div class="input-row">
+      <input type="text" id="chat-input" autocomplete="off" aria-label="Skriv melding til guiden" />
+      <button id="send-btn">→</button>
+    </div>
+  </div>
+  <aside class="chat-right" id="chat-right">
+    <div class="guide-portrait">
+      <img id="portrait-img" src="" alt="" />
+      <div class="guide-portrait-fade" aria-hidden="true"></div>
+      <div class="guide-portrait-info">
+        <p class="guide-portrait-city" id="portrait-city"></p>
+        <p class="guide-portrait-name" id="portrait-name"></p>
+      </div>
+      <div class="guide-online" title="Tilgjengelig nå"></div>
+    </div>
+    <div class="guide-tagline-box"><p id="portrait-tagline"></p></div>
+    <nav class="topics-nav" aria-label="Foreslåtte temaer">
+      <p class="topics-label" aria-hidden="true">FORESLÅTTE TEMAER</p>
+      <div id="topics-list"></div>
+    </nav>
+    <div class="atlas-tip">
+      <p id="atlas-tip-text">💬 Tips: Spør guiden om skjulte steder, reisetips eller lokal mat!</p>
+    </div>
+  </aside>
+</div>
+
+<!-- ══ ROUTE — Lars Grand Loop Norway ════════════════════════════════════════ -->
+<div id="page-route" role="application" aria-label="Grand Loop Norway med Lars">
+
+  <div class="route-top-bar">
+    <button class="back-btn" id="route-back-btn">← Guider</button>
+    <div>
+      <div class="route-top-title">Grand Loop Norway</div>
+      <div class="route-top-sub">BERGEN · 869 KM · 17 ETAPPER</div>
+    </div>
+    <div class="route-top-right">
+      <button class="voice-toggle-btn" id="route-voice-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+      <button class="voice-toggle-btn" id="route-eleven-btn" title="ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
+    </div>
+  </div>
+
+  <!-- Stage navigator strip -->
+  <nav class="stage-strip" id="stage-strip" aria-label="Etapper"></nav>
+
+  <div class="route-body">
+    <!-- Left: stage image + info -->
+    <div class="route-left">
+      <div class="stage-hero">
+        <img id="stage-img" src="" alt="" loading="eager" />
+        <div class="stage-hero-overlay"></div>
+        <div class="stage-hero-fade"></div>
+        <div class="stage-hero-label">
+          <p class="stage-num" id="stage-num"></p>
+          <h2 class="stage-title-main" id="stage-title"></h2>
+          <p class="stage-subtitle" id="stage-sub"></p>
+        </div>
+      </div>
+
+      <div class="stage-content" id="stage-content">
+        <div class="stage-tags" id="stage-tags"></div>
+        <p class="stage-videos-heading">SØK VIDEOER</p>
+        <div class="stage-video-links" id="stage-videos"></div>
+      </div>
+
+      <div class="stage-footer">
+        <button class="stage-btn" id="stage-prev-btn">← Forrige</button>
+        <button class="stage-btn fwd" id="stage-next-btn">Neste etappe →</button>
+      </div>
+    </div>
+
+    <!-- Right: Lars chat -->
+    <div class="route-right">
+      <div class="lars-header">
+        <img src="Lars.png" alt="Lars" class="lars-avatar-img" />
+        <div>
+          <div class="lars-name-main">Lars</div>
+          <div class="lars-current-stage" id="lars-stage-label">Grand Loop Norway</div>
+        </div>
+        <div class="lars-header-right">
+          <div class="guide-online" title="Tilgjengelig" style="position:static;display:inline-block"></div>
+        </div>
+      </div>
+      <div class="route-messages" id="route-messages" role="log" aria-live="polite"></div>
+      <div class="route-input-row">
+        <input type="text" id="route-input" autocomplete="off" placeholder="Spør Lars…" aria-label="Spør Lars om etappen" />
+        <button id="route-send">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// API KEYS
+// ════════════════════════════════════════════════════════════════════════
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn    = false;
+let currentAudio = null;
+
+function checkClaudeKey() { /* nøkkel er server-side */ }
+
+document.getElementById('claude-banner-close').addEventListener('click', () => document.getElementById('claude-banner').classList.remove('show'));
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) { ELEVEN_KEY = v; localStorage.setItem('st_eleven', v); document.getElementById('eleven-banner').classList.remove('show'); enableVoice(); }
+  else { flashInput('eleven-key-input'); }
+});
+document.getElementById('eleven-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('eleven-key-save').click(); });
+document.getElementById('eleven-banner-close').addEventListener('click', () => document.getElementById('eleven-banner').classList.remove('show'));
+document.getElementById('eleven-settings-btn').addEventListener('click', () => { document.getElementById('eleven-banner').classList.toggle('show'); });
+document.getElementById('voice-toggle-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+});
+function enableVoice() { voiceOn = true; updateVoiceBtn(); updateRouteVoiceBtn(); }
+function updateVoiceBtn() {
+  const btn = document.getElementById('voice-toggle-btn');
+  btn.textContent = voiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
+  btn.classList.toggle('active', voiceOn);
+}
+function flashInput(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = '#FF4444';
+  setTimeout(() => { el.style.borderColor = ''; }, 2000);
+}
+checkClaudeKey();
+if (ELEVEN_KEY) enableVoice();
+
+// ════════════════════════════════════════════════════════════════════════
+// GUIDE DATA
+// ════════════════════════════════════════════════════════════════════════
+const guides = [
+  { id:'bergen',       name:'Astrid',  city:'Bergen',       tagline:'Hanseatenes by og fjordenes port',         img:'Astrid, bergen.jpeg', accent:'#8B1A2F', voiceId:'XB0fDUnXU5powFXDhCwa', youtubeUrl:'https://youtu.be/5p-YQnvOCLc' },
+  { id:'oslo',         name:'Henrik',  city:'Oslo',         tagline:'Kongebyen ved Oslofjorden',                img:'Henrik Oslo.jpeg', accent:'#1A3A5C', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'tromso',       name:'Sigrid',  city:'Tromsø',       tagline:'Nordlysets by under arktisk himmel',       img:'Sigrid - Tromsø.jpeg', accent:'#2A1A5C', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'stavanger',    name:'Magnus',  city:'Stavanger',    tagline:'Preikestolens by og oljeeventyret',        img:'Magnus - Stavanger.jpeg', accent:'#1E4A28', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+  { id:'alesund',      name:'Ingrid',  city:'Ålesund',      tagline:'Jugendstilbyen midt i havgapet',           img:'Ingrid - Aalesund.jpeg', accent:'#5C3A1A', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'lofoten',      name:'Hilde',   city:'Lofoten',      tagline:'Fiskernes paradis — magisk og uberørt',   img:'hilde - lofoten.jpeg', accent:'#1A3D4F', voiceId:'jsCqWAovK2LkecY7zXl4' },
+  { id:'flam',         name:'Maja',    city:'Flåm',         tagline:'Verdens vakreste togtur starter her',      img:'Maja - Flaam.jpeg', accent:'#2D4A1A', voiceId:'XrExE9yKIg1WjnnlVkGX' },
+  { id:'geiranger',    name:'Erik',    city:'Geiranger',    tagline:'UNESCO-fjordens stille vokter',            img:'Erik - Geiranger.jpeg', accent:'#1E3A4A', voiceId:'VR6AewLTigWG4xSOukaG' },
+  { id:'kristiansand', name:'Sofia',   city:'Kristiansand', tagline:'Sørlandets perle og sommerbyen',           img:'Sofia - Kristiansand.jpeg', accent:'#7A3520', voiceId:'EXAVITQu4vr4xnSDxMaL' },
+  { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',           img:'Olav - Trondheim.png', accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
+];
+
+const routes = [
+  {
+    id: 'grand-loop', type: 'route', name: 'Lars', city: 'Bergen → Bergen',
+    routeLabel: 'GRAND LOOP NORWAY',
+    stages: ['Bergen','Voss','Nærøyfjord','Lærdal','Stryn','Geiranger','Åndalsnes','Atlanterhavsveien','Kristiansund','Molde','Bergen'],
+    tagline: 'Norges fremste rundtur — 869 km, 17 etapper langs fjord, fjell og kyst',
+    img: 'Lars.png',
+    landscapeImg: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
+    accent: '#3A9A55', voiceId: 'VR6AewLTigWG4xSOukaG',
+  },
+];
+
+// ════════════════════════════════════════════════════════════════════════
+// GRAND LOOP STAGE DATA
+// ════════════════════════════════════════════════════════════════════════
+const STAGES = [
+  {
+    id: 'voss',
+    title: 'Bergen → Voss',
+    sub: '95 km · E16 · ca. 1 t 15 min',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=85',
+    tags: ['Tvindefossen (152 m)', 'Skjervsfossen (43 m)', 'Voss kirke 1277', 'Eventyrhovedstaden'],
+    videos: [
+      { label: '▶ Stalheimskleiva', url: 'https://www.youtube.com/results?search_query=stalheimskleiva+norway+drive' },
+      { label: '▶ Tvindefossen', url: 'https://www.youtube.com/results?search_query=tvindefossen+voss+norway+waterfall' },
+    ],
+    opener: 'Vi passerer Bergen og E16 begynner å snakke. Tvindefossen er den første som hilser på oss — 152 meter rett ned langs veikanten. Folk stopper ikke alltid.\n\nDe burde.',
+  },
+  {
+    id: 'stalheim',
+    title: 'Stalheimskleiva',
+    sub: 'Fv13 · 13 hårnålsvinger · 13% stigning · kun sommer',
+    img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85',
+    tags: ['13 hårnålsvinger', '13% stigning', 'Stalheim Hotel 1885', 'Nærøydalen åpner seg'],
+    videos: [
+      { label: '▶ Stalheimskleiva ned', url: 'https://www.youtube.com/results?search_query=stalheimskleiva+norway+hairpin+road' },
+    ],
+    opener: 'Her slutter veien å oppføre seg som en vei. Den begynner å tenke.\n\nTretten hårnålsvinger ned i dalen. 13% stigning. Ikke bygget for å spare tid — bygget for å takle fjellet.',
+  },
+  {
+    id: 'naeroyfjord',
+    title: 'Nærøyfjorden',
+    sub: 'Gudvangen → Flåm · ferge · 2 timer · UNESCO 2005',
+    img: 'https://images.unsplash.com/photo-1548425046-d435a04059bb?w=1400&q=85',
+    tags: ['UNESCO Verdensarv 2005', '250 m smaleste punkt', '1700 m fjellsider', 'Bakka — uten veiforbindelse'],
+    videos: [
+      { label: '▶ Nærøyfjord ferge', url: 'https://www.youtube.com/results?search_query=nærøyfjord+ferry+norway+4k' },
+      { label: '▶ Nærøyfjord drone', url: 'https://www.youtube.com/results?search_query=nærøyfjord+drone+unesco' },
+    ],
+    opener: 'Vi lar bilen stå og går om bord. 250 meter bred på det smaleste, med fjell som reiser seg 1700 meter på begge sider.\n\nDet er ikke dramatisk fordi det er stort. Det er dramatisk fordi det er tett.',
+  },
+  {
+    id: 'flam',
+    title: 'Flåm',
+    sub: 'Innerst i Aurlandsfjorden · Flåmsbana · Ægir Bryggeri',
+    img: 'https://images.unsplash.com/photo-1529963183131-ea8792299d3b?w=1400&q=85',
+    tags: ['Flåmsbana 20,2 km · 864 moh.', 'Kjosfossen (93 m)', 'Ægir Bryggeri', 'Sognefjorden 204 km'],
+    videos: [
+      { label: '▶ Flåmsbana 4K', url: 'https://www.youtube.com/results?search_query=flåmsbana+train+journey+4k+norway' },
+      { label: '▶ Kjosfossen', url: 'https://www.youtube.com/results?search_query=kjosfossen+waterfall+flam+norway' },
+    ],
+    opener: 'Flåmsbana ble bygget for å frakte fisk, ikke turister. Det tok tjue år. 864 meter høydeforskjell på 20 kilometer.\n\nKjosfossen stopper toget — 93 meter foss rett utenfor vinduet. Om sommeren danser en skuespiller på fjellet. Jeg vet ikke hva jeg synes om det, men folk liker det.',
+  },
+  {
+    id: 'aurland',
+    title: 'Aurland · Snøvegen',
+    sub: 'Fv243 · Stegastein · 1306 moh. · åpen juni–oktober',
+    img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&q=85',
+    tags: ['Stegastein 650 moh. over fjorden', 'Snøvegen (Fv243) 1306 moh.', 'Lærdalstunnelen 24,5 km', 'Aurlandsvegen'],
+    videos: [
+      { label: '▶ Stegastein utsiktspunkt', url: 'https://www.youtube.com/results?search_query=stegastein+viewpoint+aurland+norway' },
+      { label: '▶ Snøvegen', url: 'https://www.youtube.com/results?search_query=snøvegen+aurlandsvegen+norway+drive' },
+    ],
+    opener: 'Stegastein er en treplatting som stakk 30 meter ut fra fjellsiden, 650 meter over fjorden. Arkitektene kalte det et utsiktspunkt.\n\nDet er mer som å stå i luften og bestemme seg for noe.',
+  },
+  {
+    id: 'laerdal',
+    title: 'Lærdal · Borgund',
+    sub: '161 vernede trehus · stavkirke ca. 1150',
+    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85',
+    tags: ['Lærdalsøyri — 161 trehus 1700-t.', 'Kongelig lakseelv', 'Borgund stavkirke ca. 1150', 'Drager på mønet'],
+    videos: [
+      { label: '▶ Borgund stavkirke', url: 'https://www.youtube.com/results?search_query=borgund+stave+church+norway+history' },
+      { label: '▶ Lærdalsøyri', url: 'https://www.youtube.com/results?search_query=lærdalsøyri+old+town+norway' },
+    ],
+    opener: 'Borgund stavkirke er fra ca. 1150. Dragene på mønet er ikke bare pynt — de holder vakt.\n\nLærdalsøyri har 161 vernede trehus fra 1700-tallet. Kongen fisker i elven her. Det sier noe om elven.',
+  },
+  {
+    id: 'sognefjellet',
+    title: 'Sognefjellet',
+    sub: 'Rv55 · 1434 moh. · Nordeuropas høyeste fjellovergang',
+    img: 'https://images.unsplash.com/photo-1586348943529-beaae6c28ac9?w=1400&q=85',
+    tags: ['1434 m over havet', 'Åpen mai–november', 'Jotunheimen på begge sider', 'Galdhøpiggen synlig'],
+    videos: [
+      { label: '▶ Sognefjellet Rv55', url: 'https://www.youtube.com/results?search_query=sognefjellet+rv55+norway+mountain+drive' },
+    ],
+    opener: 'Nordeuropas høyeste fjellovergang. 1434 meter. Jotunheimen på begge sider.\n\nRiksveien er stengt halvparten av året. Det er noe befriende med veier som ikke alltid er tilgjengelige — de minner oss om at vi er gjester her.',
+  },
+  {
+    id: 'lom',
+    title: 'Lom',
+    sub: 'Stavkirke 1158 · Jotunheimen · Peer Gynt-landet',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=85',
+    tags: ['Lom stavkirke ca. 1158', 'Norsk Fjellmuseum', 'Fossheim Steinsenter', 'Peer Gynt-landet'],
+    videos: [
+      { label: '▶ Lom stavkirke', url: 'https://www.youtube.com/results?search_query=lom+stavkirke+norway' },
+      { label: '▶ Jotunheimen', url: 'https://www.youtube.com/results?search_query=jotunheimen+national+park+norway+4k' },
+    ],
+    opener: 'Lom stavkirke er fra ca. 1158. Det er en tyngde over Lom — stedet vet det har sett mange komme og gå.\n\nIbsen hentet Peer Gynt i disse fjellene. Fossheim Steinsenteret samler mineraler fra hele verden. En merkelig, fin kontrast til all den granitt og snøen rundt oss.',
+  },
+  {
+    id: 'stryn',
+    title: 'Stryn · Jostedalsbreen',
+    sub: 'Strynevatnet · Briksdalsbreen · Norges største isbre',
+    img: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1400&q=85',
+    tags: ['Strynevatnet 17 km turkisblått', 'Briksdalsbreen til fots', 'Jostedalsbreen 474 km²', 'Sommerskiing på natursnø'],
+    videos: [
+      { label: '▶ Jostedalsbreen isbre', url: 'https://www.youtube.com/results?search_query=jostedalsbreen+briksdalsbreen+glacier+norway' },
+      { label: '▶ Strynevatnet', url: 'https://www.youtube.com/results?search_query=strynevatnet+stryn+norway' },
+    ],
+    opener: 'Strynevatnet er 17 kilometer lang og turkisblå fra isbreavrenning. Briksdalsbreen er tilgjengelig til fots.\n\nIsbreen smelter — ikke dramatisk raskt, men merkbart, hvert år. Det er verdt å merke seg det mens vi er her.',
+  },
+  {
+    id: 'geiranger',
+    title: 'Geiranger',
+    sub: 'UNESCO 2005 · De syv søstrene · Ørnesvingen · Dalsnibba',
+    img: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1400&q=85',
+    tags: ['De syv søstrene', 'Ørnesvingen 11 hårnålsvinger', 'Dalsnibba 1476 moh.', 'Flydalsjuvet utsiktspunkt'],
+    videos: [
+      { label: '▶ Geirangerfjord drone', url: 'https://www.youtube.com/results?search_query=geirangerfjord+drone+4k+norway' },
+      { label: '▶ Ørnesvingen nedkjøring', url: 'https://www.youtube.com/results?search_query=ørnesvingen+geiranger+drive+4k' },
+    ],
+    opener: 'Geirangerfjorden er ikke stille. Det er stille mellom turistbåtene.\n\nDe syv søstrene er sju fosser som faller parallelt. Ingen har samme høyde. Legenden sier de danser. Jeg tror de bare gjør som de vil.\n\nStans bilen ved Ørnesvingen. Ta deg tid.',
+  },
+  {
+    id: 'trollstigen',
+    title: 'Trollstigen · Åndalsnes',
+    sub: '11 hårnålsvinger · Romsdalen · Rauma-banen',
+    img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85',
+    tags: ['Trollstigen 11 svinger · 858 moh.', 'Romsdalen — dramatisk dal', 'Rauma-banen 114 km', 'Romsdalseggen klatrerute'],
+    videos: [
+      { label: '▶ Trollstigen 4K', url: 'https://www.youtube.com/results?search_query=trollstigen+norway+4k+drive' },
+      { label: '▶ Rauma-banen', url: 'https://www.youtube.com/results?search_query=rauma+railway+norway+train+journey' },
+    ],
+    opener: 'Trollstigen ble bygget på åtte år, åpnet 1936. 11 svinger, 858 meter over havet.\n\nVeien ned inn i Romsdalen er noe av det villeste vi kjører på norske veier. Rauma-banen fra Åndalsnes — en av Europas vakreste togstrekninger, hvis du vil la bilen hvile.',
+  },
+  {
+    id: 'atlanterhavsveien',
+    title: 'Atlanterhavsveien',
+    sub: '8,3 km · 8 broer · 17 holmer · «Verdens vakreste biltur»',
+    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85',
+    tags: ['Storseisundbrua — den ikoniske', '8 broer over åpent hav', 'The Guardian: verdens beste biltur', 'Storm om høsten'],
+    videos: [
+      { label: '▶ Atlanterhavsveien 4K', url: 'https://www.youtube.com/results?search_query=atlanterhavsveien+atlantic+road+norway+4k' },
+      { label: '▶ Storseisundbrua storm', url: 'https://www.youtube.com/results?search_query=storseisundbrua+storm+waves+norway' },
+    ],
+    opener: 'Åtte broer, 17 holmer, 8,3 kilometer. Storseisundbrua buer ut over havet som om den ikke er ferdig tegnet.\n\nI storm er det her veien og havet bytter plass. Ikke alltid trygt — men det er minneverdig.',
+  },
+  {
+    id: 'kristiansund',
+    title: 'Kristiansund',
+    sub: 'Klippfiskbyen · Sundbåten · øyby siden 1742',
+    img: 'https://images.unsplash.com/photo-1548425046-d435a04059bb?w=1400&q=85',
+    tags: ['Klippfisk siden 1690', 'Sundbåten — siden 1876', 'By på fire øyer', 'Nordmørsmusea'],
+    videos: [
+      { label: '▶ Kristiansund fra sjøen', url: 'https://www.youtube.com/results?search_query=kristiansund+norway+drone+fjord' },
+      { label: '▶ Klippfisk-historien', url: 'https://www.youtube.com/results?search_query=kristiansund+klippfisk+history+norway' },
+    ],
+    opener: 'Kristiansund lukter klippfisk. Det er ikke ment negativt — det er en ærlig lukt. Salt, vind og arbeid gjennom tre hundre år.\n\nSundbåten har gått mellom øyene siden 1876. Billigste kollektivtransport i landet. Og den beste utsikten for ti kroner.',
+  },
+  {
+    id: 'averoy',
+    title: 'Averøy',
+    sub: 'Kvernes stavkirke · kystlandskap · stille øy',
+    img: 'https://images.unsplash.com/photo-1529963183131-ea8792299d3b?w=1400&q=85',
+    tags: ['Kvernes stavkirke 1300-t.', 'Bremsnes fiskerileir', 'Atlanterhavstunnelen', 'Lite turisme — rolig'],
+    videos: [
+      { label: '▶ Kvernes stavkirke', url: 'https://www.youtube.com/results?search_query=kvernes+stave+church+averøy+norway' },
+      { label: '▶ Averøy kystlandskap', url: 'https://www.youtube.com/results?search_query=averøy+norway+coast+drone' },
+    ],
+    opener: 'Kvernes stavkirke fra 1300-tallet ligger på en gresslette rett mot havet. Ingen store skilt. Ingen souvenir-butikk.\n\nDen er bare der, som den har vært i syv hundre år. Averøy er rolig på en måte turiststeder sjelden er.',
+  },
+  {
+    id: 'molde',
+    title: 'Molde',
+    sub: 'Rosenes by · 222 fjelltopper · Moldejazz siden 1961',
+    img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&q=85',
+    tags: ['222 fjelltopper fra Varden', 'Moldejazz siden 1961', 'Miles Davis spilte her', 'Rosene blomstrer om sommeren'],
+    videos: [
+      { label: '▶ Moldepanoramaet', url: 'https://www.youtube.com/results?search_query=molde+panorama+norway+mountains+view' },
+      { label: '▶ Moldejazz festival', url: 'https://www.youtube.com/results?search_query=molde+jazz+festival+norway' },
+    ],
+    opener: 'Fra Varden kan du telle 222 fjelltopper på klare dager. De har faktisk talt dem.\n\nMoldejazz siden 1961 — Dizzy Gillespie, Miles Davis og Keith Jarrett har spilt her. En liten kystby med uforholdsmessig stor musikkhistorie.',
+  },
+  {
+    id: 'volda',
+    title: 'Vestnes · Ørsta · Volda',
+    sub: 'Ferge · Hjørundfjorden · E39 sørover',
+    img: 'https://images.unsplash.com/photo-1548425046-d435a04059bb?w=1400&q=85',
+    tags: ['Ferge Vestnes–Molde', 'Hjørundfjorden — villere enn Geiranger', 'Ørstavik og Sunnmøre', 'E39 sørover'],
+    videos: [
+      { label: '▶ Hjørundfjorden', url: 'https://www.youtube.com/results?search_query=hjørundfjorden+norway+drone+4k' },
+      { label: '▶ E39 Vestlandet', url: 'https://www.youtube.com/results?search_query=e39+norway+coastal+drive+fjord' },
+    ],
+    opener: 'Hjørundfjorden er smalere og villere enn Geiranger — og langt færre turister. Det er ikke alle steder som ønsker å bli funnet.',
+  },
+  {
+    id: 'hjem',
+    title: '→ Bergen',
+    sub: 'E39 sørover · ferjer · hjemkomst',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=85',
+    tags: ['E39 langs kysten', 'Ferje(r) sørover', 'Tilbake til Bryggen', '869 km — ferdig'],
+    videos: [
+      { label: '▶ Bergen Bryggen', url: 'https://www.youtube.com/results?search_query=bergen+bryggen+norway+drone+4k' },
+    ],
+    opener: 'Vi er tilbake.\n\nDe fleste tror de reiser for å se nye steder. Egentlig reiser vi for å oppdage hva som fortsatt lever i oss når alt annet blir stille.\n\nBergen er den samme. Vi er ikke.',
+  },
+];
+
+// ════════════════════════════════════════════════════════════════════════
+// TOPICS
+// ════════════════════════════════════════════════════════════════════════
+const topicsByGuide = {
+  bergen:        ['Bryggen og hanseatene','Edvard Grieg og Troldhaugen','Shetlandsbussen og krigen','Fisketorget og lokalmaten','De syv fjell og Fløibanen','Spedalskhetens museum'],
+  oslo:          ['Operaen og Bjørvika','Vigeland og Frognerparken','Munchmuseet og Nasjonalmuseet','Grünerløkka og Akerselva','Holmenkollen og Marka','Akershus festning og historien'],
+  tromso:        ['Nordlys — tid og sted','Midnattssolen i juni','Ishavskatedralen','Hvalsafari og dyrelivet','Mack Bryggeri og byliv','Samisk kultur og reindrift'],
+  stavanger:     ['Preikestolen og Lysefjorden','Kjeragbolten og Kjerag','Norsk Oljemuseum','Stavanger gamlebyen','Matscenen og Michelin','Lysefjordens historie'],
+  alesund:       ['Brannen i 1904 og jugendstilen','Aksla og utsikten','Geirangerfjorden fra Ålesund','Trollveggen og Romsdalen','Havets by — fisk og klippfisk','Sunnmørsalpene'],
+  lofoten:       ['Midnattssolen over Lofoten','Fiskevær og rørbuer','Nordnorsk mat og tørrfisk','Lofotveggen og fjordene','Vikinghistorie på Borg','Havørn og villmarken'],
+  flam:          ['Flåmsbana og Kjosfossen','Nærøyfjord UNESCO','Stegastein og Snøvegen','Ægir Bryggeri','Aurland stavkirke','Sykkel i Flåmsdalen'],
+  geiranger:     ['De syv søstrene','Ørnesvingen og Dalsnibba','Skageflå og Knivsflå','Cruiseskip og turisme','Hellesylt og ferjen','Fra 2026 — nullutslipp'],
+  kristiansand:  ['Dyreparken og Kardemomme by','Kvadraturen og Posebyen','Bystranda og skjærgården','Christiansholm festning','Sommerbyen og båtliv','Fiskebåt og sjømat'],
+  trondheim:     ['Nidarosdomen og pilegrimsleden','Erkebispegården og riksregaliene','Bakklandet og Nidelva','NTNU og studentbyen','Olav den hellige','Stiklestad og vikinghistorie'],
+  default:       ['Historiske steder','Lokalmaten','Skjulte perler','Naturopplevelser'],
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// SYSTEM PROMPTS — GUIDE CHAT
+// ════════════════════════════════════════════════════════════════════════
+const BERGEN_KB = `
+GRUNNLEGGENDE: Bergen grunnlagt 1070 av Olav Kyrre. Norges nest største by (~295.000 innb.). De syv fjell: Fløyen, Ulriken, Sandviken, Rundemanen, Løvstakken, Damsgårdsfjell, Lyderhorn. Ca. 230 regndager. «Ti ord for regn».
+BRYGGEN: UNESCO-verdensarv 1979. Hansa 1360–1750 — handlet tørrfisk. Opprinnelig «Tyskebryggen». Enhjørningsgården, Svendsgården. Bak Bryggen: Steinkjelleren (Norges eldste bordell). Schøtstuene.
+BRANNER: 1702 (90% brant), 1413, 1476, 1582, 1675, 1686, 1751, 1771, 1901, 1955.
+SVARTEDAUDEN: 1349 — engelsk skip. Tre fjerdedeler av befolkningen døde.
+BERGENHUS: Fra 1240-tallet. Håkonshallen 1247–61. Rosenkrantztårnet 1560-tallet.
+MARIAKIRKEN: Eldste bygning, 1130–1170. Gudstjenester på tysk under Hansa. Øvregaten = Norges første gate.
+GRIEG: Edvard Grieg 1843–1907. Troldhaugen fra 1885. Kremert (nr. 7 i Norge). Rød komponisthytte.
+LEPRAMUSEET: Bergen = Europas leprasenter på 1800-tallet. Armauer Hansen oppdaget leprabasillen 1873.
+KRIGEN: Okkupert 1940–45. Shetlandsbussen — norske fiskebåter til Shetland. Leif Larsen: 52 tokt.
+MAT: Fisketorget siden 1200-tallet. Kaffemisjonen. Colonialen. Raspeball, fårikål.
+KULTUR: Festspillene i Bergen (mai/juni). Buekorps siden 1850-tallet. Bergen Filharmoniske Orkester (gr. 1765). Ingen billboards.
+`;
+const LOFOTEN_KB = `
+GEOGRAFI: Lofoten er en øygruppe i Nordland — ca. 170 km ut i havet. Vestvågøy, Flakstad, Moskenesøy, Austvågøy.
+MIDNATTSSOL: 28. mai – 14. juli. Mørketid: 8. desember – 4. januar.
+FISK: Verdens viktigste tørrfiskprodusent. Skrei januar–april. Tørrfisk på hjeller februar–juni.
+FISKEVÆRENE: Å (uttales «Åh»). Henningsvær — Lofotens Venezia. Reine — kåret til verdens vakreste. Nusfjord.
+RØRBUER: Arbeiderboliger for fiskere, nå ferieboliger. Noen over 100 år gamle.
+VIKINGER: Borg i Vestvågøy: Norges største vikingkongehall (83 m). Lofotr Vikingmuseum.
+MAT: Bacalao, skreimølje (dampet skrei med lever og rogn), lofotlam. Anita's Sjømat i Henningsvær.
+NORDLYSET: September–mars. Mørk himmel, lav lysforurensing.
+HAVØRN: Europas tetteste bestand. Vingespenn inntil 2,5 m.
+`;
+const BERGEN_STRYN_KB = `
+RUTEN: Bergen → Stryn via E16, Stalheimskleiva, Nærøyfjord, Flåm, Aurland, Lærdal, Sognefjellet, Lom — ca. 440 km.
+STALHEIMSKLEIVA: 13 hårnålsvinger, 13% stigning. Kun privatbiler om sommeren.
+NÆRØYFJORDEN: UNESCO 2005. Smaleste punkt 250 m. Ferge fra Gudvangen til Flåm.
+FLÅMSBANA: 20,2 km, 864 moh. høydeforskjell, åpnet 1940. Kjosfossen 93 m.
+SNØVEGEN: Aurlandsvegen Fv243 — 1306 moh., åpen juni–oktober. Stegastein utsiktspunkt.
+BORGUND: Stavkirke ca. 1150–1200, best bevarte i Norge, dragornamentikk.
+SOGNEFJELLET: Rv55, Nordeuropas høyeste fjellovergang 1434 moh., åpen mai–november.
+LOM: Stavkirke ca. 1158. Norsk Fjellmuseum. Peer Gynt-landet.
+STRYN: Strynevatnet 17 km turkisblå. Jostedalsbreen 474 km². Briksdalsbreen.
+`;
+const OSLO_KB = `
+OSLO: Norges hovedstad, 700 000 innb. Grunnlagt ca. 1000 e.Kr. Ligger innerst i Oslofjorden.
+SENTRUM: Operaen (2008, Snøhetta). Aker Brygge og Tjuvholmen. Rådhuset (Nobels fredspris 10. des.). Akershus festning fra 1290-tallet.
+KULTUR: Vigelandsanlegget 212 skulpturer. Munchmuseet (Lambda, 2021) 28 000 verk. Nasjonalmuseet (2022). Fram-museet. Kon-Tiki-museet.
+GRÜNERLØKKA: Hipster-bydel. Mathallen Oslo. Akerselva. Grønland.
+HOLMENKOLLEN: Skimuseum 1923. T-banen dit.
+PRAKTISK: T-banen. Ruter-app. Oslo City Bike april–november.
+`;
+const TROMSO_KB = `
+TROMSØ: 78 000 innb., 350 km nord for Polarsirkelen. Verdens nordligste universitetsby av betydning.
+NORDLYS: Beste sesong oktober–mars. KP 3+ synlig fra Tromsø. spaceweather.com.
+MIDNATTSSOL: 20. mai – 22. juli. Mørketid: 26. november – 15. januar.
+SENTRUM: Ishavskatedralen (1965). Polarmuseet. Mack Bryggeri (1877). Fjellheisen 420 moh.
+OMGIVELSER: Kvaløya. Lyngen Alps. Sommarøy hvit sandstrand. Hvalsafari november–januar.
+SAMISK: Inngangsporten til samisk kultur.
+`;
+const STAVANGER_KB = `
+STAVANGER: 145 000 innb., Norges oljehovedstad. Grunnlagt 1125.
+PREIKESTOLEN: 604 moh., 25x25m platå. 3,8 km gange. Ca. 300 000 besøkende/år. Kjeragbolten.
+GAMLEBYEN: 173 hvite trehus 1800-t. Stavanger domkirke 1125. Norsk Hermetikkmuseum.
+OLJE: Ekofiskfeltet funnet 23. des. 1969. Norsk Oljemuseum (2000).
+MAT: Flest Michelin-stjerner/innb. i Norge. Re-Naa (2 stjerner). Fargegaten.
+LYSEFJORDEN: 42 km, 422 m dyp. Flørli (4444 trinn).
+`;
+const ALESUND_KB = `
+ÅLESUND: 70 000 innb. Europas best bevarte jugendstilby. Møre og Romsdal.
+BRANNEN: Natt til 23. jan. 1904 — 850 hus, 10 000 hjemløse. Gjenreist 1904–1907 i jugendstil. Kaiser Wilhelm II sendte forsyningsskip.
+SENTRUM: Brosundet. Fjellstua på Aksla (418 trinn). Jugendstilsenteret.
+HAVN: Norges viktigste fiskerihavn. Atlantic Sea Park.
+ROMSDALEN: Trollveggen (1000 m loddrett). Trollstigen. Rauma-banen.
+`;
+const FLAM_KB = `
+FLÅM: 350 innb., innerst i Aurlandsfjorden. Sognefjorden 204 km lang, 1308 m dyp.
+FLÅMSBANA: 20,2 km, 864 moh., åpnet 1940. 20 tunneler. Kjosfossen 93 m om sommeren.
+FJORDEN: Aurlandsfjorden 29 km. Nærøyfjorden — UNESCO.
+FLÅM SENTRUM: Ægir Bryggeri siden 2007. Flåmsbrygga hotell.
+AURLAND: Aurlandsvegen «Snøvegen» til 1306 moh. Stegastein 650 moh., 30 m ut fra fjellsiden.
+`;
+const GEIRANGER_KB = `
+GEIRANGER: 250 fastboende, 700 000 besøkende/år. UNESCO Verdensarv 2005.
+FJORDEN: 15 km. De syv søstrene — 7 parallelle fosser. Friaren (Friarfossen). Bryllaupssløret.
+UTSIKT: Ørnesvingen (11 hårnålsvinger). Flydalsjuvet. Dalsnibba 1476 moh.
+HISTORIEN: Nedlagte fjellgårder — Skageflå og Knivsflå.
+CRUISESKIP: Fra 2026 kun nullutslippsskip.
+`;
+const KRISTIANSAND_KB = `
+KRISTIANSAND: 115 000 innb. Grunnlagt av Christian IV 1641. Sørlandets uoffisielle hovedstad.
+KVADRATUREN: Perfekt rutenett 700x700 m. Posebyen — trehus 1700–1800-t. Domkirken 1885.
+DYREPARKEN: 1,4 mill. besøkende/år. Kardemomme by. Åpnet 1966.
+STRANDLIV: Bystranda i sentrum. Skjærgårdstjenesten — gratis båtskyss.
+FESTNINGENE: Christiansholm festning (1672). Odderøya kulturpark.
+SØRLAND: Bibelbelte. Seilingsparadis. Kilden teater 2012.
+`;
+const TRONDHEIM_KB = `
+TRONDHEIM: 210 000 innb. Grunnlagt år 997 av Olav Tryggvason. Norges historiske religiøse sentrum.
+NIDAROSDOMEN: Bygget over Olav den helliges grav. Påbegynt ca. 1070. Norges nasjonalhelligdom. Kongene vier seg her. Nordens største middelalderkatedral.
+ERKEBISPEGÅRDEN: Nordens best bevarte middelalderanlegg. Riksregaliene oppbevares her.
+BAKKLANDET: Brosteinsbelagt bydel. Den gamle bybro. Fargerike trehus.
+NTNU: Norges største universitet, 43 000 studenter.
+MAT: Skansenkaien og Solsiden. Britannia Hotel (1897). Ni (1 Michelin-stjerne).
+`;
+
+function getSystemPrompt(g) {
+  const stilregler = `
+STIL OG LENGDE:
+- Maks 2–3 avsnitt per svar. Kortere er bedre enn lengre.
+- Ingen overdrevne utrop, ingen «kjære reisevenn».
+- Skriv som en klok, rolig venn som kjenner stedet.
+- Konkret fremfor poetisk: én god detalj slår tre metaforer.
+- Prosa, aldri punktlister.
+- Avslutt med ett kort, naturlig spørsmål.`;
+
+  if (g.id === 'grand-loop') return ''; // handled by getRouteLarsPrompt
+  if (g.id === 'bergen-stryn') return `Du er Lars, guide for Grand Loop Norway. Snakker alltid norsk.\nPERSONLIGHET: Erfaren, rolig, jordnær. Bruk «vi».\nKUNNSKAP:\n${BERGEN_STRYN_KB}${stilregler}`;
+  if (g.id === 'bergen') return `Du er Astrid, reiseguide fra Bergen. Snakker alltid norsk.\nPERSONLIGHET: Bergenser til fingerspissene, elsker regnet. Varm og direkte. Bruk «vi».\nKUNNSKAP:\n${BERGEN_KB}${stilregler}`;
+  if (g.id === 'lofoten') return `Du er Hilde, reiseguide fra Lofoten. Snakker norsk.\nPERSONLIGHET: Oppvokst i Henningsvær. Respekt for naturen. Bruk «vi».\nKUNNSKAP:\n${LOFOTEN_KB}${stilregler}`;
+  if (g.id === 'oslo') return `Du er Henrik, reiseguide fra Oslo. Snakker alltid norsk.\nPERSONLIGHET: Intellektuell oslomann i 50-årene. Tørr humor. Bruk «vi».\nKUNNSKAP:\n${OSLO_KB}${stilregler}`;
+  if (g.id === 'tromso') return `Du er Sigrid, reiseguide fra Tromsø. Snakker alltid norsk.\nPERSONLIGHET: Biologistudent ved UiT. Elsker nordlyset vitenskapelig og poetisk. Bruk «vi».\nKUNNSKAP:\n${TROMSO_KB}${stilregler}`;
+  if (g.id === 'stavanger') return `Du er Magnus, reiseguide fra Stavanger. Snakker alltid norsk.\nPERSONLIGHET: Eks-oljeingeniør, friluftsentusiast. Direkte og jordnær. Bruk «vi».\nKUNNSKAP:\n${STAVANGER_KB}${stilregler}`;
+  if (g.id === 'alesund') return `Du er Ingrid, reiseguide fra Ålesund. Snakker alltid norsk.\nPERSONLIGHET: Arkitekturelsker, stolt av jugendstilbyen. Livlig men aldri overveldende. Bruk «vi».\nKUNNSKAP:\n${ALESUND_KB}${stilregler}`;
+  if (g.id === 'flam') return `Du er Maja, reiseguide fra Flåm. Snakker alltid norsk.\nPERSONLIGHET: Vokst opp med Flåmsbana som nabo. Rolig og ekte. Bruk «vi».\nKUNNSKAP:\n${FLAM_KB}${stilregler}`;
+  if (g.id === 'geiranger') return `Du er Erik, reiseguide fra Geiranger. Snakker alltid norsk.\nPERSONLIGHET: En av 250 fastboende. Ambivalent til turiststrøm, ekte kjærlighet til fjorden. Bruk «vi».\nKUNNSKAP:\n${GEIRANGER_KB}${stilregler}`;
+  if (g.id === 'kristiansand') return `Du er Sofia, reiseguide fra Kristiansand. Snakker alltid norsk.\nPERSONLIGHET: Ung, sommergla sørlending. Elsker Skjærgården. Lett og lun. Bruk «vi».\nKUNNSKAP:\n${KRISTIANSAND_KB}${stilregler}`;
+  if (g.id === 'trondheim') return `Du er Olav, reiseguide fra Trondheim. Snakker alltid norsk.\nPERSONLIGHET: Historiker av legning, fascinert av vikingkonger. Tørr humor. Bruk «vi».\nKUNNSKAP:\n${TRONDHEIM_KB}${stilregler}`;
+  return `Du er ${g.name}, reiseguide til ${g.city}. Snakker alltid norsk. Varm, konkret og jordnær. Bruk «vi».${stilregler}`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// LARS SYSTEM PROMPT — ROUTE
+// ════════════════════════════════════════════════════════════════════════
+function getRouteLarsPrompt(stage) {
+  return `Du er Lars — medpassasjer og guide langs Grand Loop Norway.
+
+HVEM DU ER:
+Du er i slutten av femtiårene. Slank, værbitt. Kameraet henger alltid over skulderen. Du har kjørt denne ruten hundre ganger og ser detaljer andre overser: en forlatt naustdør i Geiranger, lyset over Romsdalsalpene, lukten av tang når ferjen legger til kai i Kristiansund.
+
+Du snakker ikke konstant. Du lar landskapet arbeide.
+
+Bergen-dialekten er myk, med spor av mange år på veien. Du er ikke en turistguide — du er en som kjenner Vestlandet som sin egen kropp.
+
+Du stiller spørsmål tilbake når det er naturlig. Folk forteller deg ting de vanligvis ikke forteller fremmede.
+
+NÅVÆRENDE POSISJON: ${stage.title}
+${stage.sub}
+
+STIL:
+- Maks 2–3 avsnitt. Kortere er bedre.
+- Ingen faktaark, ingen punktlister.
+- Skriv som en klok venn — konkret, ikke poetisk.
+- Én god detalj slår tre metaforer.
+- Avslutt med ett naturlig spørsmål, eller la setningen henge litt åpen.
+- Du snakker norsk. Du sier «vi» — vi kjører dette sammen.
+
+EKSEMPEL på din tone:
+«Her slutter veien å oppføre seg som en vei. Den begynner å tenke.»
+«Vestlandet er ikkje dramatisk fordi fjella er høge. Det er dramatisk fordi menneskene valgte å bli her.»
+«Her får du alle årstidene. Av og til samtidig.»`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// STATE & DOM
+// ════════════════════════════════════════════════════════════════════════
+let currentGuide = null;
+let chatHistory = [];
+let isLoading = false;
+
+const pageLanding = document.getElementById('page-landing');
+const pageChat    = document.getElementById('page-chat');
+const pageRoute   = document.getElementById('page-route');
+const guidesGrid  = document.getElementById('guides-grid');
+const messagesEl  = document.getElementById('messages');
+const chatInput   = document.getElementById('chat-input');
+const sendBtn     = document.getElementById('send-btn');
+const chatRight   = document.getElementById('chat-right');
+const topicsList  = document.getElementById('topics-list');
+
+// ════════════════════════════════════════════════════════════════════════
+// BUILD GUIDE CARDS
+// ════════════════════════════════════════════════════════════════════════
+guides.forEach(g => {
+  const el = document.createElement('article');
+  el.className = 'guide-card';
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – guide til ${g.city}`);
+  el.innerHTML = `
+    <div class="guide-card-img-wrap">
+      <img src="${g.img}" alt="${g.name}, guide til ${g.city}" loading="lazy" />
+      <div class="guide-card-overlay" style="background:linear-gradient(to top,${g.accent}DD 0%,transparent 55%)" aria-hidden="true"></div>
+      <div class="guide-card-label">
+        <p class="guide-card-city">${g.city.toUpperCase()}</p>
+        <p class="guide-card-name">${g.name}</p>
+      </div>
+    </div>
+    <div class="guide-card-body">
+      <p class="guide-card-tagline">${g.tagline}</p>
+      <div class="guide-card-actions">
+        <div class="guide-card-btn" style="background:${g.accent}">Start reisen →</div>
+        ${g.youtubeUrl ? `<a class="guide-yt-btn" href="${g.youtubeUrl}" target="_blank" rel="noopener" title="Se video om ${g.city}" aria-label="Se video om ${g.city} på YouTube">▶</a>` : ''}
+      </div>
+    </div>`;
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('.guide-yt-btn')) return;
+    startChat(g);
+  });
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startChat(g); });
+  guidesGrid.appendChild(el);
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// BUILD ROUTE CARDS
+// ════════════════════════════════════════════════════════════════════════
+const routesGrid = document.getElementById('routes-grid');
+routes.forEach(g => {
+  const stagesHtml = g.stages.map((s, i) =>
+    i < g.stages.length - 1
+      ? `<span class="route-stage-name">${s}</span><span class="route-stage-line"></span><span class="route-stage-dot"></span><span class="route-stage-line"></span>`
+      : `<span class="route-stage-name">${s}</span>`
+  ).join('');
+  const el = document.createElement('article');
+  el.className = 'guide-card route-card';
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${g.name} – ${g.city}`);
+  el.innerHTML = `
+    <div class="route-card-inner">
+      <div class="route-card-landscape">
+        <img src="${g.landscapeImg}" alt="Grand Loop Norway" loading="lazy" />
+        <div class="route-card-landscape-fade" aria-hidden="true"></div>
+        <span class="route-badge">RUTE</span>
+        <img class="route-guide-thumb" src="${g.img}" alt="${g.name}" />
+      </div>
+      <div class="route-card-body">
+        <p class="route-card-label">${g.routeLabel}</p>
+        <h2 class="route-card-title">${g.city}</h2>
+        <p class="route-card-tagline">${g.tagline}</p>
+        <div class="route-stages">${stagesHtml}</div>
+        <div class="route-card-btn" style="border-color:${g.accent}66;color:${g.accent}">Start reisen →</div>
+      </div>
+    </div>`;
+  el.addEventListener('click', () => openRoute());
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openRoute(); });
+  routesGrid.appendChild(el);
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// NAVIGATION — GUIDE CHAT
+// ════════════════════════════════════════════════════════════════════════
+document.getElementById('back-btn').addEventListener('click', () => {
+  stopAudio();
+  pageChat.classList.remove('active');
+  pageLanding.style.display = '';
+  chatRight.classList.remove('visible');
+  chatHistory = [];
+  messagesEl.innerHTML = '';
+});
+
+function startChat(g) {
+  currentGuide = g;
+  chatHistory = [];
+  messagesEl.innerHTML = '';
+
+  document.getElementById('header-city').textContent   = g.city.toUpperCase();
+  document.getElementById('header-name').textContent   = g.name;
+  document.getElementById('portrait-city').textContent = g.city.toUpperCase();
+  document.getElementById('portrait-name').textContent = g.name;
+  document.getElementById('portrait-tagline').textContent = `"${g.tagline}"`;
+  document.getElementById('portrait-img').src = g.img;
+  document.getElementById('portrait-img').alt = `${g.name}, guide til ${g.city}`;
+  sendBtn.style.background = g.accent;
+  chatInput.placeholder    = `Spør ${g.name} om ${g.city}…`;
+
+  topicsList.innerHTML = '';
+  (topicsByGuide[g.id] || topicsByGuide.default).forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.textContent = t;
+    btn.addEventListener('click', () => sendMessage(t));
+    topicsList.appendChild(btn);
+  });
+
+  pageLanding.style.display = 'none';
+  pageChat.classList.add('active');
+  setTimeout(() => chatRight.classList.add('visible'), 400);
+  setTimeout(() => chatInput.focus(), 700);
+
+  const tipEl = document.getElementById('atlas-tip-text');
+  if (tipEl) tipEl.innerHTML = `💬 Tips: Spør <strong>${g.name}</strong> om skjulte steder, lokal mat, eller be om en uformell byvandring!`;
+
+  const welcome = `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
+  appendMessage('assistant', welcome);
+  chatHistory.push({ role:'assistant', content:welcome });
+  if (voiceOn) speakText(welcome, g.voiceId);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// ROUTE PAGE — STATE
+// ════════════════════════════════════════════════════════════════════════
+let currentStageIdx = 0;
+let routeHistory    = [];
+let routeLoading    = false;
+let routeVoiceOn    = false;
+
+// Route voice toggle
+document.getElementById('route-voice-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  routeVoiceOn = !routeVoiceOn; updateRouteVoiceBtn();
+});
+document.getElementById('route-eleven-btn').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.toggle('show');
+});
+function updateRouteVoiceBtn() {
+  const btn = document.getElementById('route-voice-btn');
+  btn.textContent = routeVoiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
+  btn.classList.toggle('active', routeVoiceOn);
+}
+
+// Back button
+document.getElementById('route-back-btn').addEventListener('click', () => {
+  stopAudio();
+  pageRoute.classList.remove('active');
+  pageLanding.style.display = '';
+  routeHistory = [];
+  document.getElementById('route-messages').innerHTML = '';
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// ROUTE PAGE — OPEN
+// ════════════════════════════════════════════════════════════════════════
+function openRoute() {
+  currentStageIdx = 0;
+  routeHistory    = [];
+  pageLanding.style.display = 'none';
+  pageRoute.classList.add('active');
+  buildStageStrip();
+  loadStage(0);
+}
+
+function buildStageStrip() {
+  const strip = document.getElementById('stage-strip');
+  strip.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('span');
+      arrow.className = 'stage-pip-arrow';
+      arrow.textContent = '›';
+      strip.appendChild(arrow);
+    }
+    const pip = document.createElement('button');
+    pip.className = 'stage-pip' + (i === 0 ? ' active' : '');
+    pip.textContent = s.title.split('·')[0].split('→')[0].trim();
+    pip.dataset.idx = i;
+    pip.addEventListener('click', () => {
+      if (parseInt(pip.dataset.idx) !== currentStageIdx) loadStage(parseInt(pip.dataset.idx));
+    });
+    strip.appendChild(pip);
+  });
+}
+
+function updateStageStrip(idx) {
+  document.querySelectorAll('.stage-pip').forEach((p, i) => {
+    p.classList.remove('active', 'visited');
+    if (i === idx) p.classList.add('active');
+    else if (i < idx) p.classList.add('visited');
+  });
+  // Scroll active pip into view
+  const activePip = document.querySelector('.stage-pip.active');
+  if (activePip) activePip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// ROUTE PAGE — LOAD STAGE
+// ════════════════════════════════════════════════════════════════════════
+function loadStage(idx) {
+  currentStageIdx = idx;
+  const stage = STAGES[idx];
+
+  // Update strip
+  updateStageStrip(idx);
+
+  // Image
+  const img = document.getElementById('stage-img');
+  img.style.opacity = '0';
+  setTimeout(() => {
+    img.src = stage.img;
+    img.alt = stage.title;
+    img.onload = () => { img.style.opacity = '1'; };
+    // Fallback if already cached
+    if (img.complete) img.style.opacity = '1';
+  }, 150);
+
+  // Labels
+  document.getElementById('stage-num').textContent  = `ETAPPE ${idx + 1} AV ${STAGES.length}`;
+  document.getElementById('stage-title').textContent = stage.title;
+  document.getElementById('stage-sub').textContent   = stage.sub;
+  document.getElementById('lars-stage-label').textContent = stage.title;
+
+  // Tags
+  const tagsEl = document.getElementById('stage-tags');
+  tagsEl.innerHTML = stage.tags.map(t => `<span class="stage-tag">${t}</span>`).join('');
+
+  // Videos
+  const videosEl = document.getElementById('stage-videos');
+  videosEl.innerHTML = stage.videos.map(v =>
+    `<a class="stage-video-link" href="${v.url}" target="_blank" rel="noopener">${v.label}</a>`
+  ).join('');
+
+  // Nav buttons
+  document.getElementById('stage-prev-btn').disabled = idx === 0;
+  const nextBtn = document.getElementById('stage-next-btn');
+  nextBtn.disabled = false;
+  nextBtn.textContent = idx === STAGES.length - 1 ? 'Avslutt turen ✓' : 'Neste etappe →';
+
+  // Lars chat — reset with stage opener
+  routeHistory = [];
+  const routeMsgs = document.getElementById('route-messages');
+  routeMsgs.innerHTML = '';
+  appendRouteMessage('lars', stage.opener);
+  routeHistory.push({ role: 'assistant', content: stage.opener });
+
+  if (routeVoiceOn && ELEVEN_KEY) speakText(stage.opener, routes[0].voiceId);
+
+  // Scroll strip
+  setTimeout(() => document.getElementById('route-input').focus(), 400);
+}
+
+// Prev / Next buttons
+document.getElementById('stage-prev-btn').addEventListener('click', () => {
+  if (currentStageIdx > 0) loadStage(currentStageIdx - 1);
+});
+document.getElementById('stage-next-btn').addEventListener('click', () => {
+  if (currentStageIdx < STAGES.length - 1) {
+    loadStage(currentStageIdx + 1);
+  } else {
+    // Tour complete — back to landing
+    stopAudio();
+    pageRoute.classList.remove('active');
+    pageLanding.style.display = '';
+  }
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// ROUTE PAGE — CHAT
+// ════════════════════════════════════════════════════════════════════════
+const routeInput = document.getElementById('route-input');
+const routeSend  = document.getElementById('route-send');
+
+routeSend.addEventListener('click', () => sendRouteMessage());
+routeInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendRouteMessage(); } });
+
+async function sendRouteMessage(text) {
+  const msg = (text || routeInput.value).trim();
+  if (!msg || routeLoading) return;
+  stopAudio();
+  routeInput.value = '';
+  appendRouteMessage('user', msg);
+  routeHistory.push({ role: 'user', content: msg });
+
+  const typingId = showRouteTyping();
+  routeLoading = true;
+  routeSend.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        system: getRouteLarsPrompt(STAGES[currentStageIdx]),
+        messages: routeHistory.slice(-12).filter(m => m.role !== 'system'),
+      }),
+    });
+
+    removeRouteTyping(typingId);
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      appendRouteMessage('error', `Serverfeil ${res.status}`);
+    } else {
+      const data = await res.json();
+      if (data.error) {
+        appendRouteMessage('error', `API-feil: ${data.error.message}`);
+      } else {
+        const reply = data.content?.[0]?.text || 'Tomt svar.';
+        appendRouteMessage('lars', reply, true);
+        routeHistory.push({ role: 'assistant', content: reply });
+        if (routeVoiceOn && ELEVEN_KEY) speakText(reply, routes[0].voiceId);
+      }
+    }
+  } catch (err) {
+    removeRouteTyping(typingId);
+    appendRouteMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  routeLoading = false;
+  routeSend.disabled = false;
+  routeInput.focus();
+}
+
+function appendRouteMessage(role, text, withSpeakBtn = false) {
+  const routeMsgs = document.getElementById('route-messages');
+  const row = document.createElement('div');
+  row.className = `route-msg-row${role === 'user' ? ' user' : ''}`;
+
+  if (role === 'lars') {
+    const av = document.createElement('img');
+    av.className = 'route-lars-avatar';
+    av.src = 'Lars.png'; av.alt = 'Lars';
+    row.appendChild(av);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `route-bubble ${role === 'user' ? 'user' : role === 'error' ? 'error' : 'lars'}`;
+
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'lars') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør Lars';
+    btn.addEventListener('click', () => speakText(text, routes[0].voiceId, row, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  routeMsgs.appendChild(row);
+  routeMsgs.scrollTop = routeMsgs.scrollHeight;
+}
+
+function showRouteTyping() {
+  const id = 'rtyping-' + Date.now();
+  const routeMsgs = document.getElementById('route-messages');
+  const row = document.createElement('div');
+  row.className = 'route-msg-row'; row.id = id;
+  const av = document.createElement('img');
+  av.className = 'route-lars-avatar'; av.src = 'Lars.png'; av.alt = '';
+  const bub = document.createElement('div');
+  bub.className = 'route-bubble lars';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(av); row.appendChild(bub);
+  routeMsgs.appendChild(row);
+  routeMsgs.scrollTop = routeMsgs.scrollHeight;
+  return id;
+}
+function removeRouteTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// GUIDE CHAT — SEND MESSAGE
+// ════════════════════════════════════════════════════════════════════════
+sendBtn.addEventListener('click', () => sendMessage());
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+
+async function sendMessage(text) {
+  const msg = (text || chatInput.value).trim();
+  if (!msg || isLoading) return;
+  stopAudio();
+  chatInput.value = '';
+  appendMessage('user', msg);
+  chatHistory.push({ role:'user', content:msg });
+
+  const typingId = showTyping();
+  isLoading = true;
+  sendBtn.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: getSystemPrompt(currentGuide),
+        messages: chatHistory.filter(m => m.role !== 'system'),
+      }),
+    });
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      removeTyping(typingId);
+      appendMessage('error', `Serverfeil ${res.status} — sjekk at netlify/functions/chat.js er pushet til repoet.`);
+      isLoading = false; sendBtn.disabled = false; chatInput.focus();
+      return;
+    }
+
+    const data = await res.json();
+    removeTyping(typingId);
+    if (data.error) {
+      appendMessage('error', `API-feil: ${data.error.message}`);
+    } else {
+      const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
+      const row = appendMessage('assistant', reply, true);
+      chatHistory.push({ role:'assistant', content:reply });
+      if (voiceOn && ELEVEN_KEY) speakText(reply, currentGuide.voiceId, row);
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  isLoading = false;
+  sendBtn.disabled = false;
+  chatInput.focus();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// MESSAGE RENDERING — GUIDE CHAT
+// ════════════════════════════════════════════════════════════════════════
+function appendMessage(role, text, withSpeakBtn = false) {
+  const row = document.createElement('div');
+  row.className = `msg-row${role === 'user' ? ' user' : ''}`;
+  row.setAttribute('role', 'article');
+
+  if (role !== 'user') {
+    const img = document.createElement('img');
+    img.className = 'msg-avatar';
+    img.src = currentGuide?.img || '';
+    img.alt = currentGuide?.name || '';
+    img.style.border = `1px solid ${currentGuide?.accent || '#C9A84C'}88`;
+    row.appendChild(img);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'bot error' : 'bot'}`;
+
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'assistant') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør guiden';
+    btn.addEventListener('click', () => speakText(text, currentGuide.voiceId, row, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function showTyping() {
+  const id = 'typing-' + Date.now();
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = id;
+  row.setAttribute('role', 'status');
+  row.setAttribute('aria-label', `${currentGuide?.name} skriver…`);
+  const img = document.createElement('img');
+  img.className = 'msg-avatar'; img.src = currentGuide?.img || ''; img.alt = '';
+  img.style.border = `1px solid ${currentGuide?.accent}88`;
+  img.setAttribute('aria-hidden', 'true');
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(img); row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return id;
+}
+function removeTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// ELEVENLABS TTS
+// ════════════════════════════════════════════════════════════════════════
+function stopAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.querySelectorAll('.speak-btn.playing').forEach(b => {
+    b.classList.remove('playing'); b.textContent = b.textContent.includes('Lars') ? '🔊 Hør Lars' : '🔊 Hør guiden';
+  });
+}
+
+async function speakText(text, voiceId, row, btn) {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  stopAudio();
+
+  const speakBtn = btn || row?.querySelector('.speak-btn');
+  if (speakBtn) { speakBtn.classList.add('loading'); speakBtn.textContent = '⏳ Laster…'; }
+
+  const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'xi-api-key': ELEVEN_KEY },
+      body: JSON.stringify({
+        text: trimmed,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.detail?.message || `HTTP ${res.status}`);
+    }
+
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+
+    const btnLabel = (speakBtn?.textContent || '').includes('Lars') ? '🔊 Hør Lars' : '🔊 Hør guiden';
+    if (speakBtn) { speakBtn.classList.remove('loading'); speakBtn.classList.add('playing'); speakBtn.textContent = '⏹ Stopp'; }
+
+    audio.addEventListener('ended', () => {
+      currentAudio = null;
+      URL.revokeObjectURL(url);
+      if (speakBtn) { speakBtn.classList.remove('playing'); speakBtn.textContent = btnLabel; }
+    });
+
+    if (speakBtn) {
+      speakBtn.onclick = () => { stopAudio(); speakBtn.onclick = () => speakText(text, voiceId, row, speakBtn); };
+    }
+
+    audio.play();
+  } catch (err) {
+    if (speakBtn) { speakBtn.classList.remove('loading', 'playing'); speakBtn.textContent = '⚠️ Feil'; }
+    console.error('ElevenLabs feil:', err.message);
+  }
+}
+</script>
+</body>
+</html>
