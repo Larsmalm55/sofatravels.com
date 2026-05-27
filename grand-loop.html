@@ -70,7 +70,7 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background: url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1600&q=85') center/cover no-repeat;
+      background: url('voss.png') center/cover no-repeat;
       transform: scale(1.05);
       animation: hero-zoom 18s ease-in-out infinite alternate;
     }
@@ -231,6 +231,10 @@
       padding-top: 18px;
     }
     .etappe.open .etappe-body { display: block; }
+    .etappe-img {
+      width: 100%; max-height: 340px; object-fit: cover;
+      border-radius: 4px; margin-bottom: 16px; display: block;
+    }
     .etappe-highlight {
       display: inline-block; margin-top: 12px;
       font-size: .72rem; letter-spacing: .15em; color: var(--green);
@@ -514,6 +518,7 @@
         <span class="etappe-arrow">›</span>
       </div>
       <div class="etappe-body">
+        <img src="stalheimskleiva.png" alt="Stalheimskleiva — hårnålsvingene ned i dalen" class="etappe-img" loading="lazy" />
         Stalheimskleiva er en av Norges bratteste bilveier: 13 hårnålsvinger, 13 % stigning over 1,2 km. Kun åpen om sommeren — busser er ikke tillatt. Stalheim Hotel øverst har servert reisende siden 1885 med utsikt rett ned i stupet. Nærøydalen er en smal, grønn dal mellom kleiva og fjorden.
         <span class="etappe-highlight">✦ Kun sommervei — kontroller åpningstider</span>
       </div>
