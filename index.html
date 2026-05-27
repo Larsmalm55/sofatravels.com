@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SofaTravel – Ten Norwegian AI guides. Unlimited stories. Chat and voice, 24/7 — from your sofa." />
-  <title>SofaTravel – Norway, Told from the Inside</title>
+  <meta name="description" content="SofaTravels – Ten Norwegian AI guides. Unlimited stories. Chat and voice, 24/7 — from your sofa." />
+  <title>SofaTravels – Norway, Told from the Inside</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <style>
@@ -41,14 +41,8 @@
     }
     .nav-logo { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); letter-spacing:.07em; text-decoration:none; }
     .nav-links { display:flex; gap:36px; list-style:none; }
-    .nav-links a { font-size:.75rem; letter-spacing:.16em; color:var(--muted); text-decoration:none; transition:color .2s; }
+    .nav-links a { font-size:1rem; letter-spacing:.06em; color:var(--muted); text-decoration:none; transition:color .2s; }
     .nav-links a:hover { color:var(--gold); }
-    .nav-cta {
-      font-size:.75rem; letter-spacing:.12em; font-weight:600;
-      color:var(--bg); background:var(--gold); padding:9px 22px;
-      border-radius:3px; text-decoration:none; transition:background .2s;
-    }
-    .nav-cta:hover { background:var(--gold2); }
 
     /* ── HERO ── */
     .hero {
@@ -69,7 +63,7 @@
     .hero-content {
       position:relative; z-index:2;
       padding:0 52px 90px;
-      max-width:860px;
+      width:100%; text-align:center;
     }
     .hero-eyebrow {
       letter-spacing:.45em; font-size:9.5px; color:rgba(201,168,76,.55);
@@ -90,12 +84,13 @@
     .hero-sub {
       font-size:clamp(1rem,1.8vw,1.2rem);
       color:var(--sub); font-style:italic;
-      max-width:480px; margin-top:22px; line-height:1.8;
+      max-width:520px; margin:22px auto 0; line-height:1.8;
       animation:fade-up .9s .25s ease both;
     }
     .hero-cta-row {
       display:flex; gap:14px; margin-top:44px; flex-wrap:wrap;
       animation:fade-up .9s .4s ease both;
+      justify-content:center;
     }
     .btn-primary {
       display:inline-flex; align-items:center; gap:10px;
@@ -305,20 +300,19 @@
 
 <!-- NAV -->
 <nav role="navigation" aria-label="Main navigation">
-  <a href="/" class="nav-logo">SofaTravel</a>
+  <a href="/" class="nav-logo">SofaTravels</a>
   <ul class="nav-links">
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#destinations">Guides</a></li>
-    <li><a href="#grand-loop">Grand Loop</a></li>
+    <li><a href="/from-the-sofa.html">Guides</a></li>
+    <li><a href="/grand-loop.html">Grand Loop</a></li>
+    <li><a href="/from-the-sofa.html#how">How it works</a></li>
   </ul>
-  <a href="/from-the-sofa.html" class="nav-cta">Start the journey →</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero" role="banner">
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-content">
-    <span class="hero-eyebrow">SOFATRAVEL · NORWEGIAN AI GUIDES</span>
+    <span class="hero-eyebrow">SOFATRAVELS · NORWEGIAN AI GUIDES</span>
     <h1 class="hero-title">
       Norway,<br>
       <em>told from<br>the inside.</em>
@@ -327,173 +321,12 @@
       Ten local guides. Centuries of stories. Chat and voice, 24/7 —
       from wherever you are.
     </p>
-    <div class="hero-cta-row">
-      <a href="/from-the-sofa.html" class="btn-primary">Meet the guides →</a>
-      <a href="/grand-loop.html"    class="btn-loop">Grand Loop Norway →</a>
-      <a href="#how"                class="btn-ghost">How it works</a>
-    </div>
   </div>
   <div class="scroll-hint" aria-hidden="true">
     <div class="scroll-line"></div>
     <span>SCROLL</span>
   </div>
 </section>
-
-<!-- STATS BAR -->
-<div class="stats-bar" role="list" aria-label="SofaTravel key figures">
-  <div class="stat-item" role="listitem">
-    <span class="stat-num">10</span>
-    <span class="stat-label">LOCAL GUIDES</span>
-  </div>
-  <div class="stat-item" role="listitem">
-    <span class="stat-num">869</span>
-    <span class="stat-label">KM GRAND LOOP</span>
-  </div>
-  <div class="stat-item" role="listitem">
-    <span class="stat-num">17</span>
-    <span class="stat-label">ROUTE STAGES</span>
-  </div>
-  <div class="stat-item" role="listitem">
-    <span class="stat-num">24/7</span>
-    <span class="stat-label">CHAT &amp; VOICE</span>
-  </div>
-</div>
-
-<!-- DESTINATIONS -->
-<section id="destinations" class="destinations-section" aria-labelledby="dest-title">
-  <span class="section-eye">MEET YOUR GUIDES</span>
-  <h2 id="dest-title" class="section-head">Ten cities. Ten voices. One Norway.</h2>
-  <div class="dest-grid" role="list">
-    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Astrid — Bergen guide">
-      <img src="Astrid, bergen.jpeg" alt="Bergen, Norway" loading="lazy" />
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-info">
-        <span class="dest-card-city">BERGEN</span>
-        <span class="dest-card-name">Astrid</span>
-        <span class="dest-card-tag">The Hanseatic port</span>
-      </div>
-    </a>
-    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Sigrid — Tromsø guide">
-      <img src="Sigrid - Tromsø.jpeg" alt="Tromsø, Norway" loading="lazy" />
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-info">
-        <span class="dest-card-city">TROMSØ</span>
-        <span class="dest-card-name">Sigrid</span>
-        <span class="dest-card-tag">City of the northern lights</span>
-      </div>
-    </a>
-    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Erik — Geiranger guide">
-      <img src="Erik - Geiranger.jpeg" alt="Geiranger, Norway" loading="lazy" />
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-info">
-        <span class="dest-card-city">GEIRANGER</span>
-        <span class="dest-card-name">Erik</span>
-        <span class="dest-card-tag">UNESCO fjord guardian</span>
-      </div>
-    </a>
-    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Hilde — Lofoten guide">
-      <img src="hilde - lofoten.jpeg" alt="Lofoten, Norway" loading="lazy" />
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-info">
-        <span class="dest-card-city">LOFOTEN</span>
-        <span class="dest-card-name">Hilde</span>
-        <span class="dest-card-tag">Fishermen's paradise</span>
-      </div>
-    </a>
-    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Magnus — Stavanger guide">
-      <img src="Magnus - Stavanger.jpeg" alt="Stavanger, Norway" loading="lazy" />
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-info">
-        <span class="dest-card-city">STAVANGER</span>
-        <span class="dest-card-name">Magnus</span>
-        <span class="dest-card-tag">Preikestolen &amp; oil country</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how" class="how-section" aria-labelledby="how-title">
-  <span class="section-eye" style="text-align:center; display:block;">HOW IT WORKS</span>
-  <h2 id="how-title" class="section-head" style="text-align:center; margin:0 auto 56px;">
-    As simple as sitting down
-  </h2>
-  <div class="steps" role="list">
-    <div class="step" role="listitem">
-      <span class="step-num">01</span>
-      <span class="step-icon">🗺️</span>
-      <h3>Choose your guide</h3>
-      <p>Ten personal guides from Bergen to Tromsø — each with their own voice, story and deep knowledge of home.</p>
-    </div>
-    <div class="step" role="listitem">
-      <span class="step-num">02</span>
-      <span class="step-icon">💬</span>
-      <h3>Start the conversation</h3>
-      <p>Ask anything — from hidden backstreets to dramatic wartime history. Your guide answers in rich, living prose.</p>
-    </div>
-    <div class="step" role="listitem">
-      <span class="step-num">03</span>
-      <span class="step-icon">🔊</span>
-      <h3>Hear the story</h3>
-      <p>Turn on voice and close your eyes. Let Astrid from Bergen or Hilde from Lofoten take you all the way there.</p>
-    </div>
-  </div>
-</section>
-
-<!-- GRAND LOOP TEASER -->
-<section id="grand-loop" class="loop-section" aria-labelledby="loop-title">
-  <span class="loop-eye">GRAND LOOP NORWAY · 869 KM · 17 STAGES</span>
-  <div class="loop-card" role="article">
-    <div class="loop-img">
-      <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=900&q=85" alt="Norwegian fjord landscape" loading="lazy" />
-      <span class="loop-badge">ROUTE</span>
-    </div>
-    <div class="loop-body">
-      <span class="loop-eyebrow">GRAND LOOP NORWAY</span>
-      <h2 id="loop-title" class="loop-title">Bergen → Bergen</h2>
-      <p class="loop-desc">
-        A full circle through Norway's west — fjord, mountain and coast.
-        Lars rides with you the whole way, from Stalheimskleiva to the Atlantic Road and home again.
-      </p>
-      <div class="loop-stages" aria-label="Route stages">
-        <span class="loop-stage">Voss</span>
-        <span class="loop-stage">Nærøyfjord</span>
-        <span class="loop-stage">Flåm</span>
-        <span class="loop-stage">Lærdal</span>
-        <span class="loop-stage">Sognefjellet</span>
-        <span class="loop-stage">Stryn</span>
-        <span class="loop-stage">Geiranger</span>
-        <span class="loop-stage">Trollstigen</span>
-        <span class="loop-stage">Atlantic Road</span>
-        <span class="loop-stage">Kristiansund</span>
-        <span class="loop-stage">Molde</span>
-        <span class="loop-stage">Volda</span>
-      </div>
-      <a href="/grand-loop.html" class="loop-cta">Start the journey with Lars →</a>
-    </div>
-  </div>
-</section>
-
-<!-- QUOTE -->
-<section class="quote-section" aria-label="Brand statement">
-  <span class="quote-mark" aria-hidden="true">"</span>
-  <p class="quote-text">
-    Not an app. Not a tour guide. A conversation
-    with someone who knows the place — from within.
-  </p>
-  <p class="quote-attr">SOFATRAVEL · NORWAY'S STORIES, TOLD ALIVE</p>
-</section>
-
-<!-- FOOTER -->
-<footer role="contentinfo">
-  <span class="footer-logo">SofaTravel</span>
-  <ul class="footer-links">
-    <li><a href="/from-the-sofa.html">Guides</a></li>
-    <li><a href="/grand-loop.html">Grand Loop</a></li>
-    <li><a href="/contact-form.html">Contact</a></li>
-  </ul>
-  <span class="footer-copy">© 2026 SofaTravel · Norway's stories, told alive</span>
-</footer>
 
 </body>
 </html>
