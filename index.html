@@ -1,457 +1,498 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SofaTravel – Utforsk Norges vakreste steder via levende AI-guider. Chat og stemme, 24/7, rett fra sofaen." />
-  <title>SofaTravel – Reise fra der du er</title>
+  <meta name="description" content="SofaTravel – Ten Norwegian AI guides. Unlimited stories. Chat and voice, 24/7 — from your sofa." />
+  <title>SofaTravel – Norway, Told from the Inside</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:     #0E0904;
-      --panel:  #160C05;
-      --card:   #1C0E07;
-      --border: #3A2010;
-      --gold:   #C9A84C;
-      --gold2:  #E8C86A;
-      --text:   #F0E6CF;
-      --muted:  #907055;
-      --sub:    #B09870;
+      --bg:    #090604;
+      --panel: #120A04;
+      --card:  #181008;
+      --border:#2E1A0C;
+      --gold:  #C9A84C;
+      --gold2: #E8C86A;
+      --text:  #F0E6CF;
+      --muted: #907055;
+      --sub:   #B09870;
+      --green: #5AAA70;
+      --green2:#7FFFA0;
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Crimson Text', Georgia, serif;
-      overflow-x: hidden;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; overflow-x: hidden; }
 
-    /* ── NOISE TEXTURE ── */
+    /* Grain */
     body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: .55;
+      content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.5;
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 22px 48px;
-      background: linear-gradient(to bottom, rgba(14,9,4,.95) 0%, transparent 100%);
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:22px 52px;
+      background:linear-gradient(to bottom, rgba(9,6,4,.96) 0%, transparent 100%);
     }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem; color: var(--gold); letter-spacing: .06em;
-      text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a {
-      font-size: .78rem; letter-spacing: .14em; color: var(--muted);
-      text-decoration: none; transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--gold); }
+    .nav-logo { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); letter-spacing:.07em; text-decoration:none; }
+    .nav-links { display:flex; gap:36px; list-style:none; }
+    .nav-links a { font-size:.75rem; letter-spacing:.16em; color:var(--muted); text-decoration:none; transition:color .2s; }
+    .nav-links a:hover { color:var(--gold); }
     .nav-cta {
-      font-size: .78rem; letter-spacing: .12em;
-      color: var(--bg); background: var(--gold);
-      padding: 8px 20px; border-radius: 3px;
-      text-decoration: none; font-weight: 600;
-      transition: background .2s;
+      font-size:.75rem; letter-spacing:.12em; font-weight:600;
+      color:var(--bg); background:var(--gold); padding:9px 22px;
+      border-radius:3px; text-decoration:none; transition:background .2s;
     }
-    .nav-cta:hover { background: var(--gold2); }
+    .nav-cta:hover { background:var(--gold2); }
 
     /* ── HERO ── */
     .hero {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 120px 32px 80px;
-      overflow: hidden;
+      position:relative; height:100vh; min-height:640px;
+      display:flex; align-items:flex-end;
+      overflow:hidden;
     }
-
-    /* Radial glow behind title */
-    .hero::after {
-      content: '';
-      position: absolute; top: 38%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px; height: 400px;
-      background: radial-gradient(ellipse, rgba(201,168,76,.08) 0%, transparent 70%);
-      pointer-events: none;
+    .hero-bg {
+      position:absolute; inset:0; z-index:0;
+      background:url('https://images.unsplash.com/photo-1537519531953-4db523c2005e?w=1800&q=90') center/cover no-repeat;
     }
-
-    /* Horizontal rule lines */
-    .hero-lines {
-      position: absolute; inset: 0; pointer-events: none;
+    .hero-bg::after {
+      content:''; position:absolute; inset:0;
       background:
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 79px,
-          rgba(201,168,76,.035) 79px,
-          rgba(201,168,76,.035) 80px
-        );
+        linear-gradient(to top,  rgba(9,6,4,1.0) 0%, rgba(9,6,4,.6) 35%, rgba(9,6,4,.15) 65%, rgba(9,6,4,.4) 100%),
+        linear-gradient(to right, rgba(9,6,4,.5) 0%, transparent 55%);
     }
-
-    @keyframes float-portrait {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-14px); }
+    .hero-content {
+      position:relative; z-index:2;
+      padding:0 52px 90px;
+      max-width:860px;
     }
-
-    .hero-content { position: relative; z-index: 2; max-width: 780px; }
     .hero-eyebrow {
-      letter-spacing: .5em; font-size: 10px; color: rgba(201,168,76,.6);
-      margin-bottom: 28px;
-      animation: fade-up .9s ease both;
+      letter-spacing:.45em; font-size:9.5px; color:rgba(201,168,76,.55);
+      margin-bottom:24px; display:block;
+      animation:fade-up .9s ease both;
     }
     .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 8vw, 6.5rem);
-      font-weight: 700; line-height: 1.0;
-      color: var(--text); margin-bottom: 12px;
-      animation: fade-up .9s .15s ease both;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(3rem,7.5vw,7rem);
+      font-weight:700; line-height:1.0;
+      color:var(--text); margin-bottom:0;
+      animation:fade-up .9s .1s ease both;
     }
     .hero-title em {
-      font-style: italic; color: var(--gold);
-      display: block;
+      font-style:italic; color:var(--gold);
+      display:block;
     }
     .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: var(--sub); font-style: italic;
-      max-width: 520px; margin: 22px auto 0;
-      line-height: 1.75;
-      animation: fade-up .9s .3s ease both;
+      font-size:clamp(1rem,1.8vw,1.2rem);
+      color:var(--sub); font-style:italic;
+      max-width:480px; margin-top:22px; line-height:1.8;
+      animation:fade-up .9s .25s ease both;
     }
-
     .hero-cta-row {
-      display: flex; gap: 16px; justify-content: center;
-      margin-top: 48px; flex-wrap: wrap;
-      animation: fade-up .9s .45s ease both;
+      display:flex; gap:14px; margin-top:44px; flex-wrap:wrap;
+      animation:fade-up .9s .4s ease both;
     }
-    .cta-primary {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--gold); color: var(--bg);
-      font-family: 'Crimson Text', serif;
-      font-size: 1rem; font-weight: 600;
-      letter-spacing: .1em; padding: 14px 36px;
-      border-radius: 3px; text-decoration: none;
-      transition: background .2s, transform .2s;
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--gold); color:var(--bg);
+      font-family:'Crimson Text',serif; font-size:1rem;
+      font-weight:600; letter-spacing:.1em;
+      padding:14px 38px; border-radius:3px;
+      text-decoration:none; transition:all .2s;
     }
-    .cta-primary:hover { background: var(--gold2); transform: translateY(-2px); }
-    .cta-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(201,168,76,.35); color: var(--sub);
-      font-size: .88rem; letter-spacing: .12em;
-      padding: 14px 28px; border-radius: 3px;
-      text-decoration: none; transition: all .2s;
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-loop {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(40,120,60,.18); border:1px solid rgba(80,180,100,.5);
+      color:var(--green2); font-family:'Crimson Text',serif;
+      font-size:1rem; font-weight:600; letter-spacing:.08em;
+      padding:14px 30px; border-radius:3px;
+      text-decoration:none; transition:all .2s;
     }
-    .cta-secondary:hover { border-color: var(--gold); color: var(--gold); }
-    .cta-grand-loop {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(80,180,100,.45); color: #7FFFA0;
-      background: rgba(40,120,60,.12);
-      font-family: 'Crimson Text', serif;
-      font-size: 1rem; font-weight: 600; letter-spacing: .08em;
-      padding: 14px 28px; border-radius: 3px;
-      text-decoration: none; transition: all .2s;
+    .btn-loop:hover { background:rgba(40,120,60,.35); border-color:rgba(80,180,100,.85); }
+    .btn-ghost {
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(201,168,76,.25); color:var(--muted);
+      font-size:.85rem; letter-spacing:.12em;
+      padding:14px 26px; border-radius:3px;
+      text-decoration:none; transition:all .2s;
     }
-    .cta-grand-loop:hover { background: rgba(40,120,60,.28); border-color: rgba(80,180,100,.8); }
+    .btn-ghost:hover { border-color:var(--gold); color:var(--gold); }
 
     /* Scroll indicator */
     .scroll-hint {
-      position: absolute; bottom: 36px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: rgba(201,168,76,.3); font-size: 9px; letter-spacing: .3em;
-      animation: fade-up 1s .8s ease both;
+      position:absolute; bottom:36px; right:52px; z-index:2;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      color:rgba(201,168,76,.3); font-size:8.5px; letter-spacing:.35em;
+      animation:fade-up 1s .8s ease both;
     }
-    .scroll-line {
-      width: 1px; height: 40px;
-      background: linear-gradient(to bottom, rgba(201,168,76,.3), transparent);
-      animation: scroll-line 2s ease-in-out infinite;
-    }
-    @keyframes scroll-line {
-      0%   { transform: scaleY(0); transform-origin: top; }
-      50%  { transform: scaleY(1); transform-origin: top; }
-      51%  { transform: scaleY(1); transform-origin: bottom; }
-      100% { transform: scaleY(0); transform-origin: bottom; }
+    .scroll-line { width:1px; height:44px; background:linear-gradient(to bottom, rgba(201,168,76,.3), transparent); animation:scroll-pulse 2s ease-in-out infinite; }
+    @keyframes scroll-pulse {
+      0%,100% { opacity:.3; } 50% { opacity:.8; }
     }
 
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display:flex; align-items:stretch;
+      border-top:1px solid rgba(201,168,76,.08);
+      border-bottom:1px solid rgba(201,168,76,.08);
+      background:linear-gradient(to right, rgba(201,168,76,.03) 0%, transparent 50%);
     }
+    .stat-item {
+      flex:1; padding:28px 0; text-align:center;
+      border-right:1px solid rgba(201,168,76,.07);
+    }
+    .stat-item:last-child { border-right:none; }
+    .stat-num {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.8rem,3vw,2.6rem);
+      color:var(--gold); line-height:1; display:block; margin-bottom:6px;
+    }
+    .stat-label { font-size:.68rem; letter-spacing:.22em; color:var(--muted); }
 
-    /* ── DIVIDER ── */
-    .divider {
-      display: flex; align-items: center; gap: 20px;
-      max-width: 400px; margin: 0 auto;
-      padding: 0 32px;
+    /* ── DESTINATIONS ── */
+    .destinations-section { padding:100px 52px 80px; max-width:1300px; margin:0 auto; }
+    .section-eye { letter-spacing:.45em; font-size:9.5px; color:rgba(201,168,76,.45); display:block; margin-bottom:16px; }
+    .section-head {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.8rem,4vw,3rem);
+      color:var(--text); font-weight:400; font-style:italic;
+      margin-bottom:56px; max-width:560px;
     }
-    .divider-line { flex: 1; height: 1px; background: var(--border); }
-    .divider-icon { color: var(--gold); opacity: .4; font-size: .7rem; letter-spacing: .3em; }
+    .dest-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+    .dest-card {
+      position:relative; border-radius:5px; overflow:hidden;
+      aspect-ratio:3/4; cursor:pointer;
+      border:1px solid rgba(201,168,76,.1);
+      transition:transform .3s, border-color .3s;
+      text-decoration:none; display:block;
+    }
+    .dest-card:hover { transform:translateY(-6px); border-color:rgba(201,168,76,.3); }
+    .dest-card img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+    .dest-card:hover img { transform:scale(1.07); }
+    .dest-card-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(9,6,4,.92) 0%, rgba(9,6,4,.2) 55%, transparent 100%);
+    }
+    .dest-card-info { position:absolute; bottom:0; left:0; right:0; padding:18px 16px; }
+    .dest-card-city { font-size:.6rem; letter-spacing:.25em; color:var(--gold); margin-bottom:4px; display:block; }
+    .dest-card-name { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--text); font-weight:700; display:block; }
+    .dest-card-tag { font-size:.65rem; color:var(--muted); font-style:italic; margin-top:3px; display:block; }
 
     /* ── HOW IT WORKS ── */
-    .how-section {
-      max-width: 1100px; margin: 0 auto;
-      padding: 100px 48px 80px;
+    .how-section { max-width:1100px; margin:0 auto; padding:80px 52px 80px; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+    .step {
+      padding:44px 40px;
+      border:1px solid var(--border);
+      border-right:none; position:relative;
     }
-    .section-eyebrow {
-      letter-spacing: .45em; font-size: 9.5px;
-      color: rgba(201,168,76,.45); text-align: center;
-      margin-bottom: 16px;
+    .step:first-child { border-radius:5px 0 0 5px; }
+    .step:last-child { border-right:1px solid var(--border); border-radius:0 5px 5px 0; }
+    .step-num {
+      font-family:'Playfair Display',serif;
+      font-size:5rem; color:rgba(201,168,76,.07);
+      line-height:1; display:block; margin-bottom:20px;
     }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      text-align: center; color: var(--text);
-      font-weight: 400; font-style: italic;
-      margin-bottom: 64px;
-    }
+    .step-icon { font-size:1.5rem; margin-bottom:16px; display:block; }
+    .step h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--text); margin-bottom:12px; }
+    .step p { font-size:.88rem; color:var(--muted); line-height:1.85; font-style:italic; }
 
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-    .step { text-align: center; }
-    .step-number {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem; color: rgba(201,168,76,.12);
-      line-height: 1; margin-bottom: 16px; display: block;
-    }
-    .step-icon {
-      width: 52px; height: 52px; margin: 0 auto 20px;
-      border-radius: 50%;
-      border: 1px solid rgba(201,168,76,.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      background: rgba(201,168,76,.05);
-    }
-    .step h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem; color: var(--text);
-      font-weight: 700; margin-bottom: 12px;
-    }
-    .step p { font-size: .9rem; color: var(--muted); line-height: 1.8; font-style: italic; }
-
-    /* ── QUOTE / FEATURE ── */
-    .quote-section {
-      max-width: 800px; margin: 0 auto;
-      padding: 60px 48px 100px;
-      text-align: center;
-    }
-    .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: rgba(201,168,76,.15); line-height: .6; display: block; margin-bottom: 8px; }
-    .quote-text {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.3rem, 3vw, 2rem);
-      font-style: italic; color: var(--sub);
-      line-height: 1.6; margin-bottom: 28px;
-    }
-    .quote-attribution { font-size: .78rem; letter-spacing: .2em; color: rgba(201,168,76,.4); }
-
-    /* ── GRAND LOOP TEASER ── */
-    .loop-section {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 48px 100px;
-    }
+    /* ── GRAND LOOP ── */
+    .loop-section { max-width:1100px; margin:0 auto; padding:0 52px 100px; }
+    .loop-eye { letter-spacing:.4em; font-size:9px; color:rgba(80,180,100,.5); display:block; margin-bottom:24px; text-align:center; }
     .loop-card {
-      border-radius: 8px; overflow: hidden;
-      background: linear-gradient(135deg, #0D1E14 0%, #0A1A10 100%);
-      border: 1px solid rgba(60,140,80,.35);
-      display: flex; flex-direction: row; min-height: 280px;
-      position: relative;
+      border-radius:8px; overflow:hidden;
+      background:linear-gradient(135deg,#071510 0%,#050F0A 100%);
+      border:1px solid rgba(60,140,80,.3);
+      display:grid; grid-template-columns:42% 1fr;
+      min-height:320px; position:relative;
+      transition:border-color .3s;
     }
-    .loop-card-img {
-      width: 45%; flex-shrink: 0; position: relative; overflow: hidden;
+    .loop-card:hover { border-color:rgba(80,180,100,.55); }
+    .loop-img { position:relative; overflow:hidden; }
+    .loop-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+    .loop-card:hover .loop-img img { transform:scale(1.04); }
+    .loop-img::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to right, transparent 40%, #071510 100%),
+                 linear-gradient(to top,   #071510 0%, transparent 40%);
     }
-    .loop-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .loop-card-img::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to right, transparent 50%, #0D1E14 100%);
+    .loop-badge {
+      position:absolute; top:18px; left:18px; z-index:2;
+      background:rgba(40,120,60,.9); border:1px solid rgba(80,180,100,.5);
+      color:var(--green2); font-size:8px; letter-spacing:.3em; padding:4px 10px; border-radius:2px;
     }
-    .loop-card-body {
-      flex: 1; padding: 44px 44px 44px 36px;
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .loop-eyebrow { letter-spacing: .4em; font-size: 9px; color: #5AAA70; margin-bottom: 12px; }
+    .loop-body { padding:52px 52px 44px 44px; display:flex; flex-direction:column; justify-content:center; }
+    .loop-eyebrow { letter-spacing:.4em; font-size:9px; color:var(--green); margin-bottom:14px; display:block; }
     .loop-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      color: var(--text); font-weight: 700; margin-bottom: 14px;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2rem,3.5vw,3rem);
+      color:var(--text); font-weight:700; margin-bottom:14px; line-height:1.05;
     }
-    .loop-desc { font-size: .9rem; color: #6A8A72; font-style: italic; line-height: 1.8; margin-bottom: 28px; max-width: 400px; }
-    .loop-stages { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+    .loop-desc { font-size:.9rem; color:#5A7A62; font-style:italic; line-height:1.85; margin-bottom:26px; max-width:380px; }
+    .loop-stages { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:30px; }
     .loop-stage {
-      font-size: .68rem; letter-spacing: .08em; color: #5AAA70;
-      background: rgba(40,120,60,.12); border: 1px solid rgba(80,180,100,.2);
-      padding: 3px 9px; border-radius: 2px;
+      font-size:.65rem; letter-spacing:.08em; color:var(--green);
+      background:rgba(40,120,60,.1); border:1px solid rgba(80,180,100,.18);
+      padding:3px 10px; border-radius:2px;
     }
     .loop-cta {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(80,180,100,.4); color: #5AAA70;
-      font-size: .8rem; letter-spacing: .1em;
-      padding: 10px 22px; border-radius: 3px;
-      text-decoration: none; width: fit-content;
-      transition: all .2s; background: rgba(40,120,60,.1);
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(80,180,100,.4); color:var(--green);
+      font-size:.8rem; letter-spacing:.1em;
+      padding:10px 24px; border-radius:3px;
+      text-decoration:none; width:fit-content;
+      transition:all .2s; background:rgba(40,120,60,.08);
     }
-    .loop-cta:hover { background: rgba(40,120,60,.25); border-color: rgba(80,180,100,.7); }
+    .loop-cta:hover { background:rgba(40,120,60,.25); border-color:rgba(80,180,100,.7); color:var(--green2); }
+
+    /* ── QUOTE ── */
+    .quote-section { max-width:720px; margin:0 auto; padding:40px 52px 100px; text-align:center; }
+    .quote-mark { font-family:'Playfair Display',serif; font-size:6rem; color:rgba(201,168,76,.1); line-height:.5; display:block; margin-bottom:16px; }
+    .quote-text {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.3rem,2.8vw,1.9rem);
+      font-style:italic; color:var(--sub); line-height:1.65; margin-bottom:28px;
+    }
+    .quote-attr { font-size:.72rem; letter-spacing:.22em; color:rgba(201,168,76,.35); }
 
     /* ── FOOTER ── */
     footer {
-      border-top: 1px solid rgba(201,168,76,.1);
-      padding: 40px 48px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px;
+      border-top:1px solid rgba(201,168,76,.08);
+      padding:36px 52px;
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
     }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: rgba(201,168,76,.4); }
-    .footer-links { display: flex; gap: 28px; list-style: none; }
-    .footer-links a { font-size: .75rem; color: var(--muted); opacity: .55; text-decoration: none; letter-spacing: .1em; }
-    .footer-copy { font-size: .72rem; color: var(--muted); opacity: .35; letter-spacing: .06em; }
+    .footer-logo { font-family:'Playfair Display',serif; font-size:.95rem; color:rgba(201,168,76,.35); }
+    .footer-links { display:flex; gap:28px; list-style:none; }
+    .footer-links a { font-size:.72rem; color:var(--muted); opacity:.5; text-decoration:none; letter-spacing:.1em; }
+    .footer-copy { font-size:.7rem; color:var(--muted); opacity:.3; letter-spacing:.06em; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fade-up {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      nav { padding: 18px 24px; }
-      .nav-links { display: none; }
-      .how-section, .loop-section, .quote-section { padding-left: 24px; padding-right: 24px; }
-      .steps { grid-template-columns: 1fr; gap: 48px; }
-      .loop-card { flex-direction: column; }
-      .loop-card-img { width: 100%; height: 220px; }
-      .loop-card-img::after { background: linear-gradient(to top, #0D1E14 0%, transparent 60%); }
-      .loop-card-body { padding: 28px 24px; }
-      footer { flex-direction: column; align-items: flex-start; }
+    @media (max-width:900px) {
+      nav { padding:18px 24px; }
+      .nav-links { display:none; }
+      .hero-content { padding:0 24px 80px; }
+      .scroll-hint { display:none; }
+      .stats-bar { flex-wrap:wrap; }
+      .stat-item { min-width:50%; border-right:none; border-bottom:1px solid rgba(201,168,76,.07); }
+      .destinations-section, .how-section, .loop-section, .quote-section { padding-left:24px; padding-right:24px; }
+      .dest-grid { grid-template-columns:repeat(2,1fr); }
+      .steps { grid-template-columns:1fr; }
+      .step { border-right:1px solid var(--border); border-bottom:none; border-radius:0; }
+      .step:first-child { border-radius:5px 5px 0 0; }
+      .step:last-child { border-radius:0 0 5px 5px; border-bottom:1px solid var(--border); }
+      .loop-card { grid-template-columns:1fr; }
+      .loop-img { height:220px; }
+      .loop-img::after { background:linear-gradient(to top, #071510 0%, transparent 60%); }
+      .loop-body { padding:28px 24px 36px; }
+      footer { flex-direction:column; align-items:flex-start; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
-<nav role="navigation" aria-label="Hovednavigasjon">
-  <a href="/" class="nav-logo" aria-label="SofaTravel hjem">SofaTravel</a>
+<!-- NAV -->
+<nav role="navigation" aria-label="Main navigation">
+  <a href="/" class="nav-logo">SofaTravel</a>
   <ul class="nav-links">
-    <li><a href="#how">Slik fungerer det</a></li>
-    <li><a href="#destinations">Guider</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#destinations">Guides</a></li>
     <li><a href="#grand-loop">Grand Loop</a></li>
   </ul>
-  <a href="/from-the-sofa.html" class="nav-cta">Start reisen →</a>
+  <a href="/from-the-sofa.html" class="nav-cta">Start the journey →</a>
 </nav>
 
-<!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
-<section class="hero" role="banner" aria-label="Velkomstseksjon">
-  <div class="hero-lines" aria-hidden="true"></div>
-
+<!-- HERO -->
+<section class="hero" role="banner">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow" aria-hidden="true">SOFATRAVEL · NORSKE AI-REISEGUIDER</p>
+    <span class="hero-eyebrow">SOFATRAVEL · NORWEGIAN AI GUIDES</span>
     <h1 class="hero-title">
-      Reise fra<br>
-      <em>der du er</em>
+      Norway,<br>
+      <em>told from<br>the inside.</em>
     </h1>
     <p class="hero-sub">
-      Ti norske guider. Utallige historier. Chat og stemme, 24/7 —
-      rett fra sofaen din.
+      Ten local guides. Centuries of stories. Chat and voice, 24/7 —
+      from wherever you are.
     </p>
     <div class="hero-cta-row">
-      <a href="/from-the-sofa.html" class="cta-primary">
-        Møt guidene →
-      </a>
-      <a href="/grand-loop.html" class="cta-grand-loop">
-        Grand Loop Norway →
-      </a>
-      <a href="#how" class="cta-secondary">
-        Se hvordan det fungerer
-      </a>
+      <a href="/from-the-sofa.html" class="btn-primary">Meet the guides →</a>
+      <a href="/grand-loop.html"    class="btn-loop">Grand Loop Norway →</a>
+      <a href="#how"                class="btn-ghost">How it works</a>
     </div>
   </div>
-
   <div class="scroll-hint" aria-hidden="true">
     <div class="scroll-line"></div>
     <span>SCROLL</span>
   </div>
 </section>
 
-<!-- ══ HOW IT WORKS ════════════════════════════════════════════════════ -->
-<section id="how" class="how-section" aria-labelledby="how-title">
-  <p class="section-eyebrow" aria-hidden="true">SLIK FUNGERER DET</p>
-  <h2 id="how-title" class="section-title">Enkelt som å sette seg ned</h2>
+<!-- STATS BAR -->
+<div class="stats-bar" role="list" aria-label="SofaTravel key figures">
+  <div class="stat-item" role="listitem">
+    <span class="stat-num">10</span>
+    <span class="stat-label">LOCAL GUIDES</span>
+  </div>
+  <div class="stat-item" role="listitem">
+    <span class="stat-num">869</span>
+    <span class="stat-label">KM GRAND LOOP</span>
+  </div>
+  <div class="stat-item" role="listitem">
+    <span class="stat-num">17</span>
+    <span class="stat-label">ROUTE STAGES</span>
+  </div>
+  <div class="stat-item" role="listitem">
+    <span class="stat-num">24/7</span>
+    <span class="stat-label">CHAT &amp; VOICE</span>
+  </div>
+</div>
 
+<!-- DESTINATIONS -->
+<section id="destinations" class="destinations-section" aria-labelledby="dest-title">
+  <span class="section-eye">MEET YOUR GUIDES</span>
+  <h2 id="dest-title" class="section-head">Ten cities. Ten voices. One Norway.</h2>
+  <div class="dest-grid" role="list">
+    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Astrid — Bergen guide">
+      <img src="Astrid, bergen.jpeg" alt="Bergen, Norway" loading="lazy" />
+      <div class="dest-card-overlay"></div>
+      <div class="dest-card-info">
+        <span class="dest-card-city">BERGEN</span>
+        <span class="dest-card-name">Astrid</span>
+        <span class="dest-card-tag">The Hanseatic port</span>
+      </div>
+    </a>
+    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Sigrid — Tromsø guide">
+      <img src="Sigrid - Tromsø.jpeg" alt="Tromsø, Norway" loading="lazy" />
+      <div class="dest-card-overlay"></div>
+      <div class="dest-card-info">
+        <span class="dest-card-city">TROMSØ</span>
+        <span class="dest-card-name">Sigrid</span>
+        <span class="dest-card-tag">City of the northern lights</span>
+      </div>
+    </a>
+    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Erik — Geiranger guide">
+      <img src="Erik - Geiranger.jpeg" alt="Geiranger, Norway" loading="lazy" />
+      <div class="dest-card-overlay"></div>
+      <div class="dest-card-info">
+        <span class="dest-card-city">GEIRANGER</span>
+        <span class="dest-card-name">Erik</span>
+        <span class="dest-card-tag">UNESCO fjord guardian</span>
+      </div>
+    </a>
+    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Hilde — Lofoten guide">
+      <img src="hilde - lofoten.jpeg" alt="Lofoten, Norway" loading="lazy" />
+      <div class="dest-card-overlay"></div>
+      <div class="dest-card-info">
+        <span class="dest-card-city">LOFOTEN</span>
+        <span class="dest-card-name">Hilde</span>
+        <span class="dest-card-tag">Fishermen's paradise</span>
+      </div>
+    </a>
+    <a href="/from-the-sofa.html" class="dest-card" role="listitem" aria-label="Magnus — Stavanger guide">
+      <img src="Magnus - Stavanger.jpeg" alt="Stavanger, Norway" loading="lazy" />
+      <div class="dest-card-overlay"></div>
+      <div class="dest-card-info">
+        <span class="dest-card-city">STAVANGER</span>
+        <span class="dest-card-name">Magnus</span>
+        <span class="dest-card-tag">Preikestolen &amp; oil country</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how-section" aria-labelledby="how-title">
+  <span class="section-eye" style="text-align:center; display:block;">HOW IT WORKS</span>
+  <h2 id="how-title" class="section-head" style="text-align:center; margin:0 auto 56px;">
+    As simple as sitting down
+  </h2>
   <div class="steps" role="list">
     <div class="step" role="listitem">
-      <div class="step-icon" aria-hidden="true">🗺️</div>
-      <h3>Velg din guide</h3>
-      <p>Ti personlige guider fra Bergen til Tromsø — hver med sin egen stemme, historie og kunnskap om hjembyen.</p>
+      <span class="step-num">01</span>
+      <span class="step-icon">🗺️</span>
+      <h3>Choose your guide</h3>
+      <p>Ten personal guides from Bergen to Tromsø — each with their own voice, story and deep knowledge of home.</p>
     </div>
     <div class="step" role="listitem">
-      <div class="step-icon" aria-hidden="true">💬</div>
-      <h3>Start samtalen</h3>
-      <p>Spør om alt — fra ukjente kneiper til dramatisk krigshistorie. Guiden svarer i rik, levende prosa.</p>
+      <span class="step-num">02</span>
+      <span class="step-icon">💬</span>
+      <h3>Start the conversation</h3>
+      <p>Ask anything — from hidden backstreets to dramatic wartime history. Your guide answers in rich, living prose.</p>
     </div>
     <div class="step" role="listitem">
-      <div class="step-icon" aria-hidden="true">🔊</div>
-      <h3>Hør guiden fortelle</h3>
-      <p>Slå på stemme og lukk øynene. La Astrid fra Bergen eller Hilde fra Lofoten ta deg med på reisen.</p>
+      <span class="step-num">03</span>
+      <span class="step-icon">🔊</span>
+      <h3>Hear the story</h3>
+      <p>Turn on voice and close your eyes. Let Astrid from Bergen or Hilde from Lofoten take you all the way there.</p>
     </div>
   </div>
 </section>
 
-<div class="divider" aria-hidden="true">
-  <div class="divider-line"></div>
-  <span class="divider-icon">✦</span>
-  <div class="divider-line"></div>
-</div>
-
-<!-- ══ QUOTE ════════════════════════════════════════════════════════════ -->
-<section class="quote-section" aria-label="Sitat">
-  <span class="quote-mark" aria-hidden="true">"</span>
-  <p class="quote-text">
-    Ikke en app. Ikke en turistguide. En samtale
-    med noen som kjenner stedet — innenfra.
-  </p>
-  <p class="quote-attribution" aria-hidden="true">SOFATRAVEL · NORGES REISER, FORTALT LEVENDE</p>
-</section>
-
-<!-- ══ GRAND LOOP TEASER ════════════════════════════════════════════════ -->
+<!-- GRAND LOOP TEASER -->
 <section id="grand-loop" class="loop-section" aria-labelledby="loop-title">
-  <p class="section-eyebrow" style="text-align:center; color:rgba(80,180,100,.45); margin-bottom:16px;" aria-hidden="true">GRAND LOOP NORWAY · NY RUTE</p>
-  <div class="loop-card" role="article" aria-label="Grand Loop Norway Bergen til Bergen">
-    <div class="loop-card-img">
-      <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80" alt="Norsk fjordlandskap" loading="lazy" />
+  <span class="loop-eye">GRAND LOOP NORWAY · 869 KM · 17 STAGES</span>
+  <div class="loop-card" role="article">
+    <div class="loop-img">
+      <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=900&q=85" alt="Norwegian fjord landscape" loading="lazy" />
+      <span class="loop-badge">ROUTE</span>
     </div>
-    <div class="loop-card-body">
-      <p class="loop-eyebrow">GRAND LOOP NORWAY · 869 KM · 17 ETAPPER</p>
+    <div class="loop-body">
+      <span class="loop-eyebrow">GRAND LOOP NORWAY</span>
       <h2 id="loop-title" class="loop-title">Bergen → Bergen</h2>
       <p class="loop-desc">
-        En full rundtur langs Norges vestside — fjord, fjell og kyst.
-        Lars er din medpassasjer hele veien, fra Stalheimskleiva til Atlanterhavsveien og tilbake.
+        A full circle through Norway's west — fjord, mountain and coast.
+        Lars rides with you the whole way, from Stalheimskleiva to the Atlantic Road and home again.
       </p>
-      <div class="loop-stages" aria-label="Etapper på ruten">
+      <div class="loop-stages" aria-label="Route stages">
         <span class="loop-stage">Voss</span>
         <span class="loop-stage">Nærøyfjord</span>
         <span class="loop-stage">Flåm</span>
         <span class="loop-stage">Lærdal</span>
         <span class="loop-stage">Sognefjellet</span>
-        <span class="loop-stage">Lom</span>
         <span class="loop-stage">Stryn</span>
         <span class="loop-stage">Geiranger</span>
         <span class="loop-stage">Trollstigen</span>
-        <span class="loop-stage">Atlanterhavsveien</span>
+        <span class="loop-stage">Atlantic Road</span>
         <span class="loop-stage">Kristiansund</span>
         <span class="loop-stage">Molde</span>
         <span class="loop-stage">Volda</span>
       </div>
-      <a href="/from-the-sofa.html" class="loop-cta">Start reisen med Lars →</a>
+      <a href="/grand-loop.html" class="loop-cta">Start the journey with Lars →</a>
     </div>
   </div>
 </section>
 
-<!-- ══ FOOTER ═══════════════════════════════════════════════════════════ -->
+<!-- QUOTE -->
+<section class="quote-section" aria-label="Brand statement">
+  <span class="quote-mark" aria-hidden="true">"</span>
+  <p class="quote-text">
+    Not an app. Not a tour guide. A conversation
+    with someone who knows the place — from within.
+  </p>
+  <p class="quote-attr">SOFATRAVEL · NORWAY'S STORIES, TOLD ALIVE</p>
+</section>
+
+<!-- FOOTER -->
 <footer role="contentinfo">
   <span class="footer-logo">SofaTravel</span>
   <ul class="footer-links">
-    <li><a href="/from-the-sofa.html">Guider</a></li>
-    <li><a href="/contact-form.html">Kontakt</a></li>
+    <li><a href="/from-the-sofa.html">Guides</a></li>
+    <li><a href="/grand-loop.html">Grand Loop</a></li>
+    <li><a href="/contact-form.html">Contact</a></li>
   </ul>
-  <span class="footer-copy">© 2026 SofaTravel · Norske reiser, fortalt levende</span>
+  <span class="footer-copy">© 2026 SofaTravel · Norway's stories, told alive</span>
 </footer>
 
 </body>
