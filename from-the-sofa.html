@@ -600,6 +600,18 @@ const STAGES = [
     opener: 'Vi passerer Bergen og E16 begynner å snakke. Tvindefossen er den første som hilser på oss — 152 meter rett ned langs veikanten. Folk stopper ikke alltid.\n\nDe burde.',
   },
   {
+    id: 'voss-stop',
+    title: 'Voss',
+    sub: 'Eventyrhovedstaden · Vangsvatnet · 95 km fra Bergen',
+    img: 'Voss.png',
+    tags: ['Vangskyrkja 1277', 'Fleischer\'s Hotel 1864', 'Ekstremsportveko juni', 'Tvindefossen 152 m · 12 km', 'Smalahove — fårehode'],
+    videos: [
+      { label: '▶ Voss drone', url: 'https://www.youtube.com/results?search_query=voss+norway+drone+4k' },
+      { label: '▶ Ekstremsportveko', url: 'https://www.youtube.com/results?search_query=ekstremsportveko+voss+extreme+sports+week+norway' },
+    ],
+    opener: 'Voss er den eneste større bygda i Vest-Norge som ikke ligger ved saltvann. Det sier noe om stedet — det valgte sin egen logikk.\n\nVangskyrkja fra 1277 står midt i sentrum og bryr seg lite om ekstremsporten rundt seg. Tvindefossen er 12 km unna og faller 152 meter rett ned langs veien. Smalahove — saltet, røkt fårehode — er lokalmaten. Det er ikke for alle.\n\nOg så Ekstremsportveko i juni: verdens største ekstremspportfestival. Fallskjerm, elvepadling, terrengsykling — alt på en gang. Voss vet hva det er.',
+  },
+  {
     id: 'stalheim',
     title: 'Stalheimskleiva',
     sub: 'Fv13 · 13 hårnålsvinger · 13% stigning · kun sommer',
@@ -845,6 +857,115 @@ SOGNEFJELLET: Rv55, Nordeuropas høyeste fjellovergang 1434 moh., åpen mai–no
 LOM: Stavkirke ca. 1158. Norsk Fjellmuseum. Peer Gynt-landet.
 STRYN: Strynevatnet 17 km turkisblå. Jostedalsbreen 474 km². Briksdalsbreen.
 `;
+const VOSS_KB = `
+BELIGGENHET: Vossevangen — eneste større bygd i Vest-Norge som ikke ligger ved saltvann. 50 moh. Mellom Sognefjorden og Hardangerfjorden. Innfallsport til Nærøyfjorden (1 time nord).
+KIRKE: Vangskyrkja 1277 — en av Norges eldste gotiske steinkirker. Midt i sentrum. Kong Olav skal ha omvendt Voss til kristendommen med makt, ifølge sagnet.
+HISTORIE: Finnesloftet — festsal fra 1295, en av Norges eldste profane trebyggverk. Voss Folkemuseum, Mølstertunet — 16 bygninger fra tradisjonell gårdsbebyggelse.
+FLEISCHER'S HOTEL: Åpnet 1864, drevet av Fleischer-familien siden starten. Sveitserstil, innendørs basseng, utsikt over Vangsvatnet.
+NATUR: Tvindefossen — ca. 152 m, 12 km fra sentrum, rett ved veien. Skjervsfossen — 43 m, spektakulær ved regnvær. Bordalsgjelet — gjel i gangavstand fra sentrum, vann mellom mørke bergvegger.
+SPORT: Norges ekstremsporthovedstad. Ekstremsportveko — verdens største ekstremspportfestival (juni), over 600 frivillige. Hangursbanen gondol. Elvepadling, rafting, fallskjerm, terrengsykling, alpint.
+OLYMPISK TRADISJON: 98 OL- og VM-medaljer fra en bygd på 15 000 innbyggere. Medaljetetthet uten sidestykke på planeten. Hadde Bergen hatt samme tetthet = 1500 medaljer. London = 50 000. Deltaker i hvert OL siden 1948, unntatt 1972. Voss hadde plass nr. 22 blant mest vinnende nasjoner i vinter-OL — foran Hviterussland.
+IDRETTSSTJERNER:
+- Kari Traa (f. 1974) — Freestyle/kulekjøring. OL-gull Salt Lake 2002, OL-sølv Torino 2006, OL-bronse Nagano 1998. 4x VM-gull (2001, 2003). Startet siden ett av Europas raskest voksende sportsmerker.
+- Eirik Kvalfoss — Skiskyting. OL-gull sprint Sarajevo 1984, OL-sølv stafett, OL-bronse normaldistanse. 16 OL- og VM-medaljer totalt (1982–1991). I 20 år tok ingen andre norske mannlige skiskyttere gull i OL eller VM.
+- Kristen Skjeldal (f. 1967) — Langrenn. 2x OL-gull stafett (Albertville 1992, Salt Lake 2002), OL-bronse 30 km 2002. I dag trener ved Voss gymnas toppidrettslinje.
+- Lars Bystøl (f. 1978) — Skihopp. OL-gull normalbakke Torino 2006, OL-bronse storbakke og lag. VM-gull skiflyging 2006.
+- Egil Gjelland (f. 1973) — Skiskyting. OL-gull stafett 2002, OL-sølv stafett 1998 og 2002. VM-gull 2005, VM-gull lag 1998. 8 OL- og VM-medaljer.
+- Sjur Røthe (f. 1988) — Langrenn. VM-gull 30 km 2019, VM-gull stafett 2013 og 2019. 6 VM-medaljer.
+- Gro Marit Istad Kristiansen — Skiskyting. VM-gull fellesstart 2005, VM-gull stafett 2004.
+- Jon Istad — Skiskyting. OL-deltaker 1966. 7 kongepokaler i tre idretter.
+- Odd Lirhus, Anne Elvebakk, Hilde Fenne, Jori Mørkve — alle skiskyttere med VM-medaljer.
+MAT: Smalahove — saltet og røkt fårehode, kokt. Voss-spesialitet. Rømmegrøt. Vosso-laksen er nesten utryddet.
+FESTIVALER: VossaJazz (april). Ekstremsportveko (juni). Osafestivalen.
+TRANSPORT: Bergensbanen stopper i Voss — 1 time fra Bergen med tog. E16 og Rv13 gjennom bygda.
+`;
+
+const STRYN_KB = `
+BELIGGENHET: Stryn kommune, Vestland. Strynevatnet — 17 km turkisblått fra isbreavrenning. Jostedalsbreen 474 km² — Norges og Europas største isbre. Briksdalsbreen tilgjengelig til fots.
+SOMMERSKIING: Stryn Sommerskisenter — eneste sted i Europa med sommerskiing på natursnø (mai–juli). Snødybde 1. juni: gjennomsnittlig 6 meter.
+BØ-BRØDRENE — fra bygda Markane i Stryn kommune:
+- Johannes Thingnes Bø (f. 1993, Stryn) — Skiskyting. Tidenes mestvinnende skiskytter. 6 OL-gull, totalt 9 OL-medaljer. 24 VM-gull, totalt 43 VM-medaljer — rekord for flest individuelle VM-gull i historien (12). 5x verdenscupen sammenlagt. 88 individuelle verdenscupseire. Satte verdensrekord i 2023: vant 19 av 21 individuelle renn. La opp 2025.
+- Tarjei Bø (f. 1988, Stryn) — Skiskyting. 3 OL-gull, totalt 7 OL-medaljer. 28 VM-medaljer (12 gull). 15 individuelle verdenscupseire. 1x verdenscupen sammenlagt.
+- Begge brødre representerte Markane IL i Stryn. Faren var aktiv i idrettslaget og bygget skiskyttermiljøet. Nå tar en ny generasjon stryninger steget mot verdenstoppen.
+- Tilsammen: 35+ OL-medaljer og 71+ VM-medaljer bare fra to brødre fra en liten bygd.
+SAMMENLIGNING: Hadde en norsk storby hatt samme medaljetetthet per innbygger som Stryn/Markane, ville det vært snakk om tusenvis av medaljer.
+`;
+
+const NAEROYFJORD_KB = `
+NÆRØYFJORDEN: UNESCO Verdensarv 2005, sammen med Geirangerfjorden. 250 meter smaleste punkt — trangeste fjord i Europa åpen for skipstrafikk. Fjellsider reiser seg 1700 moh. på begge sider.
+HISTORIEN: Bakka — bosetning kun tilgjengelig med båt. Styvi — isolert gård, fortsatt bebodd. Nedlagte gårder langs fjellsidene.
+FERGEN: Fra Gudvangen til Flåm — 2 timer. Bestill om sommeren. Flaum-batene.
+GUDVANGEN: Innfallsporten. Vikingvalley — rekonstruert vikinglandsby.
+`;
+
+const FLAM_ROUTE_KB = `
+FLÅM: 350 innb., innerst i Aurlandsfjorden. Sognefjorden 204 km lang — Norges lengste, 1308 m dyp — Norges dypeste.
+FLÅMSBANA: 20,2 km, 864 moh. høydeforskjell, åpnet 1940. 20 tunneler. En av verdens bratteste normalsporbaner. Kjosfossen foss 93 m — toget stopper.
+ÆGIR BRYGGERI: Norrønt tema. Åpnet 2007. Lokalt bryggeri i stavkirkeinspirert bygg.
+STEGASTEIN: 30 meter ut fra fjellsiden i 650 moh. over Aurlandsfjorden. 10 minutter fra Flåm.
+`;
+
+const LAERDAL_KB = `
+LÆRDALSØYRI: 161 vernede trehusfasader fra 1700–1800-tallet. Kalt «Norges Williamsburg». En av Norges best bevarte trehussamlinger.
+LÆRDALSTUNNELEN: 24,5 km — verdens lengste bilveitunnel. Åpnet 2000. Tre lyskaverner bygget inn for å motvirke monotoni og gi inntrykk av soloppgang.
+BORGUND STAVKIRKE: Ca. 1150–1200, best bevarte stavkirke i Norge. Viet til apostelen Andreas. Dragornamentikk pryder mønene — de holder vakt.
+LÆRDALSELVA: En av Norges beste og mest prestisjefulle lakseelver. Kongefamilien fisker her.
+`;
+
+const SOGNEFJELLET_KB = `
+SOGNEFJELLET: Rv55 — Nordeuropas høyeste fjellovergang, 1434 moh. Åpen ca. mai–november. Pilegrimsrute gjennom århundrer.
+JOTUNHEIMEN: Nasjonalpark på begge sider. Galdhøpiggen (2469 m) og Glittertind — Norges to høyeste fjell. Synlige i klarvær.
+STEMNING: Veistrekningen som er stengt halvparten av året. Det er noe befriende med veier som minner deg på at du er gjest i naturen.
+SPITERSTULEN: Basecamp for bestigning av Galdhøpiggen.
+`;
+
+const LOM_KB = `
+LOM: Lom stavkirke ca. 1158, utvidet 1600-tallet, en av de største stavkirkene i Norge.
+JOTUNHEIMEN: Norsk Fjellmuseum — nasjonalt senter for Jotunheimen. Fossheim Steinsenter — verdenskjent mineralsamling.
+PEER GYNT: Ibsen hentet inspirasjon her. Peer Gynt-landet.
+LOM BAKERI: Legendarisk flatbrød siden 1896.
+`;
+
+const GEIRANGER_ROUTE_KB = `
+GEIRANGER: 250 fastboende, 700 000 besøkende/år. UNESCO Verdensarv 2005.
+FOSSENE: De syv søstrene — 7 parallelle fosser på nordsiden, ingen like høye. Friaren og Bryllaupssløret på sørsiden.
+UTSIKTSPUNKTER: Ørnesvingen — 11 hårnålsvinger ned, kjør sakte. Flydalsjuvet. Dalsnibba 1476 moh. — bil helt opp.
+NEDLAGTE GÅRDER: Skageflå og Knivsflå — tilgjengelige med båt eller til fots. Folk levde her.
+FREMTID: Fra 2026 kun nullutslippsskip i fjorden.
+PERSPEKTIV: Stillheten finnes mellom turistbåtene, tidlig morgen.
+`;
+
+const TROLLSTIGEN_KB = `
+TROLLSTIGEN: Bygget 1916–1936, åpnet av Kong Haakon VII. 11 hårnålsvinger, 858 moh. Stigfossen 320 m faller langs veien.
+ROMSDALEN: En av Norges mest dramatiske daler. Trollveggen — Europas høyeste loddrette fjellvegg, 1000 m loddrett.
+RAUMA-BANEN: 114 km fra Åndalsnes til Dombås. En av Europas vakreste togstrekninger. Raumabanen.no for ruter.
+ROMSDALSEGGEN: Klatrerute langs eggen med utsikt over dalen — ikke for høydeskremte.
+ÅNDALSNES: Liten by innerst i Romsdalsfjorden. Basecamp for klatring og fjellsport.
+`;
+
+const ATLANTERHAVSVEIEN_KB = `
+ATLANTERHAVSVEIEN: Åpnet 1989. 8,3 km, 8 broer, 17 holmer. Kåret til Norges konstruksjon i hundreåret.
+STORSEISUNDBRUA: Den mest fotograferte — buer utover havet som om den ikke er ferdig tegnet. I storm slår bølgene over.
+ANERKJENNELSE: The Guardian kåret det til verdens vakreste biltur (2006). Nasjonal turistveg.
+BESTE TIDSPUNKT: Storm om høsten — dramatisk. Solnedgang om sommeren — stille og ufattelig vakkert. Begge er riktige svar.
+FISKE: Sjøørret og torsk langs hele strekningen.
+`;
+
+const KRISTIANSUND_ROUTE_KB = `
+KRISTIANSUND: Øyby på fire øyer, forbundet med broer og Atlanterhavstunnelen. Grunnlagt 1742.
+KLIPPFISK: Produsert og eksportert siden 1690. Norsk Klippfiskmuseum. Lukten er ærlig — salt, vind og arbeid.
+SUNDBÅTEN: Har gått mellom øyene siden 1876. Billigste kollektivtransport i landet — ca. 10 kr. Beste utsikten for minst penger.
+NORDMØRSMUSEA: Kystkultur og fiskerihistorie.
+OPERAEN: Lille Operaen i Kristiansund — landets eldste opera-selskap utenfor Oslo (1928).
+`;
+
+const MOLDE_ROUTE_KB = `
+MOLDE: Rosenes by — 222 fjelltopper synlige fra Varden utsiktspunkt på klare dager. Faktisk talt.
+MOLDEJAZZ: Arrangert siden 1961 — ett av Europas eldste jazzfestivaler. Dizzy Gillespie, Miles Davis, Keith Jarrett og Ella Fitzgerald har spilt her. Liten kystby, uforholdsmessig stor musikkhistorie.
+ROMSDALSFJORDEN: Ferge Molde–Vestnes over fjorden.
+KRIGEN: Kong Haakon VII og regjeringen flyktet til Molde 23. april 1940 da tyskerne bombet byen. Kongen sto under et bjørketre og så på mens Molde brant.
+`;
+
 const OSLO_KB = `
 OSLO: Norges hovedstad, 700 000 innb. Grunnlagt ca. 1000 e.Kr. Ligger innerst i Oslofjorden.
 SENTRUM: Operaen (2008, Snøhetta). Aker Brygge og Tjuvholmen. Rådhuset (Nobels fredspris 10. des.). Akershus festning fra 1290-tallet.
@@ -935,6 +1056,24 @@ STIL OG LENGDE:
 // ════════════════════════════════════════════════════════════════════════
 // LARS SYSTEM PROMPT — ROUTE
 // ════════════════════════════════════════════════════════════════════════
+function getStagKB(stage) {
+  const kb = {
+    'voss-stop':         VOSS_KB,
+    'naeroyfjord':       NAEROYFJORD_KB,
+    'flam':              FLAM_ROUTE_KB,
+    'laerdal':           LAERDAL_KB,
+    'sognefjellet':      SOGNEFJELLET_KB,
+    'lom':               LOM_KB,
+    'stryn':             STRYN_KB,
+    'geiranger':         GEIRANGER_ROUTE_KB,
+    'trollstigen':       TROLLSTIGEN_KB,
+    'atlanterhavsveien': ATLANTERHAVSVEIEN_KB,
+    'kristiansund':      KRISTIANSUND_ROUTE_KB,
+    'molde':             MOLDE_ROUTE_KB,
+  };
+  return kb[stage.id] ? `\nLOKAL KUNNSKAP FOR DENNE ETAPPEN:\n${kb[stage.id]}` : '';
+}
+
 function getRouteLarsPrompt(stage) {
   return `Du er Lars — medpassasjer og guide langs Grand Loop Norway.
 
@@ -948,7 +1087,7 @@ Bergen-dialekten er myk, med spor av mange år på veien. Du er ikke en turistgu
 Du stiller spørsmål tilbake når det er naturlig. Folk forteller deg ting de vanligvis ikke forteller fremmede.
 
 NÅVÆRENDE POSISJON: ${stage.title}
-${stage.sub}
+${stage.sub}${getStagKB(stage)}
 
 STIL:
 - Maks 2–3 avsnitt. Kortere er bedre.
