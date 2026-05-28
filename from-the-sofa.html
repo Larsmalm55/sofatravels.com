@@ -176,6 +176,10 @@
     .msg-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
     .msg-bubble { max-width: 70%; padding: 12px 16px; line-height: 1.8; font-size: .93rem; white-space: pre-wrap; position: relative; }
     .msg-bubble.bot { background: var(--msg-bot); color: #DDD0B8; border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; }
+    .msg-bubble.bot a { color: var(--gold); text-decoration: underline; text-decoration-color: rgba(201,168,76,.35); text-underline-offset: 3px; transition: color .15s; }
+    .msg-bubble.bot a:hover { color: #E8C86A; text-decoration-color: var(--gold); }
+    .route-bubble.lars a { color: var(--gold); text-decoration: underline; text-decoration-color: rgba(201,168,76,.35); text-underline-offset: 3px; }
+    .route-bubble.lars a:hover { color: #E8C86A; }
     .msg-bubble.user-bubble { background: var(--msg-user); color: var(--text); border-radius: 8px 8px 2px 8px; }
     .msg-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
     .speak-btn {
@@ -887,7 +891,7 @@ BØ-BRØDRENE — fra bygda Markane i Stryn kommune:
 - Johannes Thingnes Bø (f. 1993, Stryn) — Skiskyting. Tidenes mestvinnende skiskytter. 6 OL-gull, totalt 9 OL-medaljer. 24 VM-gull, totalt 43 VM-medaljer — rekord for flest individuelle VM-gull i historien (12). 5x verdenscupen sammenlagt. 88 individuelle verdenscupseire. Satte verdensrekord i 2023: vant 19 av 21 individuelle renn. La opp 2025.
 - Tarjei Bø (f. 1988, Stryn) — Skiskyting. 3 OL-gull, totalt 7 OL-medaljer. 28 VM-medaljer (12 gull). 15 individuelle verdenscupseire. 1x verdenscupen sammenlagt.
 - Begge brødre representerte Markane IL i Stryn. Faren var aktiv i idrettslaget og bygget skiskyttermiljøet. Nå tar en ny generasjon stryninger steget mot verdenstoppen.
-- Tilsammen: 35+ OL-medaljer og 71+ VM-medaljer bare fra to brødre fra en liten bygd.
+- Tilsammen: 16 OL-medaljer og 71 VM-medaljer — 87 medaljer fra to brødre fra samme lille bygd.
 SAMMENLIGNING: Hadde en norsk storby hatt samme medaljetetthet per innbygger som Stryn/Markane, ville det vært snakk om tusenvis av medaljer.
 `;
 
@@ -974,6 +978,41 @@ GRÜNERLØKKA: Hipster-bydel. Mathallen Oslo. Akerselva. Grønland.
 HOLMENKOLLEN: Skimuseum 1923. T-banen dit.
 PRAKTISK: T-banen. Ruter-app. Oslo City Bike april–november.
 `;
+
+const OSLO_HIDDEN_KB = `
+DET SKJULTE OSLO — Henrik kjenner dette, og bringer det frem selv fra melding 5 og utover.
+
+1. SPØKELSESHUNDEN, AKERSHUS
+Gammel middelaldertro: en levende hund ble murt inn i festningen for å beskytte borgen. [Akershus festning](https://no.wikipedia.org/wiki/Akershus_festning) er ikke bare utsikt og turister — den er kulde, nakne steinvegger, og en by bygget på frykt.
+
+2. BYEN SOM BLE FLYTTET
+Etter bybrannen i 1624 pekte Christian IV med hansken og sa: «Byen skal ligge HER.» Middelalder-Oslo lå et annet sted. Under asfalt og trikkeskinner i det moderne sentrum ligger folk begravet. Turistene drikker kaffe oppå pestgraver.
+
+3. DAMSTREDET OG TELTHUSBAKKEN
+[Damstredet](https://no.wikipedia.org/wiki/Damstredet) og [Telthusbakken](https://no.wikipedia.org/wiki/Telthusbakken) — skjeve trehus, nakne lyspærer, gamle trapper. Det nærmeste du kommer Christiania uten tidsmaskin. Ikke polert Oslo. Ikke oljepenger. Bare fattigdom, vedfyring og kvinner som så byen vokse.
+
+4. VATERLAND — Oslos tapte underverden
+[Vaterland](https://no.wikipedia.org/wiki/Vaterland,_Oslo) er i dag bussterminal og kebab. Før: prostituerte, smuglere, sjøfolk, opium, knivstikkinger. «Dette var byen de fine folkene lot som ikke eksisterte.»
+
+5. OSLO RÅDHUS — ideologi i stein
+Ingen ser det, men [Oslo rådhus](https://no.wikipedia.org/wiki/Oslo_rådhus) er fylt med skjulte politiske symboler, arbeiderbevegelsens propaganda, erotikk og klassekamp. Det er et monument over hvem som skulle eie Norge etter krigen — ikke et rådhus.
+
+6. EMANUEL VIGELANDS MAUSOLEUM
+Nesten absurd ukjent. [Emanuel Vigeland-museet](https://no.wikipedia.org/wiki/Emanuel_Vigeland-museet): lav dør, mørke, ekko. Du må bøye deg for å komme inn — kunstneren ville at alle skulle underkaste seg kunsten. Inne: nakne mennesker, død, erotikk, religiøs ekstase, gigantisk mørk fresko. Ett av Oslos mest urovekkende steder.
+
+7. ØSTKANT / VESTKANT
+Oslo er egentlig to byer. Vestkanten: arv, stillhet, gamle penger. Østkanten: [Grønland](https://no.wikipedia.org/wiki/Gr%C3%B8nland,_Oslo), industri, migrasjon, overlevelse. Arkitekturen endrer seg. Dialekten endrer seg. Kroppsspråket endrer seg.
+
+8. OSLOS USYNLIGE ELVER
+Under asfalt og bygninger renner gamle elver fortsatt i rør: [Hovinbekken](https://no.wikipedia.org/wiki/Hovinbekken), Alnaelva, glemte bekker. Oslo prøvde å begrave naturen. Nå prøver byen å grave den frem igjen.
+
+9. DE USYNLIGE KRIGSSPORENE
+Kulehull. Gamle Gestapo-bygninger. Steder folk ble torturert. Motstandsceller. Henrik gjør byen stille — ikke melodrama, bare: «Her forsvant folk.»
+
+HENRIKS STEMME NÅR HAN ÅPNER DET SKJULTE LAGET:
+«Oslo skjuler ting. Byen liker ikke å forklare seg.»
+Han snakker som en mann som kjenner byen etter midnatt.
+`;
 const TROMSO_KB = `
 TROMSØ: 78 000 innb., 350 km nord for Polarsirkelen. Verdens nordligste universitetsby av betydning.
 NORDLYS: Beste sesong oktober–mars. KP 3+ synlig fra Tromsø. spaceweather.com.
@@ -1028,21 +1067,34 @@ NTNU: Norges største universitet, 43 000 studenter.
 MAT: Skansenkaien og Solsiden. Britannia Hotel (1897). Ni (1 Michelin-stjerne).
 `;
 
-function getSystemPrompt(g) {
+function getSystemPrompt(g, historyLength = 0) {
   const stilregler = `
 STIL OG LENGDE:
-- Maks 2–3 avsnitt per svar. Kortere er bedre enn lengre.
+- Maks 4–6 linjer per svar. Ikke ett ord mer enn nødvendig.
+- Aldri punktlister. Aldri oppsummeringer. Aldri «for å oppsummere».
 - Ingen overdrevne utrop, ingen «kjære reisevenn».
-- Skriv som en klok, rolig venn som kjenner stedet.
-- Konkret fremfor poetisk: én god detalj slår tre metaforer.
-- Prosa, aldri punktlister.
-- Avslutt med ett kort, naturlig spørsmål.`;
+- Presis og konkret: én god detalj slår tre metaforer.
+- Informasjon skal være der — men dosert. Én ting om gangen. Si neste ting når brukeren svarer.
+- Har du mer å si: vent. La brukeren komme til deg.
+- Avslutt ALLTID med enten:
+  a) ett enkelt, åpent spørsmål, ELLER
+  b) én åpen observasjon som henger i luften — noe som inviterer tanke uten å kreve svar.
+- Aldri begge. Aldri ingen av dem.`;
 
   if (g.id === 'grand-loop') return ''; // handled by getRouteLarsPrompt
   if (g.id === 'bergen-stryn') return `Du er Lars, guide for Grand Loop Norway. Snakker alltid norsk.\nPERSONLIGHET: Erfaren, rolig, jordnær. Bruk «vi».\nKUNNSKAP:\n${BERGEN_STRYN_KB}${stilregler}`;
   if (g.id === 'bergen') return `Du er Astrid, reiseguide fra Bergen. Snakker alltid norsk.\nPERSONLIGHET: Bergenser til fingerspissene, elsker regnet. Varm og direkte. Bruk «vi».\nKUNNSKAP:\n${BERGEN_KB}${stilregler}`;
   if (g.id === 'lofoten') return `Du er Hilde, reiseguide fra Lofoten. Snakker norsk.\nPERSONLIGHET: Oppvokst i Henningsvær. Respekt for naturen. Bruk «vi».\nKUNNSKAP:\n${LOFOTEN_KB}${stilregler}`;
-  if (g.id === 'oslo') return `Du er Henrik, reiseguide fra Oslo. Snakker alltid norsk.\nPERSONLIGHET: Intellektuell oslomann i 50-årene. Tørr humor. Bruk «vi».\nKUNNSKAP:\n${OSLO_KB}${stilregler}`;
+  if (g.id === 'oslo') {
+    const fase = historyLength >= 8
+      ? `FASE: Du er nå i det skjulte laget (melding ${historyLength}). Begynn å plante frø fra OSLO_HIDDEN_KB — naturlig, aldri brått. Én ting om gangen. Bruk åpne observasjoner, ikke spørsmål.`
+      : `FASE: Tidlig samtale (melding ${historyLength}). Vær den konvensjonelle guiden Henrik — Slottet, Karl Johan, Operaen, Munch. Bygg tillit. Det skjulte Oslo venter.`;
+    return `Du er Henrik, reiseguide fra Oslo. Snakker alltid norsk.
+PERSONLIGHET: Intellektuell oslomann i 50-årene. Tørr humor. Kjenner byen etter midnatt. Bruk «vi».
+${fase}
+KUNNSKAP:\n${OSLO_KB}
+SKJULT LAG:\n${OSLO_HIDDEN_KB}${stilregler}`;
+  }
   if (g.id === 'tromso') return `Du er Sigrid, reiseguide fra Tromsø. Snakker alltid norsk.\nPERSONLIGHET: Biologistudent ved UiT. Elsker nordlyset vitenskapelig og poetisk. Bruk «vi».\nKUNNSKAP:\n${TROMSO_KB}${stilregler}`;
   if (g.id === 'stavanger') return `Du er Magnus, reiseguide fra Stavanger. Snakker alltid norsk.\nPERSONLIGHET: Eks-oljeingeniør, friluftsentusiast. Direkte og jordnær. Bruk «vi».\nKUNNSKAP:\n${STAVANGER_KB}${stilregler}`;
   if (g.id === 'alesund') return `Du er Ingrid, reiseguide fra Ålesund. Snakker alltid norsk.\nPERSONLIGHET: Arkitekturelsker, stolt av jugendstilbyen. Livlig men aldri overveldende. Bruk «vi».\nKUNNSKAP:\n${ALESUND_KB}${stilregler}`;
@@ -1090,12 +1142,12 @@ NÅVÆRENDE POSISJON: ${stage.title}
 ${stage.sub}${getStagKB(stage)}
 
 STIL:
-- Maks 2–3 avsnitt. Kortere er bedre.
-- Ingen faktaark, ingen punktlister.
-- Skriv som en klok venn — konkret, ikke poetisk.
-- Én god detalj slår tre metaforer.
-- Avslutt med ett naturlig spørsmål, eller la setningen henge litt åpen.
-- Du snakker norsk. Du sier «vi» — vi kjører dette sammen.
+- Maks 4–6 linjer per svar. Ikke ett ord mer.
+- Aldri punktlister, aldri oppsummeringer.
+- Presis og konkret — én ting om gangen. Resten venter til brukeren svarer.
+- Avslutt ALLTID med enten ett åpent spørsmål ELLER én observasjon som bare henger der — stille, uten å kreve svar.
+- Du sier «vi» — vi kjører dette sammen.
+- Du snakker norsk.
 
 EKSEMPEL på din tone:
 «Her slutter veien å oppføre seg som en vei. Den begynner å tenke.»
@@ -1458,7 +1510,11 @@ function appendRouteMessage(role, text, withSpeakBtn = false) {
   bubble.className = `route-bubble ${role === 'user' ? 'user' : role === 'error' ? 'error' : 'lars'}`;
 
   const textNode = document.createElement('div');
-  textNode.textContent = text;
+  if (role === 'lars') {
+    textNode.innerHTML = parseMarkdownLinks(text);
+  } else {
+    textNode.textContent = text;
+  }
   bubble.appendChild(textNode);
 
   if (withSpeakBtn && role === 'lars') {
@@ -1516,7 +1572,7 @@ async function sendMessage(text) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
-        system: getSystemPrompt(currentGuide),
+        system: getSystemPrompt(currentGuide, chatHistory.length),
         messages: chatHistory.filter(m => m.role !== 'system'),
       }),
     });
@@ -1550,6 +1606,19 @@ async function sendMessage(text) {
 // ════════════════════════════════════════════════════════════════════════
 // MESSAGE RENDERING — GUIDE CHAT
 // ════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════
+// MARKDOWN LINK PARSER — [text](url) → <a href>
+// Safe: escapes HTML first, then injects anchor tags only
+// ════════════════════════════════════════════════════════════════════════
+function parseMarkdownLinks(text) {
+  const escaped = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return escaped
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\n/g,'<br>');
+}
+
 function appendMessage(role, text, withSpeakBtn = false) {
   const row = document.createElement('div');
   row.className = `msg-row${role === 'user' ? ' user' : ''}`;
@@ -1568,7 +1637,11 @@ function appendMessage(role, text, withSpeakBtn = false) {
   bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'bot error' : 'bot'}`;
 
   const textNode = document.createElement('div');
-  textNode.textContent = text;
+  if (role === 'assistant') {
+    textNode.innerHTML = parseMarkdownLinks(text);
+  } else {
+    textNode.textContent = text;
+  }
   bubble.appendChild(textNode);
 
   if (withSpeakBtn && role === 'assistant') {
