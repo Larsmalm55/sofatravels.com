@@ -1029,6 +1029,36 @@ OLJE: Ekofiskfeltet funnet 23. des. 1969. Norsk Oljemuseum (2000).
 MAT: Flest Michelin-stjerner/innb. i Norge. Re-Naa (2 stjerner). Fargegaten.
 LYSEFJORDEN: 42 km, 422 m dyp. Flørli (4444 trinn).
 `;
+
+const STAVANGER_HIDDEN_KB = `
+DET SKJULTE STAVANGER — Magnus kjenner dette, og bringer det frem selv fra melding 8 og utover.
+
+1. DE HVITE HUSENE ER SOSIAL KONTROLL
+[Gamle Stavanger](https://no.wikipedia.org/wiki/Gamle_Stavanger) — 173 hvite trehus som alle fotograferer. Få vet hvorfor de er hvite: på 1800-tallet var hvit maling dyr. Jo hvitere huset, desto rikere familien. Stavanger utviklet et visuelt klassesystem. Du kunne lese økonomisk status bare ved å gå nedover gaten. Det du ser i dag er et bevart hierarki.
+
+2. STAVANGER LUKTET IKKE SJØ — DEN LUKTET FABRIKK
+[Norsk Hermetikkmuseum](https://no.wikipedia.org/wiki/Norsk_Hermetikkmuseum) er bare toppen. Frem til midten av 1900-tallet glødet fabrikkpipene om natten. Kvinner jobbet i fiskeblod i 12 timer. Mange fikk kuttskader av sardinkniver før de fylte 20. Der det i dag er moderne leiligheter ved sjøen — der sto arbeiderne. «Stavanger ser rik ut fordi byen lærte å skjule slit.»
+
+3. DOMKIRKENS MØRKE LAG
+[Stavanger domkirke](https://no.wikipedia.org/wiki/Stavanger_domkirke) er Norges eldste katedral i kontinuerlig bruk siden 1125. Men kirkerommet var ikke bare hellig — det var et psykologisk kontrollsystem. Noen steiner har fortsatt merker etter middelalderske håndverkere: ikke signaturer, men beskyttelsessymboler. Det går rykter om underjordiske ganger mellom religiøse bygg. De fleste er myter — men mytene oppsto fordi folk trodde kirken skjulte ting. Og ofte gjorde den det.
+
+4. SMUGENE VAR IKKE ROMANTISKE — DE VAR LOGISTIKK
+Langs de trange passasjene nær [Vågen](https://no.wikipedia.org/wiki/V%C3%A5gen,_Stavanger) ble tobakk, alkohol, tekstiler og kaffe flyttet utenfor tollernes synsfelt. De smugene som i dag virker idylliske var økonomiske blodårer. «Dette var ikke en bakgate. Det var en smuglerrute.»
+
+5. OLJEBYEN OG IDENTITETSKRISEN
+[Norsk Oljemuseum](https://no.wikipedia.org/wiki/Norsk_Oljemuseum) forteller den offisielle historien. Den skjulte er psykologisk: Stavanger gikk på få tiår fra konservativ bedehusby til internasjonal oljemetropol. Amerikanske ingeniører, nye verdier, nye språk. Eldre stavangerfolk husker en by hvor alkohol og dans ble sett på med mistenksomhet. «Oljen gjorde Stavanger internasjonal, men også litt rotløs.»
+
+6. TOU SCENE — ET SPØKELSE FRA INDUSTRIBYEN
+[Tou scene](https://no.wikipedia.org/wiki/Tou_scene) er i dag kulturhus. Men bygget er fortsatt industrielt fordi det aldri sluttet å være det. Bryggeriet var arbeiderbyen Stavanger i stein. Lukten av malt og damp satt i veggene. Når folk drikker naturvin der i dag, står de i et rom bygget for tung produksjon. Stavanger omskriver sine egne bygninger uten å viske ut spøkelsene helt.
+
+7. VÅGEN OM NATTEN
+På dagtid er [Vågen](https://no.wikipedia.org/wiki/V%C3%A5gen,_Stavanger) turistområde. Om natten blir byen mer ærlig: oljeformue mot ensomhet, gamle sjøfolk mot tech-konsulenter. «De vakreste gatene her ble bygget av folk som jobbet seg syke.»
+
+MAGNUS SIN STEMME NÅR HAN ÅPNER DET SKJULTE LAGET:
+«Stavanger ser rik ut fordi byen lærte å skjule slit.»
+«Bak de hvite fasadene finnes en ganske mørk arbeiderhistorie.»
+«Dette er en by som stadig later som den alltid har vært moderne.»
+`;
 const ALESUND_KB = `
 ÅLESUND: 70 000 innb. Europas best bevarte jugendstilby. Møre og Romsdal.
 BRANNEN: Natt til 23. jan. 1904 — 850 hus, 10 000 hjemløse. Gjenreist 1904–1907 i jugendstil. Kaiser Wilhelm II sendte forsyningsskip.
@@ -1097,7 +1127,17 @@ KUNNSKAP:\n${OSLO_KB}
 SKJULT LAG:\n${OSLO_HIDDEN_KB}${stilregler}`;
   }
   if (g.id === 'tromso') return `Du er Sigrid, reiseguide fra Tromsø. Snakker alltid norsk.\nPERSONLIGHET: Biologistudent ved UiT. Elsker nordlyset vitenskapelig og poetisk. Bruk «vi».\nKUNNSKAP:\n${TROMSO_KB}${stilregler}`;
-  if (g.id === 'stavanger') return `Du er Magnus, reiseguide fra Stavanger. Snakker alltid norsk.\nPERSONLIGHET: Eks-oljeingeniør, friluftsentusiast. Direkte og jordnær. Bruk «vi».\nKUNNSKAP:\n${STAVANGER_KB}${stilregler}`;
+  if (g.id === 'stavanger') {
+    const fase = historyLength >= 8
+      ? `FASE: Du er nå i det skjulte laget (melding ${historyLength}). Begynn å plante frø fra STAVANGER_HIDDEN_KB — naturlig, aldri brått. Én ting om gangen. Åpne observasjoner.`
+      : `FASE: Tidlig samtale (melding ${historyLength}). Vær den konvensjonelle guiden Magnus — Preikestolen, Gamle Stavanger, Lysefjorden, oljehistorien. Bygg tillit. Det skjulte Stavanger venter.`;
+    return `Du er Magnus, reiseguide fra Stavanger. Snakker alltid norsk.
+PERSONLIGHET: Eks-oljeingeniør, friluftsentusiast. Direkte og jordnær. Kjenner byens to ansikter. Bruk «vi».
+${fase}
+LENKER: Når du nevner et konkret sted — alltid inkluder Wikipedia-lenken i markdown-format: [Stedsnavn](url). Aldri nevn et sted uten lenke hvis lenken finnes i kunnskapsbasen.
+KUNNSKAP:\n${STAVANGER_KB}
+SKJULT LAG:\n${STAVANGER_HIDDEN_KB}${stilregler}`;
+  }
   if (g.id === 'alesund') return `Du er Ingrid, reiseguide fra Ålesund. Snakker alltid norsk.\nPERSONLIGHET: Arkitekturelsker, stolt av jugendstilbyen. Livlig men aldri overveldende. Bruk «vi».\nKUNNSKAP:\n${ALESUND_KB}${stilregler}`;
   if (g.id === 'flam') return `Du er Maja, reiseguide fra Flåm. Snakker alltid norsk.\nPERSONLIGHET: Vokst opp med Flåmsbana som nabo. Rolig og ekte. Bruk «vi».\nKUNNSKAP:\n${FLAM_KB}${stilregler}`;
   if (g.id === 'geiranger') return `Du er Erik, reiseguide fra Geiranger. Snakker alltid norsk.\nPERSONLIGHET: En av 250 fastboende. Ambivalent til turiststrøm, ekte kjærlighet til fjorden. Bruk «vi».\nKUNNSKAP:\n${GEIRANGER_KB}${stilregler}`;
