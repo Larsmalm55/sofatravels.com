@@ -396,7 +396,7 @@
 
     <!-- Animated portrait backdrop -->
     <div class="portrait-backdrop">
-      <img id="backdrop-img" src="hilde-collage-3.jpeg" alt="Hilde i Lofoten" />
+      <img id="backdrop-img" src="hilde-collage-1.jpeg" alt="Hilde i Lofoten" />
       <div class="portrait-light"></div>
       <div class="portrait-mist"></div>
     </div>
@@ -405,7 +405,7 @@
     <header class="chat-header">
       <a href="../../from-the-sofa.html" class="back-btn">← Guider</a>
       <div class="header-guide-info">
-        <p class="header-city" id="header-city">LOFOTEN · VESTERÅLEN</p>
+        <p class="header-city" id="header-city">REINE · LOFOTEN</p>
         <p class="header-name">Hilde</p>
       </div>
       <div class="header-controls">
@@ -433,7 +433,7 @@
     <!-- Input -->
     <div class="input-row">
       <input type="text" id="chat-input" autocomplete="off"
-             placeholder="Spør Hilde om Lofoten…"
+             placeholder="Spør Hilde om Reine, Lofoten…"
              aria-label="Skriv melding til Hilde" />
       <button id="send-btn">→</button>
     </div>
@@ -444,7 +444,7 @@
 
     <!-- Portrait -->
     <div class="right-portrait">
-      <img src="hilde-collage-3.jpeg" alt="Hilde" id="right-portrait-img" />
+      <img src="hilde-collage-1.jpeg" alt="Hilde" id="right-portrait-img" />
       <div class="right-portrait-fade"></div>
       <div class="online-dot" title="Hilde er tilgjengelig nå"></div>
       <div class="right-portrait-info">
@@ -650,70 +650,127 @@ document.getElementById('sound-btn').addEventListener('click', () => {
 
 const progressionData = {
   steder: [
+    // ── LOFOTEN SØR → NORD ──
+    {
+      id: 'reine',
+      name: 'Reine',
+      place: 'LOFOTEN · ANKOMMER',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center top',
+      unlockAt: 0,
+      soundScene: 'havn',
+      backdropImg: 'hilde-collage-1.jpeg',
+      headerCity: 'REINE · LOFOTEN',
+    },
+    {
+      id: 'aa',
+      name: 'Å',
+      place: 'LOFOTEN · ENDEN AV VEIEN',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center left',
+      unlockAt: 2,
+      soundScene: 'baat',
+      backdropImg: 'hilde-collage-3.jpeg',
+      headerCity: 'Å · LOFOTEN',
+    },
+    {
+      id: 'nusfjord',
+      name: 'Nusfjord',
+      place: 'LOFOTEN · ELDSTE FISKEVÆR',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center left',
+      unlockAt: 4,
+      soundScene: 'havn',
+      backdropImg: 'hilde-collage-2.jpeg',
+      headerCity: 'NUSFJORD · LOFOTEN',
+    },
     {
       id: 'henningsvaer',
       name: 'Henningsvær',
-      place: 'LOFOTEN',
-      img: 'hilde-collage-3.jpeg',
-      imgPos: 'center left',
-      unlockAt: 0,
+      place: 'LOFOTEN · VENEZIA',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center',
+      unlockAt: 6,
       soundScene: 'havn',
-      backdropImg: 'hilde-collage-3.jpeg',
+      backdropImg: 'hilde-collage-2.jpeg',
       headerCity: 'HENNINGSVÆR · LOFOTEN',
     },
     {
-      id: 'reine',
-      name: 'Reinebringen',
-      place: 'LOFOTEN',
-      img: 'hilde-collage-1.jpeg',
-      imgPos: 'center top',
-      unlockAt: 4,
-      soundScene: 'fjell',
-      backdropImg: 'hilde-collage-1.jpeg',
-      headerCity: 'REINEBRINGEN · LOFOTEN',
-    },
-    {
-      id: 'fiskebaat',
-      name: 'Skreifiske',
-      place: 'LOFOTEN',
-      img: 'hilde-collage-2.jpeg',
-      imgPos: 'bottom right',
-      unlockAt: 8,
-      soundScene: 'baat',
-      backdropImg: 'hilde-collage-2.jpeg',
-      headerCity: 'ÅPENT HAV · LOFOTEN',
-    },
-    {
-      id: 'nordlys',
-      name: 'Nordlyskveld',
-      place: 'VESTERÅLEN',
-      img: 'hilde-collage-2.jpeg',
-      imgPos: 'bottom right',
-      unlockAt: 12,
-      soundScene: 'nordlys',
-      backdropImg: 'hilde-collage-2.jpeg',
-      headerCity: 'ANDØYA · VESTERÅLEN',
-    },
-    {
-      id: 'andoya',
-      name: 'Andøya',
-      place: 'VESTERÅLEN',
+      id: 'kabelvag',
+      name: 'Kabelvåg',
+      place: 'LOFOTEN · FØRSTE BY',
       img: 'hilde-collage-1.jpeg',
       imgPos: 'center',
-      unlockAt: 16,
-      soundScene: 'nordlys',
+      unlockAt: 8,
+      soundScene: 'havn',
       backdropImg: 'hilde-collage-1.jpeg',
-      headerCity: 'ANDØYA · VESTERÅLEN',
+      headerCity: 'KABELVÅG · LOFOTEN',
+    },
+    {
+      id: 'svolvaer',
+      name: 'Svolvær',
+      place: 'LOFOTEN · REGIONHOVEDSTAD',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center',
+      unlockAt: 10,
+      soundScene: 'fjell',
+      backdropImg: 'hilde-collage-3.jpeg',
+      headerCity: 'SVOLVÆR · LOFOTEN',
+    },
+    // ── VESTERÅLEN NORD ──
+    {
+      id: 'sortland',
+      name: 'Sortland',
+      place: 'VESTERÅLEN · DEN BLÅ BY',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center',
+      unlockAt: 12,
+      soundScene: 'havn',
+      backdropImg: 'hilde-collage-2.jpeg',
+      headerCity: 'SORTLAND · VESTERÅLEN',
+    },
+    {
+      id: 'boe',
+      name: 'Bø',
+      place: 'VESTERÅLEN · BØSTRANDA',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center',
+      unlockAt: 14,
+      soundScene: 'havn',
+      backdropImg: 'hilde-collage-1.jpeg',
+      headerCity: 'BØ · VESTERÅLEN',
+    },
+    {
+      id: 'stoe',
+      name: 'Stø',
+      place: 'VESTERÅLEN · YTTERST UT',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center',
+      unlockAt: 16,
+      soundScene: 'baat',
+      backdropImg: 'hilde-collage-3.jpeg',
+      headerCity: 'STØ · VESTERÅLEN',
+    },
+    {
+      id: 'andenes',
+      name: 'Andenes',
+      place: 'VESTERÅLEN · HVALSAFARI',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center',
+      unlockAt: 18,
+      soundScene: 'nordlys',
+      backdropImg: 'hilde-collage-2.jpeg',
+      headerCity: 'ANDENES · VESTERÅLEN',
     },
     {
       id: 'bleik',
-      name: 'Bleik & havørn',
-      place: 'VESTERÅLEN',
-      img: 'hilde-collage-3.jpeg',
-      imgPos: 'bottom right',
+      name: 'Bleik',
+      place: 'VESTERÅLEN · HAVØRNFJELLET',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center',
       unlockAt: 20,
       soundScene: 'fjell',
-      backdropImg: 'hilde-collage-3.jpeg',
+      backdropImg: 'hilde-collage-1.jpeg',
       headerCity: 'BLEIK · VESTERÅLEN',
     },
   ],
@@ -813,7 +870,7 @@ const progressionData = {
     {
       id: 'morgenfiske',
       name: 'Morgenfiske',
-      place: 'KL. 05:00',
+      place: 'KL. 05:00 · REINE',
       img: 'hilde-collage-1.jpeg',
       imgPos: 'bottom right',
       unlockAt: 0,
@@ -824,7 +881,15 @@ const progressionData = {
       place: 'LOKALT MÅLTID',
       img: 'hilde-collage-1.jpeg',
       imgPos: 'top right',
-      unlockAt: 5,
+      unlockAt: 4,
+    },
+    {
+      id: 'reinebringen',
+      name: 'Reinebringen',
+      place: 'FJELLTUR · 448 MOH',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center top',
+      unlockAt: 7,
     },
     {
       id: 'midnattssol',
@@ -832,23 +897,31 @@ const progressionData = {
       place: 'MAI · JUNI',
       img: 'hilde-collage-2.jpeg',
       imgPos: 'top left',
-      unlockAt: 9,
+      unlockAt: 10,
     },
     {
-      id: 'havorn',
-      name: 'Havørnsafari',
-      place: 'VESTERÅLEN',
-      img: 'hilde-collage-3.jpeg',
+      id: 'boestranda',
+      name: 'Bøstranda',
+      place: 'HVIT SAND · VESTERÅLEN',
+      img: 'hilde-collage-2.jpeg',
       imgPos: 'center',
       unlockAt: 14,
     },
     {
+      id: 'havorn',
+      name: 'Havørnsafari',
+      place: 'BLEIK · VESTERÅLEN',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center',
+      unlockAt: 17,
+    },
+    {
       id: 'hvalsafari',
       name: 'Hvalsafari',
-      place: 'ANDENES',
+      place: 'ANDENES · SPERMHVAL',
       img: 'hilde-collage-2.jpeg',
       imgPos: 'center',
-      unlockAt: 18,
+      unlockAt: 20,
     },
   ],
 };
@@ -860,7 +933,7 @@ let chatHistory = [];
 let isLoading = false;
 let userMsgCount = 0;
 let activeTab = 'steder';
-let activeStedId = 'henningsvaer';
+let activeStedId = 'reine';
 let prevUnlocked = { steder: 1, antrekk: 1, historier: 0, opplevelser: 1 };
 
 // ════════════════════════════════════════════════════════════════════════
@@ -954,7 +1027,7 @@ function renderProgContent() {
   const unlockedSteder = countUnlocked('steder');
   const pct = Math.round((unlockedSteder / totalSteder) * 100);
   document.getElementById('prog-bar').style.width = pct + '%';
-  document.getElementById('prog-count').textContent = `${unlockedSteder} / ${totalSteder} steder`;
+  document.getElementById('prog-count').textContent = `${unlockedSteder} av ${totalSteder} steder`;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -997,6 +1070,13 @@ function showUnlockToast(name, tab) {
 // ════════════════════════════════════════════════════════════════════════
 const LOFOTEN_KB = `
 GEOGRAFI: Lofoten — øygruppe i Nordland, ca. 170 km ut i havet. Vestvågøy, Flakstad, Moskenesøy, Austvågøy.
+ANKOMST: Ferje fra Bodø ankommer Moskenes. Første møte med Lofotveggen — fjellene reiser seg rett fra havet.
+REINE: [Reine](https://no.wikipedia.org/wiki/Reine) — kåret til verdens vakreste sted av flere reisemagasiner. Rorbuer, speilblankt vann, Reinebringen (448 moh.) over.
+Å: [Å i Lofoten](https://no.wikipedia.org/wiki/%C3%85_i_Lofoten) — uttales «Åh». Enden av veien — bokstavelig talt. Norsk Fiskeværsmuseum. Tørrfisktradisjon siden 1800-tallet.
+NUSFJORD: [Nusfjord](https://no.wikipedia.org/wiki/Nusfjord) — et av Norges best bevarte fiskevær. Fredet. Trehus og naust fra 1800-tallet intakt.
+HENNINGSVÆR: [Henningsvær](https://no.wikipedia.org/wiki/Henningsvær) — «Lofotens Venezia». Kaier, gallerier, klatring. Henningsvær IL-fotballbanen — midt i havet.
+KABELVÅG: [Kabelvåg](https://no.wikipedia.org/wiki/Kabelvåg) — Lofotens første by. Lofotakvariet. Vågan kirke 1898.
+SVOLVÆR: [Svolvær](https://no.wikipedia.org/wiki/Svolvær) — regionhovedstad. Svolværgeita (to fjelltopper). Lofotmuseet. Hurtigruten stopper her.
 MIDNATTSSOL: 28. mai – 14. juli. Mørketid: 8. desember – 4. januar.
 FISK: Verdens viktigste tørrfiskprodusent. Skrei januar–april. Tørrfisk på hjeller februar–juni.
 FISKEVÆRENE: Å (uttales «Åh»). Henningsvær — Lofotens Venezia. Reine — kåret til verdens vakreste. Nusfjord.
@@ -1009,13 +1089,14 @@ HAVØRN: Europas tetteste bestand. Vingespenn inntil 2,5 m.
 
 const VESTERALEN_KB = `
 VESTERÅLEN: Øygruppe nord for Lofoten — Andøya, Langøya, Hinnøya, Hadseløya, Sortland.
-ANDØYA: Norges nordligste øy med dyrkbar mark. [Andøya Space](https://no.wikipedia.org/wiki/Andøya_Space) — rakettoppskyting siden 1962.
-HVALSAFARI: Andenes — spermhval året rundt. Verdens beste sted for hvalsafari på land.
-BLEIK: Hvit sandstrand, havørnkoloni. [Bleiksøya](https://no.wikipedia.org/wiki/Bleiksøya) — fugleberg med 80 000 lundefugler.
-STØ: Ytterst i Vesterålen — Vestfjorden åpner seg mot havet. Stillhet og vidde.
-NYKVÅG: Lite fiskevær, gammelt og ekte. Uberørt av turismen.
-SORTLAND: «Den blå byen» — over 30 kunstnere malte bygninger blå. Nøkkelby i Vesterålen.
-NORDLYS: Andøya — lite lysforurensing, perfekt for nordlysjakt.
+SORTLAND: «Den blå byen» — over 30 kunstnere malte bygninger blå siden 1998. Inngangsport til Vesterålen. Rett nord for Lofoten.
+BØ: [Bøstranda](https://no.wikipedia.org/wiki/Bøstranda) — kåret til en av Norges vakreste sandstrender. Turkist vann, hvit sand. Uvanlig for Nord-Norge.
+STØ: Ytterst i Vesterålen mot åpent hav. Utgangspunkt for hvalsafari. Stillhet og vidde — ingen turistmasser.
+ANDENES: [Andenes fyr](https://no.wikipedia.org/wiki/Andenes_fyr) — Norges nordligste fyr av betydning. Spermhval sees her året rundt fra land. [Andøya Space](https://no.wikipedia.org/wiki/Andøya_Space) — rakettoppskyting siden 1962, nå kommersiell romhavn.
+BLEIK: [Bleiksøya](https://no.wikipedia.org/wiki/Bleiksøya) — fugleberg med 80 000 lundefugler om sommeren. Havørnkoloni. Hvit sandstrand nedenfor fjellet.
+NYKVÅG: Lite fiskevær, uberørt. Autentisk Vesterålen uten filter.
+NORDLYS: Andøya — lav lysforurensing, perfekt for nordlysjakt september–mars.
+HVALSAFARI: Andenes — spermhval året rundt. Verdens beste fastlandspunkt for hvalsafari.
 `;
 
 const LOFOTEN_HIDDEN_KB = `
@@ -1051,7 +1132,7 @@ function getSystemPrompt(msgCount) {
     ? `FASE: Du er nå i det skjulte laget (melding ${msgCount}). Begynn å avdekke lag fra SKJULT LAG — naturlig, aldri brått. Én ting om gangen. Åpne observasjoner som henger igjen.`
     : `FASE: Tidlig samtale (melding ${msgCount}). Vær den konvensjonelle guiden Hilde — nordlys, rorbuer, skrei, Reine, Henningsvær. Bygg tillit. Det skjulte venter.`;
 
-  return `Du er Hilde. Du er fra Henningsvær i Lofoten. Du dekker nå også Vesterålen — Andøya, Bleik, Stø, Nykvåg. Du er ikke en digital guide — du er til stede, rett ved siden av.
+  return `Du er Hilde. Du er fra Henningsvær i Lofoten, men guider gjennom hele øyriket — fra Reine og Å i sør til Bleik og Andenes i Vesterålen i nord — Andøya, Bleik, Stø, Nykvåg. Du er ikke en digital guide — du er til stede, rett ved siden av.
 
 PERSONLIGHET:
 Du er i slutten av trettiårene. Du kjenner disse øyene som din egen kropp — hvert fiskevær, hvert væromslag, hvert navn på en odde som skjuler en historie. Du har bodd her hele livet, og du vet nøyaktig hva stedet gjør med folk som ser det for første gang.
@@ -1269,7 +1350,7 @@ function init() {
   setTimeout(() => document.getElementById('chat-right').classList.add('visible'), 400);
 
   // Welcome message
-  const welcome = `Det er tidlig morgen i Henningsvær.\n\nTåken ligger lavt over kaiene ennå — den sorten som ikke skynder seg. Lyset begynner å finne veien mellom husene, og det lukter salt og tang og noe som ikke har et navn på norsk, bare en følelse.\n\nJeg har ventet på deg her.\n\nHvor vil du begynne — skal vi gå langs kaien, eller vil du at jeg forteller deg noe om dette stedet som de fleste aldri ser?`;
+  const welcome = `Ferjen fra Bodø legger til kai i Moskenes.\n\nDu ser dem før du går i land — Lofotveggen. Fjellene bare reiser seg fra havet uten forvarsel, uten kystlinje å forberede deg. Det er ikke noe som ligner.\n\nJeg er Hilde. Jeg har ventet her, ved kaien i Reine.\n\nVil du at vi begynner her — i det vakreste, det fotograferte — eller vil du at jeg tar deg til Å først, enden av veien, der Norge slutter?`;
 
   appendMessage('assistant', welcome);
   chatHistory.push({ role: 'assistant', content: welcome });
