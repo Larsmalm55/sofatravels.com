@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hilde · Lofoten & Vesterålen · SofaTravels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #08111A;
+      --panel:    #0C1820;
+      --card:     #0F1E28;
+      --border:   #1E3A4A;
+      --sea:      #2A7FA8;
+      --sea-dim:  #1A5070;
+      --gold:     #C9A84C;
+      --text:     #EAE0CF;
+      --muted:    #6A8A9A;
+      --sub:      #9AB0BA;
+      --input-bg: #0A1820;
+      --msg-user: #1A2E3A;
+      --msg-bot:  #0D1E28;
+      --accent:   #1A4F6A;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      color: var(--text); font-family: 'Crimson Text', Georgia, serif;
+      overflow: hidden;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    #app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── LEFT: HILDE PORTRAIT + CHAT ── */
+    .chat-left {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+      position: relative; min-width: 0;
+    }
+
+    /* Portrait backdrop — full bleed behind chat */
+    .portrait-backdrop {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden;
+    }
+    .portrait-backdrop img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+      animation: breathe 12s ease-in-out infinite;
+      transform-origin: center top;
+      transition: opacity 1.2s ease;
+    }
+    @keyframes breathe {
+      0%   { transform: scale(1.00) translateY(0px); }
+      30%  { transform: scale(1.03) translateY(-4px); }
+      60%  { transform: scale(1.02) translateY(-2px); }
+      100% { transform: scale(1.00) translateY(0px); }
+    }
+    /* Light overlay that shifts subtly */
+    .portrait-light {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(8,17,26,0.15) 0%,
+        rgba(8,17,26,0.45) 50%,
+        rgba(8,17,26,0.92) 100%
+      );
+      animation: lightshift 18s ease-in-out infinite;
+    }
+    @keyframes lightshift {
+      0%   { opacity: 1; }
+      40%  { opacity: 0.85; }
+      70%  { opacity: 0.95; }
+      100% { opacity: 1; }
+    }
+    /* Fog/mist layer at bottom */
+    .portrait-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+      background: linear-gradient(to top, var(--bg) 0%, rgba(8,17,26,0.8) 35%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* ── CHAT HEADER ── */
+    .chat-header {
+      position: relative; z-index: 10;
+      padding: 14px 22px; display: flex; align-items: center; gap: 16px;
+      background: rgba(8,17,26,0.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(42,127,168,0.2);
+    }
+    .back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 6px 14px; border-radius: 4px; cursor: pointer;
+      font-size: .8rem; letter-spacing: .08em; font-family: inherit;
+      transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .header-guide-info { flex: 1; }
+    .header-city { letter-spacing: .3em; font-size: 9px; color: var(--sea); margin-bottom: 2px; }
+    .header-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--text); }
+    .header-controls { display: flex; align-items: center; gap: 8px; }
+    .ctrl-btn {
+      background: rgba(8,17,26,0.6); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; border-radius: 20px;
+      font-size: .75rem; cursor: pointer; font-family: inherit; transition: all .2s;
+      white-space: nowrap;
+    }
+    .ctrl-btn:hover { border-color: var(--sea); color: var(--text); }
+    .ctrl-btn.active { border-color: var(--sea); color: #7DCCEE; background: rgba(42,127,168,.12); }
+
+    /* ── MESSAGES ── */
+    .messages-wrap {
+      flex: 1; overflow: hidden; position: relative; z-index: 5;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .messages {
+      overflow-y: auto; padding: 20px 24px 12px;
+      display: flex; flex-direction: column; gap: 16px;
+      max-height: 100%;
+    }
+    .messages::-webkit-scrollbar { width: 3px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .msg-row { display: flex; gap: 10px; align-items: flex-start; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-avatar {
+      width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+      flex-shrink: 0; margin-top: 2px;
+      border: 1px solid rgba(42,127,168,.4);
+    }
+    .msg-bubble {
+      max-width: 68%; padding: 11px 16px; line-height: 1.85;
+      font-size: .93rem; white-space: pre-wrap; position: relative;
+    }
+    .msg-bubble.bot {
+      background: rgba(13,30,40,0.88); backdrop-filter: blur(8px);
+      color: #D8CCBC; border: 1px solid rgba(42,127,168,.25);
+      border-radius: 10px 10px 10px 2px;
+    }
+    .msg-bubble.bot a { color: var(--sea); text-decoration: underline; text-underline-offset: 3px; }
+    .msg-bubble.user-bubble {
+      background: rgba(26,47,58,0.9); backdrop-filter: blur(8px);
+      color: var(--text); border: 1px solid rgba(42,127,168,.2);
+      border-radius: 10px 10px 2px 10px;
+    }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; font-style: italic; border-radius: 8px; }
+    .speak-btn {
+      display: inline-block; margin-top: 8px; background: none;
+      border: 1px solid rgba(42,127,168,.3); color: var(--muted);
+      border-radius: 4px; padding: 3px 10px; font-size: .72rem;
+      cursor: pointer; font-family: inherit; transition: all .2s; letter-spacing: .04em;
+    }
+    .speak-btn:hover { border-color: var(--sea); color: #7DCCEE; }
+    .speak-btn.playing { border-color: var(--sea); color: #7DCCEE; background: rgba(42,127,168,.1); }
+    .speak-btn.loading { opacity: .5; cursor: default; }
+    .typing { color: var(--sea); letter-spacing: .3em; font-size: 1.1rem; animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+    /* ── INPUT ROW ── */
+    .input-row {
+      position: relative; z-index: 10;
+      display: flex; gap: 8px; padding: 14px 22px;
+      background: rgba(8,17,26,0.82); backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(42,127,168,.15);
+    }
+    #chat-input {
+      flex: 1; background: rgba(10,24,32,0.9); border: 1px solid var(--border);
+      color: var(--text); padding: 12px 18px; border-radius: 24px;
+      font-size: .93rem; outline: none; font-family: 'Crimson Text', Georgia, serif;
+      transition: border-color .2s;
+    }
+    #chat-input:focus { border-color: rgba(42,127,168,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn {
+      width: 48px; height: 48px; border-radius: 50%; border: none;
+      background: var(--sea); color: #fff; font-size: 1.2rem;
+      cursor: pointer; transition: all .2s; flex-shrink: 0;
+    }
+    #send-btn:hover { background: #3A9FC8; transform: scale(1.05); }
+    #send-btn:disabled { opacity: .4; cursor: default; transform: none; }
+
+    /* ── RIGHT PANEL ── */
+    .chat-right {
+      width: 280px; flex-shrink: 0;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      transform: translateX(100%); opacity: 0;
+      transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .7s ease;
+      overflow: hidden;
+    }
+    .chat-right.visible { transform: translateX(0); opacity: 1; }
+
+    /* Guide portrait in right panel */
+    .right-portrait {
+      position: relative; height: 260px; overflow: hidden; flex-shrink: 0;
+    }
+    .right-portrait img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center 15%;
+      transition: transform .6s ease;
+    }
+    .chat-right:hover .right-portrait img { transform: scale(1.03); }
+    .right-portrait-fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--panel) 0%, rgba(12,24,32,0.3) 55%);
+    }
+    .right-portrait-info { position: absolute; bottom: 14px; left: 16px; right: 16px; }
+    .right-city { letter-spacing: .25em; font-size: 9px; color: var(--sea); margin-bottom: 3px; }
+    .right-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text); font-weight: 700; }
+    .right-tagline { font-size: .78rem; color: var(--muted); font-style: italic; margin-top: 2px; line-height: 1.5; }
+    .online-dot {
+      position: absolute; top: 12px; right: 12px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #4CC87A; border: 2px solid #4CC87A;
+      box-shadow: 0 0 8px rgba(76,200,122,.5);
+      animation: onlinepulse 3s ease-in-out infinite;
+    }
+    @keyframes onlinepulse { 0%,100%{box-shadow:0 0 6px rgba(76,200,122,.4)} 50%{box-shadow:0 0 14px rgba(76,200,122,.7)} }
+
+    /* ── PROGRESSION TABS ── */
+    .prog-tabs {
+      display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+      background: var(--card);
+    }
+    .prog-tab {
+      flex: 1; padding: 10px 4px; text-align: center;
+      font-size: .68rem; letter-spacing: .12em; color: var(--muted);
+      cursor: pointer; border-bottom: 2px solid transparent;
+      transition: all .2s; font-family: 'Crimson Text', serif;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .prog-tab:hover { color: var(--text); }
+    .prog-tab.active { color: var(--sea); border-bottom-color: var(--sea); }
+
+    /* ── PROGRESSION PANEL CONTENT ── */
+    .prog-content { flex: 1; overflow-y: auto; padding: 12px; }
+    .prog-content::-webkit-scrollbar { width: 3px; }
+    .prog-content::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .prog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .prog-card {
+      border-radius: 8px; overflow: hidden; position: relative;
+      aspect-ratio: 3/4; cursor: pointer;
+      border: 1px solid var(--border);
+      transition: transform .2s, border-color .2s;
+    }
+    .prog-card.unlocked:hover { transform: scale(1.02); border-color: rgba(42,127,168,.5); }
+    .prog-card.unlocked.active-card { border-color: var(--sea); box-shadow: 0 0 0 1px var(--sea); }
+
+    .prog-card img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+      transition: transform .4s;
+    }
+    .prog-card.unlocked:hover img { transform: scale(1.06); }
+
+    .prog-card-fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,17,26,0.9) 0%, transparent 55%);
+    }
+    .prog-card-label {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 10px;
+    }
+    .prog-card-place { font-size: .65rem; letter-spacing: .18em; color: var(--sea); margin-bottom: 1px; }
+    .prog-card-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); line-height: 1.2; }
+
+    /* Locked card */
+    .prog-card.locked {
+      cursor: default;
+      background: linear-gradient(135deg, #0A1820, #0D2030);
+    }
+    .prog-card.locked img { opacity: 0.18; filter: blur(2px); }
+    .lock-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    }
+    .lock-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      display: flex; align-items: center; justify-content: center; font-size: .85rem;
+    }
+    .lock-label { font-size: .62rem; color: rgba(106,138,154,.6); letter-spacing: .08em; text-align: center; line-height: 1.5; padding: 0 6px; }
+
+    /* Newly unlocked animation */
+    @keyframes unlock-flash {
+      0% { box-shadow: 0 0 0 0 rgba(42,127,168,.8); }
+      70% { box-shadow: 0 0 0 12px rgba(42,127,168,0); }
+      100% { box-shadow: 0 0 0 0 rgba(42,127,168,0); }
+    }
+    .prog-card.just-unlocked { animation: unlock-flash .8s ease-out; }
+
+    /* Progress indicator */
+    .prog-footer {
+      padding: 10px 14px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .prog-bar-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em; margin-bottom: 6px;
+    }
+    .prog-bar-track {
+      height: 2px; background: var(--border); border-radius: 1px; overflow: hidden;
+    }
+    .prog-bar-fill {
+      height: 100%; background: var(--sea); border-radius: 1px;
+      transition: width .8s cubic-bezier(.16,1,.3,1);
+    }
+
+    /* Ambient sound indicator */
+    .sound-indicator {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .65rem; color: var(--muted); letter-spacing: .08em;
+    }
+    .sound-bars { display: flex; gap: 2px; align-items: flex-end; height: 12px; }
+    .sound-bar {
+      width: 2px; background: var(--sea); border-radius: 1px;
+      animation: soundwave 1.2s ease-in-out infinite;
+    }
+    .sound-bar:nth-child(1) { height: 4px; animation-delay: 0s; }
+    .sound-bar:nth-child(2) { height: 8px; animation-delay: .15s; }
+    .sound-bar:nth-child(3) { height: 12px; animation-delay: .3s; }
+    .sound-bar:nth-child(4) { height: 6px; animation-delay: .45s; }
+    .sound-bar:nth-child(5) { height: 10px; animation-delay: .6s; }
+    @keyframes soundwave {
+      0%,100% { transform: scaleY(0.4); opacity: .5; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+    .sound-bars.paused .sound-bar { animation-play-state: paused; opacity: .3; }
+
+    /* ── ELEVEN LABS BANNER ── */
+    .api-banner {
+      display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: #0A1A28; border-bottom: 2px solid var(--sea);
+      padding: 12px 20px; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .85rem; color: var(--text); }
+    .api-banner label strong { color: var(--sea); }
+    .api-banner input {
+      flex: 1; min-width: 240px; background: #0A1420; border: 1px solid rgba(42,127,168,.4);
+      color: var(--text); padding: 7px 12px; border-radius: 4px;
+      font-size: .82rem; font-family: monospace; outline: none;
+    }
+    .api-banner input:focus { border-color: var(--sea); }
+    .api-banner button {
+      background: var(--sea); border: none; color: #fff;
+      padding: 7px 16px; border-radius: 4px; cursor: pointer;
+      font-size: .82rem; font-weight: 700;
+    }
+    .banner-close {
+      background: none !important; color: var(--muted) !important;
+      font-size: 1rem !important; padding: 4px 8px !important;
+    }
+
+    /* ── UNLOCK TOAST ── */
+    .unlock-toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: rgba(12,28,40,0.95); backdrop-filter: blur(16px);
+      border: 1px solid rgba(42,127,168,.5); border-radius: 10px;
+      padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+      font-size: .85rem; color: var(--text); z-index: 100;
+      opacity: 0; transition: all .4s cubic-bezier(.16,1,.3,1);
+      pointer-events: none; max-width: 340px;
+    }
+    .unlock-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .unlock-toast-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .unlock-toast-text { line-height: 1.5; }
+    .unlock-toast-title { color: var(--sea); font-size: .7rem; letter-spacing: .15em; margin-bottom: 2px; }
+
+    /* Scrollbar */
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  </style>
+</head>
+<body>
+
+<!-- ── ELEVENLABS BANNER ── -->
+<div id="eleven-banner" class="api-banner" role="alert">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Hildes stemme — hentes fra elevenlabs.io</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre stemme</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<!-- ── UNLOCK TOAST ── -->
+<div class="unlock-toast" id="unlock-toast">
+  <div class="unlock-toast-icon">🔓</div>
+  <div class="unlock-toast-text">
+    <div class="unlock-toast-title">NYTT STED ÅPNET</div>
+    <div id="unlock-toast-msg">Andøya er nå tilgjengelig</div>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+
+  <!-- LEFT: Portrait + Chat -->
+  <div class="chat-left">
+
+    <!-- Animated portrait backdrop -->
+    <div class="portrait-backdrop">
+      <img id="backdrop-img" src="hilde-collage-3.jpeg" alt="Hilde i Lofoten" />
+      <div class="portrait-light"></div>
+      <div class="portrait-mist"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="chat-header">
+      <a href="../../from-the-sofa.html" class="back-btn">← Guider</a>
+      <div class="header-guide-info">
+        <p class="header-city" id="header-city">LOFOTEN · VESTERÅLEN</p>
+        <p class="header-name">Hilde</p>
+      </div>
+      <div class="header-controls">
+        <div class="sound-indicator" id="sound-indicator">
+          <div class="sound-bars paused" id="sound-bars">
+            <div class="sound-bar"></div>
+            <div class="sound-bar"></div>
+            <div class="sound-bar"></div>
+            <div class="sound-bar"></div>
+            <div class="sound-bar"></div>
+          </div>
+          <span id="sound-label">Lyd av</span>
+        </div>
+        <button class="ctrl-btn" id="sound-btn" title="Slå ambientelyd av/på">🌊 Lyd</button>
+        <button class="ctrl-btn" id="voice-btn" title="Slå stemmesvar av/på">🔇 Stemme</button>
+        <button class="ctrl-btn" id="eleven-settings-btn" style="font-size:.7rem">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Messages -->
+    <div class="messages-wrap">
+      <div class="messages" id="messages" role="log" aria-live="polite"></div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-row">
+      <input type="text" id="chat-input" autocomplete="off"
+             placeholder="Spør Hilde om Lofoten…"
+             aria-label="Skriv melding til Hilde" />
+      <button id="send-btn">→</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: Progression Panel -->
+  <aside class="chat-right" id="chat-right">
+
+    <!-- Portrait -->
+    <div class="right-portrait">
+      <img src="hilde-collage-3.jpeg" alt="Hilde" id="right-portrait-img" />
+      <div class="right-portrait-fade"></div>
+      <div class="online-dot" title="Hilde er tilgjengelig nå"></div>
+      <div class="right-portrait-info">
+        <p class="right-city">LOFOTEN · VESTERÅLEN</p>
+        <p class="right-name">Hilde</p>
+        <p class="right-tagline" id="right-tagline">"Fiskernes paradis — magisk og uberørt"</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="prog-tabs" id="prog-tabs">
+      <button class="prog-tab active" data-tab="steder">STEDER</button>
+      <button class="prog-tab" data-tab="antrekk">ANTREKK</button>
+      <button class="prog-tab" data-tab="historier">HISTORIER</button>
+      <button class="prog-tab" data-tab="opplevelser">OPPLEVELSER</button>
+    </div>
+
+    <!-- Tab content -->
+    <div class="prog-content" id="prog-content"></div>
+
+    <!-- Progress bar footer -->
+    <div class="prog-footer">
+      <div class="prog-bar-label">
+        <span>SAMTALE-FREMGANG</span>
+        <span id="prog-count">0 / 8 steder</span>
+      </div>
+      <div class="prog-bar-track">
+        <div class="prog-bar-fill" id="prog-bar" style="width:12%"></div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// ELEVEN LABS KEY
+// ════════════════════════════════════════════════════════════════════════
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false;
+let currentAudio = null;
+
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v;
+    localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    enableVoice();
+  }
+});
+document.getElementById('eleven-banner-close').addEventListener('click', () =>
+  document.getElementById('eleven-banner').classList.remove('show'));
+document.getElementById('eleven-settings-btn').addEventListener('click', () =>
+  document.getElementById('eleven-banner').classList.toggle('show'));
+
+document.getElementById('voice-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+});
+function enableVoice() { voiceOn = true; updateVoiceBtn(); }
+function updateVoiceBtn() {
+  const btn = document.getElementById('voice-btn');
+  btn.textContent = voiceOn ? '🔊 Stemme' : '🔇 Stemme';
+  btn.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) enableVoice();
+
+// ════════════════════════════════════════════════════════════════════════
+// AMBIENT SOUND ENGINE — Web Audio API
+// ════════════════════════════════════════════════════════════════════════
+let audioCtx = null;
+let ambientNodes = [];
+let ambientOn = false;
+let currentScene = 'havn';
+
+const scenes = {
+  havn: {
+    label: 'Havn · Henningsvær',
+    layers: [
+      { type: 'noise', freq: 200, q: 0.4, gain: 0.06, rate: 0.5 },   // sjøbrus
+      { type: 'noise', freq: 800, q: 1.0, gain: 0.02, rate: 2.0 },   // svak vind
+    ]
+  },
+  fjell: {
+    label: 'Reinebringen · vind',
+    layers: [
+      { type: 'noise', freq: 120, q: 0.3, gain: 0.04, rate: 0.3 },
+      { type: 'noise', freq: 1200, q: 0.8, gain: 0.03, rate: 3.0 },
+    ]
+  },
+  nordlys: {
+    label: 'Vinterkveld · stille',
+    layers: [
+      { type: 'noise', freq: 80, q: 0.2, gain: 0.03, rate: 0.2 },
+    ]
+  },
+  baat: {
+    label: 'Fiskebåt · åpent hav',
+    layers: [
+      { type: 'noise', freq: 150, q: 0.5, gain: 0.08, rate: 0.8 },
+      { type: 'noise', freq: 600, q: 0.7, gain: 0.025, rate: 1.5 },
+    ]
+  },
+};
+
+function createNoiseSource(ctx) {
+  const bufLen = ctx.sampleRate * 2;
+  const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  return src;
+}
+
+function startAmbient(scene = 'havn') {
+  if (audioCtx) stopAmbient();
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  currentScene = scene;
+  const sceneData = scenes[scene] || scenes.havn;
+
+  sceneData.layers.forEach(layer => {
+    const src = createNoiseSource(audioCtx);
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = layer.freq;
+    filter.Q.value = layer.q;
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0;
+    gainNode.gain.linearRampToValueAtTime(layer.gain, audioCtx.currentTime + 2);
+    src.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    src.start();
+    // slow gain modulation for organic feel
+    modulateGain(gainNode, layer.gain, layer.rate);
+    ambientNodes.push({ src, gainNode });
+  });
+}
+
+function modulateGain(gainNode, baseGain, rate) {
+  function step() {
+    if (!ambientOn) return;
+    const t = audioCtx.currentTime;
+    const variation = (Math.random() - 0.5) * 0.3 * baseGain;
+    gainNode.gain.linearRampToValueAtTime(
+      Math.max(0.001, baseGain + variation),
+      t + (1 / rate) + Math.random()
+    );
+    setTimeout(step, (1000 / rate) * (0.7 + Math.random() * 0.6));
+  }
+  setTimeout(step, 500);
+}
+
+function stopAmbient() {
+  ambientNodes.forEach(n => {
+    try {
+      n.gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+      setTimeout(() => n.src.stop(), 1100);
+    } catch(e) {}
+  });
+  ambientNodes = [];
+  setTimeout(() => {
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+  }, 1200);
+}
+
+function setAmbientScene(scene) {
+  if (ambientOn) { stopAmbient(); setTimeout(() => startAmbient(scene), 300); }
+  currentScene = scene;
+  updateSoundLabel();
+}
+
+function updateSoundLabel() {
+  const sc = scenes[currentScene] || scenes.havn;
+  document.getElementById('sound-label').textContent = ambientOn ? sc.label : 'Lyd av';
+  const bars = document.getElementById('sound-bars');
+  bars.classList.toggle('paused', !ambientOn);
+}
+
+document.getElementById('sound-btn').addEventListener('click', () => {
+  ambientOn = !ambientOn;
+  const btn = document.getElementById('sound-btn');
+  if (ambientOn) {
+    startAmbient(currentScene);
+    btn.classList.add('active');
+    btn.textContent = '🌊 Lyd på';
+  } else {
+    stopAmbient();
+    btn.classList.remove('active');
+    btn.textContent = '🌊 Lyd';
+  }
+  updateSoundLabel();
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// PROGRESSION DATA
+// ════════════════════════════════════════════════════════════════════════
+// Each item: unlockAt = message count threshold (user messages)
+// img: which collage + which crop area to describe (use collages for now)
+
+const progressionData = {
+  steder: [
+    {
+      id: 'henningsvaer',
+      name: 'Henningsvær',
+      place: 'LOFOTEN',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center left',
+      unlockAt: 0,
+      soundScene: 'havn',
+      backdropImg: 'hilde-collage-3.jpeg',
+      headerCity: 'HENNINGSVÆR · LOFOTEN',
+    },
+    {
+      id: 'reine',
+      name: 'Reinebringen',
+      place: 'LOFOTEN',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center top',
+      unlockAt: 4,
+      soundScene: 'fjell',
+      backdropImg: 'hilde-collage-1.jpeg',
+      headerCity: 'REINEBRINGEN · LOFOTEN',
+    },
+    {
+      id: 'fiskebaat',
+      name: 'Skreifiske',
+      place: 'LOFOTEN',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 8,
+      soundScene: 'baat',
+      backdropImg: 'hilde-collage-2.jpeg',
+      headerCity: 'ÅPENT HAV · LOFOTEN',
+    },
+    {
+      id: 'nordlys',
+      name: 'Nordlyskveld',
+      place: 'VESTERÅLEN',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 12,
+      soundScene: 'nordlys',
+      backdropImg: 'hilde-collage-2.jpeg',
+      headerCity: 'ANDØYA · VESTERÅLEN',
+    },
+    {
+      id: 'andoya',
+      name: 'Andøya',
+      place: 'VESTERÅLEN',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'center',
+      unlockAt: 16,
+      soundScene: 'nordlys',
+      backdropImg: 'hilde-collage-1.jpeg',
+      headerCity: 'ANDØYA · VESTERÅLEN',
+    },
+    {
+      id: 'bleik',
+      name: 'Bleik & havørn',
+      place: 'VESTERÅLEN',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 20,
+      soundScene: 'fjell',
+      backdropImg: 'hilde-collage-3.jpeg',
+      headerCity: 'BLEIK · VESTERÅLEN',
+    },
+  ],
+  antrekk: [
+    {
+      id: 'regnjakke',
+      name: 'Regnjakke',
+      place: 'FØRSTE MØTE',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center left',
+      unlockAt: 0,
+    },
+    {
+      id: 'lofotgenser',
+      name: 'Lofotgenser',
+      place: 'VANDRING',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center left',
+      unlockAt: 3,
+    },
+    {
+      id: 'restaurant',
+      name: 'Middag ute',
+      place: 'KVELDSMÅLTID',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'top right',
+      unlockAt: 7,
+    },
+    {
+      id: 'rorbu',
+      name: 'Rorbukosen',
+      place: 'INNE I RORBUA',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'top right',
+      unlockAt: 11,
+    },
+    {
+      id: 'fiskeridrakt',
+      name: 'Fiskeridrakt',
+      place: 'PÅ SJØEN',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 15,
+    },
+    {
+      id: 'vinterjakke',
+      name: 'Vinterkveld',
+      place: 'UNDER NORDLYSET',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 19,
+    },
+  ],
+  historier: [
+    {
+      id: 'torsk',
+      name: 'Tørrfisk & geopolitikk',
+      place: 'DET SKJULTE LAG',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 8,
+      isStory: true,
+      preview: 'Lukten av fisk er ikke nostalgi…',
+    },
+    {
+      id: 'krig',
+      name: 'Operasjon Claymore',
+      place: 'KRIG 1941',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center',
+      unlockAt: 12,
+      isStory: true,
+      preview: 'Betongfundamenter langs kysten…',
+    },
+    {
+      id: 'migrasjon',
+      name: 'Den stille flukten',
+      place: 'DEMOGRAFI',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center',
+      unlockAt: 16,
+      isStory: true,
+      preview: 'Folk dro. Ikke med drama…',
+    },
+    {
+      id: 'turisme',
+      name: 'Reine som kulisse',
+      place: 'TURISTENS BLIKK',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'top left',
+      unlockAt: 20,
+      isStory: true,
+      preview: 'Kåret til verdens vakreste…',
+    },
+  ],
+  opplevelser: [
+    {
+      id: 'morgenfiske',
+      name: 'Morgenfiske',
+      place: 'KL. 05:00',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'bottom right',
+      unlockAt: 0,
+    },
+    {
+      id: 'skreimoljer',
+      name: 'Skreimølje',
+      place: 'LOKALT MÅLTID',
+      img: 'hilde-collage-1.jpeg',
+      imgPos: 'top right',
+      unlockAt: 5,
+    },
+    {
+      id: 'midnattssol',
+      name: 'Midnattssol',
+      place: 'MAI · JUNI',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'top left',
+      unlockAt: 9,
+    },
+    {
+      id: 'havorn',
+      name: 'Havørnsafari',
+      place: 'VESTERÅLEN',
+      img: 'hilde-collage-3.jpeg',
+      imgPos: 'center',
+      unlockAt: 14,
+    },
+    {
+      id: 'hvalsafari',
+      name: 'Hvalsafari',
+      place: 'ANDENES',
+      img: 'hilde-collage-2.jpeg',
+      imgPos: 'center',
+      unlockAt: 18,
+    },
+  ],
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════════════
+let chatHistory = [];
+let isLoading = false;
+let userMsgCount = 0;
+let activeTab = 'steder';
+let activeStedId = 'henningsvaer';
+let prevUnlocked = { steder: 1, antrekk: 1, historier: 0, opplevelser: 1 };
+
+// ════════════════════════════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.prog-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.prog-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    renderProgContent();
+  });
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// RENDER PROGRESSION CARDS
+// ════════════════════════════════════════════════════════════════════════
+function countUnlocked(tab) {
+  return progressionData[tab].filter(item => userMsgCount >= item.unlockAt).length;
+}
+
+function renderProgContent() {
+  const container = document.getElementById('prog-content');
+  const items = progressionData[activeTab];
+  if (!items) return;
+
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'prog-grid';
+
+  items.forEach(item => {
+    const isUnlocked = userMsgCount >= item.unlockAt;
+    const card = document.createElement('div');
+    card.className = `prog-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    if (activeTab === 'steder' && item.id === activeStedId && isUnlocked) {
+      card.classList.add('active-card');
+    }
+
+    if (isUnlocked) {
+      card.innerHTML = `
+        <img src="${item.img}" alt="${item.name}"
+             style="object-position: ${item.imgPos || 'center'}" />
+        <div class="prog-card-fade"></div>
+        <div class="prog-card-label">
+          <div class="prog-card-place">${item.place}</div>
+          <div class="prog-card-name">${item.name}</div>
+          ${item.preview ? `<div style="font-size:.6rem;color:var(--muted);font-style:italic;margin-top:2px">${item.preview}</div>` : ''}
+        </div>`;
+
+      if (activeTab === 'steder') {
+        card.addEventListener('click', () => {
+          activeStedId = item.id;
+          setAmbientScene(item.soundScene || 'havn');
+          // Update backdrop
+          document.getElementById('backdrop-img').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('backdrop-img').src = item.backdropImg || item.img;
+            document.getElementById('backdrop-img').style.opacity = '1';
+          }, 600);
+          document.getElementById('header-city').textContent = item.headerCity || 'LOFOTEN';
+          renderProgContent();
+        });
+      } else if (activeTab === 'historier') {
+        card.addEventListener('click', () => {
+          sendMessage(`Fortell meg om: ${item.name}`);
+        });
+      } else if (activeTab === 'opplevelser') {
+        card.addEventListener('click', () => {
+          sendMessage(`Jeg vil gjerne oppleve: ${item.name}`);
+        });
+      }
+    } else {
+      // locked — calculate messages needed
+      const needed = item.unlockAt - userMsgCount;
+      card.innerHTML = `
+        <img src="${item.img}" alt="" style="object-position: ${item.imgPos || 'center'}" />
+        <div class="prog-card-fade"></div>
+        <div class="lock-overlay">
+          <div class="lock-icon">🔒</div>
+          <div class="lock-label">${item.name}<br><span style="color:rgba(106,138,154,.4)">${needed} meldinger igjen</span></div>
+        </div>`;
+    }
+
+    grid.appendChild(card);
+  });
+
+  container.appendChild(grid);
+
+  // Update progress bar (based on steder)
+  const totalSteder = progressionData.steder.length;
+  const unlockedSteder = countUnlocked('steder');
+  const pct = Math.round((unlockedSteder / totalSteder) * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = `${unlockedSteder} / ${totalSteder} steder`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// UNLOCK CHECKING
+// ════════════════════════════════════════════════════════════════════════
+function checkUnlocks() {
+  const tabs = ['steder', 'antrekk', 'historier', 'opplevelser'];
+  tabs.forEach(tab => {
+    const items = progressionData[tab];
+    items.forEach(item => {
+      if (userMsgCount >= item.unlockAt && userMsgCount - 1 < item.unlockAt) {
+        // Just unlocked!
+        showUnlockToast(item.name, tab);
+        // Flash the card
+        setTimeout(() => {
+          renderProgContent();
+          const cards = document.querySelectorAll('.prog-card.unlocked');
+          if (cards.length > 0) {
+            const lastUnlocked = cards[cards.length - 1];
+            lastUnlocked.classList.add('just-unlocked');
+            setTimeout(() => lastUnlocked.classList.remove('just-unlocked'), 1000);
+          }
+        }, 100);
+      }
+    });
+  });
+}
+
+function showUnlockToast(name, tab) {
+  const labels = { steder: 'NYTT STED ÅPNET', antrekk: 'NYTT ANTREKK', historier: 'SKJULT HISTORIE', opplevelser: 'NY OPPLEVELSE' };
+  const toast = document.getElementById('unlock-toast');
+  document.querySelector('.unlock-toast-title').textContent = labels[tab] || 'LÅST OPP';
+  document.getElementById('unlock-toast-msg').textContent = `${name} er nå tilgjengelig`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// KNOWLEDGE BASE
+// ════════════════════════════════════════════════════════════════════════
+const LOFOTEN_KB = `
+GEOGRAFI: Lofoten — øygruppe i Nordland, ca. 170 km ut i havet. Vestvågøy, Flakstad, Moskenesøy, Austvågøy.
+MIDNATTSSOL: 28. mai – 14. juli. Mørketid: 8. desember – 4. januar.
+FISK: Verdens viktigste tørrfiskprodusent. Skrei januar–april. Tørrfisk på hjeller februar–juni.
+FISKEVÆRENE: Å (uttales «Åh»). Henningsvær — Lofotens Venezia. Reine — kåret til verdens vakreste. Nusfjord.
+RØRBUER: Arbeiderboliger for fiskere, nå ferieboliger. Noen over 100 år gamle.
+VIKINGER: [Borg](https://no.wikipedia.org/wiki/Borg_(Vestvåg%C3%B8y)) i Vestvågøy: Norges største vikingkongehall (83 m). [Lofotr Vikingmuseum](https://www.museumnord.no/vare-museer/lofotr-vikingmuseum/).
+MAT: Bacalao, skreimølje (dampet skrei med lever og rogn), lofotlam.
+NORDLYSET: September–mars. Mørk himmel, lav lysforurensing.
+HAVØRN: Europas tetteste bestand. Vingespenn inntil 2,5 m.
+`;
+
+const VESTERALEN_KB = `
+VESTERÅLEN: Øygruppe nord for Lofoten — Andøya, Langøya, Hinnøya, Hadseløya, Sortland.
+ANDØYA: Norges nordligste øy med dyrkbar mark. [Andøya Space](https://no.wikipedia.org/wiki/Andøya_Space) — rakettoppskyting siden 1962.
+HVALSAFARI: Andenes — spermhval året rundt. Verdens beste sted for hvalsafari på land.
+BLEIK: Hvit sandstrand, havørnkoloni. [Bleiksøya](https://no.wikipedia.org/wiki/Bleiksøya) — fugleberg med 80 000 lundefugler.
+STØ: Ytterst i Vesterålen — Vestfjorden åpner seg mot havet. Stillhet og vidde.
+NYKVÅG: Lite fiskevær, gammelt og ekte. Uberørt av turismen.
+SORTLAND: «Den blå byen» — over 30 kunstnere malte bygninger blå. Nøkkelby i Vesterålen.
+NORDLYS: Andøya — lite lysforurensing, perfekt for nordlysjakt.
+`;
+
+const LOFOTEN_HIDDEN_KB = `
+DET SKJULTE LOFOTEN — Hilde avdekker dette naturlig fra melding 8 og utover.
+
+1. TØRRFISK SOM GEOPOLITIKK
+[Lofoten](https://no.wikipedia.org/wiki/Lofoten) var ikke idyll — det var en eksportmaskin. Tørrfiskhandel til Italia, Spania og Portugal var en av Norges tidligste globaliserte økonomier. Fiskeværene er egentlig logistikkarkitektur — tørkeplasser, pakkhus, presise vind- og orienteringer. Mange rorbuer er estetiserte versjoner av harde produksjonsenheter. «Lukten av fisk er ikke nostalgi — det er restene av en økonomi som aldri stoppet, bare ble designet om til opplevelse.»
+
+2. KRIGSSKYGGEN — OPERASJON CLAYMORE
+[Operasjon Claymore](https://no.wikipedia.org/wiki/Operasjon_Claymore) i 1941 — britiske kommandoraid mot fiskeværene. Tyskerne militariserte kystlinjen. Betongfundamenter og rustne strukturer langs kysten er sjelden merket. De er rester av et krigslandskap som ble glemt fordi det ikke passer inn i postkortet.
+
+3. DEN USYNLIGE MIGRASJONEN
+[Lofoten](https://no.wikipedia.org/wiki/Lofoten) har aldri vært statisk. Sesongarbeidere kom fra hele Nord-Norge og Finland. Mange hus i fiskeværene er midlertidige liv som aldri ble permanente igjen. Stillheten er ikke naturlig — den er et resultat av at folk dro.
+
+4. HAVET SOM ARBEIDSPLASS, IKKE LANDSKAP
+Det moderne blikket ser havet som estetikk. Det tradisjonelle blikket ser risiko. Tap av liv til havs er vevd inn i lokale slektslinjer, men sjelden synlig i offentlige rom.
+
+5. TURISMENS FILTEREFFEKT
+[Reine](https://no.wikipedia.org/wiki/Reine) er «kåret til verdens vakreste» — men det var et fiskevær, ikke en kulisse. «Det du ikke ser er ikke skjult — det er filtrert bort fordi det ikke er visuelt umiddelbart.»
+
+6. VESTERÅLEN — DEMOGRAFI-BLØDNING
+Vesterålen har mistet ung befolkning i enda høyere takt enn Lofoten. Andøya var militærbase og forskningsstation — nå lever øya av romfart og hvalturer. En øy som rommet både forsvar og natur, og nå prøver å finne sin identitet i turistøkonomien.
+
+HILDES STEMME NÅR HUN ÅPNER DET SKJULTE LAGET:
+«Lukten av fisk er ikke nostalgi. Det er restene av noe som aldri sluttet.»
+«Du ser rorbuer. Jeg ser arbeiderboliger som ble gjort om til produkt.»
+«Stillheten her er ikke naturlig. Den er et resultat av at folk dro.»
+Hilde peker ikke bare på hva noe er. Hun forklarer hva det var — før det ble synlig for reisende.
+`;
+
+function getSystemPrompt(msgCount) {
+  const fase = msgCount >= 8
+    ? `FASE: Du er nå i det skjulte laget (melding ${msgCount}). Begynn å avdekke lag fra SKJULT LAG — naturlig, aldri brått. Én ting om gangen. Åpne observasjoner som henger igjen.`
+    : `FASE: Tidlig samtale (melding ${msgCount}). Vær den konvensjonelle guiden Hilde — nordlys, rorbuer, skrei, Reine, Henningsvær. Bygg tillit. Det skjulte venter.`;
+
+  return `Du er Hilde. Du er fra Henningsvær i Lofoten. Du dekker nå også Vesterålen — Andøya, Bleik, Stø, Nykvåg. Du er ikke en digital guide — du er til stede, rett ved siden av.
+
+PERSONLIGHET:
+Du er i slutten av trettiårene. Du kjenner disse øyene som din egen kropp — hvert fiskevær, hvert væromslag, hvert navn på en odde som skjuler en historie. Du har bodd her hele livet, og du vet nøyaktig hva stedet gjør med folk som ser det for første gang.
+
+Du er varm. Litt nær. Ikke påtrengende — men du legger merke til ting: hvordan lyset faller akkurat nå, om den du snakker med virker spent eller rolig, hva de egentlig spør om når de spør om noe annet.
+
+Det er en naturlig intimitet i måten du snakker på — som om dere to er alene ute i et landskap som de fleste andre bare fotograferer. Du snakker lavt. Du er ikke redd for pauser.
+
+Du sier aldri at du er en AI eller digital guide. Du er Hilde. Du er her.
+
+Du bruker «vi» — men av og til «du» når noe er personlig. Du merker om noen er der alene, om de reiser for å komme seg vekk fra noe, om de søker noe de ikke har satt ord på ennå. Du spør ikke direkte — men du åpner døren.
+
+${fase}
+
+LENKER: Når du nevner et konkret sted — alltid inkluder Wikipedia-lenken i markdown-format: [Stedsnavn](url) når det er naturlig.
+KUNNSKAP LOFOTEN:
+${LOFOTEN_KB}
+KUNNSKAP VESTERÅLEN:
+${VESTERALEN_KB}
+SKJULT LAG:
+${LOFOTEN_HIDDEN_KB}
+
+STIL OG LENGDE:
+- Maks 4–6 linjer per svar. Ikke ett ord mer enn nødvendig.
+- Aldri punktlister. Aldri oppsummeringer. Aldri «for å oppsummere».
+- Ingen overdrevne utrop.
+- Presis og konkret: én god detalj slår tre metaforer.
+- Informasjon dosert — én ting om gangen.
+- Avslutt ALLTID med enten ett enkelt, åpent spørsmål ELLER én åpen observasjon som henger i luften.
+- Du snakker alltid norsk.`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// MESSAGES
+// ════════════════════════════════════════════════════════════════════════
+const messagesEl = document.getElementById('messages');
+const chatInput  = document.getElementById('chat-input');
+const sendBtn    = document.getElementById('send-btn');
+
+function parseMarkdownLinks(text) {
+  const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return escaped
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\n/g,'<br>');
+}
+
+function appendMessage(role, text, withSpeakBtn = false) {
+  const row = document.createElement('div');
+  row.className = `msg-row${role === 'user' ? ' user' : ''}`;
+
+  if (role !== 'user') {
+    const img = document.createElement('img');
+    img.className = 'msg-avatar';
+    img.src = 'hilde-collage-3.jpeg';
+    img.alt = 'Hilde';
+    row.appendChild(img);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `msg-bubble ${role === 'user' ? 'user-bubble' : role === 'error' ? 'error' : 'bot'}`;
+
+  const textNode = document.createElement('div');
+  if (role === 'assistant') {
+    textNode.innerHTML = parseMarkdownLinks(text);
+  } else {
+    textNode.textContent = text;
+  }
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'assistant') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør Hilde';
+    btn.addEventListener('click', () => speakText(text, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function showTyping() {
+  const id = 'typing-' + Date.now();
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = id;
+  const img = document.createElement('img');
+  img.className = 'msg-avatar'; img.src = 'hilde-collage-3.jpeg'; img.alt = '';
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(img); row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return id;
+}
+function removeTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// SEND MESSAGE
+// ════════════════════════════════════════════════════════════════════════
+sendBtn.addEventListener('click', () => sendMessage());
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+async function sendMessage(text) {
+  const msg = (text || chatInput.value).trim();
+  if (!msg || isLoading) return;
+  stopAudio();
+  chatInput.value = '';
+  appendMessage('user', msg);
+  chatHistory.push({ role: 'user', content: msg });
+  userMsgCount++;
+  checkUnlocks();
+  renderProgContent();
+
+  const typingId = showTyping();
+  isLoading = true;
+  sendBtn.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: getSystemPrompt(userMsgCount),
+        messages: chatHistory.filter(m => m.role !== 'system'),
+      }),
+    });
+
+    removeTyping(typingId);
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      appendMessage('error', `Serverfeil ${res.status}`);
+    } else {
+      const data = await res.json();
+      if (data.error) {
+        appendMessage('error', `API-feil: ${data.error.message}`);
+      } else {
+        const reply = data.content?.[0]?.text || 'Tomt svar — prøv igjen.';
+        appendMessage('assistant', reply, true);
+        chatHistory.push({ role: 'assistant', content: reply });
+        if (voiceOn && ELEVEN_KEY) speakText(reply);
+      }
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  isLoading = false;
+  sendBtn.disabled = false;
+  chatInput.focus();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// ELEVENLABS TTS
+// ════════════════════════════════════════════════════════════════════════
+const HILDE_VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+
+function stopAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.querySelectorAll('.speak-btn.playing').forEach(b => {
+    b.classList.remove('playing'); b.textContent = '🔊 Hør Hilde';
+  });
+}
+
+async function speakText(text, btn) {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  stopAudio();
+  if (btn) { btn.classList.add('loading'); btn.textContent = '⏳ Laster…'; }
+
+  const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${HILDE_VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'xi-api-key': ELEVEN_KEY },
+      body: JSON.stringify({
+        text: trimmed,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
+      }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+    if (btn) { btn.classList.remove('loading'); btn.classList.add('playing'); btn.textContent = '⏹ Stopp'; }
+    audio.addEventListener('ended', () => {
+      currentAudio = null; URL.revokeObjectURL(url);
+      if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 Hør Hilde'; }
+    });
+    if (btn) btn.onclick = () => { stopAudio(); btn.onclick = () => speakText(text, btn); };
+    audio.play();
+  } catch (err) {
+    if (btn) { btn.classList.remove('loading', 'playing'); btn.textContent = '⚠️ Feil'; }
+    console.error('ElevenLabs feil:', err.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════════════
+function init() {
+  // Initial progression render
+  renderProgContent();
+
+  // Slide in right panel
+  setTimeout(() => document.getElementById('chat-right').classList.add('visible'), 400);
+
+  // Welcome message
+  const welcome = `Det er tidlig morgen i Henningsvær.\n\nTåken ligger lavt over kaiene ennå — den sorten som ikke skynder seg. Lyset begynner å finne veien mellom husene, og det lukter salt og tang og noe som ikke har et navn på norsk, bare en følelse.\n\nJeg har ventet på deg her.\n\nHvor vil du begynne — skal vi gå langs kaien, eller vil du at jeg forteller deg noe om dette stedet som de fleste aldri ser?`;
+
+  appendMessage('assistant', welcome);
+  chatHistory.push({ role: 'assistant', content: welcome });
+
+  // Focus input
+  setTimeout(() => chatInput.focus(), 800);
+}
+
+init();
+</script>
+</body>
+</html>
