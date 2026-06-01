@@ -419,7 +419,7 @@
       <!-- Candy.AI style floating controls (right side of portrait) -->
       <div id="portrait-controls">
         <button class="p-ctrl" id="eye-btn" title="Skjul/vis chat">👁</button>
-        <button class="p-ctrl" id="expand-btn" title="Utvid chat">⤢</button>
+        <button class="p-ctrl" id="expand-btn" title="Fullskjerm">⤢</button>
         <button class="p-ctrl" id="mute-sound-btn" title="Lyd av/på">🔕</button>
       </div>
 
@@ -521,10 +521,26 @@ document.getElementById('eye-btn').onclick = () => {
 };
 document.getElementById('expand-btn').onclick = () => {
   chatExpanded = !chatExpanded;
-  document.getElementById('messages').style.maxHeight = chatExpanded ? '68vh' : '44vh';
-  document.getElementById('expand-btn').textContent = chatExpanded ? '⤡' : '⤢';
-  document.getElementById('expand-btn').classList.toggle('active', chatExpanded);
-  document.getElementById('messages').scrollTop = 99999;
+  const progCol = document.getElementById('prog-col');
+  const btn = document.getElementById('expand-btn');
+  if (chatExpanded) {
+    // Immersive mode — hide progression panel, portrait fills screen
+    progCol.style.transition = 'width .5s cubic-bezier(.16,1,.3,1), opacity .4s ease';
+    progCol.style.width = '0';
+    progCol.style.opacity = '0';
+    progCol.style.overflow = 'hidden';
+    btn.textContent = '⤡';
+    btn.classList.add('active');
+    btn.title = 'Tilbake til delt visning';
+  } else {
+    // Restore split view
+    progCol.style.width = '300px';
+    progCol.style.opacity = '1';
+    progCol.style.overflow = '';
+    btn.textContent = '⤢';
+    btn.classList.remove('active');
+    btn.title = 'Fullskjerm';
+  }
 };
 // Portrait mute btn mirrors header sound btn
 document.getElementById('mute-sound-btn').onclick = () => document.getElementById('sound-btn').click();
@@ -554,10 +570,29 @@ function updateKB(text) {
   const circ = 119.4;
   document.getElementById('kb-fill').style.strokeDashoffset = circ - (circ * pct / 100);
   document.getElementById('kb-center').textContent = pct + '%';
+
+  // If 100% — flash the ring gold, then check unlocks
+  if (pct >= 100) {
+    document.getElementById('kb-fill').style.stroke = '#C9A84C';
+    document.getElementById('kb-fill').style.filter = 'drop-shadow(0 0 6px rgba(201,168,76,.7))';
+    setTimeout(() => {
+      document.getElementById('kb-fill').style.stroke = '#4DCCF0';
+      document.getElementById('kb-fill').style.filter = 'drop-shadow(0 0 4px rgba(77,204,240,.5))';
+    }, 2000);
+  } else {
+    document.getElementById('kb-fill').style.stroke = '#4DCCF0';
+    document.getElementById('kb-fill').style.filter = 'drop-shadow(0 0 4px rgba(77,204,240,.5))';
+  }
 }
 function resetKB() {
-  document.getElementById('kb-fill').style.strokeDashoffset = 119.4;
-  document.getElementById('kb-center').textContent = '0%';
+  // Refresh bar to show current sted's actual progress (not always 0)
+  const topics = stedKnowledge[activeStedId] || [];
+  const hits = kbHits[activeStedId]?.size || 0;
+  const pct = topics.length > 0 ? Math.round(hits / topics.length * 100) : 0;
+  const circ = 119.4;
+  document.getElementById('kb-fill').style.strokeDashoffset = circ - (circ * pct / 100);
+  document.getElementById('kb-fill').style.stroke = pct >= 100 ? '#C9A84C' : '#4DCCF0';
+  document.getElementById('kb-center').textContent = pct + '%';
   const names = {reine:'REINE',aa:'Å',nusfjord:'NUSFJORD',henningsvaer:'HENNINGSVÆR',kabelvag:'KABELVÅG',svolvaer:'SVOLVÆR',sortland:'SORTLAND',boe:'BØ',stoe:'STØ',andenes:'ANDENES',bleik:'BLEIK'};
   document.getElementById('kb-place').textContent = names[activeStedId] || activeStedId.toUpperCase();
 }
@@ -641,7 +676,10 @@ function renderProg() {
   container.innerHTML='';
   const grid=document.createElement('div'); grid.className='pp-grid';
   items.forEach(item=>{
-    const unlocked=userMsgCount>=item.unlockAt;
+    // steder use KB gate, others use message count
+    const unlocked = (activeTab === 'steder')
+      ? unlockedSteder.has(progressionData.steder.indexOf(item))
+      : userMsgCount >= item.unlockAt;
     const card=document.createElement('div');
     card.className=`pp-card ${unlocked?'unlocked':'locked'}`;
     if(activeTab==='steder'&&item.id===activeStedId&&unlocked) card.classList.add('active-card');
@@ -666,27 +704,67 @@ function renderProg() {
       }
     } else {
       const needed=item.unlockAt-userMsgCount;
-      card.innerHTML=`<img src="${item.img}" alt=""/><div class="pp-card-fade"></div><div class="lock-overlay"><div class="lock-icon">🔒</div><div class="lock-label">${item.name}<br><span style="color:rgba(106,138,154,.35)">${needed} igjen</span></div></div>`;
+      // For steder, show KB requirement; for others show message count
+      let lockHint = '';
+      if (activeTab === 'steder') {
+        const idx = progressionData.steder.indexOf(item);
+        const prevSted = progressionData.steder[idx - 1];
+        const prevPct = prevSted ? getKBpct(prevSted.id) : 0;
+        lockHint = `Fullfør ${prevSted ? prevSted.name : ''} (${prevPct}%)`;
+      } else {
+        const needed = item.unlockAt - userMsgCount;
+        lockHint = `${needed} meldinger igjen`;
+      }
+      card.innerHTML=`<img src="${item.img}" alt=""/><div class="pp-card-fade"></div><div class="lock-overlay"><div class="lock-icon">🔒</div><div class="lock-label">${item.name}<br><span style="color:rgba(106,138,154,.35)">${lockHint}</span></div></div>`;
     }
     grid.appendChild(card);
   });
   container.appendChild(grid);
   const total=progressionData.steder.length;
-  const unl=progressionData.steder.filter(s=>userMsgCount>=s.unlockAt).length;
+  const unl=unlockedSteder.size;
   document.getElementById('pp-bar').style.width=Math.round(unl/total*100)+'%';
   document.getElementById('pp-count').textContent=`${unl} av ${total} steder`;
 }
 
-function checkUnlocks(){
-  ['steder','antrekk','historier','opplevelser'].forEach(tab=>{
-    progressionData[tab].forEach(item=>{
-      if(userMsgCount>=item.unlockAt&&userMsgCount-1<item.unlockAt){
-        const labels={steder:'NYTT STED',antrekk:'NYTT ANTREKK',historier:'SKJULT HISTORIE',opplevelser:'NY OPPLEVELSE'};
-        document.getElementById('toast-title').textContent=labels[tab]||'LÅST OPP';
-        document.getElementById('toast-msg').textContent=`${item.name} er nå tilgjengelig`;
-        const t=document.getElementById('unlock-toast');
-        t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4000);
-        setTimeout(()=>renderProg(),100);
+// Track which steder are unlocked (index-based, gates on KB completion)
+// sted[0] always unlocked, sted[N] unlocks when sted[N-1] KB = 100%
+let unlockedSteder = new Set([0]); // index 0 = Reine always open
+
+function getKBpct(stedId) {
+  const topics = stedKnowledge[stedId] || [];
+  if (topics.length === 0) return 100;
+  return Math.round((kbHits[stedId]?.size || 0) / topics.length * 100);
+}
+
+function checkUnlocks() {
+  // Check steder — unlock next when current KB = 100%
+  const steder = progressionData.steder;
+  steder.forEach((sted, idx) => {
+    if (idx === 0) return; // always unlocked
+    const prevSted = steder[idx - 1];
+    const prevKB = getKBpct(prevSted.id);
+    const wasLocked = !unlockedSteder.has(idx);
+    if (prevKB >= 100 && wasLocked) {
+      unlockedSteder.add(idx);
+      const labels = { steder: 'NYTT STED ÅPNET' };
+      document.getElementById('toast-title').textContent = 'NYTT STED ÅPNET';
+      document.getElementById('toast-msg').textContent = `${sted.name} er nå tilgjengelig`;
+      const t = document.getElementById('unlock-toast');
+      t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 5000);
+      setTimeout(() => renderProg(), 100);
+    }
+  });
+
+  // Antrekk/historier/opplevelser still use message count
+  ['antrekk','historier','opplevelser'].forEach(tab => {
+    progressionData[tab].forEach(item => {
+      if (userMsgCount >= item.unlockAt && userMsgCount - 1 < item.unlockAt) {
+        const labels = { antrekk:'NYTT ANTREKK', historier:'SKJULT HISTORIE', opplevelser:'NY OPPLEVELSE' };
+        document.getElementById('toast-title').textContent = labels[tab] || 'LÅST OPP';
+        document.getElementById('toast-msg').textContent = `${item.name} er nå tilgjengelig`;
+        const t = document.getElementById('unlock-toast');
+        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000);
+        setTimeout(() => renderProg(), 100);
       }
     });
   });
