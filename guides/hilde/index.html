@@ -43,18 +43,31 @@
     }
     #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
 
-    /* Knowledge barometer in header */
+    /* Knowledge barometer — bigger ring, strong contrast */
     #kb-wrap {
-      display: flex; align-items: center; gap: 9px;
+      display: flex; align-items: center; gap: 10px;
     }
-    #kb-ring { position: relative; width: 36px; height: 36px; flex-shrink: 0; }
+    #kb-ring {
+      position: relative; width: 44px; height: 44px; flex-shrink: 0;
+      /* subtle background so ring is always visible on any bg */
+      background: rgba(8,17,26,0.6); border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(42,127,168,.2);
+    }
     #kb-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
-    #kb-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: .58rem; color: var(--sea); }
-    #kb-fill { fill: none; stroke: var(--sea); stroke-width: 3; stroke-linecap: round;
-      stroke-dasharray: 97; stroke-dashoffset: 97;
-      transition: stroke-dashoffset 1s cubic-bezier(.16,1,.3,1); }
-    #kb-text { font-size: .68rem; color: var(--sub); letter-spacing: .1em; line-height: 1.4; }
-    #kb-text strong { color: var(--sea); font-size: .7rem; display: block; letter-spacing: .18em; }
+    #kb-track { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 3.5; }
+    #kb-center {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: .62rem; color: #7DCCEE; font-weight: 600; letter-spacing: -.02em;
+    }
+    #kb-fill {
+      fill: none; stroke: #4DCCF0; stroke-width: 3.5; stroke-linecap: round;
+      stroke-dasharray: 119.4; stroke-dashoffset: 119.4;
+      transition: stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1);
+      filter: drop-shadow(0 0 4px rgba(77,204,240,.5));
+    }
+    #kb-text { font-size: .68rem; line-height: 1.45; }
+    #kb-text strong { color: #7DCCEE; font-size: .72rem; display: block; letter-spacing: .2em; }
+    #kb-text span { color: rgba(154,176,186,.65); letter-spacing: .08em; font-size: .62rem; }
 
     .header-spacer { flex: 1; }
     #loc-badge {
@@ -88,21 +101,35 @@
     #portrait-col {
       flex: 1; min-width: 0; position: relative; overflow: hidden;
       background: #000;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* Portrait image fills the left column */
+    /* Portrait image — full 3:4 portrait, never cropped, centred in black col */
+    #portrait-col {
+      display: flex; align-items: center; justify-content: center;
+    }
+    #portrait-inner {
+      position: relative;
+      /* Fixed 3:4 aspect ratio, max fills available height */
+      height: 100%;
+      aspect-ratio: 3/4;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #000;
+    }
     #backdrop-img {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      animation: breathe 14s ease-in-out infinite;
-      transform-origin: center 30%;
+      object-fit: contain; object-position: center top;
+      /* gentle breathe — no zoom so image stays crisp */
+      animation: breathe 16s ease-in-out infinite;
+      transform-origin: center 40%;
       transition: opacity 1.3s ease;
     }
     @keyframes breathe {
-      0%   { transform: scale(1.00); }
-      40%  { transform: scale(1.04) translateY(-6px); }
-      100% { transform: scale(1.00); }
+      0%   { transform: scale(1.00) translateY(0px); }
+      40%  { transform: scale(1.015) translateY(-3px); }
+      100% { transform: scale(1.00) translateY(0px); }
     }
     /* Subtle light shift */
     #portrait-light {
@@ -112,9 +139,9 @@
     }
     @keyframes lightshift { 0%,100%{opacity:1} 50%{opacity:.65} }
 
-    /* Candy.AI controls — floating right side of portrait */
+    /* Candy.AI controls — float inside portrait-inner */
     #portrait-controls {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       display: flex; flex-direction: column; gap: 9px; z-index: 10;
     }
     .p-ctrl {
@@ -143,18 +170,18 @@
       box-shadow: 0 0 7px rgba(76,200,122,.7); animation: op 3s infinite; display: inline-block; }
     @keyframes op { 0%,100%{box-shadow:0 0 5px rgba(76,200,122,.4)} 50%{box-shadow:0 0 12px rgba(76,200,122,.8)} }
 
-    /* Bottom mist — chat floats above */
+    /* Bottom mist inside portrait-inner */
     #portrait-mist {
       position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none;
-      height: 52%;
+      height: 55%;
       background: linear-gradient(to top,
         rgba(10,15,20,0.97) 0%,
-        rgba(10,15,20,0.78) 22%,
-        rgba(10,15,20,0.38) 48%,
+        rgba(10,15,20,0.82) 22%,
+        rgba(10,15,20,0.42) 50%,
         transparent 100%);
     }
 
-    /* ── CHAT inside portrait col ── */
+    /* ── CHAT inside portrait-inner ── */
     #chat-area {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
       transition: opacity .35s, transform .35s;
@@ -344,9 +371,9 @@
   <!-- Knowledge barometer -->
   <div id="kb-wrap">
     <div id="kb-ring">
-      <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(42,127,168,.18)" stroke-width="3"/>
-        <circle id="kb-fill" cx="18" cy="18" r="15.5" fill="none" stroke="#2A7FA8" stroke-width="3" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="97.4"/>
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+        <circle id="kb-track" cx="22" cy="22" r="19" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="3.5"/>
+        <circle id="kb-fill" cx="22" cy="22" r="19" fill="none" stroke="#4DCCF0" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"/>
       </svg>
       <div id="kb-center">0%</div>
     </div>
@@ -376,26 +403,28 @@
 
   <!-- LEFT: Portrait + Chat -->
   <div id="portrait-col">
-    <img id="backdrop-img" src="sted-aa.jpeg" alt="Hilde" />
-    <div id="portrait-light"></div>
-    <div id="portrait-mist"></div>
+    <!-- portrait-inner: fixed 3:4 ratio, black sides auto-fill col -->
+    <div id="portrait-inner">
+      <img id="backdrop-img" src="sted-aa.jpeg" alt="Hilde" />
+      <div id="portrait-light"></div>
+      <div id="portrait-mist"></div>
 
-    <!-- Guide badge top-left -->
-    <div id="portrait-guide-badge">
-      <div class="guide-avatar"><img id="avatar-img" src="sted-aa.jpeg" alt="Hilde" /></div>
-      <span class="guide-badge-name">Hilde</span>
-      <span class="online-dot"></span>
-    </div>
+      <!-- Guide badge top-left -->
+      <div id="portrait-guide-badge">
+        <div class="guide-avatar"><img id="avatar-img" src="sted-aa.jpeg" alt="Hilde" /></div>
+        <span class="guide-badge-name">Hilde</span>
+        <span class="online-dot"></span>
+      </div>
 
-    <!-- Candy.AI style floating controls (right side of portrait) -->
-    <div id="portrait-controls">
-      <button class="p-ctrl" id="eye-btn" title="Skjul/vis chat">👁</button>
-      <button class="p-ctrl" id="expand-btn" title="Utvid chat">⤢</button>
-      <button class="p-ctrl" id="mute-sound-btn" title="Lyd av/på">🔕</button>
-    </div>
+      <!-- Candy.AI style floating controls (right side of portrait) -->
+      <div id="portrait-controls">
+        <button class="p-ctrl" id="eye-btn" title="Skjul/vis chat">👁</button>
+        <button class="p-ctrl" id="expand-btn" title="Utvid chat">⤢</button>
+        <button class="p-ctrl" id="mute-sound-btn" title="Lyd av/på">🔕</button>
+      </div>
 
-    <!-- Chat area -->
-    <div id="chat-area">
+      <!-- Chat area -->
+      <div id="chat-area">
       <div id="messages-wrap">
         <div id="messages" role="log" aria-live="polite"></div>
       </div>
@@ -411,8 +440,9 @@
         <input type="text" id="chat-input" autocomplete="off" placeholder="Spør Hilde…" />
         <button id="send-btn">→</button>
       </div>
-    </div>
-  </div>
+      </div><!-- /chat-area -->
+    </div><!-- /portrait-inner -->
+  </div><!-- /portrait-col -->
 
   <!-- RIGHT: Progression panel always visible -->
   <aside id="prog-col">
@@ -521,12 +551,12 @@ function updateKB(text) {
   topics.forEach(t => { if (lower.includes(t)) kbHits[activeStedId].add(t); });
   const hits = kbHits[activeStedId].size, total = topics.length;
   const pct = total > 0 ? Math.round(hits / total * 100) : 0;
-  const circ = 97.4;
+  const circ = 119.4;
   document.getElementById('kb-fill').style.strokeDashoffset = circ - (circ * pct / 100);
   document.getElementById('kb-center').textContent = pct + '%';
 }
 function resetKB() {
-  document.getElementById('kb-fill').style.strokeDashoffset = 97.4;
+  document.getElementById('kb-fill').style.strokeDashoffset = 119.4;
   document.getElementById('kb-center').textContent = '0%';
   const names = {reine:'REINE',aa:'Å',nusfjord:'NUSFJORD',henningsvaer:'HENNINGSVÆR',kabelvag:'KABELVÅG',svolvaer:'SVOLVÆR',sortland:'SORTLAND',boe:'BØ',stoe:'STØ',andenes:'ANDENES',bleik:'BLEIK'};
   document.getElementById('kb-place').textContent = names[activeStedId] || activeStedId.toUpperCase();
