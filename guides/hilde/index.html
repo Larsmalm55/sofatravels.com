@@ -362,20 +362,27 @@
     * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 
     /* ══════════════════════════════════════
-       IMAGE STRIP — left black area, 4 thumbnails
+       IMAGE STRIP COLUMN — between portrait and prog panel
     ══════════════════════════════════════ */
+    #img-strip-col {
+      width: 340px; flex-shrink: 0;
+      background: #000;
+      border-left: 1px solid rgba(28,48,64,.4);
+      border-right: 1px solid rgba(28,48,64,.4);
+      overflow-y: auto; overflow-x: hidden;
+    }
+    #img-strip-col::-webkit-scrollbar { width: 3px; }
+    #img-strip-col::-webkit-scrollbar-thumb { background: rgba(42,127,168,.3); border-radius: 2px; }
     #img-strip {
-      position: absolute; left: 0; top: 0; bottom: 0;
-      /* sits between portrait-col left edge and portrait-inner */
-      width: 72px;
+      width: 100%;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 6px; padding: 8px 6px;
-      z-index: 6; overflow: hidden;
+      align-items: center;
+      gap: 8px; padding: 10px 10px;
+      min-height: 100%;
     }
     .strip-thumb {
-      width: 56px; flex-shrink: 0;
-      aspect-ratio: 3/4;
+      width: 316px; flex-shrink: 0;
+      aspect-ratio: 4/3;
       border-radius: 6px; overflow: hidden; position: relative;
       cursor: pointer;
       border: 1.5px solid rgba(42,127,168,.18);
@@ -393,7 +400,7 @@
       position: absolute; bottom: 0; left: 0; right: 0;
       padding: 3px 4px;
       background: linear-gradient(to top, rgba(8,15,22,.92) 0%, transparent 100%);
-      font-size: .48rem; letter-spacing: .1em; color: var(--sub);
+      font-size: .58rem; letter-spacing: .1em; color: var(--sub);
       line-height: 1.3; text-align: center;
     }
     .strip-thumb.active-thumb .strip-thumb-label { color: #7DCCEE; }
@@ -455,11 +462,6 @@
   <!-- LEFT: Portrait + Chat -->
   <div id="portrait-col">
 
-    <!-- IMAGE STRIP in left black area -->
-    <div id="img-strip">
-      <!-- filled by JS -->
-    </div>
-
     <!-- portrait-inner: fixed 3:4 ratio, black sides auto-fill col -->
     <div id="portrait-inner">
       <img id="backdrop-img" src="sted-aa.jpeg" alt="Hilde" />
@@ -500,6 +502,13 @@
       </div><!-- /chat-area -->
     </div><!-- /portrait-inner -->
   </div><!-- /portrait-col -->
+
+  <!-- IMAGE STRIP COLUMN — between portrait and progression panel -->
+  <div id="img-strip-col">
+    <div id="img-strip">
+      <!-- filled by JS -->
+    </div>
+  </div>
 
   <!-- RIGHT: Progression panel always visible -->
   <aside id="prog-col">
