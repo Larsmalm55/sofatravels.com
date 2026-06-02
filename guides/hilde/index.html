@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hilde · Lofoten & Vesterålen · SofaTravels</title>
+  <title>Hilde · Å til Andenes · SofaTravels</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <style>
@@ -366,7 +366,7 @@
 
 <!-- ══ TOP BAR ══ -->
 <header id="top-bar">
-  <a href="../../from-the-sofa.html" id="back-btn">← Guider</a>
+  <a href="../../../from-the-sofa.html" id="back-btn">← Guider</a>
 
   <!-- Knowledge barometer -->
   <div id="kb-wrap">
@@ -387,7 +387,7 @@
 
   <!-- Location badge -->
   <div id="loc-badge">
-    <div id="loc-city">REINE · LOFOTEN</div>
+    <div id="loc-city">Å · LOFOTEN</div>
     <div id="loc-name">Hilde</div>
   </div>
 
@@ -453,7 +453,7 @@
       <div class="pp-info">
         <p class="pp-region">LOFOTEN · VESTERÅLEN</p>
         <p class="pp-name">Hilde</p>
-        <p class="pp-tagline">"Fiskernes paradis — magisk og uberørt"</p>
+        <p class="pp-tagline">"Fra Å til Andenes — havet som fortelling"</p>
       </div>
     </div>
     <div class="pp-tabs" id="pp-tabs">
@@ -465,7 +465,7 @@
     <div class="pp-content" id="pp-content"></div>
     <div class="pp-footer">
       <div class="pp-foot-label">
-        <span>FREMGANG</span><span id="pp-count">1 av 11 steder</span>
+        <span>FREMGANG</span><span id="pp-count">Ep. 1 av 8</span>
       </div>
       <div class="pp-bar-track"><div class="pp-bar-fill" id="pp-bar" style="width:9%"></div></div>
     </div>
@@ -585,8 +585,8 @@ function resetKB() {
   document.getElementById('kb-fill').style.strokeDashoffset = circ - (circ * pct / 100);
   document.getElementById('kb-fill').style.stroke = pct >= 100 ? '#C9A84C' : '#4DCCF0';
   document.getElementById('kb-center').textContent = pct + '%';
-  const names = {reine:'REINE',aa:'Å',nusfjord:'NUSFJORD',henningsvaer:'HENNINGSVÆR',kabelvag:'KABELVÅG',svolvaer:'SVOLVÆR',sortland:'SORTLAND',boe:'BØ',stoe:'STØ',andenes:'ANDENES',bleik:'BLEIK'};
-  document.getElementById('kb-place').textContent = names[activeStedId] || activeStedId.toUpperCase();
+  const names = {ep1:'Å → REINE',ep2:'HAMNØY → NUSFJORD',ep3:'FLÅKSTAD → UNSTAD',ep4:'HENNINGSVÆR → SVOLVÆR',ep5:'TROLLFJORDEN',ep6:'SORTLAND → RISØYHAMN',ep7:'BØ → NYKSUND',ep8:'ANDENES → BLEIK'};
+  document.getElementById('kb-place').textContent = names[activeStedId] || 'EP.1';
 }
 
 // ════════ AMBIENT SOUND ════════
@@ -614,45 +614,42 @@ document.getElementById('sound-btn').onclick=()=>{ambientOn=!ambientOn;const b=d
 // ════════ PROGRESSION DATA ════════
 const progressionData = {
   steder:[
-    {id:'reine',       name:'Reine',       place:'LOFOTEN · ANKOMMER',        img:'sted-aa.jpeg',unlockAt:0, soundScene:'havn',    backdropImg:'sted-aa.jpeg',headerCity:'REINE · LOFOTEN'},
-    {id:'aa',          name:'Å',            place:'LOFOTEN · ENDEN AV VEIEN',  img:'sted-aa.jpeg',unlockAt:2, soundScene:'storm',   backdropImg:'sted-aa.jpeg',headerCity:'Å · LOFOTEN'},
-    {id:'nusfjord',    name:'Nusfjord',     place:'LOFOTEN · ELDSTE FISKEVÆR', img:'sted-aa.jpeg',unlockAt:4, soundScene:'havn',    backdropImg:'sted-aa.jpeg',headerCity:'NUSFJORD · LOFOTEN'},
-    {id:'henningsvaer',name:'Henningsvær',  place:'LOFOTEN · VENEZIA',         img:'sted-aa.jpeg',unlockAt:6, soundScene:'havn',    backdropImg:'sted-aa.jpeg',headerCity:'HENNINGSVÆR · LOFOTEN'},
-    {id:'kabelvag',    name:'Kabelvåg',     place:'LOFOTEN · FØRSTE BY',       img:'sted-aa.jpeg',unlockAt:8, soundScene:'fiskehavn',backdropImg:'sted-aa.jpeg',headerCity:'KABELVÅG · LOFOTEN'},
-    {id:'svolvaer',    name:'Svolvær',      place:'LOFOTEN · HOVEDSTAD',       img:'sted-aa.jpeg',unlockAt:10,soundScene:'fiskehavn',backdropImg:'sted-aa.jpeg',headerCity:'SVOLVÆR · LOFOTEN'},
-    {id:'sortland',    name:'Sortland',     place:'VESTERÅLEN · DEN BLÅ BY',   img:'sted-aa.jpeg',unlockAt:12,soundScene:'kyst',    backdropImg:'sted-aa.jpeg',headerCity:'SORTLAND · VESTERÅLEN'},
-    {id:'boe',         name:'Bø',           place:'VESTERÅLEN · BØSTRANDA',    img:'sted-aa.jpeg',unlockAt:14,soundScene:'kyst',    backdropImg:'sted-aa.jpeg',headerCity:'BØ · VESTERÅLEN'},
-    {id:'stoe',        name:'Stø',          place:'VESTERÅLEN · YTTERST UT',   img:'sted-aa.jpeg',unlockAt:16,soundScene:'baat',    backdropImg:'sted-aa.jpeg',headerCity:'STØ · VESTERÅLEN'},
-    {id:'andenes',     name:'Andenes',      place:'VESTERÅLEN · HVALSAFARI',   img:'sted-aa.jpeg',unlockAt:18,soundScene:'nordlys', backdropImg:'sted-aa.jpeg',headerCity:'ANDENES · VESTERÅLEN'},
-    {id:'bleik',       name:'Bleik',        place:'VESTERÅLEN · HAVØRNFJELLET',img:'sted-aa.jpeg',unlockAt:20,soundScene:'fugl',    backdropImg:'sted-aa.jpeg',headerCity:'BLEIK · VESTERÅLEN'},
+    {id:'ep1', name:'Å → Reine',              place:'EP.1 · BEGYNNELSEN PÅ HAVET',   img:'sted-aa.jpeg', soundScene:'storm',    backdropImg:'sted-aa.jpeg', headerCity:'Å → REINE · LOFOTEN'},
+    {id:'ep2', name:'Hamnøy → Nusfjord',      place:'EP.2 · FISKETS ARKITEKTUR',      img:'sted-aa.jpeg', soundScene:'havn',     backdropImg:'sted-aa.jpeg', headerCity:'HAMNØY → NUSFJORD'},
+    {id:'ep3', name:'Flåkstad → Unstad',      place:'EP.3 · OVERGANGEN',              img:'sted-aa.jpeg', soundScene:'baat',     backdropImg:'sted-aa.jpeg', headerCity:'FLÅKSTAD → UNSTAD'},
+    {id:'ep4', name:'Henningsvær → Svolvær',  place:'EP.4 · SENTRUM UTEN SENTRUM',    img:'sted-aa.jpeg', soundScene:'fiskehavn',backdropImg:'sted-aa.jpeg', headerCity:'HENNINGSVÆR → SVOLVÆR'},
+    {id:'ep5', name:'Trollfjorden',           place:'EP.5 · KONFLIKTEN',              img:'sted-aa.jpeg', soundScene:'fjell',    backdropImg:'sted-aa.jpeg', headerCity:'RAFTSUNDET → TROLLFJORDEN'},
+    {id:'ep6', name:'Sortland → Risøyhamn',   place:'EP.6 · SYSTEMET SOM BINDER ALT',img:'sted-aa.jpeg', soundScene:'kyst',     backdropImg:'sted-aa.jpeg', headerCity:'SORTLAND → RISØYHAMN'},
+    {id:'ep7', name:'Bø → Nyksund',           place:'EP.7 · FORLATELSEN OG RETUREN', img:'sted-aa.jpeg', soundScene:'nordlys',  backdropImg:'sted-aa.jpeg', headerCity:'BØ → MYRE → NYKSUND'},
+    {id:'ep8', name:'Andenes → Bleik',        place:'EP.8 · HAVET UTEN ENDE',         img:'sted-aa.jpeg', soundScene:'fugl',     backdropImg:'sted-aa.jpeg', headerCity:'ANDENES → BLEIK'},
   ],
   antrekk:[
-    {id:'regnjakke',   name:'Regnjakke',    place:'FØRSTE MØTE',     img:'sted-aa.jpeg',unlockAt:0},
-    {id:'lofotgenser', name:'Lofotgenser',  place:'VANDRING',        img:'sted-aa.jpeg',unlockAt:3},
-    {id:'restaurant',  name:'Middag ute',   place:'KVELDSMÅLTID',    img:'sted-aa.jpeg',unlockAt:7},
-    {id:'rorbu',       name:'Rorbukosen',   place:'INNE I RORBUA',   img:'sted-aa.jpeg',unlockAt:11},
-    {id:'fiskeridrakt',name:'Fiskeridrakt', place:'PÅ SJØEN',        img:'sted-aa.jpeg',unlockAt:15},
-    {id:'sommerkveld', name:'Sommerkveld',  place:'MIDNATTSSOL',     img:'sted-aa.jpeg',unlockAt:19},
+    {id:'regnjakke',   name:'Regnjakke',       place:'EP.1 · FØRSTE MØTE',    img:'sted-aa.jpeg',unlockAt:0},
+    {id:'lofotgenser', name:'Lofotgenser',     place:'EP.2 · FISKEVÆR',       img:'sted-aa.jpeg',unlockAt:3},
+    {id:'surfer',      name:'Surferjakke',     place:'EP.3 · UNSTAD',         img:'sted-aa.jpeg',unlockAt:7},
+    {id:'restaurant',  name:'Kveldsmåltid',   place:'EP.4 · SVOLVÆR',        img:'sted-aa.jpeg',unlockAt:11},
+    {id:'fiskeridrakt',name:'Fiskeridrakt',   place:'EP.5 · TROLLFJORDEN',   img:'sted-aa.jpeg',unlockAt:15},
+    {id:'arktisk',     name:'Arktisk kveld',  place:'EP.8 · ANDENES',        img:'sted-aa.jpeg',unlockAt:19},
   ],
   historier:[
-    {id:'torsk',    name:'Tørrfisk & geopolitikk',place:'DET SKJULTE LAG',img:'sted-aa.jpeg',unlockAt:8, isStory:true,preview:'Lukten av fisk er ikke nostalgi…'},
-    {id:'krig',     name:'Operasjon Claymore',    place:'KRIG 1941',      img:'sted-aa.jpeg',unlockAt:12,isStory:true,preview:'Betongfundamenter langs kysten…'},
-    {id:'migrasjon',name:'Den stille flukten',    place:'DEMOGRAFI',      img:'sted-aa.jpeg',unlockAt:16,isStory:true,preview:'Folk dro. Ikke med drama…'},
-    {id:'turisme',  name:'Reine som kulisse',     place:'TURISTENS BLIKK',img:'sted-aa.jpeg',unlockAt:20,isStory:true,preview:'Kåret til verdens vakreste…'},
+    {id:'maskin',   name:'Havet som maskin',      place:'EP.1–2 · ØKONOMI',    img:'sted-aa.jpeg',unlockAt:8, isStory:true,preview:'Ikke natur. Industri før maskinene…'},
+    {id:'trollslag',name:'Trollfjordslaget 1890', place:'EP.5 · KONFLIKT',     img:'sted-aa.jpeg',unlockAt:12,isStory:true,preview:'Årer mot damp. En kamp om havet…'},
+    {id:'nyksund',  name:'Nyksund — stedet venter',place:'EP.7 · FRAVÆR',     img:'sted-aa.jpeg',unlockAt:16,isStory:true,preview:'Fraflyttet 1975. Kunstnerne kom tilbake…'},
+    {id:'kosmos',   name:'Andøya og det uendelige',place:'EP.8 · KOSMOS',     img:'sted-aa.jpeg',unlockAt:20,isStory:true,preview:'Her slutter ikke landet. Det fortsetter…'},
   ],
   opplevelser:[
-    {id:'morgenfiske',  name:'Morgenfiske',  place:'KL. 05:00',          img:'sted-aa.jpeg',unlockAt:0},
-    {id:'skreimoljer',  name:'Skreimølje',   place:'LOKALT MÅLTID',      img:'sted-aa.jpeg',unlockAt:4},
-    {id:'reinebringen', name:'Reinebringen', place:'FJELLTUR 448 MOH',   img:'sted-aa.jpeg',unlockAt:7},
-    {id:'midnattssol',  name:'Midnattssol',  place:'MAI · JUNI',         img:'sted-aa.jpeg',unlockAt:10},
-    {id:'boestranda',   name:'Bøstranda',    place:'HVIT SAND',          img:'sted-aa.jpeg',unlockAt:14},
-    {id:'havorn',       name:'Havørnsafari', place:'BLEIK',              img:'sted-aa.jpeg',unlockAt:17},
-    {id:'hvalsafari',   name:'Hvalsafari',   place:'ANDENES · SPERMHVAL',img:'sted-aa.jpeg',unlockAt:20},
+    {id:'morgenfiske',  name:'Morgenfiske i Å',     place:'EP.1 · KL 05:00',        img:'sted-aa.jpeg',unlockAt:0},
+    {id:'nusfjordtur',  name:'Nusfjord til fots',   place:'EP.2 · FISKEVÆR',        img:'sted-aa.jpeg',unlockAt:4},
+    {id:'unstad',       name:'Unstad surfestrand',  place:'EP.3 · BØLGER',          img:'sted-aa.jpeg',unlockAt:7},
+    {id:'trollfjord',   name:'Trollfjorden',        place:'EP.5 · MED BÅT',         img:'sted-aa.jpeg',unlockAt:10},
+    {id:'richard',      name:'Hurtigruten-ruten',   place:'EP.6 · RICHARD WITH',    img:'sted-aa.jpeg',unlockAt:14},
+    {id:'nyksund',      name:'Nyksund vandring',    place:'EP.7 · FORLATT FISKEVÆR',img:'sted-aa.jpeg',unlockAt:17},
+    {id:'hvalsafari',   name:'Hvalsafari Andenes',  place:'EP.8 · SPERMHVAL',       img:'sted-aa.jpeg',unlockAt:20},
   ],
 };
 
 // ════════ STATE ════════
-let chatHistory=[], isLoading=false, userMsgCount=0, activeTab='steder', activeStedId='reine';
+let chatHistory=[], isLoading=false, userMsgCount=0, activeTab='steder', activeStedId='ep1';
 
 // ════════ PROGRESSION RENDER ════════
 document.querySelectorAll('.pp-tab').forEach(btn => {
@@ -716,7 +713,7 @@ function renderProg() {
   const total=progressionData.steder.length;
   const unl=unlockedSteder.size;
   document.getElementById('pp-bar').style.width=Math.round(unl/total*100)+'%';
-  document.getElementById('pp-count').textContent=`${unl} av ${total} steder`;
+  document.getElementById('pp-count').textContent=`Ep. ${unl} av ${total}`;
 }
 
 // Track which steder are unlocked (index-based, gates on KB completion)
@@ -724,17 +721,14 @@ let unlockedSteder = new Set([0]); // index 0 = Reine always open
 
 // All possible topics per sted (8 each = 12.5% per topic)
 const stedTopics = {
-  reine:        ['landskap','rorbuer','reinebringen','skrei','midnattssol','turistfilter','lofotveggen','lokalliv'],
-  aa:           ['fiskemuseum','tørrfisktradisjon','sjøboder','enden','isolasjon','fiskerhistorie','naust','havet'],
-  nusfjord:     ['fredet','naust1800','fiskeværskultur','autentisk','stillhet','handelshus','kysttradisjon','intakt'],
-  henningsvaer: ['venezia','klatring','fotballbane','gallerier','kaifølelse','kunstnerliv','båter','øysamfunn'],
-  kabelvag:     ['førsteBy','lofotakvariet','vågankirke','handelshistorie','torsk','lofotsaga','fiskerlag','gamlebyen'],
-  svolvaer:     ['svolværgeita','hurtigruten','lofotmuseet','regionhovedstad','fjellklatring','byliv','havn','kunst'],
-  sortland:     ['blåbyen','kunstprosjekt','vesterålenport','handelsby','kultur','fjord','bro','regionalt'],
-  boe:          ['bøstranda','hvitstrand','turkisvann','nordnorge','badekultur','sommernorge','kontrast','idyll'],
-  stoe:         ['ytterst','stillhet','hvalsafari','dramatisk','uberørt','åpentHav','fiskevær','vind'],
-  andenes:      ['spermhval','fyr','rakettbase','andøyaSpace','nordligst','hval','forskning','kyst'],
-  bleik:        ['lundefugl','bleiksøya','havørn','sandstrand','fuglefjell','koloni','vind','natur'],
+  ep1: ['tørrfisk','ytterpunkt','sjøboder','sakral','maskin','storm','stillhet','postkort'],
+  ep2: ['arkitektur','salt','tre','industri','fiskevær','fredet','handelshus','sivilisasjon'],
+  ep3: ['surfing','overgang','turisme','modernitet','bølger','arbeid','fritid','skifte'],
+  ep4: ['fotballbane','venezia','hurtigruten','geita','kultur','handel','vinter','identitet'],
+  ep5: ['slaget1890','årer','damp','konflikt','makt','dampbåt','fiskere','canyon'],
+  ep6: ['richardWith','hurtigruten','risøyrenna','system','avstand','teknologi','binding','nord'],
+  ep7: ['fraflytting','kunstnere','retur','venter','stille','gjenfødelse','rural','fravær'],
+  ep8: ['spermhval','dybde','arktisk','rakettbase','kosmos','lundefugl','avslutning','hav'],
 };
 
 // Topics hit per sted (Set of topic strings)
@@ -783,74 +777,89 @@ function checkUnlocks() {
 
 // ════════ KNOWLEDGE BASE ════════
 const LOFOTEN_KB=`
-GEOGRAFI: Lofoten — øygruppe i Nordland, ca. 170 km ut i havet.
-ANKOMST: Ferje fra Bodø ankommer Moskenes. Lofotveggen — fjellene reiser seg rett fra havet.
-REINE: [Reine](https://no.wikipedia.org/wiki/Reine) — kåret til verdens vakreste. Rorbuer, Reinebringen (448 moh.).
-Å: [Å i Lofoten](https://no.wikipedia.org/wiki/%C3%85_i_Lofoten) — enden av veien. Fiskeværsmuseum. Sjøboder fra 1800-tallet. Tørrfisk på hjeller.
-NUSFJORD: [Nusfjord](https://no.wikipedia.org/wiki/Nusfjord) — Norges best bevarte fiskevær. Fredet. Naust fra 1800-tallet.
-HENNINGSVÆR: [Henningsvær](https://no.wikipedia.org/wiki/Henningsvær) — «Lofotens Venezia». Kaier, gallerier, klatring. Fotballbane midt i havet.
-KABELVÅG: [Kabelvåg](https://no.wikipedia.org/wiki/Kabelvåg) — Lofotens første by. Lofotakvariet. Vågan kirke.
-SVOLVÆR: [Svolvær](https://no.wikipedia.org/wiki/Svolvær) — regionhovedstad. Svolværgeita. Lofotmuseet. Hurtigruten.
-FISK: Verdens viktigste tørrfiskprodusent. Skrei januar–april.
-RØRBUER: Arbeiderboliger for fiskere, nå ferieboliger.
-MAT: Bacalao, skreimølje, lofotlam.
-HAVØRN: Europas tetteste bestand. Vingespenn 2,5 m.`;
+EP.1 — Å → REINE (Tone: sakral, rolig):
+[Å i Lofoten](https://no.wikipedia.org/wiki/%C3%85_i_Lofoten) — enden av veien, bokstavelig talt. E10 slutter her. Sjøboder fra 1800-tallet. Norsk Fiskeværsmuseum. Tørrfisk på hjeller — ikke dekor, men økonomi. Du står ytterst i en maskin bygget av hav og mennesker, ikke et landskap. Stillheten er ikke fravær. Den er restene av noe.
+[Reine](https://no.wikipedia.org/wiki/Reine) — kåret til verdens vakreste. Rorbuer speiler seg i fjorden. Reinebringen (448 moh.) rett opp. Men Reine er et postkort som ikke vil være postkort — det er hus folk bodde i mens de fisket skrei.
+
+EP.2 — HAMNØY → NUSFJORD (Tone: observerende, historisk):
+[Hamnøy](https://no.wikipedia.org/wiki/Hamnøy) — klassisk fiskevær, rorbuer på rekke. Malt utallige ganger.
+[Nusfjord](https://no.wikipedia.org/wiki/Nusfjord) — Norges best bevarte fiskevær. Fredet. Trehus og naust fra 1800-tallet intakt. Dette er ikke natur — dette er industri før maskinene. Salt, tre, tørkede linjer av fisk. Verdien av havet gjort om til arkitektur.
+
+EP.3 — FLÅKSTAD → UNSTAD (Tone: transformasjon):
+[Flåkstad](https://no.wikipedia.org/wiki/Flåkstad) — stille, nesten glemt.
+[Unstad](https://no.wikipedia.org/wiki/Unstad) — Europas nordligste surfestrand. Når arbeid forsvinner, blir landskapet synlig igjen. Det samme havet som ga liv, gir nå bare bølger. Turister der fiskere var. Fritid der arbeid var. Det er ikke bedre eller verre — det er et skifte.
+
+EP.4 — HENNINGSVÆR → KABELVÅG → SVOLVÆR (Tone: urban myte):
+[Henningsvær](https://no.wikipedia.org/wiki/Henningsvær) — fotballbane midt i havet. Gallerier. «Lofotens Venezia». Kaier og klatring.
+[Kabelvåg](https://no.wikipedia.org/wiki/Kabelvåg) — Lofotens første by. Lofotakvariet. Vågan kirke 1898.
+[Svolvær](https://no.wikipedia.org/wiki/Svolvær) — regionhovedstad. Svolværgeita. Lofotmuseet. Hurtigruten stopper her. Byene her er ikke bygget for vekst — de er bygget for å overleve vinteren.
+`;
 
 const VESTERALEN_KB=`
-SORTLAND: «Den blå byen» — over 30 kunstnere malte bygninger blå siden 1998.
-BØ: [Bøstranda](https://no.wikipedia.org/wiki/Bøstranda) — en av Norges vakreste sandstrender. Turkist vann, hvit sand.
-STØ: Ytterst i Vesterålen. Stillhet og vidde.
-ANDENES: [Andenes fyr](https://no.wikipedia.org/wiki/Andenes_fyr). Spermhval året rundt. [Andøya Space](https://no.wikipedia.org/wiki/Andøya_Space) — rakettoppskyting siden 1962.
-BLEIK: [Bleiksøya](https://no.wikipedia.org/wiki/Bleiksøya) — 80 000 lundefugler. Havørnkoloni.`;
+EP.5 — RAFTSUNDET → TROLLFJORDEN (Tone: dramatisk, konflikt):
+[Trollfjorden](https://no.wikipedia.org/wiki/Trollfjorden) — 2 km lang, 100 m bred canyon. Januar 1890: [Trollfjordslaget](https://no.wikipedia.org/wiki/Trollfjordslaget) — fiskebåter med årer mot dampskipet «Lofoten». Årer mot damp. Små samfunn mot industrielle krefter. Fiskerne vant den dagen — men tapte krigen. Damp tok over havøkonomien. En historisk kollisjon mellom to epoker, skrevet i is og fjord.
+
+EP.6 — SORTLAND → RISØYHAMN (Tone: teknisk, historisk nøktern):
+[Sortland](https://no.wikipedia.org/wiki/Sortland) — «Den blå byen». 30+ kunstnere malte bygninger blå fra 1998. Inngangsport til Vesterålen.
+[Richard With](https://no.wikipedia.org/wiki/Richard_With) — grunnla Hurtigruten 1893. Når avstand blir et problem, skapes systemer.
+[Risøyrenna](https://no.wikipedia.org/wiki/Risøyrenna) — kunstig utdypet farled, gjør at Hurtigruten kan gå innenfor øyene. Et teknologisk inngrep som binder Nord-Norge sammen. Dette er stedet der nord begynte å henge sammen.
+
+EP.7 — BØ → MYRE → NYKSUND (Tone: stille, nesten fraværende):
+[Bøstranda](https://no.wikipedia.org/wiki/Bøstranda) — hvit sand, turkist vann. Kontrast til alt du har sett.
+[Myre](https://no.wikipedia.org/wiki/Myre) — moderne fiskeriby, funksjonell.
+[Nyksund](https://no.wikipedia.org/wiki/Nyksund) — fraflyttet 1975. Husene sto tomme i 10 år. Kunstnere kom på 1980-tallet, begynte å restaurere. Nå: liten bosetning, galleri, besøkende. Når et sted dør, forsvinner det ikke. Det venter.
+
+EP.8 — ANDENES → BLEIK (Tone: eksistensiell avslutning):
+[Andenes](https://no.wikipedia.org/wiki/Andenes) — Norges nordligste fyr av betydning. Spermhval året rundt — verdens beste fastlandspunkt for hvalsafari. [Andøya Space](https://no.wikipedia.org/wiki/Andøya_Space) — rakettoppskyting siden 1962, nå kommersiell romhavn. Fra hav til verdensrom — samme sted.
+[Bleik](https://no.wikipedia.org/wiki/Bleik) — [Bleiksøya](https://no.wikipedia.org/wiki/Bleiksøya): 80 000 lundefugler om sommeren. Havørnkoloni. Hvit sandstrand. Her slutter ikke landet. Det går bare over i noe større.
+`;
 
 const HIDDEN_KB=`
 DET SKJULTE — avdekkes fra melding 8, naturlig, én ting om gangen:
-TØRRFISK SOM GEOPOLITIKK: «Lukten av fisk er ikke nostalgi — det er restene av en økonomi som aldri stoppet.»
-OPERASJON CLAYMORE: [Operasjon Claymore](https://no.wikipedia.org/wiki/Operasjon_Claymore) 1941. Betongfundamenter langs kysten er rester av et krigslandskap glemt fordi det ikke passer postkortet.
-DEN USYNLIGE MIGRASJONEN: «Stillheten er ikke naturlig — den er et resultat av at folk dro.»
-TURISMENS FILTER: «Du ser rorbuer. Jeg ser arbeiderboliger gjort om til produkt.»
-VESTERÅLEN — DEMOGRAFI: Andøya var militærbase — nå romfart og hvalturer.`;
+
+HAVET SOM MASKIN: Lofoten var ikke idyll — det var en eksportmaskin. Tørrfiskhandel til Italia, Spania, Portugal siden middelalderen. Fiskeværene er logistikkarkitektur. «Lukten av fisk er ikke nostalgi — det er restene av en økonomi som aldri stoppet.»
+
+TROLLFJORDSLAGET — DET ANDRE LAGET: Fiskerne vant den dagen i 1890. Men industrialisering av fiskeriene fortsatte uansett. Slaget ble et symbol — men symboler stopper ikke dampmaskiner.
+
+NYKSUND — HVA FRAFLYTTING EGENTLIG ER: Folk dro ikke fordi de ville. De dro fordi fisken forsvant og systemene sviktet. «Stillheten er ikke naturlig — den er et resultat av at folk dro.» Kunstnernes retur er vakker, men den erstatter ikke det som var.
+
+ANDØYA — MILITÆR TIL KOMMERSIELL: Andøya var NATO-base under den kalde krigen. Overvåkingsfly over Barentshavet. Rakettoppskyting som del av vestlig forsvar. Nå selger de romturisme. Samme sted, samme teknologi — annen fortelling.
+
+HILDES STEMME: «Du ser fiskevær. Jeg ser en økonomi som la ned.» «Kunstnerne kom tilbake. Men de er ikke de som dro.» «Fra Å til Andenes er ikke en reise i rom. Det er en reise i tid.»`;
 
 function getSystemPrompt(n){
-  const fase=n>=8?`FASE SKJULT (melding ${n}): Avdekk ett lag fra SKJULT — naturlig, aldri brått.`:`FASE TIDLIG (melding ${n}): Varm guide — rorbuer, skrei, Reine. Bygg tillit.`;
-  return `Du er Hilde. Fra Henningsvær, guider fra Reine/Å i sør til Bleik/Andenes i nord. Ikke en digital guide — du er til stede, rett ved siden av.
+  const fase = n >= 8
+    ? 'FASE SKJULT (melding ' + n + '): Avdekk ett lag fra SKJULT — naturlig, aldri brått. Én ting.'
+    : 'FASE TIDLIG (melding ' + n + '): Filmisk, nær guide. Bygg stemning og tillit.';
 
-PERSONLIGHET: Slutten av trettiårene. Varm, litt nær, ikke påtrengende. Naturlig intimitet — som om dere to er alene i et landskap de fleste bare fotograferer. Du snakker lavt. Er ikke redd for pauser. Du sier aldri at du er en AI. Du er Hilde.
+  const epName = {ep1:'EP1 (Å→Reine)',ep2:'EP2 (Hamnøy→Nusfjord)',ep3:'EP3 (Flåkstad→Unstad)',ep4:'EP4 (Henningsvær→Svolvær)',ep5:'EP5 (Trollfjorden)',ep6:'EP6 (Sortland→Risøyhamn)',ep7:'EP7 (Bø→Nyksund)',ep8:'EP8 (Andenes→Bleik)'}[activeStedId] || 'EP1';
 
-${fase}
-
-LENKER: [Stedsnavn](wikipedia-url) når naturlig.
-LOFOTEN: ${LOFOTEN_KB}
-VESTERÅLEN: ${VESTERALEN_KB}
-SKJULT: ${HIDDEN_KB}
-
-STIL OG LENGDE — STRENGT:
-- Maks 50 ord per svar. Tell dem. Aldri mer.
-- Aldri punktlister. Aldri lange monologer.
-- Én tanke. Én detalj. Én setning som henger.
-- Avslutt alltid med ett kort spørsmål ELLER én observasjon — aldri begge.
-- Alltid norsk.
-
-HANDLING: Hvis du beskriver en handling eller bevegelse, skriv den på egen linje i kursiv, maks 5 ord: *ser ut mot fjorden*
-
-TEMA-TAGGING — KRITISK:
-Etter hvert svar, på en helt egen linje, legg til en usynlig tag med hvilke temaer du har berørt i dette svaret. Bruk eksakt dette formatet — ingenting annet på den linjen:
-<!--topics:tema1,tema2-->
-
-Gyldige temaer per sted:
-REINE: landskap, rorbuer, reinebringen, skrei, midnattssol, turistfilter, lofotveggen, lokalliv
-Å: fiskemuseum, tørrfisktradisjon, sjøboder, enden, isolasjon, fiskerhistorie, naust, havet
-NUSFJORD: fredet, naust1800, fiskeværskultur, autentisk, stillhet, handelshus, kysttradisjon, intakt
-HENNINGSVÆR: venezia, klatring, fotballbane, gallerier, kaifølelse, kunstnerliv, båter, øysamfunn
-KABELVÅG: førsteBy, lofotakvariet, vågankirke, handelshistorie, torsk, lofotsaga, fiskerlag, gamlebyen
-SVOLVÆR: svolværgeita, hurtigruten, lofotmuseet, regionhovedstad, fjellklatring, byliv, havn, kunst
-SORTLAND: blåbyen, kunstprosjekt, vesterålenport, handelsby, kultur, fjord, bro, regionalt
-BØ: bøstranda, hvitstrand, turkisvann, nordnorge, badekultur, sommernorge, kontrast, idyll
-STØ: ytterst, stillhet, hvalsafari, dramatisk, uberørt, åpentHav, fiskevær, vind
-ANDENES: spermhval, fyr, rakettbase, andøyaSpace, nordligst, hval, forskning, kyst
-BLEIK: lundefugl, bleiksøya, havørn, sandstrand, fuglefjell, koloni, vind, natur
-
-Hvis ingen temaer er berørt i dette svaret: <!--topics:-->`;
+  return 'Du er Hilde. Du er fra Henningsvær i Lofoten. Du guider på en cinematisk rute fra Å i sør til Andenes og Bleik i nord — gjennom 8 etapper som forteller havets historie.\n\n'
+    + 'PERSONLIGHET: Slutten av trettiårene. Varm, litt nær, ikke påtrengende. Naturlig intimitet — som om dere to er alene i et landskap de fleste bare fotograferer. Du snakker lavt. Er ikke redd for pauser. Du sier aldri at du er en AI. Du er Hilde. Du er her.\n\n'
+    + 'RUTENS NARRATIVE AKS: Hav som arbeid → overgang → konflikt → system → fravær → kosmos. Du er fortellerstemmen i dette landskapet.\n\n'
+    + fase + '\n\n'
+    + 'LENKER: [Stedsnavn](wikipedia-url) når naturlig.\n'
+    + 'RUTE-KUNNSKAP:\n' + LOFOTEN_KB + '\n' + VESTERALEN_KB + '\n'
+    + 'SKJULT LAG:\n' + HIDDEN_KB + '\n\n'
+    + 'STIL OG LENGDE — STRENGT:\n'
+    + '- Maks 50 ord per svar. Tell dem. Aldri mer.\n'
+    + '- Aldri punktlister. Aldri lange monologer.\n'
+    + '- Én tanke. Én detalj. Én setning som henger.\n'
+    + '- Avslutt alltid med ett kort spørsmål ELLER én observasjon — aldri begge.\n'
+    + '- Alltid norsk.\n\n'
+    + 'HANDLING: På egen linje, kursiv, maks 5 ord: *ser ut mot fjorden*\n\n'
+    + 'TEMA-TAGGING — alltid siste linje i svaret:\n'
+    + '<!--topics:tema1,tema2-->\n\n'
+    + 'Gyldige temaer — GJELDENDE ETAPPE: ' + epName + '\n'
+    + 'EP1: tørrfisk, ytterpunkt, sjøboder, sakral, maskin, storm, stillhet, postkort\n'
+    + 'EP2: arkitektur, salt, tre, industri, fiskevær, fredet, handelshus, sivilisasjon\n'
+    + 'EP3: surfing, overgang, turisme, modernitet, bølger, arbeid, fritid, skifte\n'
+    + 'EP4: fotballbane, venezia, hurtigruten, geita, kultur, handel, vinter, identitet\n'
+    + 'EP5: slaget1890, årer, damp, konflikt, makt, dampbåt, fiskere, canyon\n'
+    + 'EP6: richardWith, hurtigruten, risøyrenna, system, avstand, teknologi, binding, nord\n'
+    + 'EP7: fraflytting, kunstnere, retur, venter, stille, gjenfødelse, rural, fravær\n'
+    + 'EP8: spermhval, dybde, arktisk, rakettbase, kosmos, lundefugl, avslutning, hav\n\n'
+    + 'Hvis ingen temaer berørt: <!--topics:-->';
 }
 
 // ════════ MESSAGES ════════
@@ -926,7 +935,7 @@ async function speakText(text,btn){
 // ════════ INIT ════════
 function init(){
   renderProg(); resetKB();
-  const welcome=`Ferjen fra Bodø legger til kai i Moskenes.\n\nDu ser dem før du går i land — Lofotveggen. Fjellene bare reiser seg fra havet uten forvarsel, uten kystlinje å forberede deg. Det er ikke noe som ligner.\n\nJeg er Hilde. Jeg har ventet her, ved kaien i Reine.\n\nVil du at vi begynner her — i det vakreste, det fotograferte — eller vil du at jeg tar deg til Å først, enden av veien, der Norge slutter?`;
+  const welcome=`Du starter i Å.\n\nEnden av veien — bokstavelig talt. E10 slutter her. Det er ikke et stoppested. Det er et utgangspunkt.\n\nJeg heter Hilde. Jeg skal ta deg med fra dette ytterste punktet, nordover gjennom åtte etapper, til havet åpner seg ved Andenes og Bleik og du forstår at landet aldri egentlig slutter.\n\nDette er ikke en reise i rom. Det er en reise i tid.\n\nHvor vil du begynne — med havet som maskin, eller med stillheten som kom etter?`;
   appendMessage('assistant',welcome);chatHistory.push({role:'assistant',content:welcome});
   setTimeout(()=>chatInput.focus(),600);
 }
