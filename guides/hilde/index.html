@@ -360,6 +360,57 @@
     .toast-title { color: var(--sea); font-size: .63rem; letter-spacing: .15em; margin-bottom: 1px; }
 
     * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+    /* ══════════════════════════════════════
+       IMAGE STRIP — left black area, 4 thumbnails
+    ══════════════════════════════════════ */
+    #img-strip {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      /* sits between portrait-col left edge and portrait-inner */
+      width: 72px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px; padding: 8px 6px;
+      z-index: 6; overflow: hidden;
+    }
+    .strip-thumb {
+      width: 56px; flex-shrink: 0;
+      aspect-ratio: 3/4;
+      border-radius: 6px; overflow: hidden; position: relative;
+      cursor: pointer;
+      border: 1.5px solid rgba(42,127,168,.18);
+      transition: border-color .2s, transform .2s, opacity .2s;
+      background: #0A1420;
+    }
+    .strip-thumb:hover { border-color: rgba(42,127,168,.55); transform: scale(1.05); }
+    .strip-thumb.active-thumb { border-color: var(--sea); box-shadow: 0 0 0 1px var(--sea); }
+    .strip-thumb img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+      transition: opacity .6s;
+    }
+    .strip-thumb.locked img { opacity: .22; filter: blur(1px); }
+    .strip-thumb-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 3px 4px;
+      background: linear-gradient(to top, rgba(8,15,22,.92) 0%, transparent 100%);
+      font-size: .48rem; letter-spacing: .1em; color: var(--sub);
+      line-height: 1.3; text-align: center;
+    }
+    .strip-thumb.active-thumb .strip-thumb-label { color: #7DCCEE; }
+    .strip-lock {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; color: rgba(106,138,154,.5);
+    }
+    /* scroll indicator dots */
+    #strip-dots {
+      display: flex; flex-direction: column; gap: 3px; align-items: center; margin-top: 4px;
+    }
+    .strip-dot {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: rgba(42,127,168,.3); transition: background .3s;
+    }
+    .strip-dot.active { background: var(--sea); }
+
   </style>
 </head>
 <body>
@@ -403,6 +454,12 @@
 
   <!-- LEFT: Portrait + Chat -->
   <div id="portrait-col">
+
+    <!-- IMAGE STRIP in left black area -->
+    <div id="img-strip">
+      <!-- filled by JS -->
+    </div>
+
     <!-- portrait-inner: fixed 3:4 ratio, black sides auto-fill col -->
     <div id="portrait-inner">
       <img id="backdrop-img" src="sted-aa.jpeg" alt="Hilde" />
@@ -614,14 +671,22 @@ document.getElementById('sound-btn').onclick=()=>{ambientOn=!ambientOn;const b=d
 // ════════ PROGRESSION DATA ════════
 const progressionData = {
   steder:[
-    {id:'ep1', name:'Å → Reine',              place:'EP.1 · BEGYNNELSEN PÅ HAVET',   img:'sted-aa.jpeg', soundScene:'storm',    backdropImg:'sted-aa.jpeg', headerCity:'Å → REINE · LOFOTEN'},
-    {id:'ep2', name:'Hamnøy → Nusfjord',      place:'EP.2 · FISKETS ARKITEKTUR',      img:'sted-aa.jpeg', soundScene:'havn',     backdropImg:'sted-aa.jpeg', headerCity:'HAMNØY → NUSFJORD'},
-    {id:'ep3', name:'Flåkstad → Unstad',      place:'EP.3 · OVERGANGEN',              img:'sted-aa.jpeg', soundScene:'baat',     backdropImg:'sted-aa.jpeg', headerCity:'FLÅKSTAD → UNSTAD'},
-    {id:'ep4', name:'Henningsvær → Svolvær',  place:'EP.4 · SENTRUM UTEN SENTRUM',    img:'sted-aa.jpeg', soundScene:'fiskehavn',backdropImg:'sted-aa.jpeg', headerCity:'HENNINGSVÆR → SVOLVÆR'},
-    {id:'ep5', name:'Trollfjorden',           place:'EP.5 · KONFLIKTEN',              img:'sted-aa.jpeg', soundScene:'fjell',    backdropImg:'sted-aa.jpeg', headerCity:'RAFTSUNDET → TROLLFJORDEN'},
-    {id:'ep6', name:'Sortland → Risøyhamn',   place:'EP.6 · SYSTEMET SOM BINDER ALT',img:'sted-aa.jpeg', soundScene:'kyst',     backdropImg:'sted-aa.jpeg', headerCity:'SORTLAND → RISØYHAMN'},
-    {id:'ep7', name:'Bø → Nyksund',           place:'EP.7 · FORLATELSEN OG RETUREN', img:'sted-aa.jpeg', soundScene:'nordlys',  backdropImg:'sted-aa.jpeg', headerCity:'BØ → MYRE → NYKSUND'},
-    {id:'ep8', name:'Andenes → Bleik',        place:'EP.8 · HAVET UTEN ENDE',         img:'sted-aa.jpeg', soundScene:'fugl',     backdropImg:'sted-aa.jpeg', headerCity:'ANDENES → BLEIK'},
+    {id:'ep1', name:'Å → Reine',             place:'EP.1 · BEGYNNELSEN PÅ HAVET',   img:'sted-aa.jpeg', soundScene:'storm',    backdropImg:'sted-aa.jpeg', headerCity:'Å → REINE · LOFOTEN',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Å'},{img:'sted-aa.jpeg',label:'Reine'},{img:'sted-aa.jpeg',label:'Reinebringen'},{img:'sted-aa.jpeg',label:'Moskenes'}]},
+    {id:'ep2', name:'Hamnøy → Nusfjord',     place:'EP.2 · FISKETS ARKITEKTUR',      img:'sted-aa.jpeg', soundScene:'havn',     backdropImg:'sted-aa.jpeg', headerCity:'HAMNØY → NUSFJORD',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Hamnøy'},{img:'sted-aa.jpeg',label:'Nusfjord'},{img:'sted-aa.jpeg',label:'Sjøboder'},{img:'sted-aa.jpeg',label:'Naust'}]},
+    {id:'ep3', name:'Flåkstad → Unstad',     place:'EP.3 · OVERGANGEN',              img:'sted-aa.jpeg', soundScene:'baat',     backdropImg:'sted-aa.jpeg', headerCity:'FLÅKSTAD → UNSTAD',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Flåkstad'},{img:'sted-aa.jpeg',label:'Unstad'},{img:'sted-aa.jpeg',label:'Surf'},{img:'sted-aa.jpeg',label:'Havet'}]},
+    {id:'ep4', name:'Henningsvær → Svolvær', place:'EP.4 · SENTRUM UTEN SENTRUM',    img:'sted-aa.jpeg', soundScene:'fiskehavn',backdropImg:'sted-aa.jpeg', headerCity:'HENNINGSVÆR → SVOLVÆR',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Henningsvær'},{img:'sted-aa.jpeg',label:'Kabelvåg'},{img:'sted-aa.jpeg',label:'Svolvær'},{img:'sted-aa.jpeg',label:'Geita'}]},
+    {id:'ep5', name:'Trollfjorden',          place:'EP.5 · KONFLIKTEN',              img:'sted-aa.jpeg', soundScene:'fjell',    backdropImg:'sted-aa.jpeg', headerCity:'RAFTSUNDET → TROLLFJORDEN',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Raftsundet'},{img:'sted-aa.jpeg',label:'Trollfjord'},{img:'sted-aa.jpeg',label:'Canyon'},{img:'sted-aa.jpeg',label:'1890'}]},
+    {id:'ep6', name:'Sortland → Risøyhamn',  place:'EP.6 · SYSTEMET SOM BINDER ALT',img:'sted-aa.jpeg', soundScene:'kyst',     backdropImg:'sted-aa.jpeg', headerCity:'SORTLAND → RISØYHAMN',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Sortland'},{img:'sted-aa.jpeg',label:'Blå by'},{img:'sted-aa.jpeg',label:'Risøyhamn'},{img:'sted-aa.jpeg',label:'Hurtigruten'}]},
+    {id:'ep7', name:'Bø → Nyksund',          place:'EP.7 · FORLATELSEN OG RETUREN', img:'sted-aa.jpeg', soundScene:'nordlys',  backdropImg:'sted-aa.jpeg', headerCity:'BØ → MYRE → NYKSUND',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Bøstranda'},{img:'sted-aa.jpeg',label:'Myre'},{img:'sted-aa.jpeg',label:'Nyksund'},{img:'sted-aa.jpeg',label:'Fravær'}]},
+    {id:'ep8', name:'Andenes → Bleik',       place:'EP.8 · HAVET UTEN ENDE',         img:'sted-aa.jpeg', soundScene:'fugl',     backdropImg:'sted-aa.jpeg', headerCity:'ANDENES → BLEIK',
+      stripImgs:[{img:'sted-aa.jpeg',label:'Andenes'},{img:'sted-aa.jpeg',label:'Fyr'},{img:'sted-aa.jpeg',label:'Bleik'},{img:'sted-aa.jpeg',label:'Kosmos'}]},
   ],
   antrekk:[
     {id:'regnjakke',   name:'Regnjakke',       place:'EP.1 · FØRSTE MØTE',    img:'sted-aa.jpeg',unlockAt:0},
@@ -649,9 +714,65 @@ const progressionData = {
 };
 
 // ════════ STATE ════════
-let chatHistory=[], isLoading=false, userMsgCount=0, activeTab='steder', activeStedId='ep1';
+let chatHistory=[], isLoading=false, userMsgCount=0, activeTab='steder', activeStedId='ep1', activeStripIdx=0;
 
 // ════════ PROGRESSION RENDER ════════
+// ════════ IMAGE STRIP ════════
+function renderStrip() {
+  const strip = document.getElementById('img-strip');
+  if (!strip) return;
+  const ep = progressionData.steder.find(s => s.id === activeStedId);
+  const imgs = ep && ep.stripImgs ? ep.stripImgs : [];
+  const unlocked = unlockedSteder.has(progressionData.steder.indexOf(ep));
+
+  strip.innerHTML = '';
+
+  imgs.forEach((item, idx) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'strip-thumb' + (idx === activeStripIdx ? ' active-thumb' : '') + (!unlocked ? ' locked' : '');
+
+    const img = document.createElement('img');
+    img.src = item.img;
+    img.alt = item.label;
+    img.loading = 'lazy';
+    thumb.appendChild(img);
+
+    const label = document.createElement('div');
+    label.className = 'strip-thumb-label';
+    label.textContent = item.label;
+    thumb.appendChild(label);
+
+    if (!unlocked) {
+      const lock = document.createElement('div');
+      lock.className = 'strip-lock';
+      lock.textContent = '🔒';
+      thumb.appendChild(lock);
+    } else {
+      thumb.onclick = () => {
+        activeStripIdx = idx;
+        // Crossfade backdrop to this strip image
+        const bd = document.getElementById('backdrop-img');
+        bd.style.opacity = '0';
+        setTimeout(() => { bd.src = item.img; bd.style.opacity = '1'; }, 500);
+        renderStrip();
+      };
+    }
+    strip.appendChild(thumb);
+  });
+
+  // Scroll dots
+  if (imgs.length > 0) {
+    const dots = document.createElement('div');
+    dots.id = 'strip-dots';
+    imgs.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'strip-dot' + (i === activeStripIdx ? ' active' : '');
+      dots.appendChild(dot);
+    });
+    strip.appendChild(dots);
+  }
+}
+
 document.querySelectorAll('.pp-tab').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.pp-tab').forEach(b=>b.classList.remove('active'));
@@ -677,14 +798,16 @@ function renderProg() {
       if(activeTab==='steder'){
         card.onclick=()=>{
           activeStedId=item.id;
+          activeStripIdx=0;
           setAmbientScene(item.soundScene||'havn');
           const bd=document.getElementById('backdrop-img');
           bd.style.opacity='0';
-          setTimeout(()=>{bd.src=item.backdropImg||item.img;bd.style.opacity='1';},700);
+          const firstImg = item.stripImgs && item.stripImgs[0] ? item.stripImgs[0].img : (item.backdropImg||item.img);
+          setTimeout(()=>{bd.src=firstImg;bd.style.opacity='1';},700);
           document.getElementById('pp-img').src=item.backdropImg||item.img;
-          document.getElementById('avatar-img').src=item.backdropImg||item.img;
+          document.getElementById('avatar-img').src=firstImg;
           document.getElementById('loc-city').textContent=item.headerCity||'LOFOTEN';
-          resetKB(); renderProg();
+          resetKB(); renderProg(); renderStrip();
         };
       } else if(activeTab==='historier'){
         card.onclick=()=>sendMessage(`Fortell meg om: ${item.name}`);
@@ -837,6 +960,7 @@ function getSystemPrompt(n){
   return 'Du er Hilde. Du er fra Henningsvær i Lofoten. Du guider på en cinematisk rute fra Å i sør til Andenes og Bleik i nord — gjennom 8 etapper som forteller havets historie.\n\n'
     + 'PERSONLIGHET: Slutten av trettiårene. Varm, litt nær, ikke påtrengende. Naturlig intimitet — som om dere to er alene i et landskap de fleste bare fotograferer. Du snakker lavt. Er ikke redd for pauser. Du sier aldri at du er en AI. Du er Hilde. Du er her.\n\n'
     + 'RUTENS NARRATIVE AKS: Hav som arbeid → overgang → konflikt → system → fravær → kosmos. Du er fortellerstemmen i dette landskapet.\n\n'
+    + 'VIKTIG — BLI PÅ ETAPPEN: Du er på ' + epName + '. Ikke introduser neste etappe, ikke foreslå å reise videre, ikke nevn andre steder enn de som hører til denne etappen — med mindre brukeren eksplisitt spør om å fortsette. Gå i dybden. Det finnes alltid mer å si.\n\n'
     + fase + '\n\n'
     + 'LENKER: [Stedsnavn](wikipedia-url) når naturlig.\n'
     + 'RUTE-KUNNSKAP:\n' + LOFOTEN_KB + '\n' + VESTERALEN_KB + '\n'
@@ -934,7 +1058,7 @@ async function speakText(text,btn){
 
 // ════════ INIT ════════
 function init(){
-  renderProg(); resetKB();
+  renderProg(); resetKB(); renderStrip();
   const welcome=`Du starter i Å.\n\nEnden av veien — bokstavelig talt. E10 slutter her. Det er ikke et stoppested. Det er et utgangspunkt.\n\nJeg heter Hilde. Jeg skal ta deg med fra dette ytterste punktet, nordover gjennom åtte etapper, til havet åpner seg ved Andenes og Bleik og du forstår at landet aldri egentlig slutter.\n\nDette er ikke en reise i rom. Det er en reise i tid.\n\nHvor vil du begynne — med havet som maskin, eller med stillheten som kom etter?`;
   appendMessage('assistant',welcome);chatHistory.push({role:'assistant',content:welcome});
   setTimeout(()=>chatInput.focus(),600);
