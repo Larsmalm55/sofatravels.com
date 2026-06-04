@@ -418,6 +418,23 @@
     }
     .strip-dot.active { background: var(--sea); }
 
+
+    /* Image bubble in chat */
+    .msg-img-bubble {
+      max-width: 68%; border-radius: 11px 11px 11px 3px;
+      overflow: hidden; border: 1px solid rgba(42,127,168,.2);
+      cursor: pointer; transition: transform .2s;
+    }
+    .msg-img-bubble:hover { transform: scale(1.01); }
+    .msg-img-bubble img {
+      width: 100%; display: block;
+      max-height: 260px; object-fit: cover; object-position: center top;
+    }
+    .msg-img-caption {
+      background: rgba(10,20,30,0.88); backdrop-filter: blur(14px);
+      padding: 7px 13px; font-size: .75rem; color: var(--sub);
+      letter-spacing: .06em;
+    }
   </style>
 </head>
 <body>
@@ -712,7 +729,7 @@ const progressionData = {
     {id:'kosmos',   name:'Andøya og det uendelige',place:'EP.8 · KOSMOS',     img:'sted-aa.jpeg',unlockAt:20,isStory:true,preview:'Her slutter ikke landet. Det fortsetter…'},
   ],
   opplevelser:[
-    {id:'morgenfiske',  name:'Morgenfiske i Å',     place:'EP.1 · KL 05:00',        img:'sted-aa.jpeg',unlockAt:0},
+    {id:'morgenfiske',  name:'Morgenfiske i Å',     place:'EP.1 · KL 05:00',        img:'opplevelse-morgenfiske.jpeg',unlockAt:0},
     {id:'nusfjordtur',  name:'Nusfjord til fots',   place:'EP.2 · FISKEVÆR',        img:'sted-aa.jpeg',unlockAt:4},
     {id:'unstad',       name:'Unstad surfestrand',  place:'EP.3 · BØLGER',          img:'sted-aa.jpeg',unlockAt:7},
     {id:'trollfjord',   name:'Trollfjorden',        place:'EP.5 · MED BÅT',         img:'sted-aa.jpeg',unlockAt:10},
@@ -819,9 +836,20 @@ function renderProg() {
           resetKB(); renderProg(); renderStrip();
         };
       } else if(activeTab==='historier'){
-        card.onclick=()=>sendMessage(`Fortell meg om: ${item.name}`);
+        card.onclick=()=>{
+          if(item.img && item.img !== 'sted-aa.jpeg'){
+            appendImageMessage(item.img, item.name + ' · ' + item.place);
+          }
+          sendMessage('Fortell meg om: ' + item.name);
+        };
       } else if(activeTab==='opplevelser'){
-        card.onclick=()=>sendMessage(`Jeg vil gjerne oppleve: ${item.name}`);
+        card.onclick=()=>{
+          // Show image in chat if card has a real image (not placeholder)
+          if(item.img && item.img !== 'sted-aa.jpeg'){
+            appendImageMessage(item.img, item.name + ' · ' + item.place);
+          }
+          sendMessage('Jeg vil gjerne oppleve: ' + item.name);
+        };
       }
     } else {
       const needed=item.unlockAt-userMsgCount;
@@ -1162,6 +1190,34 @@ function showTyping(){const id='t'+Date.now();const r=document.createElement('di
 function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
 // ════════ SEND ════════
+
+function appendImageMessage(src, caption) {
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  const av = document.createElement('img');
+  av.className = 'msg-avatar';
+  av.src = document.getElementById('backdrop-img').src;
+  av.alt = 'Hilde';
+  row.appendChild(av);
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-img-bubble';
+  bubble.innerHTML = '<img src="' + src + '" alt="' + caption + '" />'
+    + '<div class="msg-img-caption">' + caption + '</div>';
+  // Click to enlarge
+  bubble.onclick = () => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'max-width:90vw;max-height:90vh;border-radius:8px;object-fit:contain';
+    overlay.appendChild(img);
+    overlay.onclick = () => document.body.removeChild(overlay);
+    document.body.appendChild(overlay);
+  };
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
 sendBtn.onclick=()=>sendMessage();
 chatInput.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}};
 
