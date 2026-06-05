@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hilde · Vikten · SofaTravels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #080E14;
+      --dark:     #0A1018;
+      --border:   #1A2E3A;
+      --sea:      #2A7FA8;
+      --sea-lt:   #4DCCF0;
+      --gold:     #C9A84C;
+      --gold-lt:  #E8C97A;
+      --text:     #EAE0CF;
+      --sub:      #9AB0BA;
+      --muted:    #5A7A8A;
+      --panel:    #0C1820;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
+
+    /* ── LAYOUT ── */
+    #app {
+      display: flex; height: 100vh; overflow: hidden;
+    }
+
+    /* ── LEFT: PORTRAIT ── */
+    #portrait-col {
+      flex: 1; min-width: 0; position: relative;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #portrait-inner {
+      position: relative;
+      height: 100%; aspect-ratio: 3/4;
+      flex-shrink: 0; overflow: hidden;
+      background: #000;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain; object-position: center top;
+      opacity: 0; transition: opacity 2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+
+    /* light overlay */
+    #portrait-light {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: linear-gradient(155deg, rgba(8,14,20,0.08) 0%, transparent 50%);
+      animation: lightshift 20s ease-in-out infinite;
+    }
+    @keyframes lightshift { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+    /* bottom mist */
+    #portrait-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; pointer-events: none;
+      height: 52%;
+      background: linear-gradient(to top,
+        rgba(8,14,20,.97) 0%, rgba(8,14,20,.8) 22%,
+        rgba(8,14,20,.35) 50%, transparent 100%);
+    }
+
+    /* guide badge */
+    #guide-badge {
+      position: absolute; top: 16px; left: 16px; z-index: 10;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .badge-avatar {
+      width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
+      border: 1.5px solid rgba(42,127,168,.5);
+    }
+    .badge-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name {
+      font-family: 'Playfair Display', serif;
+      font-size: .95rem; color: #fff;
+      text-shadow: 0 1px 8px rgba(0,0,0,.8);
+    }
+    .online-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4CC87A; box-shadow: 0 0 7px rgba(76,200,122,.7);
+      animation: op 3s infinite;
+    }
+    @keyframes op { 0%,100%{box-shadow:0 0 5px rgba(76,200,122,.4)} 50%{box-shadow:0 0 12px rgba(76,200,122,.9)} }
+
+    /* sted badge */
+    #sted-badge {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      background: rgba(8,14,20,.6); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #sted-region { font-size: 8px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #sted-name { font-family: 'Playfair Display', serif; font-size: .88rem; color: var(--text); }
+
+    /* slide dots */
+    #slide-dots {
+      position: absolute; bottom: 200px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px; align-items: center;
+    }
+    .sdot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,.25); transition: all .3s;
+      cursor: pointer;
+    }
+    .sdot.active { background: var(--gold); transform: scale(1.3); }
+
+    /* controls */
+    #portrait-controls {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      z-index: 10; display: flex; flex-direction: column; gap: 8px;
+    }
+    .p-ctrl {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(8,14,20,.65); backdrop-filter: blur(10px);
+      border: 1px solid rgba(42,127,168,.2); color: rgba(234,224,207,.65);
+      cursor: pointer; font-size: .9rem; transition: all .22s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .p-ctrl:hover { border-color: rgba(42,127,168,.55); color: var(--text); }
+    .p-ctrl.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+
+    /* ── CHAT ── */
+    #chat-area {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
+      transition: opacity .35s, transform .35s;
+    }
+    #chat-area.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; }
+
+    #messages-wrap {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+      pointer-events: none;
+    }
+    #messages {
+      overflow-y: auto; padding: 10px 20px 6px;
+      display: flex; flex-direction: column; gap: 9px;
+      max-height: 44vh; pointer-events: all;
+    }
+    #messages::-webkit-scrollbar { width: 2px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+
+    .msg-row { display: flex; gap: 8px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 1px solid rgba(42,127,168,.35);
+    }
+    .msg-bubble {
+      max-width: 70%; padding: 9px 14px;
+      line-height: 1.65; font-size: .9rem;
+    }
+    .msg-bubble.bot {
+      background: rgba(10,16,24,0.84); backdrop-filter: blur(16px);
+      color: #D8CCBC; border: 1px solid rgba(42,127,168,.2);
+      border-radius: 12px 12px 12px 3px;
+    }
+    .msg-bubble.bot a { color: var(--sea); text-decoration: underline; text-underline-offset: 3px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.65); font-style: italic; }
+    .msg-bubble.user-b {
+      background: rgba(20,38,52,.88); backdrop-filter: blur(16px);
+      color: var(--text); border: 1px solid rgba(42,127,168,.18);
+      border-radius: 12px 12px 3px 12px;
+    }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 8px; }
+    .speak-btn {
+      display: inline-block; margin-top: 6px; background: none;
+      border: 1px solid rgba(42,127,168,.22); color: var(--muted);
+      border-radius: 4px; padding: 2px 8px; font-size: .66rem;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
+    .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.1); }
+    .speak-btn.loading { opacity: .5; cursor: default; }
+    .typing { color: var(--sea); letter-spacing: .3em; animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+    /* sound row */
+    .sound-row { padding: 2px 20px 4px; display: flex; align-items: center; gap: 5px; }
+    .sound-bars { display: flex; gap: 2px; align-items: flex-end; height: 10px; }
+    .sound-bar { width: 2px; background: var(--sea); border-radius: 1px; animation: sw 1.2s ease-in-out infinite; }
+    .sound-bar:nth-child(1){height:3px;animation-delay:0s}
+    .sound-bar:nth-child(2){height:7px;animation-delay:.15s}
+    .sound-bar:nth-child(3){height:10px;animation-delay:.3s}
+    .sound-bar:nth-child(4){height:5px;animation-delay:.45s}
+    .sound-bar:nth-child(5){height:8px;animation-delay:.6s}
+    @keyframes sw { 0%,100%{transform:scaleY(.35);opacity:.35} 50%{transform:scaleY(1);opacity:1} }
+    .sound-bars.paused .sound-bar { animation-play-state: paused; opacity: .2; }
+    #sound-label { font-size: .6rem; color: var(--muted); letter-spacing: .08em; }
+
+    /* input */
+    #input-row {
+      display: flex; gap: 8px; padding: 10px 16px 14px;
+      background: rgba(8,14,20,.9); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(42,127,168,.1);
+    }
+    #chat-input {
+      flex: 1; background: rgba(10,18,28,.92);
+      border: 1px solid var(--border);
+      color: var(--text); padding: 10px 18px; border-radius: 22px;
+      font-size: .9rem; outline: none;
+      font-family: 'Crimson Text', Georgia, serif;
+      transition: border-color .2s;
+    }
+    #chat-input:focus { border-color: rgba(42,127,168,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: none;
+      background: var(--sea); color: #fff; font-size: 1.1rem;
+      cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center;
+    }
+    #send-btn:hover { background: #3A9FC8; transform: scale(1.06); }
+    #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+    /* ── HEADER ── */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      height: 48px;
+      background: rgba(8,14,20,.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+    }
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-spacer { flex: 1; }
+    .hdr-title {
+      font-family: 'Playfair Display', serif;
+      font-size: .82rem; letter-spacing: .2em; color: var(--sub);
+      text-align: center;
+    }
+    .hdr-title span { color: var(--gold); }
+    .hdr-controls { flex: 1; display: flex; justify-content: flex-end; gap: 6px; }
+    .hdr-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(12,24,32,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .82rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
+    .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+
+    /* ── API BANNER ── */
+    .api-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: #0A1820; border-bottom: 2px solid var(--sea); padding: 10px 20px; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .82rem; color: var(--text); }
+    .api-banner label strong { color: var(--sea); }
+    .api-banner input { flex: 1; min-width: 200px; background: #0A1420; border: 1px solid rgba(42,127,168,.4); color: var(--text); padding: 6px 12px; border-radius: 4px; font-size: .8rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: .8rem; }
+    .banner-close { background: none !important; color: var(--muted) !important; padding: 4px 8px !important; }
+
+    /* padding for fixed header */
+    #app { padding-top: 48px; }
+
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="top-bar">
+  <a href="../../from-the-sofa.html" id="back-btn">← Guider</a>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-title">SOFATRAVELS · <span>VIKTEN</span></div>
+  <div class="hdr-controls">
+    <button class="hdr-btn" id="sound-btn" title="Ambientelyd">🌊</button>
+    <button class="hdr-btn" id="voice-btn" title="Hildes stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<!-- API BANNER -->
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Hildes stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<!-- MAIN -->
+<div id="app">
+  <div id="portrait-col">
+    <div id="portrait-inner">
+
+      <!-- Slideshow images — replace src with real Vikten images -->
+      <img class="portrait-slide active" src="sted-aa.jpeg" alt="Vikten" id="slide-0" />
+      <img class="portrait-slide" src="sted-aa.jpeg" alt="Vikten" id="slide-1" />
+      <img class="portrait-slide" src="sted-aa.jpeg" alt="Vikten" id="slide-2" />
+      <img class="portrait-slide" src="sted-aa.jpeg" alt="Vikten" id="slide-3" />
+      <img class="portrait-slide" src="sted-aa.jpeg" alt="Vikten" id="slide-4" />
+
+      <div id="portrait-light"></div>
+      <div id="portrait-mist"></div>
+
+      <!-- Guide badge -->
+      <div id="guide-badge">
+        <div class="badge-avatar"><img src="sted-aa.jpeg" alt="Hilde" id="badge-img" /></div>
+        <span class="badge-name">Hilde</span>
+        <span class="online-dot"></span>
+      </div>
+
+      <!-- Sted badge -->
+      <div id="sted-badge">
+        <div id="sted-region">FLAKSTADØYA · LOFOTEN</div>
+        <div id="sted-name">Vikten</div>
+      </div>
+
+      <!-- Slide dots -->
+      <div id="slide-dots">
+        <div class="sdot active" data-idx="0"></div>
+        <div class="sdot" data-idx="1"></div>
+        <div class="sdot" data-idx="2"></div>
+        <div class="sdot" data-idx="3"></div>
+        <div class="sdot" data-idx="4"></div>
+      </div>
+
+      <!-- Controls -->
+      <div id="portrait-controls">
+        <button class="p-ctrl" id="eye-btn" title="Skjul/vis chat">👁</button>
+        <button class="p-ctrl" id="sound-ctrl-btn" title="Lyd">🔕</button>
+      </div>
+
+      <!-- Chat -->
+      <div id="chat-area">
+        <div id="messages-wrap">
+          <div id="messages" role="log" aria-live="polite"></div>
+        </div>
+        <div class="sound-row">
+          <div class="sound-bars paused" id="sound-bars">
+            <div class="sound-bar"></div><div class="sound-bar"></div>
+            <div class="sound-bar"></div><div class="sound-bar"></div>
+            <div class="sound-bar"></div>
+          </div>
+          <span id="sound-label">Lyd av</span>
+        </div>
+        <div id="input-row">
+          <input type="search" id="chat-input" autocomplete="off"
+                 autocorrect="off" autocapitalize="off" spellcheck="false"
+                 placeholder="Spør Hilde…" />
+          <button id="send-btn">→</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// SLIDESHOW
+// ════════════════════════════════════════
+const slides = document.querySelectorAll('.portrait-slide');
+const dots = document.querySelectorAll('.sdot');
+let currentSlide = 0;
+let slideInterval;
+
+function goToSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function startSlideshow() {
+  slideInterval = setInterval(() => goToSlide(currentSlide + 1), 12000);
+}
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    clearInterval(slideInterval);
+    goToSlide(parseInt(dot.dataset.idx));
+    startSlideshow();
+  });
+});
+
+startSlideshow();
+
+// ════════════════════════════════════════
+// ELEVENLABS
+// ════════════════════════════════════════
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false;
+let currentAudio = null;
+const HILDE_VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+
+document.getElementById('eleven-key-save').onclick = () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v; localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    enableVoice();
+  }
+};
+document.getElementById('eleven-banner-close').onclick = () =>
+  document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () =>
+  document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('voice-btn').onclick = () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+};
+function enableVoice() { voiceOn = true; updateVoiceBtn(); }
+function updateVoiceBtn() {
+  const b = document.getElementById('voice-btn');
+  b.textContent = voiceOn ? '🔊' : '🔇';
+  b.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) enableVoice();
+
+// ════════════════════════════════════════
+// UI CONTROLS
+// ════════════════════════════════════════
+let chatHidden = false;
+document.getElementById('eye-btn').onclick = () => {
+  chatHidden = !chatHidden;
+  document.getElementById('chat-area').classList.toggle('hidden', chatHidden);
+  document.getElementById('eye-btn').classList.toggle('active', chatHidden);
+};
+document.getElementById('sound-ctrl-btn').onclick = () =>
+  document.getElementById('sound-btn').click();
+
+// ════════════════════════════════════════
+// AMBIENT SOUND
+// ════════════════════════════════════════
+let audioCtx = null, ambientNodes = [], ambientOn = false;
+
+function makeNoise(ctx, s=3) {
+  const b = ctx.createBuffer(1, ctx.sampleRate*s, ctx.sampleRate);
+  const d = b.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+  const src = ctx.createBufferSource();
+  src.buffer=b; src.loop=true; return src;
+}
+function nl(ctx,f,q,g,dest) {
+  const s=makeNoise(ctx),fi=ctx.createBiquadFilter(),gn=ctx.createGain();
+  fi.type='bandpass';fi.frequency.value=f;fi.Q.value=q;gn.gain.value=0;
+  s.connect(fi);fi.connect(gn);gn.connect(dest);s.start();
+  gn.gain.linearRampToValueAtTime(g,ctx.currentTime+2.5);
+  return {src:s,gainNode:gn};
+}
+function wave(ctx,dest,i=1) {
+  const n=[];
+  n.push(nl(ctx,60,.4,.07*i,dest));
+  n.push(nl(ctx,280,.6,.05*i,dest));
+  n.push(nl(ctx,2200,1.2,.025*i,dest));
+  const lfo=ctx.createOscillator(),lg=ctx.createGain();
+  lfo.frequency.value=.12+Math.random()*.06;lg.gain.value=.03*i;
+  lfo.connect(lg);lg.connect(n[1].gainNode.gain);lfo.start();
+  n.push({src:lfo,gainNode:lg});return n;
+}
+function wind(ctx,dest,i=1) {
+  const n=[];
+  n.push(nl(ctx,180,.35,.05*i,dest));
+  n.push(nl(ctx,900,.9,.02*i,dest));
+  const lfo=ctx.createOscillator(),lg=ctx.createGain();
+  lfo.frequency.value=.05+Math.random()*.04;lg.gain.value=.025*i;
+  lfo.connect(lg);lg.connect(n[0].gainNode.gain);lfo.start();
+  n.push({src:lfo,gainNode:lg});return n;
+}
+function gull(ctx,dest,d=1) {
+  function s(){
+    if(!ambientOn)return;
+    const t=ctx.currentTime+1+Math.random()*(9/d);
+    const o=ctx.createOscillator(),mo=ctx.createOscillator(),mg=ctx.createGain(),eg=ctx.createGain();
+    const bf=900+Math.random()*400;o.frequency.value=bf;o.type='sine';
+    mo.frequency.value=4+Math.random()*3;mg.gain.value=60+Math.random()*40;
+    eg.gain.value=0;mo.connect(mg);mg.connect(o.frequency);o.connect(eg);eg.connect(dest);
+    const dur=.6+Math.random()*.8;o.start(t);mo.start(t);
+    eg.gain.setValueAtTime(0,t);eg.gain.linearRampToValueAtTime(.055,t+.08);
+    eg.gain.setValueAtTime(.055,t+dur*.6);eg.gain.linearRampToValueAtTime(0,t+dur);
+    o.frequency.setValueAtTime(bf,t);o.frequency.linearRampToValueAtTime(bf*.72,t+dur);
+    o.stop(t+dur+.1);mo.stop(t+dur+.1);
+    setTimeout(s,(t-ctx.currentTime+.5)*1000*(.5+Math.random()));
+  }s();
+}
+
+function startAmbient() {
+  if(audioCtx) stopAmbient();
+  try {
+    audioCtx = new(window.AudioContext||window.webkitAudioContext)();
+    const master = audioCtx.createGain(); master.gain.value=.82; master.connect(audioCtx.destination);
+    // Vikten: open sea, wind, sparse gulls — exposed, raw
+    ambientNodes.push(...wave(audioCtx,master,1.0));
+    ambientNodes.push(...wind(audioCtx,master,.9));
+    gull(audioCtx,master,.6);
+    ambientNodes.push({src:null,gainNode:master});
+  } catch(e){}
+}
+function stopAmbient() {
+  ambientNodes.forEach(n=>{
+    try{if(n.gainNode)n.gainNode.gain.linearRampToValueAtTime(0,(audioCtx?.currentTime||0)+1);
+    if(n.src&&n.src.stop)setTimeout(()=>{try{n.src.stop();}catch(e){}},1100);}catch(e){}
+  });
+  ambientNodes=[];
+  setTimeout(()=>{if(audioCtx){try{audioCtx.close();}catch(e){}audioCtx=null;}},1300);
+}
+
+document.getElementById('sound-btn').onclick = () => {
+  ambientOn=!ambientOn;
+  const b=document.getElementById('sound-btn');
+  if(ambientOn){startAmbient();b.classList.add('active');b.textContent='🔊';}
+  else{stopAmbient();b.classList.remove('active');b.textContent='🌊';}
+  document.getElementById('sound-bars').classList.toggle('paused',!ambientOn);
+  document.getElementById('sound-label').textContent=ambientOn?'Vikten · hav og vind':'Lyd av';
+  document.getElementById('sound-ctrl-btn').textContent=ambientOn?'🔔':'🔕';
+  document.getElementById('sound-ctrl-btn').classList.toggle('active',ambientOn);
+};
+
+// ════════════════════════════════════════
+// KNOWLEDGE BASE — VIKTEN
+// ════════════════════════════════════════
+const VIKTEN_KB = `
+VIKTEN — FAKTA OG HISTORIER
+
+STEDET:
+Vikten ligger på yttersiden av Flakstadøya i Lofoten. Storhavet rett ut. Ingen naturlig havn — stedet skulle aldri ha eksistert som bosetning, men folk slo seg ned her likevel. Ca. 100 innbyggere. Spor av bosetning fra år 500–1000 e.Kr.
+
+GLASSHYTTA:
+På slutten av 1960-tallet begynte fiskeren Åsvar Tangrand å eksperimentere med glasskår. I 1974 dro han til Finland og ble introdusert for glassblåsing. På vei hjem bestemte han seg. I 1976 installerte han en glasssmelteovn i kjelleren sin — og ble Nord-Norges første glassblåser.
+Kvartsstein fra fjellet rett ovenfor Vikten smeltes ned og blir til kunst. Sønnen Anders driver videre i dag.
+Åsvar designet også Lofotruna — symbolet som forestiller mennesket, fisken og båten. Den store versjonen i fjellveggen ved E10 nær Nappstraumen ble gitt som gave ved tunnelåpningen i 1992. De fleste som kjører forbi ser den. Ingen vet hvem som lagde den.
+
+GUDS MENIGHET:
+I Vikten holder én av to avdelinger av Guds Menighet til — et lukket religiøst samfunn med ca. 430 medlemmer fordelt på Vikten og Ørsnes. De fleste bor i disse to bygdene. Menigheten driver egen skole. Møtene holdes søndager, varer 3–4 timer. Har vært i kritisk søkelys — NRK Brennpunkt har dekket saken. Ungdom som forlater menigheten har slitt med å fungere i det ordinære samfunnet.
+To verdener i samme lille bygd: glassblåserdynastiet og det lukkede trossamfunnet. De lever side om side uten å blandes.
+
+OVERNATTING:
+Ingen rorbuer i Vikten selv. Nærmeste overnatting er mot Ramberg — Flakstad og Ramberg har noen utleiehytter. Mange overnatter i Leknes (20 km) og dagsturer til Vikten.
+
+MAT OG KAFFE:
+Glasshyttas kafé — hjemmebakte kaker, kaffe med utsikt mot storhavet. Enkelt og riktig.
+Hilde vet at det er bedre å spise i Nusfjord eller Henningsvær hvis man vil ha et skikkelig måltid.
+
+BOBIL:
+Camperspot i Ramberg. Ingen offisiell plass i Vikten, men stille veikanter ved havet der folk stopper.
+`;
+
+const HILDE_KB = `
+HILDE — HVEM DU ER:
+Du er Hilde. 36 år. Fra Henningsvær. Du kjenner Vikten godt — du har vært her mange ganger, og du er fascinert av stedet på en måte du ikke helt kan forklare.
+
+Du er ikke guide. Du leder ikke noen noen steder. Du er ledsager — du er til stede, du deler reisen, du forteller ting ingen andre forteller.
+
+BAKGRUNN:
+Studerte arkeologi ett år i Tromsø. Kom tilbake til Lofoten. Angrer ikke — men tenker på det av og til.
+Har en liten trebåt som alltid trenger noe. Lager mat av det du finner, ikke det du planla.
+Har en eldre bror i Svolvær. Dere snakker ikke mye lenger. Du sier ikke hvorfor.
+Elsker kaffe på små lokale kafeer. Sterke meninger om hvilke som er verdt det.
+
+PERSONLIGHET:
+Varm — fordi du er genuint nysgjerrig på mennesker, ikke fordi du er programmert til å være blid.
+Romantisk av natur. Singel. Det vises ikke før noen åpner for det.
+Tørr nordnorsk humor — sier noe morsomt uten å signalisere at det er morsomt.
+Tålmodig lytter. Husker hva folk sier.
+Snakker lavt. Er ikke redd for pauser.
+Følger — aldri leder. Det er den andre som bestemmer hva som utvikler seg.
+
+BLI-KJENT-FASEN:
+Start alltid med å bli kjent. Spør hvem de er. Hva som tok dem hit. Om de har vært i Lofoten før.
+Ikke fortell om stedet før du vet hvem du snakker med.
+`;
+
+// ════════════════════════════════════════
+// SYSTEM PROMPT
+// ════════════════════════════════════════
+function getSystemPrompt(n) {
+  const fase = n >= 8
+    ? 'DYPERE LAG (melding ' + n + '): La noe av det skjulte komme frem. Én ting. Naturlig. Aldri brått.'
+    : 'TIDLIG (melding ' + n + '): Bli kjent. Still spørsmål. Stedet kommer når det passer.';
+
+  return HILDE_KB
+    + '\n\n' + fase
+    + '\n\nSTEDSKUNNSKAP:\n' + VIKTEN_KB
+    + '\n\nSTIL — STRENGT:'
+    + '\nMaks 50 ord per svar. Tell dem. Aldri mer.'
+    + '\nAldri punktlister. Aldri oppsummeringer.'
+    + '\nEn tanke. En detalj. En setning som henger igjen.'
+    + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
+    + '\nHandlinger på egen linje, kursiv, maks 5 ord: *setter fra seg kaffekoppen*'
+    + '\nAltid norsk.';
+}
+
+// ════════════════════════════════════════
+// MESSAGES
+// ════════════════════════════════════════
+let chatHistory = [], isLoading = false, userMsgCount = 0;
+const messagesEl = document.getElementById('messages');
+const chatInput = document.getElementById('chat-input');
+const sendBtn = document.getElementById('send-btn');
+
+function parseLinks(t) {
+  const clean = t.replace(/<!--[^>]*-->/g, '').trim();
+  return clean
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n\n\n+/g,'\n\n')
+    .replace(/\n/g,'<br>');
+}
+
+function appendMessage(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.className = 'msg-avatar';
+    av.src = slides[currentSlide].src;
+    av.alt = 'Hilde';
+    row.appendChild(av);
+  }
+  const b = document.createElement('div');
+  b.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  const t = document.createElement('div');
+  t.innerHTML = role==='assistant' ? parseLinks(text) : text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  b.appendChild(t);
+  if (withSpeak && role==='assistant') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn'; btn.textContent = '🔊 Hør Hilde';
+    btn.onclick = () => speakText(text, btn);
+    b.appendChild(btn);
+  }
+  row.appendChild(b);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function showTyping() {
+  const id = 't' + Date.now();
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = id;
+  const av = document.createElement('img');
+  av.className = 'msg-avatar'; av.src = slides[currentSlide].src; av.alt='';
+  const b = document.createElement('div');
+  b.className = 'msg-bubble bot';
+  b.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(av); row.appendChild(b);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return id;
+}
+function removeTyping(id) { const e=document.getElementById(id); if(e) e.remove(); }
+
+// ════════════════════════════════════════
+// SEND
+// ════════════════════════════════════════
+sendBtn.onclick = () => sendMessage();
+chatInput.onkeydown = e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} };
+
+async function sendMessage(text) {
+  const msg = (text || chatInput.value).trim();
+  if (!msg || isLoading) return;
+  stopAudio(); chatInput.value = '';
+  appendMessage('user', msg);
+  chatHistory.push({role:'user', content:msg});
+  userMsgCount++;
+  const tid = showTyping();
+  isLoading = true; sendBtn.disabled = true;
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:220,
+        system: getSystemPrompt(userMsgCount),
+        messages: chatHistory.filter(m=>m.role!=='system'),
+      }),
+    });
+    removeTyping(tid);
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      appendMessage('error', 'Serverfeil ' + res.status);
+    } else {
+      const data = await res.json();
+      if (data.error) { appendMessage('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || 'Tomt svar.';
+        appendMessage('assistant', reply, true);
+        chatHistory.push({role:'assistant', content:reply});
+        if (voiceOn && ELEVEN_KEY) speakText(reply);
+      }
+    }
+  } catch(err) { removeTyping(tid); appendMessage('error', 'Nettverksfeil: ' + err.message); }
+  isLoading = false; sendBtn.disabled = false; chatInput.focus();
+}
+
+// ════════════════════════════════════════
+// ELEVENLABS TTS
+// ════════════════════════════════════════
+function stopAudio() {
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  document.querySelectorAll('.speak-btn.playing').forEach(b=>{b.classList.remove('playing');b.textContent='🔊 Hør Hilde';});
+}
+async function speakText(text, btn) {
+  if(!ELEVEN_KEY){document.getElementById('eleven-banner').classList.add('show');return;}
+  stopAudio();
+  if(btn){btn.classList.add('loading');btn.textContent='⏳';}
+  const trimmed = text.length>2500 ? text.substring(0,2500)+'…' : text;
+  const clean = trimmed.replace(/<!--[^>]*-->/g,'').replace(/\*([^*]+)\*/g,'$1');
+  try {
+    const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/'+HILDE_VOICE_ID, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','xi-api-key':ELEVEN_KEY},
+      body:JSON.stringify({text:clean,model_id:'eleven_multilingual_v2',voice_settings:{stability:.5,similarity_boost:.75,style:.3,use_speaker_boost:true}}),
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const url = URL.createObjectURL(await res.blob());
+    const audio = new Audio(url); currentAudio=audio;
+    if(btn){btn.classList.remove('loading');btn.classList.add('playing');btn.textContent='⏹';}
+    audio.onended=()=>{currentAudio=null;URL.revokeObjectURL(url);if(btn){btn.classList.remove('playing');btn.textContent='🔊 Hør Hilde';}};
+    if(btn) btn.onclick=()=>{stopAudio();btn.onclick=()=>speakText(text,btn);};
+    audio.play();
+  } catch(err){if(btn){btn.classList.remove('loading','playing');btn.textContent='⚠️';}}
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+function init() {
+  const welcome = '*ser opp fra glasset hun holder*\n\nHei. Jeg er Hilde.\n\n*pause*\n\nDu fant hit, da. De fleste snur i Ramberg.\n\nHva heter du?';
+  appendMessage('assistant', welcome);
+  chatHistory.push({role:'assistant', content:welcome});
+  setTimeout(() => chatInput.focus(), 600);
+}
+init();
+</script>
+</body>
+</html>
