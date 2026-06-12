@@ -1345,7 +1345,7 @@ routes.forEach(g => {
         <div class="route-card-btn" style="border-color:${g.accent}66;color:${g.accent}">Start reisen →</div>
       </div>
     </div>`;
-  el.addEventListener('click', () => openRoute());
+  el.addEventListener('click', () => { if (g.url) { window.location.href = g.url; return; } openRoute(); });
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openRoute(); });
   routesGrid.appendChild(el);
 });
