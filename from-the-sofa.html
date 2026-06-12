@@ -420,7 +420,24 @@
   </section>
   <section class="routes-section" aria-label="Grand Loop Norway – ruter">
     <p class="routes-label" aria-hidden="true">GRAND LOOP NORWAY · RUTER</p>
-    <div id="routes-grid"></div>
+    <div id="routes-grid">
+      <a href="/grand-loop.html" class="guide-card route-card" style="text-decoration:none;display:block;">
+        <div class="route-card-inner">
+          <div class="route-card-landscape">
+            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80" alt="Grand Loop Norway" loading="lazy" />
+            <div class="route-card-landscape-fade" aria-hidden="true"></div>
+            <span class="route-badge">RUTE</span>
+            <img class="route-guide-thumb" src="Lars.png" alt="Lars" />
+          </div>
+          <div class="route-card-body">
+            <p class="route-card-label">GRAND LOOP NORWAY</p>
+            <h2 class="route-card-title">Bergen → Bergen</h2>
+            <p class="route-card-tagline">Norges fremste rundtur — 869 km, 17 etapper langs fjord, fjell og kyst</p>
+            <div class="route-card-btn" style="border-color:#3A9A5566;color:#3A9A55">Velg rute →</div>
+          </div>
+        </div>
+      </a>
+    </div>
   </section>
 </div>
 
@@ -585,17 +602,7 @@ const guides = [
   { id:'trondheim',    name:'Olav',    city:'Trondheim',    tagline:'Nidarosdomen og vikingenes arv',           img:'Olav - Trondheim.png', accent:'#4A2D1A', voiceId:'TxGEqnHWrfWFTfGW9XjX' },
 ];
 
-const routes = [
-  {
-    id: 'grand-loop', type: 'route', name: 'Lars', city: 'Bergen → Bergen', url: '/grand-loop/bergen-bergen.html',
-    routeLabel: 'GRAND LOOP NORWAY',
-    stages: ['Bergen','Voss','Nærøyfjord','Lærdal','Stryn','Geiranger','Åndalsnes','Atlanterhavsveien','Kristiansund','Molde','Bergen'],
-    tagline: 'Norges fremste rundtur — 869 km, 17 etapper langs fjord, fjell og kyst',
-    img: 'Lars.png',
-    landscapeImg: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
-    accent: '#3A9A55', voiceId: 'VR6AewLTigWG4xSOukaG',
-  },
-];
+
 
 // ════════════════════════════════════════════════════════════════════════
 // GRAND LOOP STAGE DATA
@@ -1315,40 +1322,7 @@ guides.forEach(g => {
 });
 
 // ════════════════════════════════════════════════════════════════════════
-// BUILD ROUTE CARDS
-// ════════════════════════════════════════════════════════════════════════
-const routesGrid = document.getElementById('routes-grid');
-routes.forEach(g => {
-  const stagesHtml = g.stages.map((s, i) =>
-    i < g.stages.length - 1
-      ? `<span class="route-stage-name">${s}</span><span class="route-stage-line"></span><span class="route-stage-dot"></span><span class="route-stage-line"></span>`
-      : `<span class="route-stage-name">${s}</span>`
-  ).join('');
-  const el = document.createElement('article');
-  el.className = 'guide-card route-card';
-  el.setAttribute('role', 'listitem');
-  el.setAttribute('tabindex', '0');
-  el.setAttribute('aria-label', `${g.name} – ${g.city}`);
-  el.innerHTML = `
-    <div class="route-card-inner">
-      <div class="route-card-landscape">
-        <img src="${g.landscapeImg}" alt="Grand Loop Norway" loading="lazy" />
-        <div class="route-card-landscape-fade" aria-hidden="true"></div>
-        <span class="route-badge">RUTE</span>
-        <img class="route-guide-thumb" src="${g.img}" alt="${g.name}" />
-      </div>
-      <div class="route-card-body">
-        <p class="route-card-label">${g.routeLabel}</p>
-        <h2 class="route-card-title">${g.city}</h2>
-        <p class="route-card-tagline">${g.tagline}</p>
-        <div class="route-stages">${stagesHtml}</div>
-        <div class="route-card-btn" style="border-color:${g.accent}66;color:${g.accent}">Start reisen →</div>
-      </div>
-    </div>`;
-  el.addEventListener('click', () => { if (g.url) { window.location.href = g.url; return; } openRoute(); });
-  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openRoute(); });
-  routesGrid.appendChild(el);
-});
+
 
 // ════════════════════════════════════════════════════════════════════════
 // NAVIGATION — GUIDE CHAT
