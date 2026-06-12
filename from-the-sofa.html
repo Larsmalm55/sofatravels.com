@@ -1800,6 +1800,14 @@ async function speakText(text, voiceId, row, btn) {
     console.error('ElevenLabs feil:', err.message);
   }
 }
+
+// Auto-start route if URL param present
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('route') === 'grand-loop') {
+    openRoute();
+  }
+})();
 </script>
 </body>
 </html>
