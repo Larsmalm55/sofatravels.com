@@ -1855,7 +1855,7 @@ async function speakText(text, voiceId, row, btn) {
   }
   const guideId = params.get('guide');
   if (guideId) {
-    const found = GUIDES.find(g => g.id === guideId);
+    const found = guides.find(g => g.id === guideId);
     if (found) startChat(found);
   }
 })();
