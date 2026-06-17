@@ -315,7 +315,7 @@ body {
   <button class="back-btn" onclick="window.location.href='/from-the-sofa.html'">← Guider</button>
   <div>
     <div class="route-top-title">Vesterålen med Olai</div>
-    <div class="route-top-sub">EVENES · 4 ETAPPER</div>
+    <div class="route-top-sub">EVENES · 5 ETAPPER</div>
   </div>
   <div class="route-top-right">
     <button class="voice-toggle-btn" id="route-voice-btn" title="Slå stemme av/på">🔇 Stemme av</button>
@@ -453,6 +453,31 @@ if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
 // STAGE DATA
 // ════════════════════════════════════════════════════════════════════════
 const STAGES = [
+  {
+    id: 'evenes',
+    title: 'Evenes — ankomst',
+    sub: 'Harstad/Narvik lufthavn · Port til Vesterålen · Ofotfjorden',
+    images: [
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Harstad/Narvik lufthavn', 'Ofotfjorden', 'Port til Vesterålen', 'Buss nordover'],
+    overnatting: 'Evenes Airport Hotel',
+    opener: 'Evenes.
+
+De fleste flyr hit og er videre før de har sett seg om. Det er en feil.
+
+Ofotfjorden utenfor rullebanen er ikke bakgrunn — den er begynnelsen. Herfra tar bussen oss nordover inn i Vesterålen. Det er ikke en lang vei. Men det er en vei som åpner seg gradvis.
+
+Er du klar til å reise?',
+    kb: `EVENES — ANKOMST:
+Harstad/Narvik lufthavn Evenes: innfallsporten til Vesterålen og Lofoten fra sør.
+Ofotfjorden: en av Norges dypeste fjorder. Historisk viktig under 2. verdenskrig — Narvik-slagene 1940.
+Bussen nordover følger Ofotfjorden før den svinger inn mot Vesterålen.
+Første inntrykk: åpent landskap, vann og fjell. Ikke spektakulært på den åpenbare måten — men det setter seg.`,
+  },
   {
     id: 'sortland',
     title: 'Evenes → Sortland',
@@ -726,7 +751,7 @@ async function sendRouteMessage(text) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 500,
         system: getOlaiPrompt(STAGES[currentStageIdx]),
         messages: routeHistory.slice(-12).filter(m => m.role !== 'system'),
