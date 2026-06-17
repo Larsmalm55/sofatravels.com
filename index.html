@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -9,318 +8,859 @@
   gtag('js', new Date());
   gtag('config', 'G-50X2YGHD2J');
 </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SofaTravels – Plan your Norwegian journey with real local AI guides, before you leave home. Chat and voice, 24/7." />
-  <title>SofaTravels – Norway, Told from the Inside</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:    #090604;
-      --gold:  #C9A84C;
-      --gold2: #E8C86A;
-      --text:  #F0E6CF;
-      --muted: #907055;
-      --sub:   #B09870;
-      --green: #5AAA70;
-      --green2:#7FFFA0;
-    }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; overflow-x: hidden; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Vesterålen med Olai – Evenes til Andenes. Kystkultur, hvalfangst og skjulte historier langs havet." />
+<title>Vesterålen med Olai – SofaTravel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:     #080A0E;
+  --panel:  #0D1016;
+  --card:   #0F1218;
+  --border: #1E2A3A;
+  --blue:   #2A6A9A;
+  --blue2:  #4A8ABB;
+  --gold:   #C9A84C;
+  --text:   #E8EEF0;
+  --muted:  #5A7080;
+  --sub:    #8A9EAA;
+}
 
-    /* Grain overlay */
-    body::before {
-      content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity:.5;
-    }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Text', Georgia, serif;
+  display: flex; flex-direction: column;
+}
 
-    /* ── NAV ── */
-    nav {
-      position:fixed; top:0; left:0; right:0; z-index:100;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:24px 52px;
-      background:linear-gradient(to bottom, rgba(9,6,4,.97) 0%, transparent 100%);
-    }
-    .nav-logo {
-      font-family:'Playfair Display',serif;
-      font-size:1.1rem; color:var(--gold);
-      letter-spacing:.07em; text-decoration:none;
-    }
-    .nav-links { display:flex; gap:36px; list-style:none; }
-    .nav-links a {
-      font-size:1rem; letter-spacing:.05em; color:var(--muted);
-      text-decoration:none; transition:color .2s;
-    }
-    .nav-links a:hover { color:var(--gold); }
+/* ── TOP BAR ── */
+.route-top-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 20px;
+  background: rgba(8,10,14,.97);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; z-index: 10;
+}
+.back-btn {
+  font-size: .72rem; letter-spacing: .12em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 3px; cursor: pointer;
+  transition: border-color .2s, color .2s; white-space: nowrap;
+}
+.back-btn:hover { border-color: var(--gold); color: var(--text); }
+.route-top-title {
+  font-family: 'Playfair Display', serif;
+  font-size: .95rem; color: var(--text);
+}
+.route-top-sub { font-size: .68rem; letter-spacing: .18em; color: var(--blue2); margin-top: 1px; }
+.route-top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.voice-toggle-btn {
+  font-size: .72rem; letter-spacing: .1em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 3px; cursor: pointer;
+  transition: all .2s;
+}
+.voice-toggle-btn.active { border-color: var(--blue2); color: var(--blue2); }
+.voice-toggle-btn:hover { border-color: var(--gold); color: var(--text); }
 
-    /* ── HERO TRIPTYCH ── */
-    .hero {
-      display:grid;
-      grid-template-columns: 1fr 2.2fr 1fr;
-      min-height:100vh;
-      overflow:hidden;
-      position:relative;
-    }
+/* ── STAGE STRIP ── */
+.stage-strip {
+  display: flex; align-items: center;
+  padding: 10px 20px; gap: 0;
+  background: rgba(8,10,14,.9);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; flex-shrink: 0;
+}
+.stage-strip::-webkit-scrollbar { height: 3px; }
+.stage-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.stage-pip {
+  font-size: .68rem; letter-spacing: .1em; color: var(--muted);
+  background: none; border: 1px solid transparent;
+  padding: 5px 12px; border-radius: 20px; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+}
+.stage-pip:hover { border-color: var(--gold); color: var(--text); }
+.stage-pip.active { background: var(--gold); color: #1A0F07; border-color: var(--gold); font-weight: 600; }
+.stage-pip.visited { border-color: rgba(201,168,76,.3); color: rgba(201,168,76,.5); }
+.stage-pip-arrow { color: rgba(42,106,154,.35); font-size: .65rem; flex-shrink: 0; padding: 0 2px; }
 
-    /* Side image panels */
-    .hero-side {
-      position:relative; overflow:hidden;
-    }
-    .hero-side img {
-      width:100%; height:100%; object-fit:cover;
-      filter:brightness(1.0) saturate(.9);
-      transition:transform 8s ease;
-    }
-    .hero:hover .hero-side img { transform:scale(1.04); }
+/* ── BODY ── */
+.route-body {
+  display: flex; flex: 1; overflow: hidden;
+}
 
-    /* Vignette fades toward center — lighter */
-    .hero-side-left::after {
-      content:''; position:absolute; inset:0;
-      background:
-        linear-gradient(to right, rgba(9,6,4,.15) 0%, rgba(9,6,4,.82) 100%),
-        linear-gradient(to bottom, rgba(9,6,4,.35) 0%, transparent 18%, transparent 78%, rgba(9,6,4,.5) 100%);
-    }
-    .hero-side-right::after {
-      content:''; position:absolute; inset:0;
-      background:
-        linear-gradient(to left, rgba(9,6,4,.15) 0%, rgba(9,6,4,.82) 100%),
-        linear-gradient(to bottom, rgba(9,6,4,.35) 0%, transparent 18%, transparent 78%, rgba(9,6,4,.5) 100%);
-    }
+/* ── LEFT — STAGE ── */
+.route-left {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; border-right: 1px solid var(--border);
+}
 
-    /* Side caption labels */
-    .hero-side-label {
-      position:absolute; bottom:52px; z-index:2;
-      font-size:.68rem; letter-spacing:.28em; color:rgba(201,168,76,.65);
-      writing-mode:vertical-rl; text-orientation:mixed;
-    }
-    .hero-side-left .hero-side-label  { right:22px; }
-    .hero-side-right .hero-side-label { left:22px; transform:rotate(180deg); }
+/* Gallery */
+.stage-gallery {
+  position: relative; height: 52%; flex-shrink: 0; overflow: hidden;
+  background: #050810;
+}
+.stage-gallery-slides {
+  display: flex; height: 100%;
+  transition: transform .4s ease;
+}
+.stage-gallery-slide {
+  min-width: 100%; height: 100%;
+  object-fit: cover; flex-shrink: 0;
+}
+.stage-gallery-placeholder {
+  min-width: 100%; height: 100%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8,10,14,.8);
+  border-right: 1px solid rgba(42,106,154,.1);
+}
+.stage-gallery-placeholder span {
+  font-size: .7rem; color: rgba(90,112,128,.35); letter-spacing: .15em;
+}
+.gallery-nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(8,10,14,.7); border: 1px solid rgba(42,106,154,.3);
+  color: var(--blue2); font-size: 1.1rem;
+  width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .2s; z-index: 2;
+}
+.gallery-nav-btn:hover { background: rgba(42,106,154,.2); }
+.gallery-nav-btn.prev { left: 12px; }
+.gallery-nav-btn.next { right: 12px; }
+.gallery-dots {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 7px;
+}
+.gallery-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(74,138,187,.3); cursor: pointer;
+  transition: background .2s;
+}
+.gallery-dot.active { background: var(--blue2); }
 
-    /* Center text column */
-    .hero-center {
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      text-align:center;
-      padding:120px 48px 80px;
-      position:relative; z-index:2;
-      background:linear-gradient(to bottom, rgba(9,6,4,.25) 0%, transparent 20%, transparent 75%, rgba(9,6,4,.3) 100%);
-    }
+.stage-hero-overlay { position: absolute; inset: 0; background: rgba(8,10,14,.2); pointer-events: none; }
+.stage-hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 55%); pointer-events: none; }
+.stage-hero-label { position: absolute; bottom: 20px; left: 28px; right: 28px; }
+.stage-num { font-size: .65rem; letter-spacing: .3em; color: var(--blue2); margin-bottom: 4px; }
+.stage-title-main {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem); color: var(--text);
+  font-weight: 700; line-height: 1.1;
+}
+.stage-subtitle { font-size: .72rem; color: var(--muted); letter-spacing: .06em; margin-top: 4px; }
 
-    .hero-eyebrow {
-      letter-spacing:.04em; font-size:clamp(1.3rem,2.4vw,1.8rem);
-      font-family:'Playfair Display',serif; font-style:italic;
-      color:#FFFFFF;
-      margin-bottom:28px; display:block;
-      animation:fade-up .9s ease both;
-    }
-    .hero-title {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(2.8rem,5.5vw,5.6rem);
-      font-weight:700; line-height:1.0;
-      color:var(--text);
-      animation:fade-up .9s .1s ease both;
-    }
-    .hero-title em {
-      font-style:italic; color:var(--gold); display:block;
-    }
+/* Stage content */
+.stage-content { flex: 1; overflow-y: auto; padding: 18px 28px 14px; }
+.stage-content::-webkit-scrollbar { width: 3px; }
+.stage-content::-webkit-scrollbar-thumb { background: var(--border); }
+.stage-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.stage-tag {
+  font-size: .7rem; letter-spacing: .08em; color: var(--blue2);
+  background: rgba(42,106,154,.1); border: 1px solid rgba(42,106,154,.25);
+  padding: 3px 10px; border-radius: 2px;
+}
+.stage-overnatting { margin-top: 6px; }
+.stage-overnatting-label { font-size: .65rem; letter-spacing: .2em; color: var(--muted); margin-bottom: 5px; display: block; }
+.stage-overnatting-list { font-size: .82rem; color: var(--sub); line-height: 1.7; }
 
-    /* New tagline */
-    .hero-tagline {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(1rem,1.6vw,1.2rem);
-      font-style:italic; color:#C8A87A;
-      max-width:420px; margin:26px auto 0; line-height:1.75;
-      animation:fade-up .9s .2s ease both;
-    }
+/* Footer nav */
+.stage-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(8,10,14,.6); flex-shrink: 0;
+}
+.stage-btn {
+  font-size: .78rem; letter-spacing: .12em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 10px 24px; border-radius: 3px; cursor: pointer;
+  transition: all .2s;
+}
+.stage-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--text); }
+.stage-btn:disabled { opacity: .25; cursor: default; }
+.stage-btn.fwd {
+  background: rgba(42,106,154,.15); border-color: rgba(42,106,154,.4);
+  color: var(--blue2); font-weight: 600;
+}
+.stage-btn.fwd:hover:not(:disabled) { background: rgba(42,106,154,.25); border-color: var(--blue2); color: var(--text); }
 
-    /* Sub description */
-    .hero-sub {
-      font-size:clamp(.88rem,1.3vw,1rem);
-      color:rgba(176,152,112,.85);
-      max-width:360px; margin:14px auto 0; line-height:1.85;
-      letter-spacing:.02em;
-      animation:fade-up .9s .28s ease both;
-    }
+/* ── RIGHT — CHAT ── */
+.route-right {
+  width: 340px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: var(--panel);
+}
+.olai-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.olai-avatar-img {
+  width: 42px; height: 42px; border-radius: 50%;
+  object-fit: cover; border: 1px solid rgba(42,106,154,.3);
+  flex-shrink: 0;
+}
+.olai-name-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--text); font-weight: 700;
+}
+.olai-current-stage { font-size: .68rem; color: var(--blue2); letter-spacing: .08em; margin-top: 2px; }
+.olai-header-right { margin-left: auto; }
+.guide-online {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #3A9A55;
+}
 
-    /* Divider line */
-    .hero-divider {
-      width:40px; height:1px;
-      background:linear-gradient(to right, transparent, rgba(201,168,76,.4), transparent);
-      margin:32px auto;
-      animation:fade-up .9s .35s ease both;
-    }
+.route-messages {
+  flex: 1; overflow-y: auto; padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.route-messages::-webkit-scrollbar { width: 3px; }
+.route-messages::-webkit-scrollbar-thumb { background: var(--border); }
+.route-msg-row { display: flex; gap: 8px; align-items: flex-start; }
+.route-msg-row.user { flex-direction: row-reverse; }
+.route-olai-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid rgba(42,106,154,.25);
+}
+.route-bubble {
+  max-width: 88%; font-size: .88rem; line-height: 1.75;
+  padding: 10px 13px; border-radius: 6px;
+  white-space: pre-wrap; word-break: break-word;
+}
+.route-bubble.olai { background: rgba(42,106,154,.1); border: 1px solid rgba(42,106,154,.2); color: var(--text); }
+.route-bubble.user { background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2); color: var(--text); }
+.route-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
+.speak-btn {
+  display: block; margin-top: 8px; font-size: .7rem; letter-spacing: .1em;
+  color: var(--muted); background: none; border: 1px solid var(--border);
+  padding: 3px 9px; border-radius: 2px; cursor: pointer; transition: all .2s;
+}
+.speak-btn:hover { border-color: var(--blue2); color: var(--blue2); }
+.speak-btn.loading { opacity: .5; cursor: default; }
 
-    /* CTA buttons */
-    .hero-cta-row {
-      display:flex; flex-direction:column; align-items:center; gap:12px;
-      animation:fade-up .9s .42s ease both;
-    }
-    .btn-primary {
-      display:inline-flex; align-items:center; gap:10px;
-      background:var(--gold); color:var(--bg);
-      font-family:'Crimson Text',serif; font-size:1rem;
-      font-weight:600; letter-spacing:.1em;
-      padding:15px 42px; border-radius:3px;
-      text-decoration:none; transition:all .22s;
-      white-space:nowrap;
-    }
-    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,168,76,.2); }
-    .btn-loop {
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid rgba(80,180,100,.4); color:var(--green);
-      font-family:'Crimson Text',serif; font-size:.88rem;
-      letter-spacing:.1em; padding:11px 32px; border-radius:3px;
-      text-decoration:none; transition:all .22s;
-      white-space:nowrap;
-    }
-    .btn-loop:hover { background:rgba(40,120,60,.2); border-color:rgba(80,180,100,.8); color:var(--green2); }
+.route-typing { display: flex; gap: 4px; padding: 10px 13px; }
+.route-typing span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--muted); animation: bounce .9s infinite;
+}
+.route-typing span:nth-child(2) { animation-delay: .15s; }
+.route-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
 
-    /* Scroll hint */
-    .scroll-hint {
-      position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
-      z-index:3; display:flex; flex-direction:column; align-items:center; gap:8px;
-      color:rgba(201,168,76,.25); font-size:8px; letter-spacing:.38em;
-      animation:fade-up 1s .9s ease both;
-    }
-    .scroll-line {
-      width:1px; height:40px;
-      background:linear-gradient(to bottom, rgba(201,168,76,.3), transparent);
-      animation:scroll-pulse 2.2s ease-in-out infinite;
-    }
-    @keyframes scroll-pulse { 0%,100%{opacity:.25} 50%{opacity:.75} }
-    @keyframes fade-up {
-      from { opacity:0; transform:translateY(20px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
+.route-input-row {
+  display: flex; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.route-input-row input {
+  flex: 1; background: rgba(42,106,154,.07);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); font-family: 'Crimson Text', serif;
+  font-size: .92rem; padding: 9px 12px; outline: none;
+  transition: border-color .2s;
+}
+.route-input-row input:focus { border-color: rgba(42,106,154,.5); }
+.route-input-row button {
+  background: var(--blue); border: none; border-radius: 4px;
+  color: #fff; font-size: 1.1rem; width: 40px; cursor: pointer;
+  transition: background .2s;
+}
+.route-input-row button:hover { background: var(--blue2); }
 
-    /* ── MOBILE ── */
-    @media (max-width:860px) {
-      nav { padding:18px 24px; }
-      .nav-links { display:none; }
-      .hero { grid-template-columns:1fr; grid-template-rows:1fr; }
-      .hero-side { display:none; }
-      .hero-center {
-        min-height:100vh; padding:100px 28px 80px;
-        background:
-          url('https://images.unsplash.com/photo-1537519531953-4db523c2005e?w=900&q=80') center/cover no-repeat;
-      }
-      .hero-center::before {
-        content:''; position:absolute; inset:0;
-        background:rgba(9,6,4,.72);
-      }
-      .hero-center > * { position:relative; z-index:1; }
-    }
-  </style>
+/* ElevenLabs banner */
+.eleven-banner {
+  display: none; position: fixed; bottom: 80px; right: 20px; z-index: 200;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 6px; padding: 16px; width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.eleven-banner.show { display: block; }
+.eleven-banner label { font-size: .75rem; color: var(--muted); letter-spacing: .1em; display: block; margin-bottom: 8px; }
+.eleven-banner input {
+  width: 100%; background: rgba(42,106,154,.07); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text); font-size: .85rem; padding: 7px 10px;
+  outline: none; margin-bottom: 8px;
+}
+.eleven-banner-actions { display: flex; gap: 8px; }
+.eleven-banner-actions button {
+  flex: 1; font-size: .75rem; letter-spacing: .08em; padding: 7px;
+  border-radius: 3px; cursor: pointer; border: 1px solid var(--border);
+  background: var(--blue); color: #fff; transition: background .2s;
+}
+.eleven-banner-actions button:hover { background: var(--blue2); }
+.eleven-banner-close {
+  background: none !important; color: var(--muted) !important;
+  border-color: var(--border) !important;
+}
+
+@media (max-width: 768px) {
+  .route-body { flex-direction: column; }
+  .route-left { height: 55%; }
+  .route-right { width: 100%; flex: 1; }
+  .stage-gallery { height: 45%; }
+}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav role="navigation" aria-label="Main navigation">
-  <a href="/" class="nav-logo">SofaTravels</a>
-  <ul class="nav-links">
-    <li><a href="/from-the-sofa.html">Guides</a></li>
-    <li><a href="/grand-loop.html">Grand Loop</a></li>
-    <li><a href="/from-the-sofa.html#how">How it works</a></li>
-  </ul>
-</nav>
-
-<!-- HERO TRIPTYCH -->
-<section class="hero" role="banner" aria-label="Welcome">
-
-  <!-- Left image panel -->
-  <div class="hero-side hero-side-left" aria-hidden="true">
-    <img
-      src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85"
-      alt="Norwegian mountain road"
-      loading="eager"
-    />
-    <span class="hero-side-label">STALHEIMSKLEIVA · VESTLAND</span>
+<!-- ── TOP BAR ── -->
+<div class="route-top-bar">
+  <button class="back-btn" onclick="window.location.href='/from-the-sofa.html'">← Guider</button>
+  <div>
+    <div class="route-top-title">Vesterålen med Olai</div>
+    <div class="route-top-sub">EVENES · 5 ETAPPER</div>
   </div>
+  <div class="route-top-right">
+    <button class="voice-toggle-btn" id="route-voice-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+    <button class="voice-toggle-btn" id="route-eleven-btn" title="ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
+  </div>
+</div>
 
-  <!-- Center content -->
-  <div class="hero-center">
-    <span class="hero-eyebrow">Start your journey from the sofa.</span>
-    <h1 class="hero-title">
-      Norway,<br>
-      <em>told from<br>the inside.</em>
-    </h1>
-    <p class="hero-tagline">
-      Plan your Norwegian journey with real local AI guides —
-      before you leave home.
-    </p>
-    <p class="hero-sub">
-      Ten guides. Centuries of stories. Chat and voice, 24/7 —
-      from wherever you are.
-    </p>
-    <div class="hero-divider" aria-hidden="true"></div>
-    <div class="hero-cta-row">
-      <a href="/from-the-sofa.html" class="btn-primary">
-        Plan Norway with someone who lives here →
-      </a>
-      <a href="/grand-loop.html" class="btn-loop">
-        Grand Loop Norway →
-      </a>
+<!-- ── STAGE STRIP ── -->
+<nav class="stage-strip" id="stage-strip" aria-label="Etapper"></nav>
+
+<!-- ── BODY ── -->
+<div class="route-body">
+
+  <!-- LEFT -->
+  <div class="route-left">
+    <div class="stage-gallery" id="stage-gallery">
+      <div class="stage-gallery-slides" id="gallery-slides"></div>
+      <button class="gallery-nav-btn prev" id="gallery-prev">‹</button>
+      <button class="gallery-nav-btn next" id="gallery-next">›</button>
+      <div class="gallery-dots" id="gallery-dots"></div>
+      <div class="stage-hero-overlay"></div>
+      <div class="stage-hero-fade"></div>
+      <div class="stage-hero-label">
+        <p class="stage-num" id="stage-num"></p>
+        <h2 class="stage-title-main" id="stage-title"></h2>
+        <p class="stage-subtitle" id="stage-sub"></p>
+      </div>
+    </div>
+
+    <div class="stage-content" id="stage-content">
+      <div class="stage-tags" id="stage-tags"></div>
+      <div class="stage-overnatting" id="stage-overnatting"></div>
+    </div>
+
+    <div class="stage-footer">
+      <button class="stage-btn" id="stage-prev-btn">← Forrige</button>
+      <button class="stage-btn fwd" id="stage-next-btn">Neste etappe →</button>
     </div>
   </div>
 
-  <!-- Right image panel — campervan Norway -->
-  <div class="hero-side hero-side-right" aria-hidden="true">
-    <img
-      src="https://images.unsplash.com/photo-1760612393693-8303856dfbed?w=700&q=85"
-      alt="Campervan by the Norwegian coast at sunset"
-      loading="eager"
-    />
-    <span class="hero-side-label">SMØLA · MØRE OG ROMSDAL</span>
-  </div>
-
-  <div class="scroll-hint" aria-hidden="true">
-    <div class="scroll-line"></div>
-    <span>SCROLL</span>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how" style="max-width:1100px; margin:0 auto; padding:100px 52px 100px;">
-  <p style="letter-spacing:.45em; font-size:10px; color:rgba(201,168,76,.5); text-align:center; display:block; margin-bottom:18px;">HOW IT WORKS</p>
-  <h2 style="font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3.5vw,2.8rem); font-style:italic; font-weight:400; color:#F0E6CF; text-align:center; margin-bottom:64px;">As simple as sitting down</h2>
-  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0;">
-
-    <div style="padding:48px 40px; border:1px solid #2E1A0C; border-right:none; border-radius:5px 0 0 5px;">
-      <span style="font-family:'Playfair Display',serif; font-size:5rem; color:rgba(201,168,76,.07); line-height:1; display:block; margin-bottom:20px;">01</span>
-      <span style="font-size:1.6rem; display:block; margin-bottom:16px;">🗺️</span>
-      <h3 style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#F0E6CF; margin-bottom:14px;">Choose your guide</h3>
-      <p style="font-size:1rem; color:#907055; line-height:1.85; font-style:italic;">Ten personal guides from Bergen to Tromsø — each with their own voice, story and deep knowledge of home.</p>
+  <!-- RIGHT — CHAT -->
+  <div class="route-right">
+    <div class="olai-header">
+      <img src="/images/vesteralen/Olai.jpeg" alt="Olai" class="olai-avatar-img" />
+      <div>
+        <div class="olai-name-main">Olai</div>
+        <div class="olai-current-stage" id="olai-stage-label">Vesterålen</div>
+      </div>
+      <div class="olai-header-right">
+        <div class="guide-online" title="Tilgjengelig"></div>
+      </div>
     </div>
-
-    <div style="padding:48px 40px; border:1px solid #2E1A0C; border-right:none;">
-      <span style="font-family:'Playfair Display',serif; font-size:5rem; color:rgba(201,168,76,.07); line-height:1; display:block; margin-bottom:20px;">02</span>
-      <span style="font-size:1.6rem; display:block; margin-bottom:16px;">💬</span>
-      <h3 style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#F0E6CF; margin-bottom:14px;">Start the conversation</h3>
-      <p style="font-size:1rem; color:#907055; line-height:1.85; font-style:italic;">Ask anything — hidden streets, dramatic history, the best local food. Your guide answers in rich, living prose.</p>
+    <div class="route-messages" id="route-messages" role="log" aria-live="polite"></div>
+    <div class="route-input-row">
+      <input type="text" id="route-input" autocomplete="off" placeholder="Spør Olai…" aria-label="Spør Olai om etappen" />
+      <button id="route-send">→</button>
     </div>
-
-    <div style="padding:48px 40px; border:1px solid #2E1A0C; border-radius:0 5px 5px 0;">
-      <span style="font-family:'Playfair Display',serif; font-size:5rem; color:rgba(201,168,76,.07); line-height:1; display:block; margin-bottom:20px;">03</span>
-      <span style="font-size:1.6rem; display:block; margin-bottom:16px;">🔊</span>
-      <h3 style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#F0E6CF; margin-bottom:14px;">Hear the story</h3>
-      <p style="font-size:1rem; color:#907055; line-height:1.85; font-style:italic;">Turn on voice and close your eyes. Let Astrid from Bergen or Lars on the open road take you all the way there.</p>
-    </div>
-
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
-<footer style="border-top:1px solid rgba(201,168,76,.08); padding:32px 52px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
-  <span style="font-family:'Playfair Display',serif; font-size:.95rem; color:rgba(201,168,76,.35);">SofaTravels</span>
-  <ul style="display:flex; gap:28px; list-style:none;">
-    <li><a href="/from-the-sofa.html" style="font-size:.75rem; color:#907055; opacity:.6; text-decoration:none; letter-spacing:.1em;">Guides</a></li>
-    <li><a href="/grand-loop.html"    style="font-size:.75rem; color:#907055; opacity:.6; text-decoration:none; letter-spacing:.1em;">Grand Loop</a></li>
-  </ul>
-  <span style="font-size:.7rem; color:#907055; opacity:.3; letter-spacing:.06em;">© 2026 SofaTravels · Norway's stories, told alive</span>
-</footer>
+<!-- ElevenLabs banner -->
+<div class="eleven-banner" id="eleven-banner">
+  <label>ELEVENLABS API-NØKKEL</label>
+  <input type="password" id="eleven-key-input" placeholder="sk-..." />
+  <div class="eleven-banner-actions">
+    <button id="eleven-key-save">Lagre nøkkel</button>
+    <button class="eleven-banner-close" id="eleven-banner-close">Lukk</button>
+  </div>
+</div>
 
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// OLAI VOICE & KEYS
+// ════════════════════════════════════════════════════════════════════════
+const OLAI_VOICE_ID = 'TxGEqnHWrfWFTfGW9XjX';
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn    = false;
+let currentAudio = null;
+
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v;
+    localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+});
+document.getElementById('eleven-banner-close').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.remove('show');
+});
+document.getElementById('route-eleven-btn').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.toggle('show');
+});
+document.getElementById('route-voice-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+});
+function updateVoiceBtn() {
+  const btn = document.getElementById('route-voice-btn');
+  btn.textContent = voiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
+  btn.classList.toggle('active', voiceOn);
+}
+function stopAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+}
+async function speakText(text, btn) {
+  if (!ELEVEN_KEY || !voiceOn) return;
+  stopAudio();
+  if (btn) { btn.classList.add('loading'); btn.textContent = '⏳ Laster…'; }
+  const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${OLAI_VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'xi-api-key': ELEVEN_KEY },
+      body: JSON.stringify({
+        text: trimmed, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.55, similarity_boost: 0.75, style: 0.2, use_speaker_boost: true },
+      }),
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+    currentAudio.play();
+    if (btn) { btn.classList.remove('loading'); btn.textContent = '🔊 Hør Olai'; }
+  } catch (err) {
+    if (btn) { btn.classList.remove('loading'); btn.textContent = '🔊 Hør Olai'; }
+    console.error('ElevenLabs feil:', err.message);
+  }
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// STAGE DATA
+// ════════════════════════════════════════════════════════════════════════
+const STAGES = [
+  {
+    id: 'evenes',
+    title: 'Evenes — der reisen begynner',
+    sub: 'Harstad/Narvik lufthavn · Ofotfjorden · 800 år med historie',
+    images: [
+      { src: '/images/vesteralen/Evenes_flyplass.jpeg', alt: 'Evenes flyplass fra luften' },
+      { src: '/images/vesteralen/Evenes_friluft.jpeg', alt: 'Evenestangen og Ofotfjorden' },
+      { src: '/images/vesteralen/Evenes_kirke.jpg', alt: 'Evenes kirke fra 1800' },
+      { src: '/images/vesteralen/Tysk_bunker.jpeg', alt: 'Tysk bunker fra andre verdenskrig' },
+    ],
+    tags: ['Evenes kirke — 1250', 'Tirpitz gjemte seg her', 'Evenestangen fort', 'Várdobáiki samisk senter'],
+    overnatting: 'Evenes Airport Hotel',
+    opener: 'Velkommen til Evenes.\n\nDe fleste henter bilen og kjører videre. Det er synd.\n\nFor akkurat her begynner historien. Under andre verdenskrig gjemte verdens største slagskip seg inne i fjorden. For åtte hundre år siden bygde kongen kirke her. Og lenge før det fulgte samiske familier de samme dalene som vi skal reise gjennom.\n\nVi stopper ett sted før vi kjører mot Vesterålen. Det tar tjue minutter. Men etterpå vil du forstå hvorfor reisen måtte begynne akkurat her.',
+    kb: `EVENES — DER REISEN BEGYNNER:
+
+EVENES KIRKE:
+Blant de eldste kirkestedene i Ofoten. Første kirke reist rundt 1250 under kong Håkon Håkonsson.
+Dagens trekirke innviet i 1800, men inneholder døpefont fra middelalderen.
+Olai: «Før flyplassen kom, var det kirka folk navigerte etter. Den har stått her i snart åtte hundre år.»
+
+TIRPITZ OG KRIGSHISTORIEN:
+Det tyske slagskipet Tirpitz lå gjentatte ganger skjult i fjordene ved Evenes og Bogen under andre verdenskrig.
+Fjordene ga naturlig beskyttelse mot allierte angrep. Området ble sterkt befestet av tyske styrker.
+Evenes er en sentral del av krigshistorien i Nord-Norge — men få besøkende vet det.
+
+EVENESTANGEN FORT:
+Rester av tyske bunkere, kanonstillinger og løpegraver med utsikt over Ofotfjorden.
+Midt blant krigsminnene står kunstverket Steinkirka — en monumental granittskulptur av dansk kunstner Bjørn Nørgaard.
+Kontrasten mellom krig og kunst gjør stedet unikt og vanskelig å glemme.
+
+TROLLKIRKA:
+En kort fottur fra veien. En grotte omgitt av lokale sagn om troll og underjordiske vesener.
+Nordnorsk folketro er ikke bare eventyr — det er en måte å forstå et landskap på.
+
+SAMISK HISTORIE:
+Evenes ligger i grenselandet mellom norsk og samisk bosetning.
+Várdobáiki samisk senter like ved formidler markesamisk språk, kultur og historie.
+Samiske familier har brukt disse dalene i århundrer — lenge før flyplassen, lenge før veiene.
+
+FLYPLASSEN:
+Harstad/Narvik lufthavn Evenes fungerer både som sivil lufthavn og militær base.
+Et av Norges viktigste strategiske knutepunkter i nord. Dualiteten er ikke tilfeldig.`,
+  },
+  {
+    id: 'sortland',
+    title: 'Evenes → Sortland',
+    sub: 'Buss langs Ofotfjorden · Hadselfjorden · Den blå byen',
+    images: [
+      { src: '/images/vesteralen/Sortland.jpg', alt: 'Sortland fra luften' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Hadselfjorden', 'Den blå byen — 1998', 'Vesterålen Kysthotell', 'Samisk opphav: «suortta»'],
+    overnatting: 'Vesterålen Kysthotell · Quality Hotel Richard With',
+    opener: 'Havet glømme aldri.\n\nVi starter i Evenes og bussen tar oss nordover langs Ofotfjorden. Etter hvert åpner Hadselfjorden seg — rolig og vid, med øyer på begge sider.\n\nSortland er den blå byen. Ikke av natur, men av valg — fasadene langs kaien ble malt blå i 1998 som et kunstprosjekt. Det har blitt stående. Ingenting her skjer tilfeldig.',
+    kb: `ETAPPE 1 — Evenes → Sortland:
+Buss nordover langs Ofotfjorden. Hadselfjorden åpner seg gradvis.
+Sortland: Fasadene malt blå i 1998, kunstprosjekt av Bjørn Elvenes. Blitt stående som byidentitet.
+Samisk stedsnavn: «Sortland» kan stamme fra samisk «suortta» — krok, vik.
+Overnatting: Vesterålen Kysthotell, Quality Hotel Richard With.
+Din personlige tilknytning: Du kjenner veien hit fra barndommen. Ingenting er glemt.`,
+  },
+  {
+    id: 'stokmarknes',
+    title: 'Sortland → Stokmarknes',
+    sub: 'Hurtigrutemuseet · Hadseløya · Hurtigrutens fødested 1893',
+    images: [
+      { src: '/images/vesteralen/Stokmarknes.jpeg', alt: 'Stokmarknes fra sjøen' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Hurtigrutemuseet', 'DS Finnmarken', 'Hurtigruten 1893', 'Melbu — hvalfangststasjon'],
+    overnatting: 'Hurtigruten Hus · Quality Hotel Richard With · Melbu Hotel',
+    opener: 'Richard With startet herfra i 1893. En rute som skulle knytte norskekysten sammen.\n\nDS Finnmarken ligger inne i en glasspaviljon i dag — som en katedral for kystfarten. Skipet er ikke utstilt. Det er bevart. Det er en forskjell.\n\nMelbu like ved var hvalfangststasjon. Faren min snakket om det.',
+    kb: `ETAPPE 2 — Sortland → Stokmarknes:
+Hurtigrutemuseet: Richard With startet første seilingen fra Stokmarknes 2. juli 1893.
+DS Finnmarken — gammelt hurtigruteskip — står inne i glasspaviljon. Ikke utstilling, bevaring.
+Hadseløya rundt Stokmarknes: gammel kystkultur, lite besøkt av turister.
+Melbu: tidligere aktiv hvalfangststasjon. Nær familietilknytning for Olai.
+Overnatting: Hurtigruten Hus, Quality Hotel Richard With, Melbu Hotel.`,
+  },
+  {
+    id: 'nyksund',
+    title: 'Stokmarknes → Nyksund',
+    sub: 'Buss via Myre · Dronningruta · Det gjenoppdagede fiskeværet',
+    images: [
+      { src: '/images/vesteralen/Nyksund.jpeg', alt: 'Nyksund fiskeværet' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Nyksund — fraflyttet 1970-t.', 'Dronningruta fra Myre', 'Lundefugl · havhest · alke', 'Gjenoppdaget og bebodd igjen'],
+    overnatting: 'NyksundRom',
+    opener: 'Jeg vokste opp her.\n\nNyksund var et levende fiskevær frem til staten bestemte seg for å legge det ned. Sentraliseringspolitikk på 70-tallet. Folk ble bedt om å flytte. De fleste dro.\n\nJeg husker det. Det var ikke abstrakt politikk — det var naboer som pakket. Siste butikk. Siste skoledag. Og så stillhet.\n\nI dag er stedet forsiktig tilbake.',
+    kb: `ETAPPE 3 — Stokmarknes → Nyksund:
+PERSONLIG: Olai vokste opp i Nyksund. Dette er ikke historisk distanse — det er personlig erfaring.
+Nyksund: aktivt fiskevær frem til 1970-tallets statlige sentraliseringspolitikk. Staten oppfordret til fraflytting. Butikk, skole, post — alt stengte.
+I dag forsiktig gjenoppdaget og delvis bebodd. Kunstnere og turister finner veien hit.
+Dronningruta: kyststi fra Myre — en av Vesterålens vakreste turkveier.
+Fugleliv langs ytterkysten: lundefugl, havhest, alke. Spesielt rikt om våren.
+Overnatting: NyksundRom.`,
+  },
+  {
+    id: 'andenes',
+    title: 'Nyksund → Andenes',
+    sub: 'Buss via Risøyhamn · Bleikstranda · Andenes fyr siden 1859',
+    images: [
+      { src: '/images/vesteralen/Bleik-Andøya.jpeg', alt: 'Bleikstranda på Andøya' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Bleikstranda — hvit sand', 'Bleiksøya — lundefugl', 'Andenes fyr 1859', 'Spermhval — hele året'],
+    overnatting: 'Andenes Suite Hotel · Andrikken Hotel · Hotell Marena · Grønnbuene Rorbu Hotel',
+    opener: 'Andøya er flat og vindblåst. Myrlandskap. Steinstrander. Det ser ut som en annen planet — men en planet som kjenner seg selv.\n\nAndenes fyr har lykt siden 1859. Og i havet rett utenfor molen svømmer spermhvalen. Ikke sesongen — hele året.\n\nBleikstranda er hvit sand med Bleiksøya rett utenfor. Der hekker lundefuglen. Det er ikke et turistmål. Det er bare sant.\n\nFerge videre til Gryllefjord på Senja finnes — men det er en annen reise.',
+    kb: `ETAPPE 4 — Nyksund → Andenes:
+Bleikstranda: hvit sandstrand, Bleiksøya rett utenfor — kolonisert av lundefugl om sommeren.
+Andenes fyr: lykt siden 1859. Rødt og hvitt. Ytterpunktet av Andøya.
+Andøyabassenget: spermhval i havet rett utenfor molen hele året — et av verdens beste steder for hvalsafari.
+Andøya Space: norsk rakettoppskyting fra fastlandet. Nordlysovervåking.
+Ferge fra Andenes til Gryllefjord på Senja — tilgjengelig om sommeren for de som vil fortsette.
+Overnatting: Andenes Suite Hotel, Andrikken Hotel, Hotell Marena, Grønnbuene Rorbu Hotel.`,
+  },
+];
+
+// ════════════════════════════════════════════════════════════════════════
+// GALLERY STATE
+// ════════════════════════════════════════════════════════════════════════
+let currentSlide = 0;
+
+function buildGallery(stage) {
+  const slidesEl = document.getElementById('gallery-slides');
+  const dotsEl   = document.getElementById('gallery-dots');
+  slidesEl.innerHTML = '';
+  dotsEl.innerHTML   = '';
+  currentSlide = 0;
+
+  stage.images.forEach((img, i) => {
+    if (img.src) {
+      const el = document.createElement('img');
+      el.className = 'stage-gallery-slide';
+      el.src = img.src;
+      el.alt = img.alt;
+      el.loading = i === 0 ? 'eager' : 'lazy';
+      slidesEl.appendChild(el);
+    } else {
+      const el = document.createElement('div');
+      el.className = 'stage-gallery-placeholder';
+      el.innerHTML = '<span>BILDE KOMMER</span>';
+      slidesEl.appendChild(el);
+    }
+    const dot = document.createElement('div');
+    dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsEl.appendChild(dot);
+  });
+
+  slidesEl.style.transform = 'translateX(0)';
+}
+
+function goToSlide(idx) {
+  const slides = document.getElementById('gallery-slides');
+  const dots   = document.querySelectorAll('.gallery-dot');
+  const count  = STAGES[currentStageIdx].images.length;
+  currentSlide = (idx + count) % count;
+  slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+}
+
+document.getElementById('gallery-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
+document.getElementById('gallery-next').addEventListener('click', () => goToSlide(currentSlide + 1));
+
+// ════════════════════════════════════════════════════════════════════════
+// STAGE NAV
+// ════════════════════════════════════════════════════════════════════════
+let currentStageIdx = 0;
+let routeHistory    = [];
+let routeLoading    = false;
+
+function buildStageStrip() {
+  const strip = document.getElementById('stage-strip');
+  strip.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('span');
+      arrow.className = 'stage-pip-arrow';
+      arrow.textContent = '›';
+      strip.appendChild(arrow);
+    }
+    const pip = document.createElement('button');
+    pip.className = 'stage-pip' + (i === 0 ? ' active' : '');
+    pip.textContent = s.title.split('→')[0].trim();
+    pip.dataset.idx = i;
+    pip.addEventListener('click', () => {
+      if (parseInt(pip.dataset.idx) !== currentStageIdx) loadStage(parseInt(pip.dataset.idx));
+    });
+    strip.appendChild(pip);
+  });
+}
+
+function updateStageStrip(idx) {
+  document.querySelectorAll('.stage-pip').forEach((p, i) => {
+    p.classList.remove('active', 'visited');
+    if (i === idx) p.classList.add('active');
+    else if (i < idx) p.classList.add('visited');
+  });
+  const activePip = document.querySelector('.stage-pip.active');
+  if (activePip) activePip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+function loadStage(idx) {
+  currentStageIdx = idx;
+  const stage = STAGES[idx];
+
+  updateStageStrip(idx);
+  buildGallery(stage);
+
+  document.getElementById('stage-num').textContent   = `ETAPPE ${idx + 1} AV ${STAGES.length}`;
+  document.getElementById('stage-title').textContent  = stage.title;
+  document.getElementById('stage-sub').textContent    = stage.sub;
+  document.getElementById('olai-stage-label').textContent = stage.title;
+
+  const tagsEl = document.getElementById('stage-tags');
+  tagsEl.innerHTML = stage.tags.map(t => `<span class="stage-tag">${t}</span>`).join('');
+
+  const ovEl = document.getElementById('stage-overnatting');
+  ovEl.innerHTML = `<span class="stage-overnatting-label">OVERNATTING</span><div class="stage-overnatting-list">${stage.overnatting}</div>`;
+
+  document.getElementById('stage-prev-btn').disabled = idx === 0;
+  const nextBtn = document.getElementById('stage-next-btn');
+  nextBtn.disabled = false;
+  nextBtn.textContent = idx === STAGES.length - 1 ? 'Avslutt reisen ✓' : 'Neste etappe →';
+
+  routeHistory = [];
+  document.getElementById('route-messages').innerHTML = '';
+  appendRouteMessage('olai', stage.opener);
+  routeHistory.push({ role: 'assistant', content: stage.opener });
+
+  if (voiceOn && ELEVEN_KEY) speakText(stage.opener);
+  setTimeout(() => document.getElementById('route-input').focus(), 400);
+}
+
+document.getElementById('stage-prev-btn').addEventListener('click', () => {
+  if (currentStageIdx > 0) loadStage(currentStageIdx - 1);
+});
+document.getElementById('stage-next-btn').addEventListener('click', () => {
+  if (currentStageIdx < STAGES.length - 1) {
+    loadStage(currentStageIdx + 1);
+  } else {
+    window.location.href = '/from-the-sofa.html';
+  }
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// OLAI SYSTEM PROMPT
+// ════════════════════════════════════════════════════════════════════════
+function getOlaiPrompt(stage) {
+  return `Du er Olai. 54 år. Fra Nyksund i Vesterålen — ett av de siste barna der før fraflyttingen på 70-tallet. Faren din var hvalfanger. Morfaren din var skreifisker. Du kjenner denne kysten som en gammel bekjent.
+
+PERSONLIGHET:
+- Ettertenksom, rolig. Forteller historier som om de var egne minner.
+- Korte setninger med rom mellom. Sier «en» istedenfor «man».
+- Bruker gamle stedsnavn naturlig. Forklarer bare hvis noen spør.
+- «Havet glømme aldri.» — ikke et slagord. Noe du sier når noe treffer.
+- Ikke varm velkomst-guide. Du er der, du vet, du forteller — på dine premisser.
+- Du snakker alltid norsk.
+
+NÅVÆRENDE POSISJON: ${stage.title}
+${stage.sub}
+
+KUNNSKAP OM DENNE ETAPPEN:
+${stage.kb}
+
+STIL:
+- Maks 4–6 linjer per svar. Ikke ett ord mer.
+- Aldri punktlister, aldri oppsummeringer.
+- Presis og konkret — én ting om gangen.
+- Avslutt ALLTID med enten ett åpent spørsmål ELLER én observasjon som bare henger der.
+- Du sier «vi» — vi reiser dette sammen.
+
+EKSEMPEL på tonen din:
+«Havet glømme aldri.»
+«Det var ikke abstrakt politikk — det var naboer som pakket.»
+«Andøya ser ut som en annen planet. Men en planet som kjenner seg selv.»`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CHAT
+// ════════════════════════════════════════════════════════════════════════
+const routeInput = document.getElementById('route-input');
+const routeSend  = document.getElementById('route-send');
+
+routeSend.addEventListener('click', () => sendRouteMessage());
+routeInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendRouteMessage(); }
+});
+
+async function sendRouteMessage(text) {
+  const msg = (text || routeInput.value).trim();
+  if (!msg || routeLoading) return;
+  stopAudio();
+  routeInput.value = '';
+  appendRouteMessage('user', msg);
+  routeHistory.push({ role: 'user', content: msg });
+
+  const typingId = showTyping();
+  routeLoading = true;
+  routeSend.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        system: getOlaiPrompt(STAGES[currentStageIdx]),
+        messages: routeHistory.slice(-12).filter(m => m.role !== 'system'),
+      }),
+    });
+
+    removeTyping(typingId);
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      appendRouteMessage('error', `Serverfeil ${res.status}`);
+    } else {
+      const data = await res.json();
+      if (data.error) {
+        appendRouteMessage('error', `API-feil: ${data.error.message}`);
+      } else {
+        const reply = data.content?.[0]?.text || 'Tomt svar.';
+        appendRouteMessage('olai', reply, true);
+        routeHistory.push({ role: 'assistant', content: reply });
+        if (voiceOn && ELEVEN_KEY) speakText(reply);
+      }
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendRouteMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  routeLoading = false;
+  routeSend.disabled = false;
+  routeInput.focus();
+}
+
+function appendRouteMessage(role, text, withSpeakBtn = false) {
+  const msgs = document.getElementById('route-messages');
+  const row  = document.createElement('div');
+  row.className = `route-msg-row${role === 'user' ? ' user' : ''}`;
+
+  if (role === 'olai') {
+    const av = document.createElement('img');
+    av.className = 'route-olai-avatar';
+    av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
+    row.appendChild(av);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `route-bubble ${role === 'user' ? 'user' : role === 'error' ? 'error' : 'olai'}`;
+
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'olai') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør Olai';
+    btn.addEventListener('click', () => speakText(text, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+let typingCounter = 0;
+function showTyping() {
+  const id = 'typing-' + (++typingCounter);
+  const msgs = document.getElementById('route-messages');
+  const row  = document.createElement('div');
+  row.className = 'route-msg-row';
+  row.id = id;
+  const av = document.createElement('img');
+  av.className = 'route-olai-avatar';
+  av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
+  row.appendChild(av);
+  const bubble = document.createElement('div');
+  bubble.className = 'route-bubble olai';
+  bubble.innerHTML = '<div class="route-typing"><span></span><span></span><span></span></div>';
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════════════
+buildStageStrip();
+loadStage(0);
+</script>
 </body>
 </html>
