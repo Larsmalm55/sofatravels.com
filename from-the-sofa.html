@@ -818,6 +818,7 @@ const topicsByGuide = {
   geiranger:     ['De syv søstrene','Ørnesvingen og Dalsnibba','Skageflå og Knivsflå','Cruiseskip og turisme','Hellesylt og ferjen','Fra 2026 — nullutslipp'],
   kristiansand:  ['Dyreparken og Kardemomme by','Kvadraturen og Posebyen','Bystranda og skjærgården','Christiansholm festning','Sommerbyen og båtliv','Fiskebåt og sjømat'],
   trondheim:     ['Nidarosdomen og pilegrimsleden','Erkebispegården og riksregaliene','Bakklandet og Nidelva','NTNU og studentbyen','Olav den hellige','Stiklestad og vikinghistorie'],
+  vesteralen:    ['Nyksund og fraflyttingen','Hvalfangsthistorien','Skreifisket og kystlivet','Samiske stedsnavn','Andenes og spermhvalen','Hurtigrutemuseet i Stokmarknes'],
   default:       ['Historiske steder','Lokalmaten','Skjulte perler','Naturopplevelser'],
 };
 
@@ -1393,7 +1394,10 @@ function startChat(g) {
   const tipEl = document.getElementById('atlas-tip-text');
   if (tipEl) tipEl.innerHTML = `💬 Tips: Spør <strong>${g.name}</strong> om skjulte steder, lokal mat, eller be om en uformell byvandring!`;
 
-  const welcome = `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
+  const welcomeMessages = {
+    vesteralen: `Havet glømme aldri.\n\nJeg er Olai. Vokste opp i Nyksund — det fiskeværet staten bestemte seg for å legge ned på 70-tallet. Faren min var hvalfanger. Morfaren skreifisker. Jeg kjenner denne kysten som en gammel bekjent.\n\nVi følger ruten nordover: Evenes → Sortland → Stokmarknes → Nyksund → Andenes. Der hvalen svømmer rett utenfor molo.\n\nHva vil du vite mer om?`,
+  };
+  const welcome = welcomeMessages[g.id] || `Hei, og hjertelig velkommen til ${g.city}!\n\nJeg er ${g.name} — din personlige sofaguide. Akkurat nå, akkurat her, fra sofaen din, tar jeg deg med på en reise gjennom ${g.city}s gater, historier og hemmeligheter.\n\nHvor vil du starte? Skal vi gå til et historisk sted, smake på lokalmaten — eller utforske noe litt ukjent og overraskende?`;
   appendMessage('assistant', welcome);
   chatHistory.push({ role:'assistant', content:welcome });
   if (voiceOn) speakText(welcome, g.voiceId);
