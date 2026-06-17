@@ -359,7 +359,7 @@ body {
   <!-- RIGHT — CHAT -->
   <div class="route-right">
     <div class="olai-header">
-      <img src="/Olai.jpeg" alt="Olai" class="olai-avatar-img" />
+      <img src="/images/vesteralen/Olai.jpeg" alt="Olai" class="olai-avatar-img" />
       <div>
         <div class="olai-name-main">Olai</div>
         <div class="olai-current-stage" id="olai-stage-label">Vesterålen</div>
@@ -455,29 +455,53 @@ if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
 const STAGES = [
   {
     id: 'evenes',
-    title: 'Evenes — ankomst',
-    sub: 'Harstad/Narvik lufthavn · Port til Vesterålen · Ofotfjorden',
+    title: 'Evenes — der reisen begynner',
+    sub: 'Harstad/Narvik lufthavn · Ofotfjorden · 800 år med historie',
     images: [
-      { src: null, alt: '' },
-      { src: null, alt: '' },
-      { src: null, alt: '' },
-      { src: null, alt: '' },
+      { src: '/images/vesteralen/Evenes_flyplass.jpeg', alt: 'Evenes flyplass fra luften' },
+      { src: '/images/vesteralen/Evenes_friluft.jpeg', alt: 'Evenestangen og Ofotfjorden' },
+      { src: '/images/vesteralen/Evenes_kirke.jpg', alt: 'Evenes kirke fra 1800' },
+      { src: '/images/vesteralen/Tysk_bunker.jpeg', alt: 'Tysk bunker fra andre verdenskrig' },
     ],
-    tags: ['Harstad/Narvik lufthavn', 'Ofotfjorden', 'Port til Vesterålen', 'Buss nordover'],
+    tags: ['Evenes kirke — 1250', 'Tirpitz gjemte seg her', 'Evenestangen fort', 'Várdobáiki samisk senter'],
     overnatting: 'Evenes Airport Hotel',
-    opener: 'Evenes.\n\nDe fleste flyr hit og er videre før de har sett seg om. Det er en feil.\n\nOfotfjorden utenfor rullebanen er ikke bakgrunn — den er begynnelsen. Herfra tar bussen oss nordover inn i Vesterålen. Det er ikke en lang vei. Men det er en vei som åpner seg gradvis.\n\nEr du klar til å reise?',
-    kb: `EVENES — ANKOMST:
-Harstad/Narvik lufthavn Evenes: innfallsporten til Vesterålen og Lofoten fra sør.
-Ofotfjorden: en av Norges dypeste fjorder. Historisk viktig under 2. verdenskrig — Narvik-slagene 1940.
-Bussen nordover følger Ofotfjorden før den svinger inn mot Vesterålen.
-Første inntrykk: åpent landskap, vann og fjell. Ikke spektakulært på den åpenbare måten — men det setter seg.`,
+    opener: 'Velkommen til Evenes.\n\nDe fleste henter bilen og kjører videre. Det er synd.\n\nFor akkurat her begynner historien. Under andre verdenskrig gjemte verdens største slagskip seg inne i fjorden. For åtte hundre år siden bygde kongen kirke her. Og lenge før det fulgte samiske familier de samme dalene som vi skal reise gjennom.\n\nVi stopper ett sted før vi kjører mot Vesterålen. Det tar tjue minutter. Men etterpå vil du forstå hvorfor reisen måtte begynne akkurat her.',
+    kb: `EVENES — DER REISEN BEGYNNER:
+
+EVENES KIRKE:
+Blant de eldste kirkestedene i Ofoten. Første kirke reist rundt 1250 under kong Håkon Håkonsson.
+Dagens trekirke innviet i 1800, men inneholder døpefont fra middelalderen.
+Olai: «Før flyplassen kom, var det kirka folk navigerte etter. Den har stått her i snart åtte hundre år.»
+
+TIRPITZ OG KRIGSHISTORIEN:
+Det tyske slagskipet Tirpitz lå gjentatte ganger skjult i fjordene ved Evenes og Bogen under andre verdenskrig.
+Fjordene ga naturlig beskyttelse mot allierte angrep. Området ble sterkt befestet av tyske styrker.
+Evenes er en sentral del av krigshistorien i Nord-Norge — men få besøkende vet det.
+
+EVENESTANGEN FORT:
+Rester av tyske bunkere, kanonstillinger og løpegraver med utsikt over Ofotfjorden.
+Midt blant krigsminnene står kunstverket Steinkirka — en monumental granittskulptur av dansk kunstner Bjørn Nørgaard.
+Kontrasten mellom krig og kunst gjør stedet unikt og vanskelig å glemme.
+
+TROLLKIRKA:
+En kort fottur fra veien. En grotte omgitt av lokale sagn om troll og underjordiske vesener.
+Nordnorsk folketro er ikke bare eventyr — det er en måte å forstå et landskap på.
+
+SAMISK HISTORIE:
+Evenes ligger i grenselandet mellom norsk og samisk bosetning.
+Várdobáiki samisk senter like ved formidler markesamisk språk, kultur og historie.
+Samiske familier har brukt disse dalene i århundrer — lenge før flyplassen, lenge før veiene.
+
+FLYPLASSEN:
+Harstad/Narvik lufthavn Evenes fungerer både som sivil lufthavn og militær base.
+Et av Norges viktigste strategiske knutepunkter i nord. Dualiteten er ikke tilfeldig.`,
   },
   {
     id: 'sortland',
     title: 'Evenes → Sortland',
     sub: 'Buss langs Ofotfjorden · Hadselfjorden · Den blå byen',
     images: [
-      { src: '/Sortland.jpg', alt: 'Sortland fra luften' },
+      { src: '/images/vesteralen/Sortland.jpg', alt: 'Sortland fra luften' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -497,7 +521,7 @@ Din personlige tilknytning: Du kjenner veien hit fra barndommen. Ingenting er gl
     title: 'Sortland → Stokmarknes',
     sub: 'Hurtigrutemuseet · Hadseløya · Hurtigrutens fødested 1893',
     images: [
-      { src: '/Stokmarknes.jpeg', alt: 'Stokmarknes fra sjøen' },
+      { src: '/images/vesteralen/Stokmarknes.jpeg', alt: 'Stokmarknes fra sjøen' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -517,7 +541,7 @@ Overnatting: Hurtigruten Hus, Quality Hotel Richard With, Melbu Hotel.`,
     title: 'Stokmarknes → Nyksund',
     sub: 'Buss via Myre · Dronningruta · Det gjenoppdagede fiskeværet',
     images: [
-      { src: '/Nyksund.jpeg', alt: 'Nyksund fiskeværet' },
+      { src: '/images/vesteralen/Nyksund.jpeg', alt: 'Nyksund fiskeværet' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -538,7 +562,7 @@ Overnatting: NyksundRom.`,
     title: 'Nyksund → Andenes',
     sub: 'Buss via Risøyhamn · Bleikstranda · Andenes fyr siden 1859',
     images: [
-      { src: '/Bleik-Andøya.jpeg', alt: 'Bleikstranda på Andøya' },
+      { src: '/images/vesteralen/Bleik-Andøya.jpeg', alt: 'Bleikstranda på Andøya' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -784,7 +808,7 @@ function appendRouteMessage(role, text, withSpeakBtn = false) {
   if (role === 'olai') {
     const av = document.createElement('img');
     av.className = 'route-olai-avatar';
-    av.src = '/Olai.jpeg'; av.alt = 'Olai';
+    av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
     row.appendChild(av);
   }
 
@@ -817,7 +841,7 @@ function showTyping() {
   row.id = id;
   const av = document.createElement('img');
   av.className = 'route-olai-avatar';
-  av.src = '/Olai.jpeg'; av.alt = 'Olai';
+  av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
   row.appendChild(av);
   const bubble = document.createElement('div');
   bubble.className = 'route-bubble olai';
