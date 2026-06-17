@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -9,709 +8,816 @@
   gtag('js', new Date());
   gtag('config', 'G-50X2YGHD2J');
 </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Vesterålen med Olai – Evenes til Andenes. Kystkultur, hvalfangst og skjulte historier langs havet med AI-guide Olai." />
-  <title>Vesterålen – SofaTravel</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:     #080E0A;
-      --panel:  #0D1610;
-      --card:   #0F1A12;
-      --border: #1E3A22;
-      --green:  #3A9A55;
-      --green2: #5ABB70;
-      --gold:   #C9A84C;
-      --text:   #E8F0E2;
-      --muted:  #5A8060;
-      --sub:    #8AAA88;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Vesterålen med Olai – Evenes til Andenes. Kystkultur, hvalfangst og skjulte historier langs havet." />
+<title>Vesterålen med Olai – SofaTravel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:     #080A0E;
+  --panel:  #0D1016;
+  --card:   #0F1218;
+  --border: #1E2A3A;
+  --blue:   #2A6A9A;
+  --blue2:  #4A8ABB;
+  --gold:   #C9A84C;
+  --text:   #E8EEF0;
+  --muted:  #5A7080;
+  --sub:    #8A9EAA;
+}
 
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Crimson Text', Georgia, serif;
-      overflow-x: hidden;
-    }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Text', Georgia, serif;
+  display: flex; flex-direction: column;
+}
 
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-    }
+/* ── TOP BAR ── */
+.route-top-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 20px;
+  background: rgba(8,10,14,.97);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; z-index: 10;
+}
+.back-btn {
+  font-size: .72rem; letter-spacing: .12em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 3px; cursor: pointer;
+  transition: border-color .2s, color .2s; white-space: nowrap;
+}
+.back-btn:hover { border-color: var(--gold); color: var(--text); }
+.route-top-title {
+  font-family: 'Playfair Display', serif;
+  font-size: .95rem; color: var(--text);
+}
+.route-top-sub { font-size: .68rem; letter-spacing: .18em; color: var(--blue2); margin-top: 1px; }
+.route-top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.voice-toggle-btn {
+  font-size: .72rem; letter-spacing: .1em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 3px; cursor: pointer;
+  transition: all .2s;
+}
+.voice-toggle-btn.active { border-color: var(--blue2); color: var(--blue2); }
+.voice-toggle-btn:hover { border-color: var(--gold); color: var(--text); }
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 22px 48px;
-      background: linear-gradient(to bottom, rgba(8,14,10,.97) 0%, transparent 100%);
-    }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; color: var(--gold); letter-spacing: .06em;
-      text-decoration: none;
-    }
-    .nav-back {
-      font-size: .78rem; letter-spacing: .14em; color: var(--muted);
-      text-decoration: none; transition: color .2s;
-    }
-    .nav-back:hover { color: var(--green2); }
-    .nav-cta {
-      font-size: .78rem; letter-spacing: .12em;
-      color: var(--bg); background: var(--green);
-      padding: 8px 20px; border-radius: 3px;
-      text-decoration: none; font-weight: 600;
-      transition: background .2s;
-    }
-    .nav-cta:hover { background: var(--green2); }
+/* ── STAGE STRIP ── */
+.stage-strip {
+  display: flex; align-items: center;
+  padding: 10px 20px; gap: 0;
+  background: rgba(8,10,14,.9);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; flex-shrink: 0;
+}
+.stage-strip::-webkit-scrollbar { height: 3px; }
+.stage-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.stage-pip {
+  font-size: .68rem; letter-spacing: .1em; color: var(--muted);
+  background: none; border: 1px solid transparent;
+  padding: 5px 12px; border-radius: 20px; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+}
+.stage-pip:hover { border-color: var(--gold); color: var(--text); }
+.stage-pip.active { background: var(--gold); color: #1A0F07; border-color: var(--gold); font-weight: 600; }
+.stage-pip.visited { border-color: rgba(201,168,76,.3); color: rgba(201,168,76,.5); }
+.stage-pip-arrow { color: rgba(42,106,154,.35); font-size: .65rem; flex-shrink: 0; padding: 0 2px; }
 
-    /* ── HERO ── */
-    .hero {
-      position: relative; height: 100vh; min-height: 600px;
-      display: flex; align-items: flex-end;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: url('/Sortland.jpg') center/cover no-repeat;
-      transform: scale(1.05);
-      animation: hero-zoom 18s ease-in-out infinite alternate;
-    }
-    @keyframes hero-zoom {
-      from { transform: scale(1.05); }
-      to   { transform: scale(1.12); }
-    }
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(8,14,10,.97) 0%,
-        rgba(8,14,10,.55) 40%,
-        rgba(8,14,10,.2) 70%,
-        rgba(8,14,10,.4) 100%
-      );
-    }
-    .hero-content {
-      position: relative; z-index: 2;
-      padding: 0 64px 72px; max-width: 780px;
-    }
-    .hero-eyebrow {
-      letter-spacing: .5em; font-size: 10px; color: rgba(90,187,112,.7);
-      margin-bottom: 20px; display: block;
-      animation: fade-up .8s ease both;
-    }
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 700; line-height: 1.0; color: var(--text);
-      margin-bottom: 20px;
-      animation: fade-up .8s .15s ease both;
-    }
-    .hero-title em { font-style: italic; color: var(--green2); }
-    .hero-stats {
-      display: flex; gap: 36px; margin-bottom: 36px;
-      animation: fade-up .8s .3s ease both;
-    }
-    .hero-stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; color: var(--text); display: block; line-height: 1;
-    }
-    .hero-stat-label { font-size: .75rem; color: var(--muted); letter-spacing: .15em; display: block; margin-top: 4px; }
-    .hero-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--green); color: var(--bg);
-      font-family: 'Crimson Text', serif;
-      font-size: 1rem; font-weight: 600; letter-spacing: .1em;
-      padding: 14px 36px; border-radius: 3px;
-      text-decoration: none; transition: background .2s, transform .2s;
-      animation: fade-up .8s .45s ease both;
-    }
-    .hero-cta:hover { background: var(--green2); transform: translateY(-2px); }
+/* ── BODY ── */
+.route-body {
+  display: flex; flex: 1; overflow: hidden;
+}
 
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+/* ── LEFT — STAGE ── */
+.route-left {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; border-right: 1px solid var(--border);
+}
 
-    /* ── ROUTE LINE ── */
-    .route-line-section {
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 32px 64px; overflow-x: auto;
-    }
-    .route-line {
-      display: flex; align-items: center; gap: 0;
-      min-width: max-content;
-    }
-    .route-stop { display: flex; flex-direction: column; align-items: center; }
-    .route-stop-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--green); border: 2px solid var(--green2);
-      flex-shrink: 0; margin-bottom: 8px;
-    }
-    .route-stop-dot.start, .route-stop-dot.end {
-      width: 14px; height: 14px;
-      background: var(--green2);
-    }
-    .route-stop-name { font-size: .72rem; color: var(--green2); letter-spacing: .08em; white-space: nowrap; }
-    .route-stop-km { font-size: .65rem; color: var(--muted); margin-top: 2px; }
-    .route-connector {
-      height: 2px; width: 60px; flex-shrink: 0;
-      background: linear-gradient(to right, rgba(58,154,85,.6), rgba(58,154,85,.3));
-      margin-bottom: 20px;
-    }
+/* Gallery */
+.stage-gallery {
+  position: relative; height: 52%; flex-shrink: 0; overflow: hidden;
+  background: #050810;
+}
+.stage-gallery-slides {
+  display: flex; height: 100%;
+  transition: transform .4s ease;
+}
+.stage-gallery-slide {
+  min-width: 100%; height: 100%;
+  object-fit: cover; flex-shrink: 0;
+}
+.stage-gallery-placeholder {
+  min-width: 100%; height: 100%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8,10,14,.8);
+  border-right: 1px solid rgba(42,106,154,.1);
+}
+.stage-gallery-placeholder span {
+  font-size: .7rem; color: rgba(90,112,128,.35); letter-spacing: .15em;
+}
+.gallery-nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(8,10,14,.7); border: 1px solid rgba(42,106,154,.3);
+  color: var(--blue2); font-size: 1.1rem;
+  width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .2s; z-index: 2;
+}
+.gallery-nav-btn:hover { background: rgba(42,106,154,.2); }
+.gallery-nav-btn.prev { left: 12px; }
+.gallery-nav-btn.next { right: 12px; }
+.gallery-dots {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 7px;
+}
+.gallery-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(74,138,187,.3); cursor: pointer;
+  transition: background .2s;
+}
+.gallery-dot.active { background: var(--blue2); }
 
-    /* ── INTRO ── */
-    .intro-section {
-      max-width: 1100px; margin: 0 auto;
-      padding: 80px 64px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
-    }
-    .intro-text h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-      font-weight: 400; font-style: italic;
-      color: var(--text); margin-bottom: 24px; line-height: 1.2;
-    }
-    .intro-text p {
-      font-size: 1.05rem; color: var(--sub); line-height: 1.9;
-      margin-bottom: 16px;
-    }
-    .intro-facts { padding-top: 8px; }
-    .fact-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      padding: 14px 0; border-bottom: 1px solid rgba(30,58,34,.6);
-    }
-    .fact-label { font-size: .78rem; letter-spacing: .12em; color: var(--muted); }
-    .fact-value { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--text); text-align: right; }
+.stage-hero-overlay { position: absolute; inset: 0; background: rgba(8,10,14,.2); pointer-events: none; }
+.stage-hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 55%); pointer-events: none; }
+.stage-hero-label { position: absolute; bottom: 20px; left: 28px; right: 28px; }
+.stage-num { font-size: .65rem; letter-spacing: .3em; color: var(--blue2); margin-bottom: 4px; }
+.stage-title-main {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem); color: var(--text);
+  font-weight: 700; line-height: 1.1;
+}
+.stage-subtitle { font-size: .72rem; color: var(--muted); letter-spacing: .06em; margin-top: 4px; }
 
-    /* ── ETAPPER ── */
-    .etapper-section {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 64px 100px;
-    }
-    .section-eyebrow {
-      letter-spacing: .45em; font-size: 9.5px;
-      color: rgba(90,187,112,.4); margin-bottom: 14px; display: block;
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      color: var(--text); font-weight: 400; font-style: italic;
-      margin-bottom: 48px;
-    }
+/* Stage content */
+.stage-content { flex: 1; overflow-y: auto; padding: 18px 28px 14px; }
+.stage-content::-webkit-scrollbar { width: 3px; }
+.stage-content::-webkit-scrollbar-thumb { background: var(--border); }
+.stage-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.stage-tag {
+  font-size: .7rem; letter-spacing: .08em; color: var(--blue2);
+  background: rgba(42,106,154,.1); border: 1px solid rgba(42,106,154,.25);
+  padding: 3px 10px; border-radius: 2px;
+}
+.stage-overnatting { margin-top: 6px; }
+.stage-overnatting-label { font-size: .65rem; letter-spacing: .2em; color: var(--muted); margin-bottom: 5px; display: block; }
+.stage-overnatting-list { font-size: .82rem; color: var(--sub); line-height: 1.7; }
 
-    .etapper-grid { display: flex; flex-direction: column; gap: 2px; }
-    .etappe {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 6px; overflow: hidden;
-      transition: border-color .2s;
-    }
-    .etappe:hover { border-color: rgba(58,154,85,.4); }
-    .etappe-header {
-      display: flex; align-items: center; gap: 20px;
-      padding: 20px 24px; cursor: pointer;
-    }
-    .etappe-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem; color: rgba(58,154,85,.3);
-      width: 28px; flex-shrink: 0; line-height: 1;
-    }
-    .etappe-route {
-      flex: 1;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem; color: var(--text);
-    }
-    .etappe-route span { color: var(--green); }
-    .etappe-meta { font-size: .75rem; color: var(--muted); letter-spacing: .08em; white-space: nowrap; }
-    .etappe-arrow { color: var(--muted); font-size: .8rem; transition: transform .2s; }
-    .etappe.open .etappe-arrow { transform: rotate(90deg); }
-    .etappe-body {
-      display: none; padding: 0 24px 22px 72px;
-      font-size: .92rem; color: var(--sub); line-height: 1.85;
-      border-top: 1px solid rgba(30,58,34,.4);
-      padding-top: 18px;
-    }
-    .etappe.open .etappe-body { display: block; }
+/* Footer nav */
+.stage-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(8,10,14,.6); flex-shrink: 0;
+}
+.stage-btn {
+  font-size: .78rem; letter-spacing: .12em; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  padding: 10px 24px; border-radius: 3px; cursor: pointer;
+  transition: all .2s;
+}
+.stage-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--text); }
+.stage-btn:disabled { opacity: .25; cursor: default; }
+.stage-btn.fwd {
+  background: rgba(42,106,154,.15); border-color: rgba(42,106,154,.4);
+  color: var(--blue2); font-weight: 600;
+}
+.stage-btn.fwd:hover:not(:disabled) { background: rgba(42,106,154,.25); border-color: var(--blue2); color: var(--text); }
 
-    /* ── BILDEGALLERI ── */
-    .img-gallery {
-      position: relative; width: 100%;
-      max-height: 360px; border-radius: 4px;
-      overflow: hidden; margin-bottom: 18px;
-      background: rgba(15,26,18,.8);
-    }
-    .img-gallery-slides {
-      display: flex; width: 100%;
-      transition: transform .4s ease;
-    }
-    .img-gallery-slide {
-      min-width: 100%; max-height: 360px;
-      object-fit: cover; flex-shrink: 0;
-      display: block;
-    }
-    .img-gallery-slide.placeholder {
-      min-width: 100%; height: 240px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(15,26,18,.6);
-      border: 1px dashed rgba(58,154,85,.2);
-      flex-shrink: 0;
-    }
-    .img-gallery-slide.placeholder span {
-      font-size: .75rem; color: rgba(90,128,96,.4);
-      letter-spacing: .12em;
-    }
-    .gallery-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(8,14,10,.7); border: 1px solid rgba(58,154,85,.3);
-      color: var(--green2); font-size: 1rem;
-      width: 34px; height: 34px; border-radius: 50%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background .2s; z-index: 2;
-    }
-    .gallery-btn:hover { background: rgba(58,154,85,.2); }
-    .gallery-btn.prev { left: 10px; }
-    .gallery-btn.next { right: 10px; }
-    .gallery-dots {
-      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 6px;
-    }
-    .gallery-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(90,187,112,.3); cursor: pointer;
-      transition: background .2s;
-    }
-    .gallery-dot.active { background: var(--green2); }
+/* ── RIGHT — CHAT ── */
+.route-right {
+  width: 340px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: var(--panel);
+}
+.olai-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.olai-avatar-img {
+  width: 42px; height: 42px; border-radius: 50%;
+  object-fit: cover; border: 1px solid rgba(42,106,154,.3);
+  flex-shrink: 0;
+}
+.olai-name-main {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--text); font-weight: 700;
+}
+.olai-current-stage { font-size: .68rem; color: var(--blue2); letter-spacing: .08em; margin-top: 2px; }
+.olai-header-right { margin-left: auto; }
+.guide-online {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #3A9A55;
+}
 
-    .etappe-highlight {
-      display: inline-block; margin-top: 12px;
-      font-size: .72rem; letter-spacing: .15em; color: var(--green);
-      background: rgba(58,154,85,.1); border: 1px solid rgba(58,154,85,.25);
-      padding: 3px 10px; border-radius: 2px;
-    }
+.route-messages {
+  flex: 1; overflow-y: auto; padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.route-messages::-webkit-scrollbar { width: 3px; }
+.route-messages::-webkit-scrollbar-thumb { background: var(--border); }
+.route-msg-row { display: flex; gap: 8px; align-items: flex-start; }
+.route-msg-row.user { flex-direction: row-reverse; }
+.route-olai-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid rgba(42,106,154,.25);
+}
+.route-bubble {
+  max-width: 88%; font-size: .88rem; line-height: 1.75;
+  padding: 10px 13px; border-radius: 6px;
+  white-space: pre-wrap; word-break: break-word;
+}
+.route-bubble.olai { background: rgba(42,106,154,.1); border: 1px solid rgba(42,106,154,.2); color: var(--text); }
+.route-bubble.user { background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2); color: var(--text); }
+.route-bubble.error { background: #3A0A00; color: #FF9966; border-color: #8B2000; font-style: italic; }
+.speak-btn {
+  display: block; margin-top: 8px; font-size: .7rem; letter-spacing: .1em;
+  color: var(--muted); background: none; border: 1px solid var(--border);
+  padding: 3px 9px; border-radius: 2px; cursor: pointer; transition: all .2s;
+}
+.speak-btn:hover { border-color: var(--blue2); color: var(--blue2); }
+.speak-btn.loading { opacity: .5; cursor: default; }
 
-    /* overnatting */
-    .etappe-overnatting {
-      margin-top: 14px; padding-top: 14px;
-      border-top: 1px solid rgba(30,58,34,.4);
-    }
-    .etappe-overnatting-label {
-      font-size: .68rem; letter-spacing: .18em; color: var(--muted);
-      margin-bottom: 6px; display: block;
-    }
-    .etappe-overnatting-list {
-      font-size: .88rem; color: var(--sub); line-height: 1.7;
-    }
+.route-typing { display: flex; gap: 4px; padding: 10px 13px; }
+.route-typing span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--muted); animation: bounce .9s infinite;
+}
+.route-typing span:nth-child(2) { animation-delay: .15s; }
+.route-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
 
-    /* ── GUIDE INTRO ── */
-    .guide-section {
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .guide-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 80px 64px;
-      display: flex; gap: 60px; align-items: center;
-    }
-    .guide-img-wrap {
-      flex-shrink: 0; width: 200px; height: 200px;
-      border-radius: 50%; overflow: hidden;
-      border: 2px solid rgba(58,154,85,.3);
-    }
-    .guide-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .guide-text { flex: 1; }
-    .guide-text h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; color: var(--text); font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .guide-text .guide-subtitle {
-      letter-spacing: .25em; font-size: .75rem; color: var(--green);
-      margin-bottom: 20px; display: block;
-    }
-    .guide-text p {
-      font-size: 1rem; color: var(--sub); line-height: 1.9; margin-bottom: 24px;
-      font-style: italic;
-    }
-    .guide-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--green); color: var(--bg);
-      font-family: 'Crimson Text', serif;
-      font-size: 1rem; font-weight: 600; letter-spacing: .1em;
-      padding: 13px 32px; border-radius: 3px;
-      text-decoration: none; transition: background .2s;
-    }
-    .guide-cta:hover { background: var(--green2); }
+.route-input-row {
+  display: flex; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.route-input-row input {
+  flex: 1; background: rgba(42,106,154,.07);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); font-family: 'Crimson Text', serif;
+  font-size: .92rem; padding: 9px 12px; outline: none;
+  transition: border-color .2s;
+}
+.route-input-row input:focus { border-color: rgba(42,106,154,.5); }
+.route-input-row button {
+  background: var(--blue); border: none; border-radius: 4px;
+  color: #fff; font-size: 1.1rem; width: 40px; cursor: pointer;
+  transition: background .2s;
+}
+.route-input-row button:hover { background: var(--blue2); }
 
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid rgba(30,58,34,.4);
-      padding: 36px 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: rgba(201,168,76,.35); }
-    .footer-back { font-size: .75rem; color: var(--muted); text-decoration: none; letter-spacing: .1em; }
-    .footer-back:hover { color: var(--green2); }
-    .footer-copy { font-size: .7rem; color: var(--muted); opacity: .4; }
+/* ElevenLabs banner */
+.eleven-banner {
+  display: none; position: fixed; bottom: 80px; right: 20px; z-index: 200;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 6px; padding: 16px; width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.eleven-banner.show { display: block; }
+.eleven-banner label { font-size: .75rem; color: var(--muted); letter-spacing: .1em; display: block; margin-bottom: 8px; }
+.eleven-banner input {
+  width: 100%; background: rgba(42,106,154,.07); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text); font-size: .85rem; padding: 7px 10px;
+  outline: none; margin-bottom: 8px;
+}
+.eleven-banner-actions { display: flex; gap: 8px; }
+.eleven-banner-actions button {
+  flex: 1; font-size: .75rem; letter-spacing: .08em; padding: 7px;
+  border-radius: 3px; cursor: pointer; border: 1px solid var(--border);
+  background: var(--blue); color: #fff; transition: background .2s;
+}
+.eleven-banner-actions button:hover { background: var(--blue2); }
+.eleven-banner-close {
+  background: none !important; color: var(--muted) !important;
+  border-color: var(--border) !important;
+}
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      nav { padding: 18px 24px; }
-      .hero-content { padding: 0 28px 60px; }
-      .hero-stats { gap: 24px; }
-      .route-line-section { padding: 24px 28px; }
-      .intro-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 28px; }
-      .etapper-section { padding: 0 28px 80px; }
-      .etappe-body { padding: 18px 18px 20px 18px; }
-      .guide-inner { flex-direction: column; padding: 56px 28px; }
-      footer { flex-direction: column; align-items: flex-start; padding: 32px 28px; }
-    }
-  </style>
+@media (max-width: 768px) {
+  .route-body { flex-direction: column; }
+  .route-left { height: 55%; }
+  .route-right { width: 100%; flex: 1; }
+  .stage-gallery { height: 45%; }
+}
+</style>
 </head>
 <body>
 
-<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
-<nav role="navigation">
-  <a href="/" class="nav-logo">SofaTravel</a>
-  <a href="/from-the-sofa.html" class="nav-back">← Guidene</a>
-  <a href="/from-the-sofa.html?guide=vesteralen" class="nav-cta">Start med Olai →</a>
-</nav>
-
-<!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
-<section class="hero" role="banner">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-eyebrow">VESTERÅLEN · SOFATRAVEL</span>
-    <h1 class="hero-title">
-      Evenes<br>
-      <em>→ Andenes</em>
-    </h1>
-    <div class="hero-stats">
-      <div>
-        <span class="hero-stat-num">4</span>
-        <span class="hero-stat-label">ETAPPER</span>
-      </div>
-      <div>
-        <span class="hero-stat-num">3–5</span>
-        <span class="hero-stat-label">DAGER</span>
-      </div>
-      <div>
-        <span class="hero-stat-num">1</span>
-        <span class="hero-stat-label">GUIDE</span>
-      </div>
-    </div>
-    <a href="/from-the-sofa.html?guide=vesteralen" class="hero-cta">Start reisen med Olai →</a>
+<!-- ── TOP BAR ── -->
+<div class="route-top-bar">
+  <button class="back-btn" onclick="window.location.href='/from-the-sofa.html'">← Guider</button>
+  <div>
+    <div class="route-top-title">Vesterålen med Olai</div>
+    <div class="route-top-sub">EVENES · 4 ETAPPER</div>
   </div>
-</section>
+  <div class="route-top-right">
+    <button class="voice-toggle-btn" id="route-voice-btn" title="Slå stemme av/på">🔇 Stemme av</button>
+    <button class="voice-toggle-btn" id="route-eleven-btn" title="ElevenLabs-nøkkel" style="font-size:.7rem">⚙️</button>
+  </div>
+</div>
 
-<!-- ══ ROUTE LINE ════════════════════════════════════════════════════════ -->
-<div class="route-line-section" role="navigation" aria-label="Ruteoversikt">
-  <div class="route-line">
-    <div class="route-stop">
-      <div class="route-stop-dot start"></div>
-      <span class="route-stop-name">EVENES</span>
-      <span class="route-stop-km">Start</span>
+<!-- ── STAGE STRIP ── -->
+<nav class="stage-strip" id="stage-strip" aria-label="Etapper"></nav>
+
+<!-- ── BODY ── -->
+<div class="route-body">
+
+  <!-- LEFT -->
+  <div class="route-left">
+    <div class="stage-gallery" id="stage-gallery">
+      <div class="stage-gallery-slides" id="gallery-slides"></div>
+      <button class="gallery-nav-btn prev" id="gallery-prev">‹</button>
+      <button class="gallery-nav-btn next" id="gallery-next">›</button>
+      <div class="gallery-dots" id="gallery-dots"></div>
+      <div class="stage-hero-overlay"></div>
+      <div class="stage-hero-fade"></div>
+      <div class="stage-hero-label">
+        <p class="stage-num" id="stage-num"></p>
+        <h2 class="stage-title-main" id="stage-title"></h2>
+        <p class="stage-subtitle" id="stage-sub"></p>
+      </div>
     </div>
-    <div class="route-connector"></div>
-    <div class="route-stop">
-      <div class="route-stop-dot"></div>
-      <span class="route-stop-name">SORTLAND</span>
-      <span class="route-stop-km">Etappe 1</span>
+
+    <div class="stage-content" id="stage-content">
+      <div class="stage-tags" id="stage-tags"></div>
+      <div class="stage-overnatting" id="stage-overnatting"></div>
     </div>
-    <div class="route-connector"></div>
-    <div class="route-stop">
-      <div class="route-stop-dot"></div>
-      <span class="route-stop-name">STOKMARKNES</span>
-      <span class="route-stop-km">Etappe 2</span>
+
+    <div class="stage-footer">
+      <button class="stage-btn" id="stage-prev-btn">← Forrige</button>
+      <button class="stage-btn fwd" id="stage-next-btn">Neste etappe →</button>
     </div>
-    <div class="route-connector"></div>
-    <div class="route-stop">
-      <div class="route-stop-dot"></div>
-      <span class="route-stop-name">NYKSUND</span>
-      <span class="route-stop-km">Etappe 3</span>
+  </div>
+
+  <!-- RIGHT — CHAT -->
+  <div class="route-right">
+    <div class="olai-header">
+      <img src="/Olai.jpeg" alt="Olai" class="olai-avatar-img" />
+      <div>
+        <div class="olai-name-main">Olai</div>
+        <div class="olai-current-stage" id="olai-stage-label">Vesterålen</div>
+      </div>
+      <div class="olai-header-right">
+        <div class="guide-online" title="Tilgjengelig"></div>
+      </div>
     </div>
-    <div class="route-connector"></div>
-    <div class="route-stop">
-      <div class="route-stop-dot end"></div>
-      <span class="route-stop-name">ANDENES</span>
-      <span class="route-stop-km">Etappe 4</span>
+    <div class="route-messages" id="route-messages" role="log" aria-live="polite"></div>
+    <div class="route-input-row">
+      <input type="text" id="route-input" autocomplete="off" placeholder="Spør Olai…" aria-label="Spør Olai om etappen" />
+      <button id="route-send">→</button>
     </div>
   </div>
 </div>
 
-<!-- ══ INTRO ══════════════════════════════════════════════════════════════ -->
-<section class="intro-section" aria-labelledby="intro-title">
-  <div class="intro-text">
-    <h2 id="intro-title">Havet som aldri glemmer — kystkultur der turisten ikke har funnet veien ennå.</h2>
-    <p>Vesterålen er ikke Lofoten. Det er roligere, villere og med færre linser rettet mot seg. Her er det skreifisket som bygde landet, hvalfangsten som finansierte det, og de samiske stedsnavnene som forteller hva kysten egentlig heter.</p>
-    <p>Fra Evenes flyplass nordover til Sortland, ut til Hurtigrutemuseets vugge i Stokmarknes, videre til Nyksund — det forlatte fiskeværet som nektet å bli borte — og til slutt til Andenes, der hvalen svømmer like utenfor molo og fyret har lykt i 160 år.</p>
-    <p>Olai kjenner alle disse stedene. Han har fisket her, gått her, og lyttet til dem som husker.</p>
+<!-- ElevenLabs banner -->
+<div class="eleven-banner" id="eleven-banner">
+  <label>ELEVENLABS API-NØKKEL</label>
+  <input type="password" id="eleven-key-input" placeholder="sk-..." />
+  <div class="eleven-banner-actions">
+    <button id="eleven-key-save">Lagre nøkkel</button>
+    <button class="eleven-banner-close" id="eleven-banner-close">Lukk</button>
   </div>
-  <div class="intro-facts" role="list">
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">STARTPUNKT</span>
-      <span class="fact-value">Evenes flyplass</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">ENDEPUNKT</span>
-      <span class="fact-value">Andenes</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">ANBEFALT REISETID</span>
-      <span class="fact-value">3–5 dager</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">BESTE SESONG</span>
-      <span class="fact-value">Mai – September</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">HVALSAFARI</span>
-      <span class="fact-value">Andenes (hele året)</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">HURTIGRUTEMUSEET</span>
-      <span class="fact-value">Stokmarknes</span>
-    </div>
-    <div class="fact-row" role="listitem">
-      <span class="fact-label">ETAPPER</span>
-      <span class="fact-value">4</span>
-    </div>
-  </div>
-</section>
-
-<!-- ══ ETAPPER ════════════════════════════════════════════════════════════ -->
-<section class="etapper-section" aria-labelledby="etapper-title">
-  <span class="section-eyebrow">ETAPPE FOR ETAPPE</span>
-  <h2 id="etapper-title" class="section-title">Hva venter deg underveis</h2>
-
-  <div class="etapper-grid">
-
-    <!-- ETAPPE 1 -->
-    <div class="etappe">
-      <div class="etappe-header" onclick="toggleEtappe(this)">
-        <span class="etappe-num">1</span>
-        <span class="etappe-route">Evenes <span>→</span> Sortland</span>
-        <span class="etappe-meta">Buss · Hadselfjorden</span>
-        <span class="etappe-arrow">›</span>
-      </div>
-      <div class="etappe-body">
-
-        <div class="img-gallery" id="gallery-1">
-          <div class="img-gallery-slides" id="slides-1">
-            <img src="/Sortland.jpg" alt="Sortland fra luften" class="img-gallery-slide" loading="lazy" />
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-          </div>
-          <button class="gallery-btn prev" onclick="slideGallery('gallery-1', -1)">‹</button>
-          <button class="gallery-btn next" onclick="slideGallery('gallery-1', 1)">›</button>
-          <div class="gallery-dots" id="dots-1">
-            <div class="gallery-dot active" onclick="goToSlide('gallery-1', 0)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-1', 1)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-1', 2)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-1', 3)"></div>
-          </div>
-        </div>
-
-        Fra Evenes går bussen nordover langs Ofotfjorden og inn i Vesterålens landskap. Hadselfjorden åpner seg gradvis — en vid, rolig stripe av vann mellom øyene. Sortland er den blå byen: fasadene langs kaien ble malt blå i 1998 som et kunstprosjekt. Det har blitt stående. Ingenting her skjer tilfeldig — det er bare ikke alltid lett å se sammenhengen med en gang.
-
-        <div class="etappe-overnatting">
-          <span class="etappe-overnatting-label">OVERNATTING</span>
-          <div class="etappe-overnatting-list">
-            Vesterålen Kysthotell · Quality Hotel Richard With
-          </div>
-        </div>
-        <span class="etappe-highlight">✦ Den blå byen — kunstprosjekt siden 1998</span>
-      </div>
-    </div>
-
-    <!-- ETAPPE 2 -->
-    <div class="etappe">
-      <div class="etappe-header" onclick="toggleEtappe(this)">
-        <span class="etappe-num">2</span>
-        <span class="etappe-route">Sortland <span>→</span> Stokmarknes</span>
-        <span class="etappe-meta">Buss · Hurtigruten</span>
-        <span class="etappe-arrow">›</span>
-      </div>
-      <div class="etappe-body">
-
-        <div class="img-gallery" id="gallery-2">
-          <div class="img-gallery-slides" id="slides-2">
-            <img src="/Stokmarknes.jpeg" alt="Stokmarknes fra sjøen" class="img-gallery-slide" loading="lazy" />
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-          </div>
-          <button class="gallery-btn prev" onclick="slideGallery('gallery-2', -1)">‹</button>
-          <button class="gallery-btn next" onclick="slideGallery('gallery-2', 1)">›</button>
-          <div class="gallery-dots" id="dots-2">
-            <div class="gallery-dot active" onclick="goToSlide('gallery-2', 0)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-2', 1)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-2', 2)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-2', 3)"></div>
-          </div>
-        </div>
-
-        Stokmarknes er der Hurtigruten ble født. Richard With startet den første seilingen herfra i 1893 — en rute som skulle knytte norskekysten sammen. Hurtigrutemuseet har det gamle skipet DS Finnmarken liggende inne i en glasspaviljon, nærmest som en katedral for kystfarten. Hadseløya rundt Stokmarknes er gammel kystkultur, lite besøkt.
-
-        <div class="etappe-overnatting">
-          <span class="etappe-overnatting-label">OVERNATTING</span>
-          <div class="etappe-overnatting-list">
-            Hurtigruten Hus · Quality Hotel Richard With · Melbu Hotel
-          </div>
-        </div>
-        <span class="etappe-highlight">✦ Hurtigrutemuseet — ruten begynte her i 1893</span>
-      </div>
-    </div>
-
-    <!-- ETAPPE 3 -->
-    <div class="etappe">
-      <div class="etappe-header" onclick="toggleEtappe(this)">
-        <span class="etappe-num">3</span>
-        <span class="etappe-route">Stokmarknes <span>→</span> Nyksund</span>
-        <span class="etappe-meta">Buss via Myre · Kystkultur</span>
-        <span class="etappe-arrow">›</span>
-      </div>
-      <div class="etappe-body">
-
-        <div class="img-gallery" id="gallery-3">
-          <div class="img-gallery-slides" id="slides-3">
-            <img src="/Nyksund.jpeg" alt="Nyksund fiskeværet" class="img-gallery-slide" loading="lazy" />
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-          </div>
-          <button class="gallery-btn prev" onclick="slideGallery('gallery-3', -1)">‹</button>
-          <button class="gallery-btn next" onclick="slideGallery('gallery-3', 1)">›</button>
-          <div class="gallery-dots" id="dots-3">
-            <div class="gallery-dot active" onclick="goToSlide('gallery-3', 0)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-3', 1)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-3', 2)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-3', 3)"></div>
-          </div>
-        </div>
-
-        Nyksund ble i praksis avviklet gjennom statlig sentraliseringspolitikk på 1970-tallet. Folk ble bedt om å flytte. De fleste dro. Men stedet nektet å forsvinne — i dag er det forsiktig gjenoppdaget, restaurert og bebodd igjen. Dronningruta fra Myre er en av Vesterålens vakreste kyststier. Fuglelivet langs ytterkysten er eksepsjonelt, særlig om våren.
-
-        <div class="etappe-overnatting">
-          <span class="etappe-overnatting-label">OVERNATTING</span>
-          <div class="etappe-overnatting-list">
-            NyksundRom · Rooms in a coastal fishing village Nyksund
-          </div>
-        </div>
-        <span class="etappe-highlight">✦ Nyksund — fraflyttet på 70-tallet, gjenoppdaget</span>
-      </div>
-    </div>
-
-    <!-- ETAPPE 4 -->
-    <div class="etappe">
-      <div class="etappe-header" onclick="toggleEtappe(this)">
-        <span class="etappe-num">4</span>
-        <span class="etappe-route">Nyksund <span>→</span> Andenes</span>
-        <span class="etappe-meta">Buss via Risøyhamn · Endestasjon</span>
-        <span class="etappe-arrow">›</span>
-      </div>
-      <div class="etappe-body">
-
-        <div class="img-gallery" id="gallery-4">
-          <div class="img-gallery-slides" id="slides-4">
-            <img src="/Bleik-Andøya.jpeg" alt="Bleikstranda på Andøya" class="img-gallery-slide" loading="lazy" />
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-            <div class="img-gallery-slide placeholder"><span>BILDE KOMMER</span></div>
-          </div>
-          <button class="gallery-btn prev" onclick="slideGallery('gallery-4', -1)">‹</button>
-          <button class="gallery-btn next" onclick="slideGallery('gallery-4', 1)">›</button>
-          <div class="gallery-dots" id="dots-4">
-            <div class="gallery-dot active" onclick="goToSlide('gallery-4', 0)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-4', 1)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-4', 2)"></div>
-            <div class="gallery-dot" onclick="goToSlide('gallery-4', 3)"></div>
-          </div>
-        </div>
-
-        Andøya er flat og vindblåst, med myrlandskap og strandsteinere som ser ut som de er hentet fra en annen tid. Bleikstranda er en av Norges vakreste hvite sandstrender — med Bleiksøya rett utenfor, kolonisert av lundefugl. Andenes fyr har lykt siden 1859. Og i havet rett utenfor molen svømmer spermhvalen — hele året. Hvalsafari fra Andenes er blant de sikreste i verden.
-        <br><br>
-        <em style="color: var(--muted); font-size: .88rem;">Ferge videre til Gryllefjord på Senja er tilgjengelig fra Andenes for de som vil fortsette.</em>
-
-        <div class="etappe-overnatting">
-          <span class="etappe-overnatting-label">OVERNATTING</span>
-          <div class="etappe-overnatting-list">
-            Andenes Suite Hotel · Andrikken Hotel · Hotell Marena · Grønnbuene Rorbu Hotel
-          </div>
-        </div>
-        <span class="etappe-highlight">✦ Andenes fyr siden 1859 · Hvalsafari hele året</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══ GUIDE ═══════════════════════════════════════════════════════════════ -->
-<section class="guide-section" aria-labelledby="guide-title">
-  <div class="guide-inner">
-    <div class="guide-img-wrap">
-      <img src="/Olai.jpeg" alt="Olai, guide for Vesterålen" />
-    </div>
-    <div class="guide-text">
-      <h3 id="guide-title">Olai</h3>
-      <span class="guide-subtitle">VESTERÅLEN · REISEGUIDE</span>
-      <p>Olai er 54 år. Han vokste opp i Nyksund før fraflyttingen — en av de siste barna der. Faren var hvalfanger, morfaren skreifisker. Han kjenner de samiske stedsnavnene, hvalfangsthistorien, skreifisket og kystlandskapet på en måte som ikke finnes i noen reiseguide.</p>
-      <p>Han snakker ikke fort. Han lar havet arbeide. «Havet glømme aldri,» sier han — og mener det.</p>
-      <a href="/from-the-sofa.html?guide=vesteralen" class="guide-cta">Start samtalen med Olai →</a>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FOOTER ═══════════════════════════════════════════════════════════ -->
-<footer role="contentinfo">
-  <span class="footer-logo">SofaTravel</span>
-  <a href="/from-the-sofa.html" class="footer-back">← Alle guider</a>
-  <span class="footer-copy">© 2026 SofaTravel · Vesterålen</span>
-</footer>
+</div>
 
 <script>
-function toggleEtappe(header) {
-  const etappe = header.parentElement;
-  etappe.classList.toggle('open');
+// ════════════════════════════════════════════════════════════════════════
+// OLAI VOICE & KEYS
+// ════════════════════════════════════════════════════════════════════════
+const OLAI_VOICE_ID = 'TxGEqnHWrfWFTfGW9XjX';
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn    = false;
+let currentAudio = null;
+
+document.getElementById('eleven-key-save').addEventListener('click', () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v;
+    localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+});
+document.getElementById('eleven-banner-close').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.remove('show');
+});
+document.getElementById('route-eleven-btn').addEventListener('click', () => {
+  document.getElementById('eleven-banner').classList.toggle('show');
+});
+document.getElementById('route-voice-btn').addEventListener('click', () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+});
+function updateVoiceBtn() {
+  const btn = document.getElementById('route-voice-btn');
+  btn.textContent = voiceOn ? '🔊 Stemme på' : '🔇 Stemme av';
+  btn.classList.toggle('active', voiceOn);
+}
+function stopAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+}
+async function speakText(text, btn) {
+  if (!ELEVEN_KEY || !voiceOn) return;
+  stopAudio();
+  if (btn) { btn.classList.add('loading'); btn.textContent = '⏳ Laster…'; }
+  const trimmed = text.length > 2500 ? text.substring(0, 2500) + '…' : text;
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${OLAI_VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'xi-api-key': ELEVEN_KEY },
+      body: JSON.stringify({
+        text: trimmed, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.55, similarity_boost: 0.75, style: 0.2, use_speaker_boost: true },
+      }),
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+    currentAudio.play();
+    if (btn) { btn.classList.remove('loading'); btn.textContent = '🔊 Hør Olai'; }
+  } catch (err) {
+    if (btn) { btn.classList.remove('loading'); btn.textContent = '🔊 Hør Olai'; }
+    console.error('ElevenLabs feil:', err.message);
+  }
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ════════════════════════════════════════════════════════════════════════
+// STAGE DATA
+// ════════════════════════════════════════════════════════════════════════
+const STAGES = [
+  {
+    id: 'sortland',
+    title: 'Evenes → Sortland',
+    sub: 'Buss langs Ofotfjorden · Hadselfjorden · Den blå byen',
+    images: [
+      { src: '/Sortland.jpg', alt: 'Sortland fra luften' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Hadselfjorden', 'Den blå byen — 1998', 'Vesterålen Kysthotell', 'Samisk opphav: «suortta»'],
+    overnatting: 'Vesterålen Kysthotell · Quality Hotel Richard With',
+    opener: 'Havet glømme aldri.\n\nVi starter i Evenes og bussen tar oss nordover langs Ofotfjorden. Etter hvert åpner Hadselfjorden seg — rolig og vid, med øyer på begge sider.\n\nSortland er den blå byen. Ikke av natur, men av valg — fasadene langs kaien ble malt blå i 1998 som et kunstprosjekt. Det har blitt stående. Ingenting her skjer tilfeldig.',
+    kb: `ETAPPE 1 — Evenes → Sortland:
+Buss nordover langs Ofotfjorden. Hadselfjorden åpner seg gradvis.
+Sortland: Fasadene malt blå i 1998, kunstprosjekt av Bjørn Elvenes. Blitt stående som byidentitet.
+Samisk stedsnavn: «Sortland» kan stamme fra samisk «suortta» — krok, vik.
+Overnatting: Vesterålen Kysthotell, Quality Hotel Richard With.
+Din personlige tilknytning: Du kjenner veien hit fra barndommen. Ingenting er glemt.`,
+  },
+  {
+    id: 'stokmarknes',
+    title: 'Sortland → Stokmarknes',
+    sub: 'Hurtigrutemuseet · Hadseløya · Hurtigrutens fødested 1893',
+    images: [
+      { src: '/Stokmarknes.jpeg', alt: 'Stokmarknes fra sjøen' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Hurtigrutemuseet', 'DS Finnmarken', 'Hurtigruten 1893', 'Melbu — hvalfangststasjon'],
+    overnatting: 'Hurtigruten Hus · Quality Hotel Richard With · Melbu Hotel',
+    opener: 'Richard With startet herfra i 1893. En rute som skulle knytte norskekysten sammen.\n\nDS Finnmarken ligger inne i en glasspaviljon i dag — som en katedral for kystfarten. Skipet er ikke utstilt. Det er bevart. Det er en forskjell.\n\nMelbu like ved var hvalfangststasjon. Faren min snakket om det.',
+    kb: `ETAPPE 2 — Sortland → Stokmarknes:
+Hurtigrutemuseet: Richard With startet første seilingen fra Stokmarknes 2. juli 1893.
+DS Finnmarken — gammelt hurtigruteskip — står inne i glasspaviljon. Ikke utstilling, bevaring.
+Hadseløya rundt Stokmarknes: gammel kystkultur, lite besøkt av turister.
+Melbu: tidligere aktiv hvalfangststasjon. Nær familietilknytning for Olai.
+Overnatting: Hurtigruten Hus, Quality Hotel Richard With, Melbu Hotel.`,
+  },
+  {
+    id: 'nyksund',
+    title: 'Stokmarknes → Nyksund',
+    sub: 'Buss via Myre · Dronningruta · Det gjenoppdagede fiskeværet',
+    images: [
+      { src: '/Nyksund.jpeg', alt: 'Nyksund fiskeværet' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Nyksund — fraflyttet 1970-t.', 'Dronningruta fra Myre', 'Lundefugl · havhest · alke', 'Gjenoppdaget og bebodd igjen'],
+    overnatting: 'NyksundRom',
+    opener: 'Jeg vokste opp her.\n\nNyksund var et levende fiskevær frem til staten bestemte seg for å legge det ned. Sentraliseringspolitikk på 70-tallet. Folk ble bedt om å flytte. De fleste dro.\n\nJeg husker det. Det var ikke abstrakt politikk — det var naboer som pakket. Siste butikk. Siste skoledag. Og så stillhet.\n\nI dag er stedet forsiktig tilbake.',
+    kb: `ETAPPE 3 — Stokmarknes → Nyksund:
+PERSONLIG: Olai vokste opp i Nyksund. Dette er ikke historisk distanse — det er personlig erfaring.
+Nyksund: aktivt fiskevær frem til 1970-tallets statlige sentraliseringspolitikk. Staten oppfordret til fraflytting. Butikk, skole, post — alt stengte.
+I dag forsiktig gjenoppdaget og delvis bebodd. Kunstnere og turister finner veien hit.
+Dronningruta: kyststi fra Myre — en av Vesterålens vakreste turkveier.
+Fugleliv langs ytterkysten: lundefugl, havhest, alke. Spesielt rikt om våren.
+Overnatting: NyksundRom.`,
+  },
+  {
+    id: 'andenes',
+    title: 'Nyksund → Andenes',
+    sub: 'Buss via Risøyhamn · Bleikstranda · Andenes fyr siden 1859',
+    images: [
+      { src: '/Bleik-Andøya.jpeg', alt: 'Bleikstranda på Andøya' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+      { src: null, alt: '' },
+    ],
+    tags: ['Bleikstranda — hvit sand', 'Bleiksøya — lundefugl', 'Andenes fyr 1859', 'Spermhval — hele året'],
+    overnatting: 'Andenes Suite Hotel · Andrikken Hotel · Hotell Marena · Grønnbuene Rorbu Hotel',
+    opener: 'Andøya er flat og vindblåst. Myrlandskap. Steinstrander. Det ser ut som en annen planet — men en planet som kjenner seg selv.\n\nAndenes fyr har lykt siden 1859. Og i havet rett utenfor molen svømmer spermhvalen. Ikke sesongen — hele året.\n\nBleikstranda er hvit sand med Bleiksøya rett utenfor. Der hekker lundefuglen. Det er ikke et turistmål. Det er bare sant.\n\nFerge videre til Gryllefjord på Senja finnes — men det er en annen reise.',
+    kb: `ETAPPE 4 — Nyksund → Andenes:
+Bleikstranda: hvit sandstrand, Bleiksøya rett utenfor — kolonisert av lundefugl om sommeren.
+Andenes fyr: lykt siden 1859. Rødt og hvitt. Ytterpunktet av Andøya.
+Andøyabassenget: spermhval i havet rett utenfor molen hele året — et av verdens beste steder for hvalsafari.
+Andøya Space: norsk rakettoppskyting fra fastlandet. Nordlysovervåking.
+Ferge fra Andenes til Gryllefjord på Senja — tilgjengelig om sommeren for de som vil fortsette.
+Overnatting: Andenes Suite Hotel, Andrikken Hotel, Hotell Marena, Grønnbuene Rorbu Hotel.`,
+  },
+];
+
+// ════════════════════════════════════════════════════════════════════════
+// GALLERY STATE
+// ════════════════════════════════════════════════════════════════════════
+let currentSlide = 0;
+
+function buildGallery(stage) {
+  const slidesEl = document.getElementById('gallery-slides');
+  const dotsEl   = document.getElementById('gallery-dots');
+  slidesEl.innerHTML = '';
+  dotsEl.innerHTML   = '';
+  currentSlide = 0;
+
+  stage.images.forEach((img, i) => {
+    if (img.src) {
+      const el = document.createElement('img');
+      el.className = 'stage-gallery-slide';
+      el.src = img.src;
+      el.alt = img.alt;
+      el.loading = i === 0 ? 'eager' : 'lazy';
+      slidesEl.appendChild(el);
+    } else {
+      const el = document.createElement('div');
+      el.className = 'stage-gallery-placeholder';
+      el.innerHTML = '<span>BILDE KOMMER</span>';
+      slidesEl.appendChild(el);
+    }
+    const dot = document.createElement('div');
+    dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsEl.appendChild(dot);
+  });
+
+  slidesEl.style.transform = 'translateX(0)';
 }
 
-const galleryState = {};
-
-function getState(id) {
-  if (!galleryState[id]) galleryState[id] = { current: 0, total: 4 };
-  return galleryState[id];
+function goToSlide(idx) {
+  const slides = document.getElementById('gallery-slides');
+  const dots   = document.querySelectorAll('.gallery-dot');
+  const count  = STAGES[currentStageIdx].images.length;
+  currentSlide = (idx + count) % count;
+  slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
 }
 
-function updateGallery(id) {
-  const state = getState(id);
-  const slides = document.getElementById('slides-' + id.split('-')[1]);
-  const dots = document.querySelectorAll('#dots-' + id.split('-')[1] + ' .gallery-dot');
-  if (slides) slides.style.transform = `translateX(-${state.current * 100}%)`;
-  dots.forEach((d, i) => d.classList.toggle('active', i === state.current));
+document.getElementById('gallery-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
+document.getElementById('gallery-next').addEventListener('click', () => goToSlide(currentSlide + 1));
+
+// ════════════════════════════════════════════════════════════════════════
+// STAGE NAV
+// ════════════════════════════════════════════════════════════════════════
+let currentStageIdx = 0;
+let routeHistory    = [];
+let routeLoading    = false;
+
+function buildStageStrip() {
+  const strip = document.getElementById('stage-strip');
+  strip.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('span');
+      arrow.className = 'stage-pip-arrow';
+      arrow.textContent = '›';
+      strip.appendChild(arrow);
+    }
+    const pip = document.createElement('button');
+    pip.className = 'stage-pip' + (i === 0 ? ' active' : '');
+    pip.textContent = s.title.split('→')[0].trim();
+    pip.dataset.idx = i;
+    pip.addEventListener('click', () => {
+      if (parseInt(pip.dataset.idx) !== currentStageIdx) loadStage(parseInt(pip.dataset.idx));
+    });
+    strip.appendChild(pip);
+  });
 }
 
-function slideGallery(id, dir) {
-  const state = getState(id);
-  state.current = (state.current + dir + state.total) % state.total;
-  updateGallery(id);
+function updateStageStrip(idx) {
+  document.querySelectorAll('.stage-pip').forEach((p, i) => {
+    p.classList.remove('active', 'visited');
+    if (i === idx) p.classList.add('active');
+    else if (i < idx) p.classList.add('visited');
+  });
+  const activePip = document.querySelector('.stage-pip.active');
+  if (activePip) activePip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 }
 
-function goToSlide(id, index) {
-  const state = getState(id);
-  state.current = index;
-  updateGallery(id);
+function loadStage(idx) {
+  currentStageIdx = idx;
+  const stage = STAGES[idx];
+
+  updateStageStrip(idx);
+  buildGallery(stage);
+
+  document.getElementById('stage-num').textContent   = `ETAPPE ${idx + 1} AV ${STAGES.length}`;
+  document.getElementById('stage-title').textContent  = stage.title;
+  document.getElementById('stage-sub').textContent    = stage.sub;
+  document.getElementById('olai-stage-label').textContent = stage.title;
+
+  const tagsEl = document.getElementById('stage-tags');
+  tagsEl.innerHTML = stage.tags.map(t => `<span class="stage-tag">${t}</span>`).join('');
+
+  const ovEl = document.getElementById('stage-overnatting');
+  ovEl.innerHTML = `<span class="stage-overnatting-label">OVERNATTING</span><div class="stage-overnatting-list">${stage.overnatting}</div>`;
+
+  document.getElementById('stage-prev-btn').disabled = idx === 0;
+  const nextBtn = document.getElementById('stage-next-btn');
+  nextBtn.disabled = false;
+  nextBtn.textContent = idx === STAGES.length - 1 ? 'Avslutt reisen ✓' : 'Neste etappe →';
+
+  routeHistory = [];
+  document.getElementById('route-messages').innerHTML = '';
+  appendRouteMessage('olai', stage.opener);
+  routeHistory.push({ role: 'assistant', content: stage.opener });
+
+  if (voiceOn && ELEVEN_KEY) speakText(stage.opener);
+  setTimeout(() => document.getElementById('route-input').focus(), 400);
 }
+
+document.getElementById('stage-prev-btn').addEventListener('click', () => {
+  if (currentStageIdx > 0) loadStage(currentStageIdx - 1);
+});
+document.getElementById('stage-next-btn').addEventListener('click', () => {
+  if (currentStageIdx < STAGES.length - 1) {
+    loadStage(currentStageIdx + 1);
+  } else {
+    window.location.href = '/from-the-sofa.html';
+  }
+});
+
+// ════════════════════════════════════════════════════════════════════════
+// OLAI SYSTEM PROMPT
+// ════════════════════════════════════════════════════════════════════════
+function getOlaiPrompt(stage) {
+  return `Du er Olai. 54 år. Fra Nyksund i Vesterålen — ett av de siste barna der før fraflyttingen på 70-tallet. Faren din var hvalfanger. Morfaren din var skreifisker. Du kjenner denne kysten som en gammel bekjent.
+
+PERSONLIGHET:
+- Ettertenksom, rolig. Forteller historier som om de var egne minner.
+- Korte setninger med rom mellom. Sier «en» istedenfor «man».
+- Bruker gamle stedsnavn naturlig. Forklarer bare hvis noen spør.
+- «Havet glømme aldri.» — ikke et slagord. Noe du sier når noe treffer.
+- Ikke varm velkomst-guide. Du er der, du vet, du forteller — på dine premisser.
+- Du snakker alltid norsk.
+
+NÅVÆRENDE POSISJON: ${stage.title}
+${stage.sub}
+
+KUNNSKAP OM DENNE ETAPPEN:
+${stage.kb}
+
+STIL:
+- Maks 4–6 linjer per svar. Ikke ett ord mer.
+- Aldri punktlister, aldri oppsummeringer.
+- Presis og konkret — én ting om gangen.
+- Avslutt ALLTID med enten ett åpent spørsmål ELLER én observasjon som bare henger der.
+- Du sier «vi» — vi reiser dette sammen.
+
+EKSEMPEL på tonen din:
+«Havet glømme aldri.»
+«Det var ikke abstrakt politikk — det var naboer som pakket.»
+«Andøya ser ut som en annen planet. Men en planet som kjenner seg selv.»`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CHAT
+// ════════════════════════════════════════════════════════════════════════
+const routeInput = document.getElementById('route-input');
+const routeSend  = document.getElementById('route-send');
+
+routeSend.addEventListener('click', () => sendRouteMessage());
+routeInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendRouteMessage(); }
+});
+
+async function sendRouteMessage(text) {
+  const msg = (text || routeInput.value).trim();
+  if (!msg || routeLoading) return;
+  stopAudio();
+  routeInput.value = '';
+  appendRouteMessage('user', msg);
+  routeHistory.push({ role: 'user', content: msg });
+
+  const typingId = showTyping();
+  routeLoading = true;
+  routeSend.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        system: getOlaiPrompt(STAGES[currentStageIdx]),
+        messages: routeHistory.slice(-12).filter(m => m.role !== 'system'),
+      }),
+    });
+
+    removeTyping(typingId);
+
+    if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+      appendRouteMessage('error', `Serverfeil ${res.status}`);
+    } else {
+      const data = await res.json();
+      if (data.error) {
+        appendRouteMessage('error', `API-feil: ${data.error.message}`);
+      } else {
+        const reply = data.content?.[0]?.text || 'Tomt svar.';
+        appendRouteMessage('olai', reply, true);
+        routeHistory.push({ role: 'assistant', content: reply });
+        if (voiceOn && ELEVEN_KEY) speakText(reply);
+      }
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendRouteMessage('error', `Nettverksfeil: ${err.message}`);
+  }
+  routeLoading = false;
+  routeSend.disabled = false;
+  routeInput.focus();
+}
+
+function appendRouteMessage(role, text, withSpeakBtn = false) {
+  const msgs = document.getElementById('route-messages');
+  const row  = document.createElement('div');
+  row.className = `route-msg-row${role === 'user' ? ' user' : ''}`;
+
+  if (role === 'olai') {
+    const av = document.createElement('img');
+    av.className = 'route-olai-avatar';
+    av.src = '/Olai.jpeg'; av.alt = 'Olai';
+    row.appendChild(av);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `route-bubble ${role === 'user' ? 'user' : role === 'error' ? 'error' : 'olai'}`;
+
+  const textNode = document.createElement('div');
+  textNode.textContent = text;
+  bubble.appendChild(textNode);
+
+  if (withSpeakBtn && role === 'olai') {
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.textContent = '🔊 Hør Olai';
+    btn.addEventListener('click', () => speakText(text, btn));
+    bubble.appendChild(btn);
+  }
+
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+let typingCounter = 0;
+function showTyping() {
+  const id = 'typing-' + (++typingCounter);
+  const msgs = document.getElementById('route-messages');
+  const row  = document.createElement('div');
+  row.className = 'route-msg-row';
+  row.id = id;
+  const av = document.createElement('img');
+  av.className = 'route-olai-avatar';
+  av.src = '/Olai.jpeg'; av.alt = 'Olai';
+  row.appendChild(av);
+  const bubble = document.createElement('div');
+  bubble.className = 'route-bubble olai';
+  bubble.innerHTML = '<div class="route-typing"><span></span><span></span><span></span></div>';
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════════════
+buildStageStrip();
+loadStage(0);
 </script>
-
 </body>
 </html>
