@@ -1846,11 +1846,17 @@ async function speakText(text, voiceId, row, btn) {
   }
 }
 
-// Auto-start route if URL param present
+// Auto-start route or guide if URL param present
 (function() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('route') === 'grand-loop') {
     openRoute();
+    return;
+  }
+  const guideId = params.get('guide');
+  if (guideId) {
+    const found = GUIDES.find(g => g.id === guideId);
+    if (found) startChat(found);
   }
 })();
 </script>
