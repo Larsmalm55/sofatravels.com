@@ -90,18 +90,19 @@ body {
 
 /* ── BODY ── */
 .route-body {
-  display: flex; flex: 1; overflow: hidden;
+  display: flex; flex: 1; overflow: hidden; min-height: 0;
 }
 
 /* ── LEFT — STAGE ── */
 .route-left {
   flex: 1; display: flex; flex-direction: column;
   overflow: hidden; border-right: 1px solid var(--border);
+  min-height: 0; min-width: 0;
 }
 
 /* Gallery */
 .stage-gallery {
-  position: relative; height: 52%; flex-shrink: 0; overflow: hidden;
+  position: relative; height: 380px; flex-shrink: 0; overflow: hidden;
   background: #050810;
 }
 .stage-gallery-slides {
@@ -302,9 +303,9 @@ body {
 
 @media (max-width: 768px) {
   .route-body { flex-direction: column; }
-  .route-left { height: 55%; }
-  .route-right { width: 100%; flex: 1; }
-  .stage-gallery { height: 45%; }
+  .route-left { height: 55%; min-height: 0; }
+  .route-right { width: 100%; flex: 1; min-height: 0; }
+  .stage-gallery { height: 220px; }
 }
 </style>
 </head>
