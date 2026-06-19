@@ -100,47 +100,37 @@ body {
   min-height: 0; min-width: 0;
 }
 
-/* Gallery */
+/* Gallery — simple static img, src swapped by JS (same pattern as working Lars page) */
 .stage-gallery {
-  position: relative; height: 380px; flex-shrink: 0; overflow: hidden;
+  flex-shrink: 0; padding: 20px 28px 0;
+}
+.stage-gallery-img {
+  width: 100%; max-height: 320px; object-fit: cover;
+  border-radius: 4px; display: block;
   background: #050810;
 }
-.stage-gallery-slides {
-  position: relative;
-  width: 100%; height: 100%;
-}
-.stage-gallery-slide {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover; display: none;
-}
-.stage-gallery-slide.active { display: block; }
 .stage-gallery-placeholder {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;
-  display: none;
-  align-items: center; justify-content: center;
-  background: rgba(8,10,14,.8);
+  width: 100%; height: 240px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8,10,14,.8); border-radius: 4px;
+  border: 1px dashed rgba(42,106,154,.2);
 }
-.stage-gallery-placeholder.active { display: flex; }
 .stage-gallery-placeholder span {
   font-size: .7rem; color: rgba(90,112,128,.35); letter-spacing: .15em;
 }
+.gallery-controls {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 10px 0 4px;
+}
 .gallery-nav-btn {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(8,10,14,.7); border: 1px solid rgba(42,106,154,.3);
-  color: var(--blue2); font-size: 1.1rem;
-  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(42,106,154,.12); border: 1px solid rgba(42,106,154,.3);
+  color: var(--blue2); font-size: 1rem;
+  width: 32px; height: 32px; border-radius: 50%;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background .2s; z-index: 2;
+  transition: background .2s;
 }
-.gallery-nav-btn:hover { background: rgba(42,106,154,.2); }
-.gallery-nav-btn.prev { left: 12px; }
-.gallery-nav-btn.next { right: 12px; }
-.gallery-dots {
-  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 7px;
-}
+.gallery-nav-btn:hover { background: rgba(42,106,154,.25); }
+.gallery-dots { display: flex; gap: 7px; }
 .gallery-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: rgba(74,138,187,.3); cursor: pointer;
@@ -148,16 +138,14 @@ body {
 }
 .gallery-dot.active { background: var(--blue2); }
 
-.stage-hero-overlay { position: absolute; inset: 0; background: rgba(8,10,14,.2); pointer-events: none; }
-.stage-hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 55%); pointer-events: none; }
-.stage-hero-label { position: absolute; bottom: 20px; left: 28px; right: 28px; }
-.stage-num { font-size: .65rem; letter-spacing: .3em; color: var(--blue2); margin-bottom: 4px; }
+.stage-num { font-size: .65rem; letter-spacing: .3em; color: var(--blue2); margin: 18px 28px 4px; }
 .stage-title-main {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.4rem, 3vw, 2rem); color: var(--text);
   font-weight: 700; line-height: 1.1;
+  margin: 0 28px;
 }
-.stage-subtitle { font-size: .72rem; color: var(--muted); letter-spacing: .06em; margin-top: 4px; }
+.stage-subtitle { font-size: .72rem; color: var(--muted); letter-spacing: .06em; margin: 4px 28px 0; }
 
 /* Stage content */
 .stage-content { flex: 1; overflow-y: auto; padding: 18px 28px 14px; }
@@ -336,18 +324,17 @@ body {
 
   <!-- LEFT -->
   <div class="route-left">
+    <p class="stage-num" id="stage-num"></p>
+    <h2 class="stage-title-main" id="stage-title"></h2>
+    <p class="stage-subtitle" id="stage-sub"></p>
+
     <div class="stage-gallery" id="stage-gallery">
-      <div class="stage-gallery-slides" id="gallery-slides"></div>
+      <img class="stage-gallery-img" id="gallery-img" src="" alt="" loading="eager" />
+    </div>
+    <div class="gallery-controls">
       <button class="gallery-nav-btn prev" id="gallery-prev">‹</button>
-      <button class="gallery-nav-btn next" id="gallery-next">›</button>
       <div class="gallery-dots" id="gallery-dots"></div>
-      <div class="stage-hero-overlay"></div>
-      <div class="stage-hero-fade"></div>
-      <div class="stage-hero-label">
-        <p class="stage-num" id="stage-num"></p>
-        <h2 class="stage-title-main" id="stage-title"></h2>
-        <p class="stage-subtitle" id="stage-sub"></p>
-      </div>
+      <button class="gallery-nav-btn next" id="gallery-next">›</button>
     </div>
 
     <div class="stage-content" id="stage-content">
@@ -591,41 +578,38 @@ Overnatting: Andenes Suite Hotel, Andrikken Hotel, Hotell Marena, Grønnbuene Ro
 let currentSlide = 0;
 
 function buildGallery(stage) {
-  const slidesEl = document.getElementById('gallery-slides');
-  const dotsEl   = document.getElementById('gallery-dots');
-  slidesEl.innerHTML = '';
-  dotsEl.innerHTML   = '';
+  const dotsEl = document.getElementById('gallery-dots');
+  dotsEl.innerHTML = '';
   currentSlide = 0;
 
   stage.images.forEach((img, i) => {
-    if (img.src) {
-      const el = document.createElement('img');
-      el.className = 'stage-gallery-slide' + (i === 0 ? ' active' : '');
-      el.src = img.src;
-      el.alt = img.alt;
-      el.loading = i === 0 ? 'eager' : 'lazy';
-      slidesEl.appendChild(el);
-    } else {
-      const el = document.createElement('div');
-      el.className = 'stage-gallery-placeholder' + (i === 0 ? ' active' : '');
-      el.innerHTML = '<span>BILDE KOMMER</span>';
-      slidesEl.appendChild(el);
-    }
     const dot = document.createElement('div');
     dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
     dot.addEventListener('click', () => goToSlide(i));
     dotsEl.appendChild(dot);
   });
+
+  showSlide(0);
+}
+
+function showSlide(idx) {
+  const stage = STAGES[currentStageIdx];
+  const galleryEl = document.getElementById('stage-gallery');
+  const img = stage.images[idx];
+
+  if (img && img.src) {
+    galleryEl.innerHTML = `<img class="stage-gallery-img" src="${img.src}" alt="${img.alt || ''}" loading="eager" />`;
+  } else {
+    galleryEl.innerHTML = `<div class="stage-gallery-placeholder"><span>BILDE KOMMER</span></div>`;
+  }
+
+  document.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
 }
 
 function goToSlide(idx) {
-  const slidesEl = document.getElementById('gallery-slides');
-  const slides = slidesEl.querySelectorAll('.stage-gallery-slide, .stage-gallery-placeholder');
-  const dots   = document.querySelectorAll('.gallery-dot');
-  const count  = STAGES[currentStageIdx].images.length;
+  const count = STAGES[currentStageIdx].images.length;
   currentSlide = (idx + count) % count;
-  slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-  dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  showSlide(currentSlide);
 }
 
 document.getElementById('gallery-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
