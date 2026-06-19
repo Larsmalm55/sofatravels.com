@@ -351,7 +351,7 @@ body {
   <!-- RIGHT — CHAT -->
   <div class="route-right">
     <div class="olai-header">
-      <img src="/images/vesteralen/Olai.jpeg" alt="Olai" class="olai-avatar-img" />
+      <img src="/images/olai/Olai.jpg" alt="Olai" class="olai-avatar-img" />
       <div>
         <div class="olai-name-main">Olai</div>
         <div class="olai-current-stage" id="olai-stage-label">Vesterålen</div>
@@ -450,10 +450,10 @@ const STAGES = [
     title: 'Evenes — der reisen begynner',
     sub: 'Harstad/Narvik lufthavn · Ofotfjorden · 800 år med historie',
     images: [
-      { src: '/images/vesteralen/Evenes_flyplass.jpeg', alt: 'Evenes flyplass fra luften' },
-      { src: '/images/vesteralen/Evenes_friluft.jpeg', alt: 'Evenestangen og Ofotfjorden' },
-      { src: '/images/vesteralen/Evenes_kirke.jpg', alt: 'Evenes kirke fra 1800' },
-      { src: '/images/vesteralen/Tysk_bunker.jpeg', alt: 'Tysk bunker fra andre verdenskrig' },
+      { src: '/images/evenes/Evenes_flyplass.jpg', alt: 'Evenes flyplass fra luften' },
+      { src: '/images/evenes/Evenes_friluft.jpg', alt: 'Evenestangen og Ofotfjorden' },
+      { src: '/images/evenes/Evenes_kirke.jpg', alt: 'Evenes kirke fra 1800' },
+      { src: '/images/evenes/Tysk_bunker.jpg', alt: 'Tysk bunker fra andre verdenskrig' },
     ],
     tags: ['Evenes kirke — 1250', 'Tirpitz gjemte seg her', 'Evenestangen fort', 'Várdobáiki samisk senter'],
     overnatting: 'Evenes Airport Hotel',
@@ -493,7 +493,7 @@ Et av Norges viktigste strategiske knutepunkter i nord. Dualiteten er ikke tilfe
     title: 'Evenes → Sortland',
     sub: 'Buss langs Ofotfjorden · Hadselfjorden · Den blå byen',
     images: [
-      { src: '/images/vesteralen/Sortland.jpg', alt: 'Sortland fra luften' },
+      { src: '/images/sortland/Sortland.jpg', alt: 'Sortland fra luften' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -513,7 +513,7 @@ Din personlige tilknytning: Du kjenner veien hit fra barndommen. Ingenting er gl
     title: 'Sortland → Stokmarknes',
     sub: 'Hurtigrutemuseet · Hadseløya · Hurtigrutens fødested 1893',
     images: [
-      { src: '/images/vesteralen/Stokmarknes.jpeg', alt: 'Stokmarknes fra sjøen' },
+      { src: '/images/stokmarknes/Stokmarknes.jpg', alt: 'Stokmarknes fra sjøen' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -533,7 +533,7 @@ Overnatting: Hurtigruten Hus, Quality Hotel Richard With, Melbu Hotel.`,
     title: 'Stokmarknes → Nyksund',
     sub: 'Buss via Myre · Dronningruta · Det gjenoppdagede fiskeværet',
     images: [
-      { src: '/images/vesteralen/Nyksund.jpeg', alt: 'Nyksund fiskeværet' },
+      { src: '/images/nyksund/Nyksund.jpg', alt: 'Nyksund fiskeværet' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -554,7 +554,7 @@ Overnatting: NyksundRom.`,
     title: 'Nyksund → Andenes',
     sub: 'Buss via Risøyhamn · Bleikstranda · Andenes fyr siden 1859',
     images: [
-      { src: '/images/vesteralen/Bleik-Andøya.jpeg', alt: 'Bleikstranda på Andøya' },
+      { src: '/images/andenes/Bleik-Andoya.jpg', alt: 'Bleikstranda på Andøya' },
       { src: null, alt: '' },
       { src: null, alt: '' },
       { src: null, alt: '' },
@@ -796,7 +796,7 @@ function appendRouteMessage(role, text, withSpeakBtn = false) {
   if (role === 'olai') {
     const av = document.createElement('img');
     av.className = 'route-olai-avatar';
-    av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
+    av.src = '/images/olai/Olai.jpg'; av.alt = 'Olai';
     row.appendChild(av);
   }
 
@@ -829,7 +829,7 @@ function showTyping() {
   row.id = id;
   const av = document.createElement('img');
   av.className = 'route-olai-avatar';
-  av.src = '/images/vesteralen/Olai.jpeg'; av.alt = 'Olai';
+  av.src = '/images/olai/Olai.jpg'; av.alt = 'Olai';
   row.appendChild(av);
   const bubble = document.createElement('div');
   bubble.className = 'route-bubble olai';
