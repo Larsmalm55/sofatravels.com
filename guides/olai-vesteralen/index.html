@@ -450,6 +450,7 @@ const STAGES = [
     title: 'Evenes — der reisen begynner',
     sub: 'Harstad/Narvik lufthavn · Ofotfjorden · 800 år med historie',
     images: [
+      { type: 'video', src: '/images/evenes/Olai_velkommen.mp4', alt: 'Olai ønsker velkommen' },
       { src: '/images/evenes/Evenes_flyplass.jpg', alt: 'Evenes flyplass fra luften' },
       { src: '/images/evenes/Evenes_friluft.jpg', alt: 'Evenestangen og Ofotfjorden' },
       { src: '/images/evenes/Evenes_kirke.jpg', alt: 'Evenes kirke fra 1800' },
@@ -624,10 +625,12 @@ function buildGallery(stage) {
 function showSlide(idx) {
   const stage = STAGES[currentStageIdx];
   const galleryEl = document.getElementById('stage-gallery');
-  const img = stage.images[idx];
+  const item = stage.images[idx];
 
-  if (img && img.src) {
-    galleryEl.innerHTML = `<img class="stage-gallery-img" src="${img.src}" alt="${img.alt || ''}" loading="eager" />`;
+  if (item && item.type === 'video' && item.src) {
+    galleryEl.innerHTML = `<video class="stage-gallery-img" src="${item.src}" controls playsinline preload="metadata"></video>`;
+  } else if (item && item.src) {
+    galleryEl.innerHTML = `<img class="stage-gallery-img" src="${item.src}" alt="${item.alt || ''}" loading="eager" />`;
   } else {
     galleryEl.innerHTML = `<div class="stage-gallery-placeholder"><span>BILDE KOMMER</span></div>`;
   }
