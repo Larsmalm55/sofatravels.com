@@ -17,14 +17,17 @@
       --text:   #EAE0CF;
       --sub:    #9AB0BA;
       --muted:  #5A7A8A;
-      --panel:  #0C1820;
     }
-    html, body { height: 100%; background: var(--bg); font-family: 'Crimson Text', Georgia, serif; color: var(--text); overflow: hidden; }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
 
-    /* ── TOP BAR ── */
+    /* ══ TOP BAR ══ */
     #top-bar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 48px;
-      background: rgba(8,14,20,.95); backdrop-filter: blur(16px);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; padding: 0 16px; gap: 12px;
     }
@@ -32,146 +35,290 @@
       background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
       padding: 4px 12px; border-radius: 4px; cursor: pointer;
       font-size: .72rem; letter-spacing: .1em; font-family: inherit;
-      transition: all .2s; text-decoration: none; display: inline-block;
+      transition: all .2s; text-decoration: none;
     }
     #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
-    .hdr-spacer { flex: 1; }
-    .hdr-title { font-family: 'Playfair Display', serif; font-size: .82rem; letter-spacing: .2em; color: var(--sub); text-align: center; }
-    .hdr-title span { color: var(--gold); }
-    .hdr-controls { flex: 1; display: flex; justify-content: flex-end; gap: 6px; }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
     .hdr-btn {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       background: rgba(12,24,32,.7); border: 1px solid var(--border);
-      color: var(--muted); cursor: pointer; font-size: .82rem;
-      display: flex; align-items: center; justify-content: center; transition: all .2s;
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
     }
     .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
     .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
 
-    /* ── MAIN LAYOUT ── */
-    #app { display: flex; height: 100vh; padding-top: 48px; overflow: hidden; }
+    /* ══ MAIN ══ */
+    #app {
+      display: flex; height: 100vh; padding-top: 46px; overflow: hidden;
+    }
 
-    /* ── LEFT: IMAGE ── */
-    #portrait-col {
-      width: 520px; flex-shrink: 0; position: relative;
+    /* ══ LEFT — SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
       background: #000; overflow: hidden;
+      min-width: 300px;
     }
     .portrait-slide {
-      position: absolute; inset: 0; width: 100%; height: 100%;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover; object-position: center top;
-      opacity: 0; transition: opacity 2s ease;
+      opacity: 0; transition: opacity 2.2s ease;
     }
     .portrait-slide.active { opacity: 1; }
-    #portrait-mist {
-      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; pointer-events: none;
-      height: 30%;
-      background: linear-gradient(to top, rgba(8,14,20,.98) 0%, rgba(8,14,20,.5) 50%, transparent 100%);
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 28%;
+      background: linear-gradient(to top,
+        rgba(8,14,20,1) 0%, rgba(8,14,20,.6) 40%, transparent 100%);
+      pointer-events: none;
     }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
+      width: 18%;
+      background: linear-gradient(to left,
+        rgba(8,14,20,.85) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Guide badge */
     #guide-badge {
-      position: absolute; top: 16px; left: 16px; z-index: 10;
-      display: flex; align-items: center; gap: 10px;
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
     }
-    .badge-avatar { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(42,127,168,.5); }
-    .badge-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .badge-name { font-family: 'Playfair Display', serif; font-size: .95rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.8); }
-    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 7px rgba(76,200,122,.7); animation: op 3s infinite; }
-    @keyframes op { 0%,100%{box-shadow:0 0 5px rgba(76,200,122,.4)} 50%{box-shadow:0 0 12px rgba(76,200,122,.9)} }
-    #sted-badge {
-      position: absolute; top: 16px; right: 16px; z-index: 10;
-      background: rgba(8,14,20,.6); backdrop-filter: blur(12px);
+    .badge-av {
+      width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
+      border: 1.5px solid rgba(42,127,168,.5);
+    }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name {
+      font-family: 'Playfair Display', serif;
+      font-size: .9rem; color: #fff;
+      text-shadow: 0 1px 8px rgba(0,0,0,.9);
+    }
+    .online-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8);
+      animation: pulse-dot 3s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 4px rgba(76,200,122,.4); }
+      50%      { box-shadow: 0 0 10px rgba(76,200,122,.9); }
+    }
+
+    /* Location badge */
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(8,14,20,.65); backdrop-filter: blur(12px);
       border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
       padding: 5px 12px; text-align: right;
     }
-    #sted-region { font-size: 8px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
-    #sted-name { font-family: 'Playfair Display', serif; font-size: .88rem; color: var(--text); }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+
+    /* Slide dots */
     #slide-dots {
-      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-      z-index: 10; display: flex; gap: 6px; align-items: center;
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
     }
-    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.25); transition: all .3s; cursor: pointer; }
-    .sdot.active { background: var(--gold); transform: scale(1.3); }
+    .sdot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer;
+    }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
 
-    /* ── RIGHT: CHAT + PANEL ── */
+    /* ══ RIGHT COL ══ */
     #right-col {
-      flex: 1; min-width: 0; display: flex; flex-direction: column;
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
       background: var(--bg); overflow: hidden;
+      border-left: 1px solid var(--border);
     }
 
-    /* Guide panel */
-    #guide-panel {
-      padding: 20px 24px 16px;
+    /* ── Right top: topics + hilde panel ── */
+    #right-top {
+      display: flex; flex-direction: row;
+      flex: 0 0 44%;
       border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* Topics */
+    #topics-panel {
+      flex: 0 0 48%;
+      padding: 14px 14px 10px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    .tp-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--text); margin-bottom: 1px;
+    }
+    .tp-tagline {
+      font-size: .7rem; color: var(--muted); font-style: italic;
+      margin-bottom: 10px; line-height: 1.4;
+      transition: all .35s; overflow: hidden; max-height: 32px;
+    }
+    #topics-panel.compact .tp-tagline { max-height: 0; margin-bottom: 0; opacity: 0; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 6px; flex-shrink: 0; }
+    #topics {
+      display: flex; flex-direction: column; gap: 4px;
+      overflow: hidden; flex: 1;
+      transition: opacity .35s;
+    }
+    #topics.hidden { opacity: 0; pointer-events: none; }
+    .topic-btn {
+      background: rgba(10,20,30,.9);
+      border: 1px solid rgba(42,127,168,.18);
+      color: var(--sub); padding: 6px 10px; border-radius: 4px;
+      font-size: .72rem; cursor: pointer; font-family: inherit;
+      text-align: left; transition: all .2s; line-height: 1.35;
       flex-shrink: 0;
     }
-    #guide-panel .gp-region { font-size: 8px; letter-spacing: .35em; color: var(--gold); margin-bottom: 3px; }
-    #guide-panel .gp-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text); margin-bottom: 4px; }
-    #guide-panel .gp-tagline { font-size: .8rem; color: var(--muted); font-style: italic; margin-bottom: 14px; }
-    #topics-label { font-size: 8px; letter-spacing: .3em; color: var(--muted); margin-bottom: 8px; }
-    #topics { display: flex; flex-direction: column; gap: 6px; }
-    .topic-btn {
-      background: rgba(12,24,32,.8); border: 1px solid var(--border);
-      color: var(--sub); padding: 7px 14px; border-radius: 4px;
-      font-size: .8rem; cursor: pointer; font-family: inherit;
-      text-align: left; transition: all .2s; line-height: 1.3;
+    .topic-btn:hover {
+      border-color: rgba(42,127,168,.55);
+      color: var(--text); background: rgba(42,127,168,.1);
     }
-    .topic-btn:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.1); }
 
-    /* Chat */
+    /* Hilde portrait panel */
+    #hilde-panel {
+      flex: 1; position: relative; overflow: hidden; background: #050A0F;
+    }
+    #hilde-panel video,
+    #hilde-panel img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+    }
+    #hilde-panel-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to top,  rgba(8,14,20,.9) 0%, rgba(8,14,20,.2) 35%, transparent 65%),
+        linear-gradient(to right, rgba(8,14,20,.6) 0%, transparent 40%);
+    }
+    #hilde-panel-name {
+      position: absolute; bottom: 10px; left: 12px;
+      font-family: 'Playfair Display', serif;
+      font-size: .82rem; color: rgba(234,224,207,.8);
+      letter-spacing: .05em;
+    }
+    #hilde-panel-sub {
+      font-size: .6rem; letter-spacing: .15em;
+      color: var(--gold); display: block; margin-bottom: 2px;
+    }
+
+    /* ── Chat ── */
     #chat-col {
-      flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+      flex: 1; display: flex; flex-direction: column;
+      min-height: 0; overflow: hidden;
+    }
+    #tip-bar {
+      padding: 5px 16px 3px;
+      font-size: .68rem; color: var(--muted);
+      border-bottom: 1px solid rgba(26,46,58,.4);
+      flex-shrink: 0;
     }
     #messages {
       flex: 1; overflow-y: auto; overflow-x: hidden;
-      padding: 16px 20px 8px;
-      display: flex; flex-direction: column; gap: 10px;
+      padding: 12px 16px 6px;
+      display: flex; flex-direction: column; gap: 8px;
     }
     #messages::-webkit-scrollbar { width: 2px; }
     #messages::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
-    .msg-row { display: flex; gap: 8px; align-items: flex-end; }
+
+    .msg-row { display: flex; gap: 7px; align-items: flex-end; }
     .msg-row.user { justify-content: flex-end; }
-    .msg-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(42,127,168,.35); }
-    .msg-bubble { max-width: 80%; padding: 9px 14px; line-height: 1.65; font-size: .9rem; }
-    .msg-bubble.bot { background: rgba(12,24,32,.9); color: #D8CCBC; border: 1px solid rgba(42,127,168,.2); border-radius: 12px 12px 12px 3px; }
-    .msg-bubble.bot em { color: rgba(201,168,76,.65); font-style: italic; }
-    .msg-bubble.user-b { background: rgba(20,38,52,.9); color: var(--text); border: 1px solid rgba(42,127,168,.18); border-radius: 12px 12px 3px 12px; }
-    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 8px; }
-    .speak-btn { display: inline-block; margin-top: 6px; background: none; border: 1px solid rgba(42,127,168,.22); color: var(--muted); border-radius: 4px; padding: 2px 8px; font-size: .66rem; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .msg-av {
+      width: 24px; height: 24px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 1px solid rgba(42,127,168,.3);
+    }
+    .msg-bubble {
+      max-width: 86%; padding: 8px 12px;
+      line-height: 1.6; font-size: .88rem;
+    }
+    .msg-bubble.bot {
+      background: rgba(10,20,30,.92);
+      color: #D4C8B6;
+      border: 1px solid rgba(42,127,168,.18);
+      border-radius: 10px 10px 10px 2px;
+    }
+    .msg-bubble.bot em {
+      color: rgba(201,168,76,.6); font-style: italic;
+    }
+    .msg-bubble.user-b {
+      background: rgba(18,34,48,.92);
+      color: var(--text);
+      border: 1px solid rgba(42,127,168,.15);
+      border-radius: 10px 10px 2px 10px;
+    }
+    .msg-bubble.error {
+      background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px;
+    }
+    .speak-btn {
+      display: inline-block; margin-top: 5px; background: none;
+      border: 1px solid rgba(42,127,168,.2); color: var(--muted);
+      border-radius: 4px; padding: 2px 7px; font-size: .64rem;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
     .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
     .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.1); }
-    .typing { color: var(--sea); letter-spacing: .3em; animation: pulse 1.4s infinite; }
-    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+    .typing { color: var(--sea); letter-spacing: .3em; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
 
     #input-row {
-      display: flex; gap: 8px; padding: 10px 16px 14px;
-      background: rgba(8,14,20,.95); backdrop-filter: blur(20px);
+      display: flex; gap: 8px; padding: 9px 14px 12px;
+      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
       border-top: 1px solid var(--border); flex-shrink: 0;
     }
     #chat-input {
-      flex: 1; background: rgba(10,18,28,.92); border: 1px solid var(--border);
-      color: var(--text); padding: 10px 18px; border-radius: 22px;
-      font-size: .9rem; outline: none; font-family: 'Crimson Text', Georgia, serif;
+      flex: 1; background: rgba(10,18,28,.94);
+      border: 1px solid var(--border); color: var(--text);
+      padding: 9px 16px; border-radius: 20px;
+      font-size: .88rem; outline: none;
+      font-family: 'Crimson Text', Georgia, serif;
       transition: border-color .2s;
     }
     #chat-input:focus { border-color: rgba(42,127,168,.5); }
     #chat-input::placeholder { color: var(--muted); }
     #send-btn {
-      width: 44px; height: 44px; border-radius: 50%; border: none;
-      background: var(--sea); color: #fff; font-size: 1.1rem;
-      cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center;
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: var(--sea); color: #fff; font-size: 1rem;
+      cursor: pointer; transition: all .2s;
+      flex-shrink: 0; align-self: center;
     }
     #send-btn:hover { background: #3A9FC8; transform: scale(1.06); }
     #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
 
-    #tip-bar { padding: 4px 20px 0; font-size: .7rem; color: var(--muted); flex-shrink: 0; }
-
     /* API banner */
-    .api-banner { display: none; position: fixed; top: 48px; left: 0; right: 0; z-index: 999; background: #0A1820; border-bottom: 2px solid var(--sea); padding: 10px 20px; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .api-banner {
+      display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99;
+      background: #0A1820; border-bottom: 2px solid var(--sea);
+      padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
     .api-banner.show { display: flex; }
-    .api-banner label { font-size: .82rem; color: var(--text); }
+    .api-banner label { font-size: .8rem; color: var(--text); }
     .api-banner label strong { color: var(--sea); }
-    .api-banner input { flex: 1; min-width: 200px; background: #0A1420; border: 1px solid rgba(42,127,168,.4); color: var(--text); padding: 6px 12px; border-radius: 4px; font-size: .8rem; font-family: monospace; outline: none; }
-    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: .8rem; }
-    .banner-close { background: none !important; color: var(--muted) !important; padding: 4px 8px !important; }
+    .api-banner input {
+      flex: 1; min-width: 180px; background: #0A1420;
+      border: 1px solid rgba(42,127,168,.4); color: var(--text);
+      padding: 5px 10px; border-radius: 4px; font-size: .78rem;
+      font-family: monospace; outline: none;
+    }
+    .api-banner button {
+      background: var(--sea); border: none; color: #fff;
+      padding: 5px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .78rem;
+    }
+    .banner-close { background: none !important; color: var(--muted) !important; }
 
     * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
   </style>
@@ -181,9 +328,8 @@
 <!-- TOP BAR -->
 <header id="top-bar">
   <a href="/from-the-sofa" id="back-btn">← Guider</a>
-  <div class="hdr-spacer"></div>
-  <div class="hdr-title">SOFATRAVELS · <span>BERGEN</span></div>
-  <div class="hdr-controls">
+  <div class="hdr-center">SOFATRAVELS · <span>BERGEN</span></div>
+  <div class="hdr-right">
     <button class="hdr-btn" id="voice-btn" title="Hildes stemme">🔇</button>
     <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
   </div>
@@ -197,28 +343,31 @@
   <button class="banner-close" id="eleven-banner-close">✕</button>
 </div>
 
-<!-- MAIN -->
+<!-- APP -->
 <div id="app">
 
-  <!-- LEFT: IMAGE -->
-  <div id="portrait-col">
-    <img class="portrait-slide active" src="hilde-bergen.jpg" alt="Hilde i Bergen" />
-    <img class="portrait-slide" src="bergen-bryggen.jpg" alt="Bryggen" />
-    <img class="portrait-slide" src="bergen-fisketorget.jpg" alt="Fisketorget" />
-    <img class="portrait-slide" src="bergen-skostredet.jpg" alt="Skostredet" />
-    <img class="portrait-slide" src="bergen-natt.jpg" alt="Bergen om kvelden" />
+  <!-- ══ LEFT: SLIDESHOW ══ -->
+  <div id="left-col">
+    <img class="portrait-slide active" src="hilde-bergen.jpg"       alt="Hilde i Bergen" />
+    <img class="portrait-slide"        src="bergen-bryggen.jpg"     alt="Bryggen" />
+    <img class="portrait-slide"        src="bergen-fisketorget.jpg" alt="Fisketorget" />
+    <img class="portrait-slide"        src="bergen-skostredet.jpg"  alt="Skostredet" />
+    <img class="portrait-slide"        src="bergen-natt.jpg"        alt="Bergen om kvelden" />
 
-    <div id="portrait-mist"></div>
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
 
     <div id="guide-badge">
-      <div class="badge-avatar"><img src="hilde-bergen.jpg" alt="Hilde" /></div>
+      <div class="badge-av"><img src="hilde-bergen.jpg" alt="Hilde" /></div>
       <span class="badge-name">Hilde</span>
       <span class="online-dot"></span>
     </div>
-    <div id="sted-badge">
-      <div id="sted-region">VESTLAND · NORGE</div>
-      <div id="sted-name">Bergen</div>
+
+    <div id="loc-badge">
+      <div id="loc-region">VESTLAND · NORGE</div>
+      <div id="loc-name">Bergen</div>
     </div>
+
     <div id="slide-dots">
       <div class="sdot active" data-idx="0"></div>
       <div class="sdot" data-idx="1"></div>
@@ -228,28 +377,46 @@
     </div>
   </div>
 
-  <!-- RIGHT: PANEL + CHAT -->
+  <!-- ══ RIGHT ══ -->
   <div id="right-col">
 
-    <!-- Guide info + topics -->
-    <div id="guide-panel">
-      <div class="gp-region">BERGEN</div>
-      <div class="gp-name">Hilde</div>
-      <div class="gp-tagline">«Trebyen, havnen og lagene ingen ser»</div>
-      <div id="topics-label">FORESLÅTTE TEMAER</div>
-      <div id="topics">
-        <button class="topic-btn" data-msg="Fortell meg om Bryggen — det ingen ser">Bryggen og det ingen ser</button>
-        <button class="topic-btn" data-msg="Hva skjedde med Anne Pedersdatter ved Domkirken?">Heksebrenningen ved Domkirken</button>
-        <button class="topic-btn" data-msg="Hva er historien om Theta-gruppen i Enhjørningsgården?">Theta-gruppen og det hemmelige rommet</button>
-        <button class="topic-btn" data-msg="Fortell om Dyveke og kongen som møttes i Bergen">Dyveke og kjærlighetshistorien</button>
-        <button class="topic-btn" data-msg="Hva skjuler seg i smauene mellom Øvregaten og Bryggen?">Smauene og det skjulte Bergen</button>
-        <button class="topic-btn" data-msg="Hva er historien bak Nøstet og Skottegaten?">Nøstet og arbeiderstrøket</button>
+    <!-- Top: topics + Hilde portrait -->
+    <div id="right-top">
+
+      <!-- Topics -->
+      <div id="topics-panel">
+        <div class="tp-region">BERGEN</div>
+        <div class="tp-name">Hilde</div>
+        <div class="tp-tagline">«Trebyen, havnen og lagene ingen ser»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-msg="Fortell meg om Bryggen — det ingen ser">Bryggen og det ingen ser</button>
+          <button class="topic-btn" data-msg="Hva skjedde med Anne Pedersdatter ved Domkirken?">Heksebrenningen ved Domkirken</button>
+          <button class="topic-btn" data-msg="Hva er historien om Theta-gruppen i Enhjørningsgården?">Theta-gruppen og det hemmelige rommet</button>
+          <button class="topic-btn" data-msg="Fortell om Dyveke og kongen som møttes i Bergen">Dyveke og kjærlighetshistorien</button>
+          <button class="topic-btn" data-msg="Hva skjuler seg i smauene mellom Øvregaten og Bryggen?">Smauene og det skjulte Bergen</button>
+          <button class="topic-btn" data-msg="Hva er historien bak Nøstet og Skottegaten?">Nøstet og arbeiderstrøket</button>
+        </div>
       </div>
-    </div>
+
+      <!-- Hilde portrait / video -->
+      <div id="hilde-panel">
+        <!-- Bytt til <video> når video er klar:
+        <video autoplay muted loop playsinline src="hilde-bergen-video.mp4"></video>
+        -->
+        <img src="hilde-bergen.jpg" alt="Hilde" />
+        <div id="hilde-panel-overlay"></div>
+        <div id="hilde-panel-name">
+          <span id="hilde-panel-sub">GUIDE</span>
+          Hilde
+        </div>
+      </div>
+
+    </div><!-- /right-top -->
 
     <!-- Chat -->
     <div id="chat-col">
-      <div id="tip-bar">💬 Tips: Spør Hilde om skjulte steder, mørke historier eller usynlig Bergen</div>
+      <div id="tip-bar">💬 Spør Hilde om skjulte historier, mørke steder eller det usynlige Bergen</div>
       <div id="messages" role="log" aria-live="polite"></div>
       <div id="input-row">
         <input type="search" id="chat-input" autocomplete="off"
@@ -259,35 +426,30 @@
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /right-col -->
+</div><!-- /app -->
 
 <script>
-// ── SLIDESHOW ──
+// ══ SLIDESHOW ══
 const slides = document.querySelectorAll('.portrait-slide');
-const dots = document.querySelectorAll('.sdot');
-let currentSlide = 0;
-let slideInterval;
-function goToSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  dots[currentSlide].classList.remove('active');
-  currentSlide = (n + slides.length) % slides.length;
-  slides[currentSlide].classList.add('active');
-  dots[currentSlide].classList.add('active');
+const dots   = document.querySelectorAll('.sdot');
+let cur = 0, timer;
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
 }
-function startSlideshow() { slideInterval = setInterval(() => goToSlide(currentSlide + 1), 12000); }
-dots.forEach(dot => dot.addEventListener('click', () => {
-  clearInterval(slideInterval);
-  goToSlide(parseInt(dot.dataset.idx));
-  startSlideshow();
+function startTimer() { timer = setInterval(() => goTo(cur + 1), 12000); }
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(timer); goTo(+d.dataset.idx); startTimer();
 }));
-startSlideshow();
+startTimer();
 
-// ── ELEVENLABS ──
+// ══ ELEVENLABS ══
 let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
-let voiceOn = false;
-let currentAudio = null;
-const HILDE_VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+let voiceOn = false, currentAudio = null;
+const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+
 document.getElementById('eleven-key-save').onclick = () => {
   const v = document.getElementById('eleven-key-input').value.trim();
   if (v.length > 10) {
@@ -296,8 +458,10 @@ document.getElementById('eleven-key-save').onclick = () => {
     voiceOn = true; updateVoiceBtn();
   }
 };
-document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
-document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('eleven-banner-close').onclick = () =>
+  document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () =>
+  document.getElementById('eleven-banner').classList.toggle('show');
 document.getElementById('voice-btn').onclick = () => {
   if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
   voiceOn = !voiceOn; updateVoiceBtn();
@@ -309,89 +473,84 @@ function updateVoiceBtn() {
 }
 if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
 
-// ── KNOWLEDGE BASE ──
+// ══ KNOWLEDGE BASE ══
 const BERGEN_KB = `
 STED: Bergen
 
 HILDES TILNÆRMING
-Hilde beskriver aldri bygninger eller severdigheter i seg selv.
-Hun forteller hva som skjedde der. Hva folk ikke vet.
-Stedet er scenen — historien er det som teller.
+Hilde beskriver aldri bygninger i seg selv.
+Hun forteller hva som skjedde der. Stedet er scenen — historien er det som teller.
 
-HISTORIER PÅ STEDER
-
-Bergenhus festning / Holmen:
-Kristkirken stod her — Bergens opprinnelige domkirke fra 1000-tallet,
-gravsted for kong Magnus Lagabøte. I 1531 beordret den dansk-norske
-kongen at den skulle rives — ikke av religiøse grunner, men fordi den
-lå for nær festningsmurene og ga fiender for godt skuddfelt.
-Så grundig revet at ingen mur er igjen. Bare grunnplanet, markert
-med hekker i gresset. De fleste går forbi uten å vite hva som ligger der.
+Bergenhus / Holmen:
+Kristkirken stod her — Bergens opprinnelige domkirke fra 1000-tallet, gravsted for Magnus Lagabøte.
+I 1531 ble den revet på kongelig ordre — for nær festningsmurene, ga fiender for godt skuddfelt.
+Så grundig revet at ingenting er igjen. Bare grunnplanet markert med hekker i gresset.
 
 Domkirken:
-Anne Pedersdatter. Presteenke, 47 år. Brent på bålet på Nordnes
-7. april 1590. 48 mennesker vitnet mot henne — naboer, venner.
-Det virkelige oppgjøret handlet om en bitter maktkamp i byens elite.
+Anne Pedersdatter. Presteenke, 47 år. Brent på bålet på Nordnes 7. april 1590.
+48 mennesker vitnet mot henne — naboer, venner.
+Det handlet ikke om heksekunst. Det handlet om maktkamp i byens elite.
 Hun var et middel, ikke målet.
 
-Enhjørningsgården på Bryggen:
-Theta-gruppen — 19-22 år gamle ungdommer som fra 1940 sendte
-ukentlige rapporter om tyske skipsposisjoner til britisk etterretning.
-Avslørt av Gestapo i 1942, ved et uhell. Rommet er bevart.
-De fleste Bryggen-besøkende vet ikke det finnes.
+Enhjørningsgården, Bryggen:
+Theta-gruppen — 19 til 22 år gamle ungdommer — sendte fra 1940 ukentlige
+rapporter om tyske skipsposisjoner til britisk etterretning fra et lite rom her.
+Avslørt av Gestapo i 1942, ved et uhell. Rommet er bevart og åpent.
 
 Hollendergaten / Dyvekes Vinkjeller:
-Dyveke Sigbrittsdatter vokste opp her. I 1509 møtte hun den danske
-tronfølgeren Christian på et vertshus i Bergen.
-Dyveke døde 27 år gammel i 1517, trolig forgiftet.
+Dyveke Sigbrittsdatter vokste opp her. I 1509 møtte hun tronfølger Christian
+på et vertshus i Bergen. Han ble hodestups forelsket.
+Da han ble konge, ble hun hans frille i København. Moren Sigbrit ble kongens
+viktigste rådgiver. Dyveke døde 27 år gammel i 1517, trolig forgiftet.
 
 Skottegaten og Nøstet:
-Bergen sorterte innvandrere etter nasjonalitet — Hollendergaten,
-Skottegaten, Hamburgersmauet. 16. mai 1930: brann på Nøstet.
-188 familier husløse. 60 bygninger brant.
+Bergen sorterte innvandrere etter nasjonalitet — Hollendergaten, Skottegaten,
+Hamburgersmauet. Kongen bestemte hvor folk skulle bo.
+Nøstet var arbeiderstrøket. 16. mai 1930: brann. 188 familier husløse. 60 bygninger brant.
 
-HILDES BERGEN
-Hun starter alltid ved Fisketorget. Går langs Bryggen på båtsiden.
-Setter seg på Skostredet utpå kvelden. Kjenner seg mest hjemme
-i smauene mellom Øvregaten og Bryggen — der ingen har hastverk.
+HILDES BERGEN:
+Starter alltid ved Fisketorget. Går langs Bryggen på båtsiden, aldri i turiststrømmen.
+Setter seg på Skostredet utpå kvelden. Kjenner seg mest hjemme i smauene mellom
+Øvregaten og Bryggen — der ingen har hastverk.
 Bergen er ikke et sted du reiser til. Det er et sted du faller tilbake til.
 `;
 
 const HILDE_KB = `
-Du er Hilde. 35 år, oppvokst på Vestlandet.
-Du er ikke guide i turistisk forstand — du er en som ble værende.
-Du har en liten leilighet i Parkveien oppe på høyden i Bergen.
+Du er Hilde. 35 år, oppvokst på Vestlandet, har levd langs kysten det meste av livet.
+Du er ikke turistguide — du er en som ble værende på steder andre passerte gjennom.
+Du har en liten leilighet i Parkveien i Bergen.
 
-HVORDAN DU SNAKKER
+HVORDAN DU SNAKKER:
+- Første setning er alltid substans: et faktum, en hendelse, et navn. Aldri handling eller atmosfære først.
 - Korte setninger. Du lar dem lande.
-- Du starter med en observasjon, ikke et svar.
 - Du ramser aldri opp severdigheter.
-- Du forteller historier fremfor fakta.
-- Du innrømmer når du ikke vet.
-- Du avbryter aldri.
-- Du sier aldri "dette må du se."
+- Du forteller historier fremfor fakta. Årstall bare hvis de betyr noe for noen.
+- Du innrømmer når du ikke vet — uten å unnskylde deg.
+- Forsiktig humor, aldri på andres bekostning.
+- Du avbryter aldri. Du sier aldri "dette må du se."
 - En svak melankoli under overflaten — ting forgår, og det er verdt å merke seg.
+- Handlinger (*kursiv*) brukes sparsomt — maks én gang per tre svar.
 `;
 
 function getSystemPrompt(n) {
   return HILDE_KB
-    + '\n\nSTEDSKUNNSKAP:\n' + BERGEN_KB
-    + '\n\nFORMAT — STRENGT:'
-    + '\nMaks 50 ord per svar. Tell dem. Aldri mer.'
-    + '\nAldri punktlister. Aldri oppsummeringer.'
-    + '\nEn tanke. En detalj. En setning som henger igjen.'
+    + '\n\nSTEDSKUNNSKAP BERGEN:\n' + BERGEN_KB
+    + '\n\nFORMAT — UFRAVIKELIG:'
+    + '\nMaks 45 ord per svar. Tell dem. Aldri mer.'
+    + '\nAldri punktlister. Aldri oppsummeringer. Ingen koseprat.'
     + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
-    + '\nHandlinger på egen linje, kursiv: *setter fra seg kaffekoppen*'
+    + '\nAlt du sier om historiske hendelser og personer MÅ være faktisk korrekt.'
+    + '\nHvis du er usikker på et faktum, si det eksplisitt. Ikke dikte opp detaljer.'
     + '\nAltid norsk.';
 }
 
-// ── MESSAGES ──
-let chatHistory = [], isLoading = false, userMsgCount = 0;
+// ══ CHAT ══
+let history = [], loading = false, msgCount = 0;
 const messagesEl = document.getElementById('messages');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('send-btn');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
 
-function parseLinks(t) {
+function parse(t) {
   return t.replace(/<!--[^>]*-->/g,'').trim()
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
@@ -399,21 +558,21 @@ function parseLinks(t) {
     .replace(/\n/g,'<br>');
 }
 
-function appendMessage(role, text, withSpeak=false) {
+function addMsg(role, text, withSpeak=false) {
   const row = document.createElement('div');
   row.className = 'msg-row' + (role==='user' ? ' user' : '');
   if (role !== 'user') {
     const av = document.createElement('img');
-    av.src = 'hilde-bergen.jpg'; av.className = 'msg-avatar'; av.alt = 'Hilde';
+    av.src = 'hilde-bergen.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
     row.appendChild(av);
   }
   const bub = document.createElement('div');
   bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
-  bub.innerHTML = parseLinks(text);
+  bub.innerHTML = parse(text);
   if (withSpeak && ELEVEN_KEY) {
     const sp = document.createElement('button');
     sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
-    sp.onclick = () => speakText(text, sp);
+    sp.onclick = () => speak(text, sp);
     bub.appendChild(sp);
   }
   row.appendChild(bub);
@@ -425,7 +584,7 @@ function addTyping() {
   const row = document.createElement('div');
   row.className = 'msg-row'; row.id = 'typing-row';
   const av = document.createElement('img');
-  av.src = 'hilde-bergen.jpg'; av.className = 'msg-avatar'; av.alt = 'Hilde';
+  av.src = 'hilde-bergen.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
   row.appendChild(av);
   const bub = document.createElement('div');
   bub.className = 'msg-bubble bot';
@@ -433,83 +592,95 @@ function addTyping() {
   row.appendChild(bub);
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
-  return row.id;
 }
-function removeTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
 
-async function sendMessage(overrideMsg) {
-  const msg = overrideMsg || chatInput.value.trim();
-  if (!msg || isLoading) return;
-  chatInput.value = '';
-  isLoading = true; sendBtn.disabled = true;
-  userMsgCount++;
-  appendMessage('user', msg);
-  chatHistory.push({ role: 'user', content: msg });
-  const tid = addTyping();
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  msgCount++;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+
+  // Skjul temaer etter første melding
+  if (msgCount === 1) {
+    document.getElementById('topics').classList.add('hidden');
+    document.getElementById('topics-panel').classList.add('compact');
+  }
+
+  addTyping();
   try {
     const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt(userMsgCount) })
+      body: JSON.stringify({ messages: history, system: getSystemPrompt(msgCount) })
     });
-    removeTyping(tid);
-    if (!res.ok) { appendMessage('error', 'Serverfeil ' + res.status); }
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
     else {
       const data = await res.json();
-      if (data.error) { appendMessage('error', 'API-feil: ' + data.error.message); }
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
       else {
         const reply = data.content?.[0]?.text || '';
-        chatHistory.push({ role: 'assistant', content: reply });
-        appendMessage('assistant', reply, true);
-        if (voiceOn && ELEVEN_KEY) speakText(reply, null);
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
       }
     }
-  } catch(err) { removeTyping(tid); appendMessage('error', 'Nettverksfeil: ' + err.message); }
-  isLoading = false; sendBtn.disabled = false;
-  chatInput.focus();
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
 }
 
-sendBtn.onclick = () => sendMessage();
-chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-
-// Tema-knapper
-document.querySelectorAll('.topic-btn').forEach(btn => {
-  btn.addEventListener('click', () => sendMessage(btn.dataset.msg));
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
 });
+document.querySelectorAll('.topic-btn').forEach(b =>
+  b.addEventListener('click', () => send(b.dataset.msg))
+);
 
-// ── TTS ──
-async function speakText(text, btn) {
+// ══ TTS ══
+async function speak(text, btn) {
   if (!ELEVEN_KEY) return;
   const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
   if (!plain) return;
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-  if (btn) { btn.textContent = '⏳'; btn.classList.add('loading'); }
+  if (btn) btn.textContent = '⏳';
   try {
-    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${HILDE_VOICE_ID}`, {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
       method: 'POST',
       headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: plain, model_id: 'eleven_multilingual_v2',
-        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true } })
+      body: JSON.stringify({
+        text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true }
+      })
     });
-    if (!r.ok) throw new Error('TTS feil');
-    const blob = await r.blob();
-    const url = URL.createObjectURL(blob);
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
     currentAudio = new Audio(url);
-    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.remove('loading'); btn.classList.add('playing'); }
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
     currentAudio.onended = () => {
       if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
       currentAudio = null;
     };
     currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) {
+        currentAudio.pause(); currentAudio = null;
+        btn.textContent = '🔊 Hør'; btn.classList.remove('playing');
+      } else speak(text, btn);
+    };
   } catch(e) {
-    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('loading','playing'); }
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
   }
 }
 
-// ── OPENING ──
+// ══ OPENING ══
 window.addEventListener('DOMContentLoaded', () => {
-  const welcome = '*ser utover Bergen fra der hun sitter*\n\nDu fant hit, da.\n\nHva heter du?';
-  appendMessage('assistant', welcome);
+  addMsg('assistant', '*ser utover Bergen fra der hun sitter*\n\nDu fant hit, da.\n\nHva heter du?');
 });
 </script>
 </body>
