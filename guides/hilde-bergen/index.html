@@ -168,14 +168,14 @@
       margin-bottom: 10px; line-height: 1.4;
       transition: all .35s; overflow: hidden; max-height: 32px;
     }
-    #topics-panel.compact .tp-tagline { max-height: 0; margin-bottom: 0; opacity: 0; }
+    /* tagline alltid synlig */
     .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 6px; flex-shrink: 0; }
     #topics {
       display: flex; flex-direction: column; gap: 4px;
       overflow: hidden; flex: 1;
       transition: opacity .35s;
     }
-    #topics.hidden { opacity: 0; pointer-events: none; }
+    /* temaer alltid synlige */
     .topic-btn {
       background: rgba(10,20,30,.9);
       border: 1px solid rgba(42,127,168,.18);
@@ -603,12 +603,6 @@ async function send(override) {
   msgCount++;
   addMsg('user', msg);
   history.push({ role: 'user', content: msg });
-
-  // Skjul temaer etter første melding
-  if (msgCount === 1) {
-    document.getElementById('topics').classList.add('hidden');
-    document.getElementById('topics-panel').classList.add('compact');
-  }
 
   addTyping();
   try {
