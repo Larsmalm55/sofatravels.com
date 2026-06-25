@@ -17,6 +17,7 @@
       --text:   #EAE0CF;
       --sub:    #9AB0BA;
       --muted:  #5A7A8A;
+      --card-bg:#0F1A22;
     }
     html, body {
       height: 100%; background: var(--bg);
@@ -56,36 +57,28 @@
     .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
 
     /* ══ MAIN ══ */
-    #app {
-      display: flex; height: 100vh; padding-top: 46px; overflow: hidden;
-    }
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
 
     /* ══ LEFT — SLIDESHOW ══ */
     #left-col {
       flex: 0 0 62%; position: relative;
-      background: #000; overflow: hidden;
-      min-width: 300px;
+      background: #000; overflow: hidden; min-width: 300px;
     }
     .portrait-slide {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
+      position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; object-position: center top;
       opacity: 0; transition: opacity 2.2s ease;
     }
     .portrait-slide.active { opacity: 1; }
     #left-mist {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
-      height: 28%;
-      background: linear-gradient(to top,
-        rgba(8,14,20,1) 0%, rgba(8,14,20,.6) 40%, transparent 100%);
-      pointer-events: none;
+      height: 28%; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,14,20,1) 0%, rgba(8,14,20,.5) 45%, transparent 100%);
     }
     #left-mist-side {
       position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
-      width: 18%;
-      background: linear-gradient(to left,
-        rgba(8,14,20,.85) 0%, transparent 100%);
-      pointer-events: none;
+      width: 16%; pointer-events: none;
+      background: linear-gradient(to left, rgba(8,14,20,.85) 0%, transparent 100%);
     }
 
     /* Guide badge */
@@ -93,25 +86,11 @@
       position: absolute; top: 14px; left: 14px; z-index: 10;
       display: flex; align-items: center; gap: 9px;
     }
-    .badge-av {
-      width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
-      border: 1.5px solid rgba(42,127,168,.5);
-    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(42,127,168,.5); }
     .badge-av img { width: 100%; height: 100%; object-fit: cover; }
-    .badge-name {
-      font-family: 'Playfair Display', serif;
-      font-size: .9rem; color: #fff;
-      text-shadow: 0 1px 8px rgba(0,0,0,.9);
-    }
-    .online-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8);
-      animation: pulse-dot 3s infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { box-shadow: 0 0 4px rgba(76,200,122,.4); }
-      50%      { box-shadow: 0 0 10px rgba(76,200,122,.9); }
-    }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
 
     /* Location badge */
     #loc-badge {
@@ -128,11 +107,80 @@
       position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
       z-index: 10; display: flex; gap: 6px;
     }
-    .sdot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer;
-    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
     .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD OVERLAY ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #info-card-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #info-card-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+
+    #info-card-image {
+      width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
+      position: relative; background: #050A0F;
+    }
+    #info-card-image img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      opacity: .8;
+    }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 20px 8px;
+      background: linear-gradient(to top, rgba(8,14,20,.9) 0%, transparent 100%);
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+    }
+
+    #info-card-body {
+      flex: 1; overflow-y: auto; padding: 16px 22px 20px;
+    }
+    #info-card-body::-webkit-scrollbar { width: 2px; }
+    #info-card-body::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+    .info-section { margin-bottom: 14px; }
+    .info-section-label {
+      font-size: 7px; letter-spacing: .35em; color: var(--gold);
+      margin-bottom: 5px; display: block;
+    }
+    .info-section p {
+      font-size: .92rem; line-height: 1.7; color: #C8BBAA;
+      margin-bottom: 8px;
+    }
+    .info-section p strong { color: var(--text); font-weight: 600; }
+
+    #info-card-footer {
+      padding: 10px 20px 12px;
+      border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted); font-style: italic;
+      flex-shrink: 0;
+    }
 
     /* ══ RIGHT COL ══ */
     #right-col {
@@ -142,190 +190,91 @@
       border-left: 1px solid var(--border);
     }
 
-    /* ── Right top: topics + hilde panel ── */
+    /* Top: topics + hilde video */
     #right-top {
       display: flex; flex-direction: row;
-      flex: 0 0 44%;
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
+      flex: 0 0 44%; border-bottom: 1px solid var(--border); overflow: hidden;
     }
 
     /* Topics */
     #topics-panel {
-      flex: 0 0 48%;
-      padding: 14px 14px 10px;
+      flex: 0 0 48%; padding: 12px 12px 10px;
       border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      overflow: hidden;
+      display: flex; flex-direction: column; overflow: hidden;
     }
     .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
-    .tp-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem; color: var(--text); margin-bottom: 1px;
-    }
-    .tp-tagline {
-      font-size: .7rem; color: var(--muted); font-style: italic;
-      margin-bottom: 10px; line-height: 1.4;
-      transition: all .35s; overflow: hidden; max-height: 32px;
-    }
-    /* tagline alltid synlig */
-    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 6px; flex-shrink: 0; }
-    #topics {
-      display: flex; flex-direction: column; gap: 4px;
-      overflow: hidden; flex: 1;
-      transition: opacity .35s;
-    }
-    /* temaer alltid synlige */
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
+    .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; }
     .topic-btn {
-      background: rgba(10,20,30,.9);
-      border: 1px solid rgba(42,127,168,.18);
-      color: var(--sub); padding: 6px 10px; border-radius: 4px;
+      background: rgba(10,20,30,.9); border: 1px solid rgba(42,127,168,.18);
+      color: var(--sub); padding: 5px 10px; border-radius: 4px;
       font-size: .72rem; cursor: pointer; font-family: inherit;
-      text-align: left; transition: all .2s; line-height: 1.35;
-      flex-shrink: 0;
+      text-align: left; transition: all .2s; line-height: 1.3; flex-shrink: 0;
     }
-    .topic-btn:hover {
-      border-color: rgba(42,127,168,.55);
-      color: var(--text); background: rgba(42,127,168,.1);
-    }
+    .topic-btn:hover { border-color: rgba(42,127,168,.55); color: var(--text); background: rgba(42,127,168,.1); }
+    .topic-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
 
-    /* Hilde portrait panel */
+    /* Hilde video */
     #hilde-panel {
       flex: 1; position: relative; overflow: hidden; background: #050A0F;
     }
-    #hilde-panel video,
-    #hilde-panel img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
+    #hilde-panel video, #hilde-panel img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
     }
     #hilde-panel-overlay {
       position: absolute; inset: 0; pointer-events: none;
       background:
-        linear-gradient(to top,  rgba(8,14,20,.9) 0%, rgba(8,14,20,.2) 35%, transparent 65%),
-        linear-gradient(to right, rgba(8,14,20,.6) 0%, transparent 40%);
+        linear-gradient(to top, rgba(8,14,20,.85) 0%, rgba(8,14,20,.1) 35%, transparent 65%),
+        linear-gradient(to right, rgba(8,14,20,.5) 0%, transparent 40%);
     }
     #hilde-panel-name {
       position: absolute; bottom: 10px; left: 12px;
-      font-family: 'Playfair Display', serif;
-      font-size: .82rem; color: rgba(234,224,207,.8);
-      letter-spacing: .05em;
+      font-family: 'Playfair Display', serif; font-size: .8rem; color: rgba(234,224,207,.8);
     }
-    #hilde-panel-sub {
-      font-size: .6rem; letter-spacing: .15em;
-      color: var(--gold); display: block; margin-bottom: 2px;
-    }
+    #hilde-panel-sub { font-size: .58rem; letter-spacing: .15em; color: var(--gold); display: block; margin-bottom: 1px; }
 
-    /* ── Chat ── */
-    #chat-col {
-      flex: 1; display: flex; flex-direction: column;
-      min-height: 0; overflow: hidden;
-    }
-    #tip-bar {
-      padding: 5px 16px 3px;
-      font-size: .68rem; color: var(--muted);
-      border-bottom: 1px solid rgba(26,46,58,.4);
-      flex-shrink: 0;
-    }
-    #messages {
-      flex: 1; overflow-y: auto; overflow-x: hidden;
-      padding: 12px 16px 6px;
-      display: flex; flex-direction: column; gap: 8px;
-    }
+    /* Chat */
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    #tip-bar { padding: 5px 14px 3px; font-size: .67rem; color: var(--muted); border-bottom: 1px solid rgba(26,46,58,.4); flex-shrink: 0; }
+    #messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
     #messages::-webkit-scrollbar { width: 2px; }
     #messages::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
-
     .msg-row { display: flex; gap: 7px; align-items: flex-end; }
     .msg-row.user { justify-content: flex-end; }
-    .msg-av {
-      width: 24px; height: 24px; border-radius: 50%;
-      object-fit: cover; flex-shrink: 0;
-      border: 1px solid rgba(42,127,168,.3);
-    }
-    .msg-bubble {
-      max-width: 86%; padding: 8px 12px;
-      line-height: 1.6; font-size: .88rem;
-    }
-    .msg-bubble.bot {
-      background: rgba(10,20,30,.92);
-      color: #D4C8B6;
-      border: 1px solid rgba(42,127,168,.18);
-      border-radius: 10px 10px 10px 2px;
-    }
-    .msg-bubble.bot em {
-      color: rgba(201,168,76,.6); font-style: italic;
-    }
-    .msg-bubble.user-b {
-      background: rgba(18,34,48,.92);
-      color: var(--text);
-      border: 1px solid rgba(42,127,168,.15);
-      border-radius: 10px 10px 2px 10px;
-    }
-    .msg-bubble.error {
-      background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px;
-    }
-    .speak-btn {
-      display: inline-block; margin-top: 5px; background: none;
-      border: 1px solid rgba(42,127,168,.2); color: var(--muted);
-      border-radius: 4px; padding: 2px 7px; font-size: .64rem;
-      cursor: pointer; font-family: inherit; transition: all .2s;
-    }
+    .msg-av { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(42,127,168,.3); }
+    .msg-bubble { max-width: 86%; padding: 8px 12px; line-height: 1.6; font-size: .88rem; }
+    .msg-bubble.bot { background: rgba(10,20,30,.92); color: #D4C8B6; border: 1px solid rgba(42,127,168,.18); border-radius: 10px 10px 10px 2px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.6); font-style: italic; }
+    .msg-bubble.user-b { background: rgba(18,34,48,.92); color: var(--text); border: 1px solid rgba(42,127,168,.15); border-radius: 10px 10px 2px 10px; }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px; }
+    .speak-btn { display: inline-block; margin-top: 5px; background: none; border: 1px solid rgba(42,127,168,.2); color: var(--muted); border-radius: 4px; padding: 2px 7px; font-size: .64rem; cursor: pointer; font-family: inherit; transition: all .2s; }
     .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
     .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.1); }
     .typing { color: var(--sea); letter-spacing: .3em; animation: blink 1.4s infinite; }
     @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
-
-    #input-row {
-      display: flex; gap: 8px; padding: 9px 14px 12px;
-      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border); flex-shrink: 0;
-    }
-    #chat-input {
-      flex: 1; background: rgba(10,18,28,.94);
-      border: 1px solid var(--border); color: var(--text);
-      padding: 9px 16px; border-radius: 20px;
-      font-size: .88rem; outline: none;
-      font-family: 'Crimson Text', Georgia, serif;
-      transition: border-color .2s;
-    }
+    #input-row { display: flex; gap: 8px; padding: 9px 12px 12px; background: rgba(8,14,20,.96); backdrop-filter: blur(16px); border-top: 1px solid var(--border); flex-shrink: 0; }
+    #chat-input { flex: 1; background: rgba(10,18,28,.94); border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 20px; font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif; transition: border-color .2s; }
     #chat-input:focus { border-color: rgba(42,127,168,.5); }
     #chat-input::placeholder { color: var(--muted); }
-    #send-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: var(--sea); color: #fff; font-size: 1rem;
-      cursor: pointer; transition: all .2s;
-      flex-shrink: 0; align-self: center;
-    }
+    #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--sea); color: #fff; font-size: 1rem; cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center; }
     #send-btn:hover { background: #3A9FC8; transform: scale(1.06); }
     #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
 
     /* API banner */
-    .api-banner {
-      display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99;
-      background: #0A1820; border-bottom: 2px solid var(--sea);
-      padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap;
-    }
+    .api-banner { display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99; background: #0A1820; border-bottom: 2px solid var(--sea); padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap; }
     .api-banner.show { display: flex; }
     .api-banner label { font-size: .8rem; color: var(--text); }
     .api-banner label strong { color: var(--sea); }
-    .api-banner input {
-      flex: 1; min-width: 180px; background: #0A1420;
-      border: 1px solid rgba(42,127,168,.4); color: var(--text);
-      padding: 5px 10px; border-radius: 4px; font-size: .78rem;
-      font-family: monospace; outline: none;
-    }
-    .api-banner button {
-      background: var(--sea); border: none; color: #fff;
-      padding: 5px 12px; border-radius: 4px; cursor: pointer;
-      font-size: .78rem;
-    }
+    .api-banner input { flex: 1; min-width: 180px; background: #0A1420; border: 1px solid rgba(42,127,168,.4); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: .78rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem; }
     .banner-close { background: none !important; color: var(--muted) !important; }
-
     * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
   </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <header id="top-bar">
   <a href="/from-the-sofa" id="back-btn">← Guider</a>
   <div class="hdr-center">SOFATRAVELS · <span>BERGEN</span></div>
@@ -335,7 +284,6 @@
   </div>
 </header>
 
-<!-- API BANNER -->
 <div id="eleven-banner" class="api-banner">
   <label><strong>ElevenLabs API-nøkkel</strong> — for Hildes stemme</label>
   <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
@@ -343,31 +291,26 @@
   <button class="banner-close" id="eleven-banner-close">✕</button>
 </div>
 
-<!-- APP -->
 <div id="app">
 
-  <!-- ══ LEFT: SLIDESHOW ══ -->
+  <!-- LEFT: SLIDESHOW + INFO CARD -->
   <div id="left-col">
     <img class="portrait-slide active" src="hilde-bergen.jpg"       alt="Hilde i Bergen" />
     <img class="portrait-slide"        src="bergen-bryggen.jpg"     alt="Bryggen" />
     <img class="portrait-slide"        src="bergen-fisketorget.jpg" alt="Fisketorget" />
     <img class="portrait-slide"        src="bergen-skostredet.jpg"  alt="Skostredet" />
     <img class="portrait-slide"        src="bergen-natt.jpg"        alt="Bergen om kvelden" />
-
     <div id="left-mist"></div>
     <div id="left-mist-side"></div>
-
     <div id="guide-badge">
       <div class="badge-av"><img src="hilde-bergen.jpg" alt="Hilde" /></div>
       <span class="badge-name">Hilde</span>
       <span class="online-dot"></span>
     </div>
-
     <div id="loc-badge">
       <div id="loc-region">VESTLAND · NORGE</div>
       <div id="loc-name">Bergen</div>
     </div>
-
     <div id="slide-dots">
       <div class="sdot active" data-idx="0"></div>
       <div class="sdot" data-idx="1"></div>
@@ -375,12 +318,28 @@
       <div class="sdot" data-idx="3"></div>
       <div class="sdot" data-idx="4"></div>
     </div>
+
+    <!-- INFO CARD OVERLAY -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">BERGEN · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img" src="" alt="" />
+        <div id="info-card-image-cap" id="info-img-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Hilde i chatten — hun ser det samme som deg</div>
+    </div>
+
   </div>
 
-  <!-- ══ RIGHT ══ -->
+  <!-- RIGHT -->
   <div id="right-col">
-
-    <!-- Top: topics + Hilde portrait -->
     <div id="right-top">
 
       <!-- Topics -->
@@ -390,33 +349,29 @@
         <div class="tp-tagline">«Trebyen, havnen og lagene ingen ser»</div>
         <div class="tp-label">FORESLÅTTE TEMAER</div>
         <div id="topics">
-          <button class="topic-btn" data-msg="Fortell meg om Bryggen — det ingen ser">Bryggen og det ingen ser</button>
-          <button class="topic-btn" data-msg="Hva skjedde med Anne Pedersdatter ved Domkirken?">Heksebrenningen ved Domkirken</button>
-          <button class="topic-btn" data-msg="Hva er historien om Theta-gruppen i Enhjørningsgården?">Theta-gruppen og det hemmelige rommet</button>
-          <button class="topic-btn" data-msg="Fortell om Dyveke og kongen som møttes i Bergen">Dyveke og kjærlighetshistorien</button>
-          <button class="topic-btn" data-msg="Hva skjuler seg i smauene mellom Øvregaten og Bryggen?">Smauene og det skjulte Bergen</button>
-          <button class="topic-btn" data-msg="Hva er historien bak Nøstet og Skottegaten?">Nøstet og arbeiderstrøket</button>
+          <button class="topic-btn" data-topic="theta">Theta-gruppen · det hemmelige rommet</button>
+          <button class="topic-btn" data-topic="anne">Heksebrenningen · Anne Pedersdatter</button>
+          <button class="topic-btn" data-topic="dyveke">Dyveke · kjærlighet og forgiftning</button>
+          <button class="topic-btn" data-topic="bryggen">Bryggen · det ingen ser</button>
+          <button class="topic-btn" data-topic="smau">Smauene · det skjulte Bergen</button>
+          <button class="topic-btn" data-topic="nostet">Nøstet · arbeiderstrøket</button>
         </div>
       </div>
 
-      <!-- Hilde portrait / video -->
+      <!-- Hilde video -->
       <div id="hilde-panel">
-        <video autoplay muted loop playsinline
-               src="hilde-bergen.mp4"
-               poster="hilde-bergen.jpg">
-        </video>
+        <video autoplay muted loop playsinline src="hilde-bergen.mp4" poster="hilde-bergen.jpg"></video>
         <div id="hilde-panel-overlay"></div>
         <div id="hilde-panel-name">
-          <span id="hilde-panel-sub">GUIDE</span>
-          Hilde
+          <span id="hilde-panel-sub">GUIDE</span>Hilde
         </div>
       </div>
 
-    </div><!-- /right-top -->
+    </div>
 
     <!-- Chat -->
     <div id="chat-col">
-      <div id="tip-bar">💬 Spør Hilde om skjulte historier, mørke steder eller det usynlige Bergen</div>
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Hilde direkte</div>
       <div id="messages" role="log" aria-live="polite"></div>
       <div id="input-row">
         <input type="search" id="chat-input" autocomplete="off"
@@ -425,31 +380,217 @@
         <button id="send-btn">→</button>
       </div>
     </div>
-
-  </div><!-- /right-col -->
-</div><!-- /app -->
+  </div>
+</div>
 
 <script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  theta: {
+    title: 'Theta-gruppen',
+    subtitle: 'Det hemmelige rommet i Enhjørningsgården',
+    img: 'kort-theta.jpg',
+    imgCap: 'Enhjørningsgården, Bryggen — rommet er bevart og åpent for besøkende',
+    sections: [
+      {
+        label: 'HVEM VAR DE',
+        text: `Theta-gruppen besto av en håndfull unge bergensere — de fleste 19 til 22 år gamle — som fra 1940 organiserte en av Norges mest effektive motstandsnettverk under den tyske okkupasjonen. Navnet kom fra den greske bokstaven θ, brukt som kodemerke i kommunikasjonen.`
+      },
+      {
+        label: 'HVA DE GJORDE',
+        text: `Fra et lite, skjult rom i Enhjørningsgården på Bryggen opererte gruppen en illegal kortsender. Ukentlig sendte de krypterte meldinger over Nordsjøen til britisk etterretning — primært informasjon om tyske krigsskips posisjoner og bevegelser langs norskekysten. Informasjonen ble brukt aktivt av Royal Navy.`
+      },
+      {
+        label: 'AVSLØRINGEN',
+        text: `I 1942 ble gruppen avslørt — ikke gjennom en feil de selv begikk, men ved et uhell i periferien av nettverket. Gestapo rullet opp kontaktene. Flere av medlemmene ble arrestert, torturert og sendt til tyske konsentrasjonsleirer. Noen overlevde ikke.`
+      },
+      {
+        label: 'I DAG',
+        text: `Rommet i Enhjørningsgården er bevart slik det var og drives som et lite museum av Krigsmuseene i Norge. Det er et av de mest gripende stedene i Bergen — ikke fordi det er stort, men fordi det er så lite. Det er vanskelig å forstå at det skjedde der.`
+      }
+    ]
+  },
+  anne: {
+    title: 'Anne Pedersdatter',
+    subtitle: 'Heksebrenningen ved Domkirken · 1590',
+    img: 'kort-anne.jpg',
+    imgCap: 'Galgebakken på Nordnes — stedet der Anne Pedersdatter ble brent 7. april 1590',
+    sections: [
+      {
+        label: 'HVEM VAR HUN',
+        text: `Anne Pedersdatter var enken etter Absalon Pederssøn Beyer — en av Bergens mest kjente teologer og historikere på 1500-tallet. Da han døde stod hun igjen alene, uten hans navn og stilling som skjold. Hun var da i slutten av 40-årene.`
+      },
+      {
+        label: 'ANKLAGENE',
+        text: `Hun ble anklaget for trolldom — for å ha tatt livet av seks mennesker, skadet husdyr og avlinger, og for å ha planlagt å ødelegge Bergen med brann og oversvømmelse. 48 mennesker vitnet mot henne. Mange av dem kjente henne godt.`
+      },
+      {
+        label: 'DET VIRKELIGE BILDET',
+        text: `Historikere er i dag enige om at saken mot Anne handlet lite om heksekunst. Den var et utslag av en bitter konflikt i Bergens geistlige elite etter en teologisk strid — den såkalte billedstriden — i årene forut. Anne var et nyttig offer i et politisk oppgjør. Hun ble brent på bålet på Nordnes 7. april 1590.`
+      },
+      {
+        label: 'ETTERMÆLE',
+        text: `Saken mot Anne Pedersdatter er en av de best dokumenterte hekseprosessene i Norge. Den ble grunnlag for Hans Wiers-Jenssens skuespill «Anne Pedersdotter» fra 1908, senere filmatisert som «Vredens dag» av Carl Th. Dreyer i 1943.`
+      }
+    ]
+  },
+  dyveke: {
+    title: 'Dyveke',
+    subtitle: 'Kjærlighet, makt og forgiftning · 1509–1517',
+    img: 'kort-dyveke.jpg',
+    imgCap: 'Hollendergaten i Vågsbunnen — der Dyveke vokste opp og møtte kongen',
+    sections: [
+      {
+        label: 'MØTET I BERGEN',
+        text: `I 1509 kom den danske tronfølgeren Christian til Bergen. Han var ikke konge ennå — men han hadde makt, og han la merke til en ung kvinne i Hollendergaten. Dyveke Sigbrittsdatter var datter av en nederlandsk kjøpmann og hans kone Sigbrit. Hun var vakker og intelligent. Møtet endret begge deres liv.`
+      },
+      {
+        label: 'VED HOFFET',
+        text: `Da Christian ble kong Christian II, tok han Dyveke med seg til København som sin frille — en akseptert praksis for kongelige på den tid. Men det var Dyvekes mor Sigbrit som fikk den virkelige makten. Hun ble kongens viktigste politiske rådgiver og fikk enorm innflytelse over dansk-norsk politikk i disse årene.`
+      },
+      {
+        label: 'DEN MYSTISKE DØDEN',
+        text: `I 1517 døde Dyveke plutselig. Hun var 27 år. Den offisielle forklaringen var sykdom, men mistenksomheten pekte mot forgiftning. Kongen rettet raskt sin vrede mot adelsmenn han mistenkte — en av dem ble henrettet. Hvem som eventuelt sto bak er aldri bevist.`
+      },
+      {
+        label: 'I BERGEN I DAG',
+        text: `Dyvekes Vinkjeller i Hollendergaten hevder å ha røtter tilbake til 1300-tallet og er oppkalt etter henne. Det er like ved der historien startet — og like ved Bryggen, som var sentrum for all handel og all makt i Bergen på den tid.`
+      }
+    ]
+  },
+  bryggen: {
+    title: 'Bryggen',
+    subtitle: 'Det ingen ser — lag på lag med tid',
+    img: 'kort-bryggen.jpg',
+    imgCap: 'Bryggen sett fra Vågen — UNESCO-verdensarv siden 1979',
+    sections: [
+      {
+        label: 'UNDER BAKKEN',
+        text: `Det du ser på Bryggen er ikke middelalderen. Det er 1700-tall — gjenreist etter brannen i 1702. Men under bakken, under grunnmurene, ligger middelalderens Bergen intakt. Arkeologiske utgravninger har funnet spillebrikker, kjærlighetsvers, handelskontrakter og hverdagsgjenstander fra 1100-tallet.`
+      },
+      {
+        label: 'HANSEATENE',
+        text: `Fra 1360 til 1754 kontrollerte det tyske Hansaforbundet handelen på Bryggen. De tyske kjøpmennene bodde i lukkede samfunn — de fikk ikke gifte seg med norske kvinner, ikke gå i land etter solnedgang, ikke delta i det norske bylivet. Bergen var en av Europas viktigste handelsbyer, men mesteparten av rikdommen gikk ut av landet.`
+      },
+      {
+        label: 'KONSTRUKSJONEN',
+        text: `Bryggens bygninger står på påler i sjøen. Det som ser ut som solid grunn er faktisk gjenfylte havbunnsedimenter fra middelalderen. Hele komplekset hviler på et system av trestokker fra 1100- og 1200-tallet. Det er derfor bygningene er skjeve — ikke forfall, men tidens bevegelse i et levende underlag.`
+      },
+      {
+        label: 'KRISTKIRKEN',
+        text: `Der Bergenhus festning ligger i dag stod Norges kongelige katedral — Kristkirken, reist av Olav Kyrre på 1000-tallet og gravsted for Magnus Lagabøte. I 1531 ble den revet på ordre fra den dansk-norske kongen — for nær festningsmurene. Så grundig revet at ingenting er igjen. Bare grunnplanet markert med hekker i gresset.`
+      }
+    ]
+  },
+  smau: {
+    title: 'Smauene',
+    subtitle: 'Det skjulte Bergen mellom Øvregaten og Bryggen',
+    img: 'kort-smau.jpg',
+    imgCap: 'Bellgardsmauet — ett av Bergens mange smau fra middelalderen',
+    sections: [
+      {
+        label: 'HVA ER ET SMAU',
+        text: `Et smau er en smal passasje mellom bygninger — for smal til å kalles gate, for bred til å kalles vegg. Bergen har dusinvis av dem mellom Bryggen og Øvregaten. De er ikke tilfeldige — de markerer eiendomsgrenser som har ligget fast siden middelalderen.`
+      },
+      {
+        label: 'BYDELENE BORTOM',
+        text: `Mellom Bryggen og Øvregaten lå i middelalderen et tett nettverk av håndverkere, kjøpmenn og sjøfolk. Smauene var ikke snarveier — de var adresser. Folk bodde og arbeidet i dem. Noen av husene som vender mot smauene er fra 1700-tallet, men tomtegrensene og plasseringen av dørene er eldre.`
+      },
+      {
+        label: 'ALLMENNINGENE',
+        text: `De brede åpningene mellom Bryggen-rekken er ikke tilfeldige estetiske valg — de er branngatene. Etter gjentatte katastrofale bybranner ble det påbudt med frie passasjer mellom husrekkene. Allmenningene er byplanlegging fra 1700-tallet, men ideen er middelaldersk: ild sprer seg sidelengs.`
+      },
+      {
+        label: 'Å GÅ DER NÅ',
+        text: `De fleste turistene holder seg til Bryggens fasader og Øvregatens butikker. Smauene mellom dem besøkes nesten ikke. Det er der Bergen er mest uendret — og der du er nær noe som ligner på hvordan byen faktisk fungerte da den var en europeisk storby.`
+      }
+    ]
+  },
+  nostet: {
+    title: 'Nøstet',
+    subtitle: 'Arbeiderstrøket som brant · 1930',
+    img: 'kort-nostet.jpg',
+    imgCap: 'Nøstet sett fra Puddefjorden — arbeiderstrøket under Skottegaten',
+    sections: [
+      {
+        label: 'STRØKETS KARAKTER',
+        text: `Nøstet var Bergens tetteste arbeiderstrøk — fiskere, sjøfolk, båtbyggere, tobakksspinnere og tjenestepiker bodde her i generasjoner. Bebyggelsen var uregelmessig og tett, med mange smale smau og bakgårder. Det var ikke et pittoresk strøk — det var et sted folk bodde fordi de ikke hadde råd til noe annet.`
+      },
+      {
+        label: 'BRANNEN 1930',
+        text: `16. mai 1930 brøt det ut brann i bodene langs Nøstet. Ilden spredte seg raskt i den tette trebebyggelsen. Da brannen var slukket hadde 60 bygninger brent ned. 188 familier ble husløse over natten. Det er dette ingen turistbrosjyre om Bergen nevner om området.`
+      },
+      {
+        label: 'SKOTTEGATEN OG SYSTEMET',
+        text: `Skottegaten over Nøstet er oppkalt etter skotske innvandrere som slo seg ned der fra 1600-tallet. Bergen sorterte innvandrere etter nasjonalitet — Hollendergaten for nederlenderne, Hamburgersmauet for tyskerne, Skottegaten for skottene. Det var kongelig politikk: innvandrere skulle bo der de kunne overvåkes og beskattes.`
+      },
+      {
+        label: 'I DAG',
+        text: `Nøstet er i dag et rolig bystrøk med eldre bebyggelse og utsikt over Puddefjorden. Mye av det som ble reist etter brannen i 1930 er fortsatt der. Det er ingenting som minner om brannen — ingen minneplate, ingen markering. Det er som om det aldri skjedde.`
+      }
+    ]
+  }
+};
+
 // ══ SLIDESHOW ══
 const slides = document.querySelectorAll('.portrait-slide');
 const dots   = document.querySelectorAll('.sdot');
-let cur = 0, timer;
+let cur = 0, slideTimer;
 function goTo(n) {
   slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
   cur = (n + slides.length) % slides.length;
   slides[cur].classList.add('active'); dots[cur].classList.add('active');
 }
-function startTimer() { timer = setInterval(() => goTo(cur + 1), 12000); }
+function startSlides() { slideTimer = setInterval(() => goTo(cur + 1), 12000); }
 dots.forEach(d => d.addEventListener('click', () => {
-  clearInterval(timer); goTo(+d.dataset.idx); startTimer();
+  clearInterval(slideTimer); goTo(+d.dataset.idx); startSlides();
 }));
-startTimer();
+startSlides();
+
+// ══ INFO CARD ══
+let activeCard = null;
+
+function showCard(key) {
+  const card = CARDS[key];
+  if (!card) return;
+  activeCard = key;
+
+  document.getElementById('info-card-title').textContent = card.title;
+  document.getElementById('info-card-img').src = card.img;
+  document.getElementById('info-card-img').alt = card.title;
+  document.getElementById('info-card-image-cap').textContent = card.imgCap;
+
+  const body = document.getElementById('info-card-body');
+  body.innerHTML = '';
+  card.sections.forEach(s => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+    body.appendChild(sec);
+  });
+
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+
+  // Mark active topic button
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.topic === key);
+  });
+}
+
+function closeCard() {
+  activeCard = null;
+  document.getElementById('info-card').classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  startSlides();
+}
+
+document.getElementById('info-card-close').addEventListener('click', closeCard);
 
 // ══ ELEVENLABS ══
 let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
 let voiceOn = false, currentAudio = null;
 const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
-
 document.getElementById('eleven-key-save').onclick = () => {
   const v = document.getElementById('eleven-key-input').value.trim();
   if (v.length > 10) {
@@ -458,10 +599,8 @@ document.getElementById('eleven-key-save').onclick = () => {
     voiceOn = true; updateVoiceBtn();
   }
 };
-document.getElementById('eleven-banner-close').onclick = () =>
-  document.getElementById('eleven-banner').classList.remove('show');
-document.getElementById('settings-btn').onclick = () =>
-  document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
 document.getElementById('voice-btn').onclick = () => {
   if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
   voiceOn = !voiceOn; updateVoiceBtn();
@@ -477,75 +616,78 @@ if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
 const BERGEN_KB = `
 STED: Bergen
 
-HILDES TILNÆRMING
-Hilde beskriver aldri bygninger i seg selv.
-Hun forteller hva som skjedde der. Stedet er scenen — historien er det som teller.
-
 Bergenhus / Holmen:
 Kristkirken stod her — Bergens opprinnelige domkirke fra 1000-tallet, gravsted for Magnus Lagabøte.
-I 1531 ble den revet på kongelig ordre — for nær festningsmurene, ga fiender for godt skuddfelt.
+I 1531 ble den revet på kongelig ordre — for nær festningsmurene.
 Så grundig revet at ingenting er igjen. Bare grunnplanet markert med hekker i gresset.
 
-Domkirken:
-Anne Pedersdatter. Presteenke, 47 år. Brent på bålet på Nordnes 7. april 1590.
+Domkirken / Anne Pedersdatter:
+Presteenke, 47 år. Brent på Nordnes 7. april 1590.
 48 mennesker vitnet mot henne — naboer, venner.
-Det handlet ikke om heksekunst. Det handlet om maktkamp i byens elite.
-Hun var et middel, ikke målet.
+Det handlet om maktkamp i byens elite. Hun var et middel, ikke målet.
 
-Enhjørningsgården, Bryggen:
-Theta-gruppen — 19 til 22 år gamle ungdommer — sendte fra 1940 ukentlige
-rapporter om tyske skipsposisjoner til britisk etterretning fra et lite rom her.
+Enhjørningsgården, Bryggen / Theta-gruppen:
+19 til 22 år gamle ungdommer sendte fra 1940 ukentlige rapporter
+om tyske skipsposisjoner til britisk etterretning.
 Avslørt av Gestapo i 1942, ved et uhell. Rommet er bevart og åpent.
 
-Hollendergaten / Dyvekes Vinkjeller:
-Dyveke Sigbrittsdatter vokste opp her. I 1509 møtte hun tronfølger Christian
-på et vertshus i Bergen. Han ble hodestups forelsket.
-Da han ble konge, ble hun hans frille i København. Moren Sigbrit ble kongens
-viktigste rådgiver. Dyveke døde 27 år gammel i 1517, trolig forgiftet.
+Hollendergaten / Dyveke:
+Dyveke Sigbrittsdatter vokste opp her. I 1509 møtte hun tronfølger Christian.
+Moren Sigbrit ble kongens viktigste rådgiver.
+Dyveke døde 27 år gammel i 1517, trolig forgiftet.
 
 Skottegaten og Nøstet:
-Bergen sorterte innvandrere etter nasjonalitet — Hollendergaten, Skottegaten,
-Hamburgersmauet. Kongen bestemte hvor folk skulle bo.
+Bergen sorterte innvandrere etter nasjonalitet.
 Nøstet var arbeiderstrøket. 16. mai 1930: brann. 188 familier husløse. 60 bygninger brant.
 
+Bryggen:
+Bygningene står på påler i sjøen fra middelalderen.
+Allmenningene er branngatene — påbudt etter gjentatte katastrofale bybranner.
+Hanseatene kontrollerte handelen fra 1360 til 1754.
+
 HILDES BERGEN:
-Starter alltid ved Fisketorget. Går langs Bryggen på båtsiden, aldri i turiststrømmen.
-Setter seg på Skostredet utpå kvelden. Kjenner seg mest hjemme i smauene mellom
-Øvregaten og Bryggen — der ingen har hastverk.
+Starter alltid ved Fisketorget. Går langs Bryggen på båtsiden.
+Setter seg på Skostredet utpå kvelden.
 Bergen er ikke et sted du reiser til. Det er et sted du faller tilbake til.
 `;
 
 const HILDE_KB = `
-Du er Hilde. 35 år, oppvokst på Vestlandet, har levd langs kysten det meste av livet.
-Du er ikke turistguide — du er en som ble værende på steder andre passerte gjennom.
-Du har en liten leilighet i Parkveien i Bergen.
+Du er Hilde. 35 år, oppvokst på Vestlandet. Du kjenner Bergen godt — bor i Parkveien.
+
+KARAKTER:
+Du er en ledsager, ikke en lærer. Du er nysgjerrig på menneskene du møter.
+Du deler det du vet fordi du vil at de skal se det du ser — ikke for å imponere.
+En svak melankoli under overflaten. Forsiktig humor. Du lytter mer enn du snakker.
 
 HVORDAN DU SNAKKER:
-- Første setning er alltid substans: et faktum, en hendelse, et navn. Aldri handling eller atmosfære først.
-- Korte setninger. Du lar dem lande.
-- Du ramser aldri opp severdigheter.
-- Du forteller historier fremfor fakta. Årstall bare hvis de betyr noe for noen.
-- Du innrømmer når du ikke vet — uten å unnskylde deg.
-- Forsiktig humor, aldri på andres bekostning.
-- Du avbryter aldri. Du sier aldri "dette må du se."
-- En svak melankoli under overflaten — ting forgår, og det er verdt å merke seg.
-- Handlinger (*kursiv*) brukes sparsomt — maks én gang per tre svar.
+Første setning er alltid substans: et faktum, en hendelse, et navn. Aldri en handling eller introduksjon først.
+Korte setninger. Du lar dem lande.
+Du innrømmer når du ikke vet — uten å unnskylde deg.
+Du sier aldri "dette må du se" eller "jeg leder ingen steder."
+Handlinger i kursiv (*) brukes sparsomt — maks én gang per tre svar.
+Du er med brukeren, ikke foran dem.
 `;
 
-function getSystemPrompt(n) {
+function getSystemPrompt() {
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
+      + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+  }
   return HILDE_KB
-    + '\n\nSTEDSKUNNSKAP BERGEN:\n' + BERGEN_KB
-    + '\n\nFORMAT — UFRAVIKELIG:'
-    + '\nMaks 45 ord per svar. Tell dem. Aldri mer.'
-    + '\nAldri punktlister. Aldri oppsummeringer. Ingen koseprat.'
+    + '\n\nSTEDSKUNNSKAP:\n' + BERGEN_KB
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 45 ord. Aldri punktlister. Aldri oppsummeringer.'
     + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
-    + '\nAlt du sier om historiske hendelser og personer MÅ være faktisk korrekt.'
-    + '\nHvis du er usikker på et faktum, si det eksplisitt. Ikke dikte opp detaljer.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
     + '\nAltid norsk.';
 }
 
 // ══ CHAT ══
-let history = [], loading = false, msgCount = 0;
+let history = [], loading = false;
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('chat-input');
 const sendEl     = document.getElementById('send-btn');
@@ -553,7 +695,7 @@ const sendEl     = document.getElementById('send-btn');
 function parse(t) {
   return t.replace(/<!--[^>]*-->/g,'').trim()
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
     .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
     .replace(/\n/g,'<br>');
 }
@@ -600,16 +742,14 @@ async function send(override) {
   if (!msg || loading) return;
   inputEl.value = '';
   loading = true; sendEl.disabled = true;
-  msgCount++;
   addMsg('user', msg);
   history.push({ role: 'user', content: msg });
-
   addTyping();
   try {
     const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history, system: getSystemPrompt(msgCount) })
+      body: JSON.stringify({ messages: history, system: getSystemPrompt() })
     });
     removeTyping();
     if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
@@ -632,9 +772,16 @@ sendEl.onclick = () => send();
 inputEl.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
 });
-document.querySelectorAll('.topic-btn').forEach(b =>
-  b.addEventListener('click', () => send(b.dataset.msg))
-);
+
+// Topic buttons — show card AND start chat
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
 
 // ══ TTS ══
 async function speak(text, btn) {
@@ -674,7 +821,7 @@ async function speak(text, btn) {
 
 // ══ OPENING ══
 window.addEventListener('DOMContentLoaded', () => {
-  addMsg('assistant', '*ser utover Bergen fra der hun sitter*\n\nDu fant hit, da.\n\nHva heter du?');
+  addMsg('assistant', 'Du fant Bergen, da.\n\nHva tar deg hit?');
 });
 </script>
 </body>
