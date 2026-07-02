@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hilde · Kristiansand · SofaTravels</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-50X2YGHD2J');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #0A0E0C;
+      --border: #1E2E22;
+      --sea:    #3A8A5A;
+      --sea-lt: #5DCC8A;
+      --gold:   #C9A84C;
+      --text:   #EAE5D8;
+      --sub:    #9AB8A0;
+      --muted:  #5A7A62;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
+
+    /* ══ TOP BAR ══ */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(10,14,12,.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+    }
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none;
+    }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
+    .hdr-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(12,24,16,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
+    .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(58,138,90,.15); }
+
+    /* ══ MAIN ══ */
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
+
+    /* ══ LEFT: SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
+      background: #000; overflow: hidden; min-width: 300px;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0; transition: opacity 2.2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; pointer-events: none;
+      height: 28%;
+      background: linear-gradient(to top, rgba(10,14,12,1) 0%, rgba(10,14,12,.5) 45%, transparent 100%);
+    }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2; pointer-events: none;
+      width: 16%;
+      background: linear-gradient(to left, rgba(10,14,12,.85) 0%, transparent 100%);
+    }
+    #guide-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(58,138,90,.5); }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(10,14,12,.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+    #slide-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
+    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(10,14,12,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease; overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0;
+    }
+    #info-card-label { font-size: 7.5px; letter-spacing: .4em; color: var(--gold); margin-bottom: 4px; display: block; }
+    #info-card-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text); line-height: 1.2; }
+    #info-card-close {
+      background: rgba(58,138,90,.15); border: 1px solid rgba(58,138,90,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center; transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--sea); color: var(--text); }
+    #info-card-image { width: 100%; height: 38%; flex-shrink: 0; overflow: hidden; position: relative; background: #050A06; }
+    #info-card-image img { width: 100%; height: 100%; object-fit: cover; opacity: .8; }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 20px 8px;
+      background: linear-gradient(to top, rgba(10,14,12,.9) 0%, transparent 100%);
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+    }
+    #info-card-body { flex: 1; overflow-y: auto; padding: 16px 22px 20px; }
+    #info-card-body::-webkit-scrollbar { width: 2px; }
+    #info-card-body::-webkit-scrollbar-thumb { background: rgba(58,138,90,.2); }
+    .info-section { margin-bottom: 14px; }
+    .info-section-label { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 5px; display: block; }
+    .info-section p { font-size: .92rem; line-height: 1.7; color: #C8C0AA; margin-bottom: 8px; }
+    .info-section p strong { color: var(--text); font-weight: 600; }
+    #info-card-footer {
+      padding: 10px 20px 12px; border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted); font-style: italic; flex-shrink: 0;
+    }
+
+    /* ══ RIGHT ══ */
+    #right-col {
+      flex: 1; min-width: 0; display: flex; flex-direction: column;
+      background: var(--bg); overflow: hidden; border-left: 1px solid var(--border);
+    }
+    #right-top {
+      display: flex; flex-direction: row;
+      flex: 0 0 44%; border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+    #topics-panel {
+      flex: 0 0 48%; padding: 12px 12px 10px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
+    .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; }
+    .topic-btn {
+      background: rgba(10,20,14,.9); border: 1px solid rgba(58,138,90,.18);
+      color: var(--sub); padding: 5px 10px; border-radius: 4px;
+      font-size: .72rem; cursor: pointer; font-family: inherit;
+      text-align: left; transition: all .2s; line-height: 1.3; flex-shrink: 0;
+    }
+    .topic-btn:hover { border-color: rgba(58,138,90,.55); color: var(--text); background: rgba(58,138,90,.1); }
+    .topic-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+    .topic-link { text-decoration: none; border-color: rgba(201,168,76,.2); color: rgba(201,168,76,.7); }
+    .topic-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+
+    #hilde-panel { flex: 1; position: relative; overflow: hidden; background: #050A06; }
+    #hilde-panel video, #hilde-panel img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    #hilde-panel-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to top, rgba(10,14,12,.85) 0%, rgba(10,14,12,.1) 35%, transparent 65%),
+                  linear-gradient(to right, rgba(10,14,12,.5) 0%, transparent 40%);
+    }
+    #hilde-panel-name { position: absolute; bottom: 10px; left: 12px; font-family: 'Playfair Display', serif; font-size: .8rem; color: rgba(234,229,216,.8); }
+    #hilde-panel-sub { font-size: .58rem; letter-spacing: .15em; color: var(--gold); display: block; margin-bottom: 1px; }
+
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    #tip-bar { padding: 5px 14px 3px; font-size: .67rem; color: var(--muted); border-bottom: 1px solid rgba(30,46,34,.4); flex-shrink: 0; }
+    #messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+    #messages::-webkit-scrollbar { width: 2px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(58,138,90,.2); }
+    .msg-row { display: flex; gap: 7px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-av { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(58,138,90,.3); }
+    .msg-bubble { max-width: 86%; padding: 8px 12px; line-height: 1.6; font-size: .88rem; }
+    .msg-bubble.bot { background: rgba(10,20,14,.92); color: #D4CCB6; border: 1px solid rgba(58,138,90,.18); border-radius: 10px 10px 10px 2px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.6); font-style: italic; }
+    .msg-bubble.user-b { background: rgba(18,34,22,.92); color: var(--text); border: 1px solid rgba(58,138,90,.15); border-radius: 10px 10px 2px 10px; }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px; }
+    .speak-btn { display: inline-block; margin-top: 5px; background: none; border: 1px solid rgba(58,138,90,.2); color: var(--muted); border-radius: 4px; padding: 2px 7px; font-size: .64rem; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
+    .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(58,138,90,.1); }
+    .typing { color: var(--sea); letter-spacing: .3em; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+    #input-row { display: flex; gap: 8px; padding: 9px 12px 12px; background: rgba(10,14,12,.96); backdrop-filter: blur(16px); border-top: 1px solid var(--border); flex-shrink: 0; }
+    #chat-input { flex: 1; background: rgba(10,18,12,.94); border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 20px; font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif; transition: border-color .2s; }
+    #chat-input:focus { border-color: rgba(58,138,90,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--sea); color: #fff; font-size: 1rem; cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center; }
+    #send-btn:hover { background: #4AAA6A; transform: scale(1.06); }
+    #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+    .api-banner { display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99; background: #0A140C; border-bottom: 2px solid var(--sea); padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .8rem; color: var(--text); }
+    .api-banner label strong { color: var(--sea); }
+    .api-banner input { flex: 1; min-width: 180px; background: #0A1410; border: 1px solid rgba(58,138,90,.4); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: .78rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem; }
+    .banner-close { background: none !important; color: var(--muted) !important; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  </style>
+</head>
+<body>
+
+<header id="top-bar">
+  <a href="/from-the-sofa" id="back-btn">← Guider</a>
+  <div class="hdr-center">SOFATRAVELS · <span>KRISTIANSAND</span></div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="voice-btn" title="Hildes stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Hildes stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<div id="app">
+  <div id="left-col">
+    <img class="portrait-slide active" src="hilde-kristiansand.jpg"   alt="Hilde i Kristiansand" />
+    <img class="portrait-slide"        src="slide-posebyen.jpg"       alt="Posebyen" />
+    <img class="portrait-slide"        src="slide-christiansholm.jpg" alt="Christiansholm festning" />
+    <img class="portrait-slide"        src="slide-ravnedalen.jpg"     alt="Ravnedalen" />
+    <img class="portrait-slide"        src="slide-kvadraturen.jpg"    alt="Kvadraturen" />
+
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
+    <div id="guide-badge">
+      <div class="badge-av"><img src="hilde-kristiansand.jpg" alt="Hilde" /></div>
+      <span class="badge-name">Hilde</span>
+      <span class="online-dot"></span>
+    </div>
+    <div id="loc-badge">
+      <div id="loc-region">AGDER · NORGE</div>
+      <div id="loc-name">Kristiansand</div>
+    </div>
+    <div id="slide-dots">
+      <div class="sdot active" data-idx="0"></div>
+      <div class="sdot" data-idx="1"></div>
+      <div class="sdot" data-idx="2"></div>
+      <div class="sdot" data-idx="3"></div>
+      <div class="sdot" data-idx="4"></div>
+    </div>
+
+    <!-- INFO CARD -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">KRISTIANSAND · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img" src="" alt="" />
+        <div id="info-card-image-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Hilde i chatten — hun ser det samme som deg</div>
+    </div>
+  </div>
+
+  <div id="right-col">
+    <div id="right-top">
+      <div id="topics-panel">
+        <div class="tp-region">KRISTIANSAND</div>
+        <div class="tp-name">Hilde</div>
+        <div class="tp-tagline">«Byen de fleste går rett gjennom»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-topic="posebyen">Posebyen · hvile og franske soldater</button>
+          <button class="topic-btn" data-topic="bybrann">Bybrannen 1892 · fra tre til mur</button>
+          <button class="topic-btn" data-topic="christiansholm">Christiansholm · slavebrakka og krigen</button>
+          <button class="topic-btn" data-topic="odderoya">Odderøya · karantene og krig</button>
+          <button class="topic-btn" data-topic="ravnedalen">Ravnedalen · soldater med spader</button>
+          <button class="topic-btn" data-topic="kvadraturen">Kvadraturen · byen tegnet med linjal</button>
+          <a class="topic-btn topic-link" href="https://www.visitkrs.no/spise-og-drikke/" target="_blank" rel="noopener">Spise og drikke i Kristiansand ↗</a>
+        </div>
+      </div>
+
+      <div id="hilde-panel">
+        <video autoplay muted loop playsinline src="hilde-kristiansand.mp4" poster="hilde-kristiansand.jpg"></video>
+        <div id="hilde-panel-overlay"></div>
+        <div id="hilde-panel-name">
+          <span id="hilde-panel-sub">GUIDE</span>Hilde
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-col">
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Hilde direkte</div>
+      <div id="messages" role="log" aria-live="polite"></div>
+      <div id="input-row">
+        <input type="search" id="chat-input" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Spør Hilde om Kristiansand…" />
+        <button id="send-btn">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  posebyen: {
+    title: 'Posebyen',
+    subtitle: 'Hvile, franske soldater og arbeiderstrøket som overlevde',
+    img: 'kort-posebyen.jpg',
+    imgCap: 'Gyldenløvesgate i Posebyen — Nord-Europas største sammenhengende trehusbebyggelse',
+    sections: [
+      { label: 'NAVNET',
+        text: `Navnet Posebyen stammer fra napoleonskrigenes tid tidlig på 1800-tallet. Franske tropper var garnisonert i Kristiansand og alliert med Danmark-Norge. Soldatene ble innkvartert i private hjem i den nordøstlige delen av Kvadraturen. Når de gikk opp i byen for å hvile — «reposez» på fransk — fikk området tilnavnet Posebyen. Den franske byen.` },
+      { label: 'HVEM BODDE HER',
+        text: `Posebyen var arbeider- og håndverkerstrøket. Sjøfolk, dagarbeidere, tjenestefolk og de fattigste familiene bodde her — tett, med griser og høns i bakgårdene og husdyr som beitet i Baneheia om sommeren. I Skippergaten lå skjenkestuer, høkerbutikker og et lite sykehus. Yrker som salmakere, hjulmakere, seilmakere og smeder fylte kvartalene. Opp til 40 mennesker kunne bo i ett hus.` },
+      { label: 'BYBRANNEN 1892',
+        text: `Da den store bybrannen la en tredjedel av Kristiansand i aske i 1892, ble Posebyen spart. Brannen tok den sørøstlige delen av byen — der den ble gjenreist i obligatorisk murstein. Posebyen, lenger nord, ble stående. Slik ble den til det den er i dag: Nord-Europas største sammenhengende trehusbebyggelse, med rundt 14 kvartaler og over 160 vernede eiendommer fra 1700- og 1800-tallet.` },
+      { label: 'I DAG',
+        text: `Smauene mellom husene er der ennå. Der gikk barn med ved og kvinner med vann. Der ble hemmeligheter delt over gjerder. Husene er hvite, brosteinen er den samme. Det er lett å gå gjennom Posebyen og bare se idyll. Det er vanskeligere å se det som faktisk er der: et arbeiderstrøk som overlevde brannen og tre århundrer med forandring.` }
+    ]
+  },
+  bybrann: {
+    title: 'Bybrannen 1892',
+    subtitle: 'Fra treby til murby — en ettermiddag forandret Kristiansand',
+    img: 'kort-bybrann.jpg',
+    imgCap: 'Kristiansand etter bybrannen 1892 — en tredjedel av byen i aske',
+    sections: [
+      { label: 'DET SKJEDDE',
+        text: `8. juli 1892, klokken tre om ettermiddagen, brøt det ut brann i et glassmesterverksted på hjørnet av Markens gate og Dronningens gate. Vinden hadde stormstyrke. Brannvesenet klarte ingenting. Ilden spredte seg østover mot Otra, nordover og sørover. Da det var over hadde 350 bygninger brent ned — 21 fulle kvartaler. 4 000 mennesker ble husløse.` },
+      { label: 'INGEN OMKOM',
+        text: `Brannen brøt ut midt på dagen. Det reddet liv. To brannmenn ble hardt skadet — den ene falt fra et hustak, den andre fikk hendene og ansiktet forbrent. Christiansholm festning fikk store skader fra eksplosjonene. Norges Bank, Sparebanken, postkontoret og telegrafstasjonen brant ned. Domkirken, som hadde brent i 1880, ble spart denne gangen.` },
+      { label: 'KONSEKVENSEN',
+        text: `Bystyret innførte murtvang i hele brannstrøket. Den sørøstlige delen av Kristiansand — det vi i dag kaller Murbyen — ble gjenreist i stein og tegl. Gatene ble bredere. Husene ble høyere. En ny by vokste frem på ruinene av den gamle. Hvis du synes gatene i sentrum virker brede og ordentlige, er det fordi ilden bestemte hvordan de skulle bli.` },
+      { label: 'SPORENE I DAG',
+        text: `I Tollbodgaten er det ett sted du fortsatt kan se skillet tydelig — trehus på den ene siden, murbygg på den andre. Det er byens sår, synlig om du vet hva du ser etter. Posebyen nord for brannen ble stående. Murbyen sør for brannen ble bygget. Mellom dem løper grensen som ilden trakk den kvelden i 1892.` }
+    ]
+  },
+  christiansholm: {
+    title: 'Christiansholm festning',
+    subtitle: 'Slavebrakka, oberst Löwen og angrepet i 1807',
+    img: 'kort-christiansholm.jpg',
+    imgCap: 'Kanonene på Christiansholm — festningen som bare én gang avfyrte skudd i kamp',
+    sections: [
+      { label: 'BYGGET PÅ EN HOLME',
+        text: `Christiansholm festning sto ferdig i 1672 — bygget på en holme i Østerhavnen, forbundet med fastlandet via en nesten 100 meter lang pelebro. Arkitekt var den nederlandskfødte generalkvartermester Willem Coucheron. Veggene er fem meter tykke. Inne i den runde tårnet: kruttkammer, offisersrom, vaktrom og fengsel. Utenfor, på vollgangen: åtte bronsekanoner.` },
+      { label: 'SLAVEBRAKKA',
+        text: `Lavetthuset inne i festningsanlegget ble etter hvert brukt som hus for straffarbeidere — derav tilnavnet Slavebrakka. Den svenske obersten Axel Löwen tilbragte tre år her etter nederlaget på Norderhov i 1716, der prestefruen Anna Colbjørnsdatter beseiret hans hær. Han fikk visse friheter — tok imot besøk og vervet til og med en amtmann til svensk tjeneste. En annen fange, rittmester Carl Henrik Norman, døde i fangenskapet og ble gravlagt på Domkirkegården i 1719.` },
+      { label: 'ANGREPET I 1807',
+        text: `Den eneste gangen Christiansholm faktisk avfyrte skudd i kamp var 18. september 1807. Det britiske linjeskipet HMS Spencer seilte inn i Kristiansandsfjorden for å kapre det dansk-norske orlogsskipet Prins Christian Frederik. Festningen åpnet ild. Inntrengningsforsøket ble slått tilbake. Engelskmennene sprengte den eldre Fredriksholm-festningen i stedet og forlot fjorden.` },
+      { label: 'I DAG',
+        text: `Festningen ble nedlagt som forsvarsverk i 1872. Siste gang den var i militær bruk var under andre verdenskrig, da tyskerne plasserte to panservernkanoner der. I dag er Christiansholm en av Kristiansands mest besøkte steder — konsertarena, utstillingslokale og turistattraksjon. Vollen er åpen for publikum fra mai til september.` }
+    ]
+  },
+  odderoya: {
+    title: 'Odderøya',
+    subtitle: 'Karanteneøy, festning og kulturarena — ett sted, mange århundrer',
+    img: 'kort-odderoya.jpg',
+    imgCap: 'Odderøya sett fra Kristiansandsfjorden — øya som har vært alt',
+    sections: [
+      { label: 'NORD-EUROPAS STØRSTE KARANTENESTASJON',
+        text: `I 1804 ble det anlagt en karantenestasjon på Odderøya for Danmark, Norge og Holstein — den største i Nord-Europa, i drift til 1914. Skip som ankom med syke om bord måtte ligge i karantene her. «Quaranta giorni» — førti dager — var den opprinnelige ventetiden fra middelalderen. På østsiden av øya ligger fortsatt Kolerakirkegården, der de som ikke overlevde ble gravlagt.` },
+      { label: 'KAMPENE 9. APRIL 1940',
+        text: `Da tyske krigsskip forsøkte å ta Kristiansand 9. april 1940, var det Odderøya som holdt dem ute. Tre ganger mellom kl. 05 og 07 forsøkte den tyske styrken — anført av krysseren Karlsruhe — å trenge gjennom. Tre ganger ble de slått tilbake. Åtte norske soldater mistet livet. En av kanonkulene fra Karlsruhe traff toppen av Domkirkens tårn. Til slutt fikk festningen forvekslede ordrer og innkapitulerte.` },
+      { label: 'MILITÆR SONE I 52 ÅR',
+        text: `Fra 9. april 1940 til 23. juni 1992 var Odderøya stengt for allmennheten — 52 år som militær sone. Da kommunen overtok, var det kunstnere og kulturarbeidere som tok over de forlatte militærbygningene. I dag huser øya gallerier, musikkstudioer, konsertarenaen Odderøya Amfi og baren Vaktbua. Quart-festivalen holdt til her. David Bowie, Bob Dylan og Oasis har spilt på øya.` },
+      { label: 'I DAG',
+        text: `En tur rundt Odderøya er tre kilometer med utsikt over hele byfjorden. Gamle kanonstillinger, karantenemurer og militærbygninger fra ulike århundrer ligger langs stiene. Det er et av de stedene i Kristiansand der historien ikke er rekonstruert — den er bare der, litt forlatt og helt ekte.` }
+    ]
+  },
+  ravnedalen: {
+    title: 'Ravnedalen',
+    subtitle: 'Soldater med spader — dalen som nesten ble skytebane',
+    img: 'kort-ravnedalen.jpg',
+    imgCap: 'General Wergelands bronsestatue i Ravnedalen — han som ga soldatene spader i stedet for geværer',
+    sections: [
+      { label: 'DET INGEN VET',
+        text: `De fleste tror Ravnedalen er et stykke urørt natur. Den er det motsatte. På 1800-tallet var området nærmest ødelagt — trærne hugget ned, landskapet brukt som beitemark. Det fantes planer om å gjøre stedet om til skytebane for militæret. Det var da general Joseph Frantz Oscar Wergeland grep inn.` },
+      { label: 'SOLDATER MED SPADER',
+        text: `Mellom 1874 og 1878 satte Wergeland sine soldater til å bygge en romantisk park i stedet for en skytebane. De anla dammer, gravde stier, plantet eksotiske trær — rhododendron, magnolia, minner og sypress. De bygde en fontene med naturlig trykk fra den nærliggende Baanetjønn. Stedet ble forvandlet fra et ødelagt beitelandskap til et av Norges vakreste parkprosjekter.` },
+      { label: 'TRÆRNE',
+        text: `Noen av Norges største grantrær ble plantet rundt 1875. De er der ennå. Neste gang du er i Ravnedalen: se opp. De enorme trærne du ser ble plantet av soldater som fikk spader i stedet for geværer. Det er 150 år siden. Granittveggene rundt dalen ble ikke sprengt bort — de fikk bli kulissene i et av norgeshistoriens mest uventede parkprosjekter.` },
+      { label: 'I DAG',
+        text: `Ravnedalen er i dag Kristiansands fremste kulturarena utendørs — konsertscene med plass til 5 000, kafé i det gamle gartnerhuset, svaner på dammen. Wergeland selv er bevart i bronse i parken, støpt av Gustav Lærum i 1917. Han ser ut over det han skapte. Det er verdt å stoppe og tenke på hva som nesten skjedde her i stedet.` }
+    ]
+  },
+  kvadraturen: {
+    title: 'Kvadraturen',
+    subtitle: 'Byen tegnet med linjal — en 400 år gammel idé du går i hver dag',
+    img: 'kort-kvadraturen.jpg',
+    imgCap: 'Kvadraturen fra luften — renessansebyplanen er fortsatt fullt synlig',
+    sections: [
+      { label: 'EN IDÉ FØR EN BY',
+        text: `Da kong Christian IV grunnla Kristiansand i 1641, ble byen tegnet før den ble bygget. Ingeniøren Hans Jacobsen Schiørt la ut et strengt rutenett — syv gater nord-sør, ti gater øst-vest — med usedvanlig brede gater på rundt 15 meter. Det var revolusjonerende for sin tid. Hensikten var militær kontroll, lettere handel og bedre brannbekjempelse. De fleste norske byer vokste frem litt etter litt. Kristiansand ble designet.` },
+      { label: 'IDEEN BAK RUTENETTET',
+        text: `Renessansens byplanlegging handlet om orden som maktutøvelse. Kongen bestemte ikke bare at det skulle være en by her — han bestemte hvordan den skulle se ut, hvordan folk skulle bevege seg i den, og hvordan den skulle forsvares. Gatene er brede nok til at hærstyrker kan marsjere gjennom dem. Det er ikke tilfeldigheter. Det er vilje.` },
+      { label: 'STOPP I ET GATEKRYSS',
+        text: `Neste gang du er i Kristiansand sentrum: stå stille midt i et gatekryss. Se rett frem. Så til høyre. Så til venstre. Linjene fortsetter nesten uendelig i alle fire retninger. Du står ikke bare i en gate. Du står inne i en idé som er nesten 400 år gammel. Ingen andre norske byer ser slik ut — fordi ingen andre ble planlagt på denne måten.` },
+      { label: 'TO BYER I ÉN',
+        text: `I dag er Kvadraturen delt i to tydelige deler. Posebyen i nord — trehusene fra 1700- og 1800-tallet som overlevde bybrannen. Murbyen i sør — gjenreist etter brannen i 1892 i obligatorisk steinmateriale. I Tollbodgaten kan du se det skarpeste skillet: trehus på én side, murbygg på den andre. Det er der byens historie er mest synlig.` }
+    ]
+  }
+};
+
+// ══ SLIDESHOW ══
+const slides = document.querySelectorAll('.portrait-slide');
+const dots   = document.querySelectorAll('.sdot');
+let cur = 0, slideTimer;
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
+}
+function startSlides() { slideTimer = setInterval(() => goTo(cur + 1), 12000); }
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(slideTimer); goTo(+d.dataset.idx); startSlides();
+}));
+startSlides();
+
+// ══ INFO CARD ══
+let activeCard = null;
+function showCard(key) {
+  const card = CARDS[key];
+  if (!card) return;
+  activeCard = key;
+  document.getElementById('info-card-title').textContent = card.title;
+  document.getElementById('info-card-img').src = card.img;
+  document.getElementById('info-card-img').alt = card.title;
+  document.getElementById('info-card-image-cap').textContent = card.imgCap;
+  const body = document.getElementById('info-card-body');
+  body.innerHTML = '';
+  card.sections.forEach(s => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+    body.appendChild(sec);
+  });
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.toggle('active', b.dataset.topic === key));
+}
+function closeCard() {
+  activeCard = null;
+  document.getElementById('info-card').classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  startSlides();
+}
+document.getElementById('info-card-close').addEventListener('click', closeCard);
+
+// ══ ELEVENLABS ══
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false, currentAudio = null;
+const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+document.getElementById('eleven-key-save').onclick = () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v; localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+};
+document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('voice-btn').onclick = () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+};
+function updateVoiceBtn() {
+  const b = document.getElementById('voice-btn');
+  b.textContent = voiceOn ? '🔊' : '🔇';
+  b.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ══ KNOWLEDGE BASE ══
+const KRISTIANSAND_KB = `
+STED: Kristiansand
+
+Posebyen:
+Navnet fra napoleonskrigene — franske soldaters «reposez» (hvile) ga navn til bydelen.
+Arbeider- og håndverkerstrøket: sjøfolk, dagarbeidere, smeder, seilmakere.
+Opp til 40 mennesker i ett hus. Griser i bakgårdene.
+Overlevde bybrannen i 1892. Nord-Europas største sammenhengende trehusbebyggelse.
+Smauene mellom husene der barn bar ved og kvinner bar vann.
+
+Bybrannen 1892:
+8. juli 1892, kl. 15 — brann i glassmesterverksted, Markens/Dronningens gate.
+Stormstyrke vind. 350 bygninger, 21 kvartaler, 4 000 hjemløse.
+Ingen omkom. Murtvang innført. Sørøst ble murby. Posebyen nord ble stående.
+"Gatene er brede fordi ilden bestemte det."
+
+Christiansholm festning:
+Ferdig 1672 på holme i Østerhavnen. Arkitekt: Willem Coucheron.
+Vegger fem meter tykke. Slavebrakka — straffarbeidere.
+Oberst Axel Löwen fanget her 1716-1719 etter Norderhov.
+Eneste kamp: HMS Spencer, 18. september 1807. Inntrengning slått tilbake.
+
+Odderøya:
+Nord-Europas største karantenestasjon 1804-1914. Kolerakirkegården.
+9. april 1940: holdt tyske krigsskip ute i to timer. Åtte norske soldater falt.
+Stengt 52 år. Åpnet 1992. Nå kulturarena — Quart, Bowie, Dylan.
+
+Ravnedalen:
+Nesten skytebane. General Oscar Wergeland ga soldatene spader 1874-1878.
+Plantet romantisk park: dammer, eksotiske trær, stier.
+Noen av Norges største grantrær, plantet rundt 1875. Bronsestatue av Wergeland.
+
+Kvadraturen:
+Grunnlagt 1641 av Christian IV. Ingeniør: Hans Jacobsen Schiørt.
+Syv gater nord-sør, ti gater øst-vest. 15 meter brede gater — revolusjonerende.
+Tegnet før bygget. To deler: Posebyen (tre) og Murbyen (stein etter 1892).
+Stå i et gatekryss — linjene fortsetter nesten uendelig.
+
+HILDES KRISTIANSAND:
+Hun liker å sitte på brostein i Posebyen med kaffe.
+Ser folk gå forbi uten å ane hva som skjedde der de står.
+Kristiansand er ikke kjedelig. Det er bare presentert feil.
+`;
+
+const HILDE_KB = `
+Du er Hilde. 35 år, oppvokst på Vestlandet, bor i Parkveien i Bergen.
+Du er ikke guide i turistisk forstand — du er en som ble værende på steder andre passerte gjennom.
+
+HVORDAN DU SNAKKER:
+Første setning er alltid substans: et faktum, en hendelse, et navn. Aldri handling eller atmosfære først.
+Korte setninger. Du lar dem lande.
+Du ramser aldri opp severdigheter.
+Du forteller historier fremfor fakta. Årstall bare hvis de betyr noe for noen.
+Du innrømmer når du ikke vet — uten å unnskylde deg.
+Forsiktig humor, aldri på andres bekostning.
+Du avbryter aldri. Du sier aldri "dette må du se."
+En svak melankoli under overflaten — ting forgår, og det er verdt å merke seg.
+Handlinger i kursiv (*) brukes sparsomt — maks én gang per tre svar.
+Du er med brukeren, ikke foran dem.
+`;
+
+function getSystemPrompt() {
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte. Kortets innhold: `
+      + c.sections.map(s => s.label + ': ' + s.text.substring(0,80) + '...').join(' | ');
+  }
+  return HILDE_KB
+    + '\n\nSTEDSKUNNSKAP KRISTIANSAND:\n' + KRISTIANSAND_KB
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 45 ord. Aldri punktlister. Aldri oppsummeringer.'
+    + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
+    + '\nAltid norsk.';
+}
+
+// ══ CHAT ══
+let history = [], loading = false;
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
+
+function parse(t) {
+  return t.replace(/<!--[^>]*-->/g,'').trim()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+function addMsg(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.src = 'hilde-kristiansand.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
+    row.appendChild(av);
+  }
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  bub.innerHTML = parse(text);
+  if (withSpeak && ELEVEN_KEY) {
+    const sp = document.createElement('button');
+    sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
+    sp.onclick = () => speak(text, sp);
+    bub.appendChild(sp);
+  }
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function addTyping() {
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-row';
+  const av = document.createElement('img');
+  av.src = 'hilde-kristiansand.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
+  row.appendChild(av);
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
+
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+  addTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: getSystemPrompt() })
+    });
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
+    else {
+      const data = await res.json();
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || '';
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
+      }
+    }
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
+}
+
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+document.querySelectorAll('.topic-btn[data-topic]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
+
+// ══ TTS ══
+async function speak(text, btn) {
+  if (!ELEVEN_KEY) return;
+  const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
+  if (!plain) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true } })
+    });
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
+    currentAudio = new Audio(url);
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
+    currentAudio.onended = () => {
+      if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      currentAudio = null;
+    };
+    currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      else speak(text, btn);
+    };
+  } catch(e) {
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+  }
+}
+
+// ══ OPENING ══
+window.addEventListener('DOMContentLoaded', () => {
+  addMsg('assistant', 'Du fant Kristiansand, da.\n\nHva tar deg hit?');
+});
+</script>
+</body>
+</html>
