@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redaktør · SofaTravels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080E14;
+      --border: #1A2E3A;
+      --sea:    #2A7FA8;
+      --gold:   #C9A84C;
+      --text:   #EAE0CF;
+      --sub:    #9AB0BA;
+      --muted:  #5A7A8A;
+      --red:    #C84A4A;
+      --green:  #4AC87A;
+    }
+    html, body {
+      min-height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text);
+    }
+
+    /* TOP BAR */
+    #top-bar {
+      background: rgba(8,14,20,.98); border-bottom: 1px solid var(--border);
+      padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .top-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: .9rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .top-logo span { color: var(--gold); }
+    .top-tag {
+      font-size: .7rem; letter-spacing: .2em; color: var(--muted);
+      border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px;
+    }
+    .top-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    #refresh-btn {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.35);
+      color: var(--sea); padding: 5px 14px; border-radius: 4px;
+      cursor: pointer; font-size: .75rem; font-family: inherit;
+      transition: all .2s;
+    }
+    #refresh-btn:hover { background: rgba(42,127,168,.25); }
+    #status { font-size: .72rem; color: var(--muted); }
+
+    /* MAIN */
+    #main { max-width: 960px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    /* STATS */
+    #stats {
+      display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .stat-box {
+      background: rgba(10,18,28,.8); border: 1px solid var(--border);
+      border-radius: 6px; padding: 14px 20px; flex: 1; min-width: 140px;
+    }
+    .stat-label { font-size: 7px; letter-spacing: .35em; color: var(--muted); margin-bottom: 4px; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--text); }
+    .stat-val.red { color: var(--red); }
+    .stat-val.gold { color: var(--gold); }
+
+    /* FILTERS */
+    #filters {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(10,18,28,.8); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 14px; border-radius: 20px;
+      cursor: pointer; font-size: .75rem; font-family: inherit;
+      transition: all .2s;
+    }
+    .filter-btn:hover { border-color: var(--sea); color: var(--text); }
+    .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+
+    /* LOG ENTRIES */
+    #entries { display: flex; flex-direction: column; gap: 12px; }
+
+    .entry {
+      background: rgba(10,18,28,.85); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 20px;
+      transition: border-color .2s;
+    }
+    .entry:hover { border-color: rgba(42,127,168,.3); }
+    .entry.vet-ikke { border-left: 3px solid var(--red); }
+    .entry.kort-svar { border-left: 3px solid var(--gold); }
+
+    .entry-meta {
+      display: flex; gap: 10px; align-items: center;
+      margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .entry-type {
+      font-size: 7px; letter-spacing: .3em; padding: 2px 8px; border-radius: 3px;
+    }
+    .entry-type.vet-ikke {
+      background: rgba(200,74,74,.15); border: 1px solid rgba(200,74,74,.3);
+      color: var(--red);
+    }
+    .entry-type.kort-svar {
+      background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25);
+      color: var(--gold);
+    }
+    .entry-sted {
+      font-size: .72rem; color: var(--sea); letter-spacing: .1em;
+    }
+    .entry-tid {
+      font-size: .68rem; color: var(--muted); margin-left: auto;
+    }
+
+    .entry-sporsmal {
+      font-size: .82rem; color: var(--sub);
+      margin-bottom: 8px; font-style: italic;
+    }
+    .entry-sporsmal::before { content: '↗ '; color: var(--muted); }
+
+    .entry-svar {
+      font-size: .85rem; color: var(--text); line-height: 1.6;
+      border-top: 1px solid rgba(255,255,255,.05);
+      padding-top: 8px; margin-top: 4px;
+    }
+    .entry-svar::before {
+      content: 'Hilde: ';
+      color: var(--muted); font-size: .72rem; letter-spacing: .1em;
+    }
+
+    .entry-actions { margin-top: 10px; display: flex; gap: 8px; }
+    .action-btn {
+      font-size: .68rem; padding: 3px 10px; border-radius: 3px;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .action-add {
+      background: rgba(74,200,122,.1); border: 1px solid rgba(74,200,122,.3);
+      color: var(--green);
+    }
+    .action-add:hover { background: rgba(74,200,122,.2); }
+    .action-ignore {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+    }
+    .action-ignore:hover { border-color: rgba(200,74,74,.4); color: var(--red); }
+
+    /* TOM */
+    #tom {
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-style: italic; display: none;
+    }
+
+    /* LOADING */
+    #laster {
+      text-align: center; padding: 40px;
+      color: var(--muted); font-style: italic;
+    }
+
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  </style>
+</head>
+<body>
+
+<div id="top-bar">
+  <div class="top-logo">SOFATRAVELS · <span>REDAKTØR</span></div>
+  <div class="top-tag">KUNNSKAPSLOGG</div>
+  <div class="top-right">
+    <span id="status">Henter logg…</span>
+    <button id="refresh-btn">↻ Oppdater</button>
+  </div>
+</div>
+
+<div id="main">
+
+  <div id="stats">
+    <div class="stat-box">
+      <div class="stat-label">TOTALT FLAGGET</div>
+      <div class="stat-val" id="stat-total">—</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">VET IKKE</div>
+      <div class="stat-val red" id="stat-vet-ikke">—</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">KORT SVAR</div>
+      <div class="stat-val gold" id="stat-kort">—</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">SISTE FLAGG</div>
+      <div class="stat-val" id="stat-siste" style="font-size:.9rem">—</div>
+    </div>
+  </div>
+
+  <div id="filters">
+    <button class="filter-btn active" data-filter="alle">Alle</button>
+    <button class="filter-btn" data-filter="vet-ikke">Vet ikke</button>
+    <button class="filter-btn" data-filter="kort-svar">Kort svar</button>
+    <button class="filter-btn" data-filter="bergen">Bergen</button>
+    <button class="filter-btn" data-filter="kristiansand">Kristiansand</button>
+    <button class="filter-btn" data-filter="vikten">Vikten</button>
+    <button class="filter-btn" data-filter="vagar">Vågar</button>
+  </div>
+
+  <div id="laster">Henter loggoppføringer…</div>
+  <div id="tom">Ingen flaggede samtaler ennå. Hilde vet tilsynelatende alt. 🎉</div>
+  <div id="entries"></div>
+
+</div>
+
+<script>
+let alleOppforinger = [];
+let aktivFilter = 'alle';
+
+function formaterTid(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('no-NO', { day:'numeric', month:'short' })
+    + ' · ' + d.toLocaleTimeString('no-NO', { hour:'2-digit', minute:'2-digit' });
+}
+
+function visOppforinger(data) {
+  const container = document.getElementById('entries');
+  const tom = document.getElementById('tom');
+  container.innerHTML = '';
+
+  const filtrert = data.filter(o => {
+    if (aktivFilter === 'alle') return true;
+    if (aktivFilter === 'vet-ikke') return o.type === 'vet-ikke';
+    if (aktivFilter === 'kort-svar') return o.type === 'kort-svar';
+    return o.sted?.toLowerCase().includes(aktivFilter);
+  });
+
+  if (filtrert.length === 0) {
+    tom.style.display = 'block';
+    return;
+  }
+  tom.style.display = 'none';
+
+  filtrert.forEach(o => {
+    const el = document.createElement('div');
+    el.className = `entry ${o.type}`;
+    el.innerHTML = `
+      <div class="entry-meta">
+        <span class="entry-type ${o.type}">${o.type === 'vet-ikke' ? 'VET IKKE' : 'KORT SVAR'}</span>
+        <span class="entry-sted">${(o.sted || 'ukjent').toUpperCase()}</span>
+        <span class="entry-tid">${formaterTid(o.tidspunkt)}</span>
+      </div>
+      <div class="entry-sporsmal">${o.sporsmal || '—'}</div>
+      <div class="entry-svar">${o.svar || '—'}</div>
+      <div class="entry-actions">
+        <button class="action-btn action-add" onclick="kopierKB(this)" data-tekst="${encodeURIComponent(o.sporsmal + '\n\n' + o.svar)}">
+          + Kopi til KB
+        </button>
+        <button class="action-btn action-ignore" onclick="this.closest('.entry').style.opacity='.3'">
+          Ignorer
+        </button>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function oppdaterStats(data) {
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-vet-ikke').textContent = data.filter(o => o.type === 'vet-ikke').length;
+  document.getElementById('stat-kort').textContent = data.filter(o => o.type === 'kort-svar').length;
+  const siste = data[0];
+  document.getElementById('stat-siste').textContent = siste ? formaterTid(siste.tidspunkt) : '—';
+}
+
+async function hentLogg() {
+  document.getElementById('status').textContent = 'Henter…';
+  document.getElementById('laster').style.display = 'block';
+  document.getElementById('entries').innerHTML = '';
+  try {
+    const res = await fetch('/.netlify/functions/get-log');
+    const data = await res.json();
+    alleOppforinger = Array.isArray(data) ? data : [];
+    oppdaterStats(alleOppforinger);
+    visOppforinger(alleOppforinger);
+    document.getElementById('status').textContent = `${alleOppforinger.length} oppføringer`;
+  } catch(e) {
+    document.getElementById('status').textContent = 'Feil ved henting';
+    console.error(e);
+  }
+  document.getElementById('laster').style.display = 'none';
+}
+
+function kopierKB(btn) {
+  const tekst = decodeURIComponent(btn.dataset.tekst);
+  navigator.clipboard.writeText(tekst).then(() => {
+    btn.textContent = '✓ Kopiert';
+    setTimeout(() => { btn.textContent = '+ Kopi til KB'; }, 2000);
+  });
+}
+
+// Filterknapper
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    aktivFilter = btn.dataset.filter;
+    visOppforinger(alleOppforinger);
+  });
+});
+
+document.getElementById('refresh-btn').addEventListener('click', hentLogg);
+
+// Start
+hentLogg();
+</script>
+</body>
+</html>
