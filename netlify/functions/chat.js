@@ -1,4 +1,45 @@
 const https = require('https');
+const { getStore } = require('@netlify/blobs');
+
+// Usikkerhetsmarkører — Hilde flagges når hun sier disse
+const USIKKER_MARKORER = [
+  'vet ikke',
+  'usikker',
+  'stopper kunnskapen',
+  'ikke godt nok',
+  'kan ikke svare',
+  'er jeg ikke sikker',
+  'har jeg ikke',
+  'kjenner jeg ikke',
+  'vil ikke gjette',
+  'bør du sjekke',
+  'ikke nøyaktig',
+  'hull i det jeg',
+];
+
+// Sjekk om svaret inneholder usikkerhet
+function erUsikkert(tekst) {
+  const lavt = tekst.toLowerCase();
+  return USIKKER_MARKORER.some(m => lavt.includes(m));
+}
+
+// Lagre loggoppføring til Netlify Blobs
+async function loggOppforing(sted, sporsmal, svar) {
+  try {
+    const store = getStore('hilde-logg');
+    const nokkel = `logg-${Date.now()}`;
+    const oppforing = {
+      tidspunkt: new Date().toISOString(),
+      sted: sted || 'ukjent',
+      sporsmal,
+      svar,
+      type: erUsikkert(svar) ? 'vet-ikke' : 'kort-svar',
+    };
+    await store.set(nokkel, JSON.stringify(oppforing));
+  } catch (e) {
+    console.log('Logg-feil (ikke kritisk):', e.message);
+  }
+}
 
 exports.handler = async function(event) {
 
@@ -18,22 +59,22 @@ exports.handler = async function(event) {
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  
-  // Log key status (not the actual key)
+
   if (!apiKey) {
     console.log('ERROR: ANTHROPIC_API_KEY is not set');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on server' }) };
   }
-  
-  console.log('API key found, length:', apiKey.length, 'starts with:', apiKey.substring(0, 7));
 
   let body;
   try {
     body = JSON.parse(event.body);
   } catch(e) {
-    console.log('ERROR: Invalid JSON body', e.message);
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
+
+  // Hent siste brukermelding og sted fra systemprompt
+  const sisteMelding = body.messages?.filter(m => m.role === 'user').slice(-1)[0]?.content || '';
+  const sted = body.sted || 'ukjent';
 
   return new Promise((resolve) => {
     const payload = JSON.stringify({
@@ -57,10 +98,20 @@ exports.handler = async function(event) {
 
     const req = https.request(options, (res) => {
       let data = '';
-      console.log('Anthropic response status:', res.statusCode);
       res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        console.log('Anthropic response:', data.substring(0, 200));
+      res.on('end', async () => {
+        try {
+          const parsed = JSON.parse(data);
+          const svar = parsed.content?.[0]?.text || '';
+
+          // Logg hvis Hilde er usikker eller svaret er veldig kort
+          if (erUsikkert(svar) || svar.length < 80) {
+            await loggOppforing(sted, sisteMelding, svar);
+          }
+        } catch(e) {
+          console.log('Logg-parsing feil:', e.message);
+        }
+
         resolve({
           statusCode: 200,
           headers,
@@ -70,7 +121,6 @@ exports.handler = async function(event) {
     });
 
     req.on('error', (e) => {
-      console.log('Request error:', e.message);
       resolve({ statusCode: 500, headers, body: JSON.stringify({ error: e.message }) });
     });
 
