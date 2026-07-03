@@ -1,31 +1,32 @@
 const { getStore } = require('@netlify/blobs');
 
 exports.handler = async function(event) {
-
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
   };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    const store = getStore('hilde-logg');
-    const { blobs } = await store.list();
+    const store = getStore({
+      name: 'hilde-logg',
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_ACCESS_TOKEN,
+    });
 
-    // Hent alle oppføringer og sorter nyeste først
+    const { blobs } = await store.list();
+    if (!blobs || blobs.length === 0) {
+      return { statusCode: 200, headers, body: JSON.stringify([]) };
+    }
+
     const oppforinger = await Promise.all(
       blobs.map(async (blob) => {
-        const data = await store.get(blob.key);
         try {
+          const data = await store.get(blob.key);
           return JSON.parse(data);
-        } catch {
-          return null;
-        }
+        } catch { return null; }
       })
     );
 
@@ -33,16 +34,9 @@ exports.handler = async function(event) {
       .filter(Boolean)
       .sort((a, b) => new Date(b.tidspunkt) - new Date(a.tidspunkt));
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(sortert),
-    };
+    return { statusCode: 200, headers, body: JSON.stringify(sortert) };
   } catch (e) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: e.message }),
-    };
+    console.log('get-log feil:', e.message);
+    return { statusCode: 200, headers, body: JSON.stringify([]) };
   }
 };

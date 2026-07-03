@@ -1,48 +1,39 @@
 const https = require('https');
 const { getStore } = require('@netlify/blobs');
 
-// Usikkerhetsmarkører — Hilde flagges når hun sier disse
 const USIKKER_MARKORER = [
-  'vet ikke',
-  'usikker',
-  'stopper kunnskapen',
-  'ikke godt nok',
-  'kan ikke svare',
-  'er jeg ikke sikker',
-  'har jeg ikke',
-  'kjenner jeg ikke',
-  'vil ikke gjette',
-  'bør du sjekke',
-  'ikke nøyaktig',
-  'hull i det jeg',
+  'vet ikke', 'usikker', 'stopper kunnskapen', 'ikke godt nok',
+  'kan ikke svare', 'er jeg ikke sikker', 'har jeg ikke',
+  'kjenner jeg ikke', 'vil ikke gjette', 'bør du sjekke',
+  'ikke nøyaktig', 'hull i det jeg',
 ];
 
-// Sjekk om svaret inneholder usikkerhet
 function erUsikkert(tekst) {
-  const lavt = tekst.toLowerCase();
-  return USIKKER_MARKORER.some(m => lavt.includes(m));
+  return USIKKER_MARKORER.some(m => tekst.toLowerCase().includes(m));
 }
 
-// Lagre loggoppføring til Netlify Blobs
-async function loggOppforing(sted, sporsmal, svar) {
+async function loggOppforing(sted, sporsmal, svar, type) {
   try {
-    const store = getStore('hilde-logg');
+    const store = getStore({
+      name: 'hilde-logg',
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_ACCESS_TOKEN,
+    });
     const nokkel = `logg-${Date.now()}`;
-    const oppforing = {
+    await store.set(nokkel, JSON.stringify({
       tidspunkt: new Date().toISOString(),
       sted: sted || 'ukjent',
       sporsmal,
       svar,
-      type: erUsikkert(svar) ? 'vet-ikke' : 'kort-svar',
-    };
-    await store.set(nokkel, JSON.stringify(oppforing));
+      type,
+    }));
+    console.log('Logg lagret:', type, sted, nokkel);
   } catch (e) {
-    console.log('Logg-feil (ikke kritisk):', e.message);
+    console.log('Logg-feil:', e.message);
   }
 }
 
 exports.handler = async function(event) {
-
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -50,29 +41,16 @@ exports.handler = async function(event) {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-
-  if (!apiKey) {
-    console.log('ERROR: ANTHROPIC_API_KEY is not set');
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on server' }) };
-  }
+  if (!apiKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
 
   let body;
-  try {
-    body = JSON.parse(event.body);
-  } catch(e) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
-  }
+  try { body = JSON.parse(event.body); }
+  catch(e) { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
 
-  // Hent siste brukermelding og sted fra systemprompt
   const sisteMelding = body.messages?.filter(m => m.role === 'user').slice(-1)[0]?.content || '';
   const sted = body.sted || 'ukjent';
 
@@ -98,32 +76,24 @@ exports.handler = async function(event) {
 
     const req = https.request(options, (res) => {
       let data = '';
-      res.on('data', (chunk) => { data += chunk; });
+      res.on('data', c => data += c);
       res.on('end', async () => {
         try {
           const parsed = JSON.parse(data);
           const svar = parsed.content?.[0]?.text || '';
-
-          // Logg hvis Hilde er usikker eller svaret er veldig kort
-          if (erUsikkert(svar) || svar.length < 80) {
-            await loggOppforing(sted, sisteMelding, svar);
+          const usikker = erUsikkert(svar);
+          const kort = svar.length < 80;
+          if (usikker || kort) {
+            await loggOppforing(sted, sisteMelding, svar, usikker ? 'vet-ikke' : 'kort-svar');
           }
         } catch(e) {
-          console.log('Logg-parsing feil:', e.message);
+          console.log('Logg-feil:', e.message);
         }
-
-        resolve({
-          statusCode: 200,
-          headers,
-          body: data,
-        });
+        resolve({ statusCode: 200, headers, body: data });
       });
     });
 
-    req.on('error', (e) => {
-      resolve({ statusCode: 500, headers, body: JSON.stringify({ error: e.message }) });
-    });
-
+    req.on('error', (e) => resolve({ statusCode: 500, headers, body: JSON.stringify({ error: e.message }) }));
     req.write(payload);
     req.end();
   });
