@@ -1,193 +1,760 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-50X2YGHD2J');
-</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Four regions, four companions. Choose where in Norway you want to begin." />
-  <title>Regions · SofaTravels</title>
+  <title>Olav · Trondheim · SofaTravels</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-50X2YGHD2J');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #130C06; --panel: #1A0D06; --card: #1E0F07; --border: #3A2010;
-      --gold: #C9A84C; --text: #F0E6CF; --muted: #907055; --sub: #B09870;
+      --bg:     #14100C;
+      --border: #2E2418;
+      --wood:   #A8702F;
+      --wood-lt:#D4A059;
+      --gold:   #C9A84C;
+      --text:   #EAE0CF;
+      --sub:    #B0A08A;
+      --muted:  #6A5A48;
+      --card-bg:#1C1610;
     }
-    html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; }
-
-    /* ── TOP BAR ── */
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; }
-    .topbar a { color: var(--gold); text-decoration: none; font-size: .85rem; letter-spacing: .08em; }
-    .topbar a:hover { color: #DDB85C; }
-    .topbar .wordmark { font-family: 'Playfair Display', Georgia, serif; font-size: .95rem; letter-spacing: .25em; color: var(--muted); text-decoration: none; }
-
-    /* ── HERO ── */
-    .hero {
-      padding: 10px 32px 40px; text-align: center;
-      background: linear-gradient(170deg, #221008 0%, var(--bg) 100%);
-      border-bottom: 1px solid rgba(201,168,76,.15);
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
     }
-    .hero-eyebrow { letter-spacing: .4em; font-size: 12px; color: var(--gold); margin-bottom: 14px; }
-    .hero h1 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(2.2rem, 6vw, 3.8rem);
-      color: var(--text); margin-bottom: 14px; line-height: 1.1; font-weight: 700;
+
+    /* ══ TOP BAR ══ */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(20,16,12,.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
     }
-    .hero p { font-size: 1.05rem; color: var(--sub); font-style: italic; max-width: 480px; margin: 0 auto; }
-
-    /* ── MAP ── */
-    .map-wrap { display: flex; justify-content: center; padding: 40px 20px 10px; }
-    .map-wrap svg { width: min(320px, 70vw); height: auto; }
-
-    /* ── GUIDE GRID (same pattern as from-the-sofa.html) ── */
-    .guides-section { max-width: 1100px; margin: 0 auto; padding: 40px 32px 90px; }
-    .section-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(201,168,76,.55); text-align: center; margin-bottom: 40px; }
-    .guides-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
-    .guide-card {
-      display: block; text-decoration: none;
-      cursor: pointer; border-radius: 6px; overflow: hidden;
-      background: var(--card); border: 1px solid var(--border);
-      transition: transform .22s, border-color .22s, box-shadow .22s; outline: none;
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none;
     }
-    .guide-card:hover, .guide-card:focus { transform: translateY(-4px); }
-    .guide-card-img-wrap { position: relative; height: 210px; overflow: hidden; }
-    .guide-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-    .guide-card:hover .guide-card-img-wrap img,
-    .guide-card:focus .guide-card-img-wrap img { transform: scale(1.05); }
-    .guide-card-overlay { position: absolute; inset: 0; }
-    .guide-card-label { position: absolute; bottom: 12px; left: 14px; }
-    .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
-    .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
-    .guide-card-body { padding: 14px 16px 18px; }
-    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
-    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; letter-spacing: .08em; flex: 1; font-weight: 700; }
-    .guide-card-actions { display: flex; gap: 8px; align-items: stretch; }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
+    .hdr-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(28,22,16,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--wood); color: var(--text); }
+    .hdr-btn.active { border-color: var(--wood); color: var(--wood-lt); background: rgba(168,112,47,.15); }
 
-    /* ── DISABLED / COMING SOON CARD ── */
-    .guide-card.is-disabled { cursor: default; opacity: .55; }
-    .guide-card.is-disabled:hover, .guide-card.is-disabled:focus { transform: none; }
-    .guide-card.is-disabled .guide-card-img-wrap img { filter: grayscale(60%); }
-    .guide-card.is-disabled .guide-card-btn { background: transparent !important; border: 1px solid var(--border); color: var(--muted); }
+    /* ══ MAIN ══ */
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
 
-    /* ── FOOTER LINK ── */
-    .back-footer { text-align: center; padding: 0 32px 60px; }
-    .back-footer a { color: var(--muted); text-decoration: none; font-size: .85rem; }
-    .back-footer a:hover { color: var(--gold); }
+    /* ══ LEFT — SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
+      background: #000; overflow: hidden; min-width: 300px;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0; transition: opacity 2.2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 28%; pointer-events: none;
+      background: linear-gradient(to top, rgba(20,16,12,1) 0%, rgba(20,16,12,.5) 45%, transparent 100%);
+    }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
+      width: 16%; pointer-events: none;
+      background: linear-gradient(to left, rgba(20,16,12,.85) 0%, transparent 100%);
+    }
+
+    #guide-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(168,112,47,.5); }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
+
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(20,16,12,.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+
+    #slide-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
+    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD OVERLAY ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(20,16,12,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #info-card-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #info-card-close {
+      background: rgba(168,112,47,.15); border: 1px solid rgba(168,112,47,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--wood); color: var(--text); background: rgba(168,112,47,.25); }
+
+    #info-card-image {
+      width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
+      position: relative; background: #0A0806;
+    }
+    #info-card-image img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      opacity: .8;
+    }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 20px 8px;
+      background: linear-gradient(to top, rgba(20,16,12,.9) 0%, transparent 100%);
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+    }
+
+    #info-card-body {
+      flex: 1; overflow-y: auto; padding: 16px 22px 20px;
+    }
+    #info-card-body::-webkit-scrollbar { width: 2px; }
+    #info-card-body::-webkit-scrollbar-thumb { background: rgba(168,112,47,.2); }
+    .info-section { margin-bottom: 14px; }
+    .info-section-label {
+      font-size: 7px; letter-spacing: .35em; color: var(--gold);
+      margin-bottom: 5px; display: block;
+    }
+    .info-section p {
+      font-size: .92rem; line-height: 1.7; color: #C8BBAA;
+      margin-bottom: 8px;
+    }
+    .info-section p strong { color: var(--text); font-weight: 600; }
+
+    #info-card-footer {
+      padding: 10px 20px 12px;
+      border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted); font-style: italic;
+      flex-shrink: 0;
+    }
+
+    /* ══ RIGHT COL ══ */
+    #right-col {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      background: var(--bg); overflow: hidden;
+      border-left: 1px solid var(--border);
+    }
+
+    #right-top {
+      display: flex; flex-direction: row;
+      flex: 0 0 44%; border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+
+    #topics-panel {
+      flex: 0 0 48%; padding: 12px 12px 10px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
+    .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; }
+    .topic-btn {
+      background: rgba(28,22,16,.9); border: 1px solid rgba(168,112,47,.18);
+      color: var(--sub); padding: 5px 10px; border-radius: 4px;
+      font-size: .72rem; cursor: pointer; font-family: inherit;
+      text-align: left; transition: all .2s; line-height: 1.3; flex-shrink: 0;
+    }
+    .topic-btn:hover { border-color: rgba(168,112,47,.55); color: var(--text); background: rgba(168,112,47,.1); }
+    .topic-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+
+    #olav-panel {
+      flex: 1; position: relative; overflow: hidden; background: #0A0806;
+    }
+    #olav-panel video, #olav-panel img {
+      width: 100%; height: 100%; object-fit: cover; object-position: 68% top;
+    }
+    #olav-panel-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(20,16,12,.85) 0%, rgba(20,16,12,.1) 35%, transparent 65%),
+        linear-gradient(to right, rgba(20,16,12,.5) 0%, transparent 40%);
+    }
+    #olav-panel-name {
+      position: absolute; bottom: 10px; left: 12px;
+      font-family: 'Playfair Display', serif; font-size: .8rem; color: rgba(234,224,207,.8);
+    }
+    #olav-panel-sub { font-size: .58rem; letter-spacing: .15em; color: var(--gold); display: block; margin-bottom: 1px; }
+
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    #tip-bar { padding: 5px 14px 3px; font-size: .67rem; color: var(--muted); border-bottom: 1px solid rgba(46,36,24,.4); flex-shrink: 0; }
+    #messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+    #messages::-webkit-scrollbar { width: 2px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(168,112,47,.2); }
+    .msg-row { display: flex; gap: 7px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-av { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(168,112,47,.3); }
+    .msg-bubble { max-width: 86%; padding: 8px 12px; line-height: 1.6; font-size: .88rem; }
+    .msg-bubble.bot { background: rgba(28,22,16,.92); color: #D4C8B6; border: 1px solid rgba(168,112,47,.18); border-radius: 10px 10px 10px 2px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.6); font-style: italic; }
+    .msg-bubble.user-b { background: rgba(36,28,20,.92); color: var(--text); border: 1px solid rgba(168,112,47,.15); border-radius: 10px 10px 2px 10px; }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px; }
+    .speak-btn { display: inline-block; margin-top: 5px; background: none; border: 1px solid rgba(168,112,47,.2); color: var(--muted); border-radius: 4px; padding: 2px 7px; font-size: .64rem; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .speak-btn:hover { border-color: var(--wood); color: var(--wood-lt); }
+    .speak-btn.playing { border-color: var(--wood); color: var(--wood-lt); background: rgba(168,112,47,.1); }
+    .typing { color: var(--wood); letter-spacing: .3em; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+    #input-row { display: flex; gap: 8px; padding: 9px 12px 12px; background: rgba(20,16,12,.96); backdrop-filter: blur(16px); border-top: 1px solid var(--border); flex-shrink: 0; }
+    #chat-input { flex: 1; background: rgba(28,22,16,.94); border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 20px; font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif; transition: border-color .2s; }
+    #chat-input:focus { border-color: rgba(168,112,47,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--wood); color: #fff; font-size: 1rem; cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center; }
+    #send-btn:hover { background: var(--wood-lt); transform: scale(1.06); }
+    #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+    .api-banner { display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99; background: #1A140E; border-bottom: 2px solid var(--wood); padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .8rem; color: var(--text); }
+    .api-banner label strong { color: var(--wood); }
+    .api-banner input { flex: 1; min-width: 180px; background: #0F0B08; border: 1px solid rgba(168,112,47,.4); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: .78rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--wood); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem; }
+    .banner-close { background: none !important; color: var(--muted) !important; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+    /* ══ MOBIL (≤768px) ══ */
+    @media (max-width: 768px) {
+      #app { flex-direction: column; height: 100vh; overflow: hidden; }
+      #left-col { flex: 0 0 38vh; height: 38vh; width: 100%; min-width: unset; }
+      #right-col {
+        flex: 1; height: calc(62vh - 42px); width: 100%; min-width: unset;
+        border-left: none; border-top: 1px solid var(--border);
+        display: flex; flex-direction: column; overflow: hidden;
+      }
+      #left-mist { height: 35%; }
+      #left-mist-side { display: none; }
+      #guide-badge { top: 10px; left: 10px; }
+      .badge-name { font-size: .8rem; }
+      #loc-badge { top: 10px; right: 10px; padding: 4px 8px; }
+      #loc-region { font-size: 6.5px; }
+      #loc-name { font-size: .75rem; }
+      #slide-dots { bottom: 6px; }
+      #info-card-image { height: 30%; }
+      #info-card-title { font-size: 1.1rem; }
+      #right-top { flex: 0 0 auto; flex-direction: column; height: auto; border-bottom: 1px solid var(--border); overflow: visible; }
+      #topics-panel { flex: none; width: 100%; padding: 6px 10px 6px; border-right: none; border-bottom: none; overflow: hidden; }
+      .tp-name { font-size: .82rem; margin-bottom: 0; }
+      .tp-tagline { display: none; }
+      .tp-label { display: none; }
+      #topics { flex-direction: row; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; gap: 5px; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-top: 4px; }
+      #topics::-webkit-scrollbar { display: none; }
+      .topic-btn { white-space: nowrap; flex-shrink: 0; padding: 4px 9px; font-size: .68rem; }
+      #olav-panel { display: none; }
+      #chat-col { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+      #tip-bar { display: none; }
+      #messages { flex: 1; padding: 8px 10px 4px; gap: 6px; min-height: 0; }
+      .msg-bubble { font-size: .84rem; padding: 7px 10px; }
+      .msg-av { width: 22px; height: 22px; }
+      #input-row { padding: 7px 10px 10px; gap: 6px; flex-shrink: 0; position: sticky; bottom: 0; background: rgba(20,16,12,.98); }
+      #chat-input { padding: 8px 14px; font-size: .84rem; }
+      #send-btn { width: 36px; height: 36px; font-size: .9rem; }
+      #info-card { position: fixed; inset: 42px 0 0 0; z-index: 100; overflow-y: auto; }
+      #info-card-close { width: 38px; height: 38px; font-size: 1.1rem; background: rgba(168,112,47,.3); border: 2px solid rgba(168,112,47,.6); }
+      #info-card-image { height: 28%; }
+      #info-card-title { font-size: 1.1rem; }
+      #top-bar { height: 42px; padding: 0 12px; }
+      #back-btn { padding: 3px 8px; font-size: .66rem; }
+      .hdr-center { font-size: .72rem; letter-spacing: .15em; }
+      #app { padding-top: 42px; }
+    }
+    @media (max-width: 390px) {
+      #left-col { flex: 0 0 32vh; }
+      #right-top { max-height: 28vh; }
+      .msg-bubble { font-size: .8rem; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <a href="/">← Home</a>
-    <a href="/" class="wordmark">SOFATRAVELS</a>
+<header id="top-bar">
+  <a href="/regions/" id="back-btn">← Regioner</a>
+  <div class="hdr-center">SOFATRAVELS · <span>TRONDHEIM</span></div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="voice-btn" title="Olavs stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Olavs stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<div id="app">
+
+  <!-- LEFT: SLIDESHOW + INFO CARD -->
+  <div id="left-col">
+    <img class="portrait-slide active" src="olav-trondheim.jpg" alt="Olav" />
+    <img class="portrait-slide" src="nidarosdomen-aerial.jpg" alt="Nidarosdomen sett fra luften" />
+    <img class="portrait-slide" src="kort-stiklestad.jpg" alt="Slaget på Stiklestad, 1030 — kunstnerisk gjengivelse" />
+    <img class="portrait-slide" src="kort-kirke1070.jpg" alt="Den første kirken, bygget rundt 1070 — kunstnerisk gjengivelse" />
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
+    <div id="guide-badge">
+      <div class="badge-av"><img src="olav-trondheim.jpg" alt="Olav" /></div>
+      <span class="badge-name">Olav</span>
+      <span class="online-dot"></span>
+    </div>
+    <div id="loc-badge">
+      <div id="loc-region">TRØNDELAG · NORGE</div>
+      <div id="loc-name">Trondheim</div>
+    </div>
+    <div id="slide-dots">
+      <div class="sdot active" data-idx="0"></div>
+      <div class="sdot" data-idx="1"></div>
+      <div class="sdot" data-idx="2"></div>
+      <div class="sdot" data-idx="3"></div>
+    </div>
+
+    <!-- INFO CARD OVERLAY -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">TRONDHEIM · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img" src="" alt="" />
+        <div id="info-card-image-cap" id="info-img-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Olav i chatten — han ser det samme som deg</div>
+    </div>
+
   </div>
 
-  <header class="hero" role="banner">
-    <p class="hero-eyebrow" aria-hidden="true">FOUR REGIONS · FOUR COMPANIONS</p>
-    <h1>Where in Norway do you want to begin?</h1>
-    <p>Personal guides. Local knowledge. Experiences you'll remember.</p>
-  </header>
+  <!-- RIGHT -->
+  <div id="right-col">
+    <div id="right-top">
 
-  <div class="map-wrap" aria-hidden="true">
-<svg viewBox="0 0 247 289" role="img" aria-label="Stylized map of Norway divided into four color-coded guide regions: Vestlandet, Trondelag, Nord-Norge and Ostlandet">
-<title>Regions map</title>
-<path d="M67.8 134.8L67.1 133.6L68.4 134.1L71.2 133.1L75.7 128.0L71.3 132.0L70.0 131.5L71.5 130.6L69.8 129.9L70.9 129.1L69.0 129.7L71.1 126.8L68.8 127.8L69.2 128.9L67.1 130.2L70.0 124.6L69.9 124.1L68.9 124.7L69.3 124.0L68.4 125.1L69.4 122.0L73.4 126.9L72.4 125.4L74.1 124.7L70.0 121.1L71.5 118.7L72.5 120.6L74.1 121.0L71.8 118.4L73.4 117.9L72.3 116.8L73.0 114.7L74.9 113.5L77.9 116.6L77.4 114.1L75.1 113.6L76.6 111.3L73.1 111.4L81.1 107.6L81.9 108.5L81.2 110.6L83.9 109.9L81.8 108.0L83.6 108.7L87.0 105.7L76.4 109.1L81.4 106.1L76.3 105.8L77.6 104.0L76.9 102.7L77.7 102.8L76.0 101.2L78.5 103.1L83.1 99.5L78.1 100.7L79.9 99.0L78.2 98.1L81.5 98.7L78.2 97.0L82.8 97.5L84.6 96.8L81.5 97.3L83.3 96.2L80.9 95.2L85.6 95.4L80.8 92.0L85.1 92.0L86.0 89.2L87.0 91.5L88.1 90.1L87.8 89.2L91.3 90.3L87.8 88.9L93.1 85.6L95.1 85.7L94.0 87.1L94.7 88.3L95.9 85.7L99.5 88.8L98.4 86.0L99.1 85.2L95.4 84.9L96.7 83.7L88.5 85.1L91.6 82.5L91.6 81.3L95.5 81.0L91.8 80.5L94.3 78.3L95.6 77.9L96.5 78.5L94.3 80.2L97.3 79.7L96.4 80.1L96.4 81.4L99.3 80.1L100.5 83.2L101.6 81.3L100.0 80.4L103.4 78.2L97.0 78.7L99.3 77.8L96.5 77.0L98.0 74.7L100.0 75.9L101.2 75.7L98.9 74.5L100.0 74.0L103.0 75.9L103.1 75.3L99.0 71.7L94.3 76.4L92.5 76.1L96.3 74.2L93.0 72.6L103.4 70.8L104.3 68.7L102.4 67.7L100.6 67.9L99.9 66.7L98.8 68.0L99.0 68.9L97.7 67.5L101.0 64.8L101.9 66.3L100.8 67.3L102.7 66.8L104.5 63.1L105.8 64.8L105.1 67.9L106.3 70.9L109.1 73.0L106.3 68.4L108.8 70.8L107.5 68.3L108.1 68.3L108.8 69.6L109.4 69.7L107.9 67.6L111.2 67.0L107.7 66.9L106.8 66.0L110.2 64.9L109.0 63.6L106.3 64.3L107.9 63.5L106.0 62.2L108.7 62.4L108.3 62.5L109.6 63.0L110.2 64.5L112.2 65.6L110.3 62.8L107.1 60.7L115.8 60.4L117.1 64.7L117.8 63.2L116.7 59.7L122.3 59.8L118.4 58.7L119.1 56.8L108.8 57.8L113.8 53.2L120.4 54.1L116.3 52.2L121.5 52.5L118.4 50.6L122.0 49.9L118.3 49.3L119.2 47.9L118.4 47.1L124.9 43.7L123.1 41.8L125.1 38.3L124.8 36.7L128.1 38.8L127.9 42.3L128.7 39.1L132.9 40.6L127.7 37.2L131.2 34.5L132.7 38.4L136.1 40.1L135.1 41.7L138.0 42.2L136.4 38.7L132.5 36.8L135.2 35.4L132.3 34.6L134.1 30.5L139.8 29.2L139.2 36.3L137.4 38.2L139.1 37.7L139.7 33.6L142.1 34.1L143.6 34.0L140.7 33.3L140.9 30.0L145.6 26.3L144.7 31.9L145.6 33.4L141.5 41.1L144.7 38.7L146.0 34.0L148.3 35.6L150.0 36.0L146.9 33.4L146.6 30.2L148.9 29.5L152.1 25.9L150.3 28.1L151.9 29.9L153.6 27.7L153.0 29.3L154.7 27.1L153.5 26.4L154.0 24.7L162.4 30.7L159.9 26.4L161.9 24.2L159.1 24.1L161.2 23.3L161.9 22.2L158.6 23.8L153.5 20.5L156.4 20.6L156.4 18.1L159.7 21.8L159.2 19.1L160.7 17.7L164.0 18.8L163.3 22.1L166.2 22.3L163.9 21.3L164.6 19.2L170.3 21.0L169.1 22.5L165.4 23.2L163.7 24.1L164.0 24.5L169.1 22.8L170.4 21.8L171.9 25.3L170.6 26.7L175.1 25.4L171.9 23.1L174.3 22.3L172.6 20.0L176.4 18.4L174.7 18.0L178.7 14.0L183.2 15.1L180.9 13.0L182.7 10.0L186.6 11.2L182.4 7.8L183.4 5.6L186.0 7.4L185.4 6.0L186.8 5.8L185.3 5.1L186.0 3.1L189.6 3.5L188.5 5.6L190.6 4.5L192.1 7.1L193.3 5.4L192.6 3.4L194.7 4.8L193.7 6.3L198.2 5.7L190.1 13.9L191.8 13.5L190.1 14.1L191.8 15.9L188.9 19.9L189.4 23.7L189.8 21.5L191.6 23.0L194.5 18.1L193.7 16.9L204.4 3.9L205.8 4.2L205.5 8.5L201.9 10.6L204.9 9.9L203.5 17.1L206.0 14.2L209.3 14.6L208.0 12.3L210.8 11.9L209.2 10.7L209.5 8.3L215.1 7.3L209.4 4.4L211.6 4.0L210.3 2.6L211.1 1.9L213.6 3.9L213.1 1.5L214.5 0.0L223.1 3.7L220.1 7.5L215.4 7.3L219.2 8.8L214.7 11.2L220.8 9.8L216.1 14.2L216.6 15.5L222.7 15.1L221.6 13.0L223.8 9.9L222.8 8.9L227.0 5.5L230.9 7.7L229.9 10.6L237.6 9.4L240.0 11.5L237.1 13.4L242.7 12.8L246.8 17.0L238.4 23.4L235.1 23.6L224.9 21.1L223.2 21.1L233.6 25.7L230.7 27.7L234.6 27.6L232.1 32.6L237.5 30.0L235.8 31.4L236.3 33.9L236.0 31.7L237.8 31.8L238.7 29.8L238.0 28.2L239.3 27.5L240.7 30.5L239.8 32.1L241.0 32.1L241.6 28.8L245.7 32.1L244.5 35.3L237.6 32.5L238.6 34.4L237.9 36.6L230.1 40.4L229.6 44.4L227.7 46.7L225.5 44.5L230.5 36.4L228.6 31.6L221.7 28.9L217.5 22.9L208.8 26.9L203.7 26.1L198.7 31.4L196.2 41.3L196.9 46.5L191.0 51.3L190.7 54.8L188.6 56.7L178.9 50.5L172.2 55.1L164.7 53.2L157.7 40.8L154.4 40.1L151.8 42.0L152.3 46.1L149.1 44.3L142.9 45.9L145.5 51.3L141.7 56.7L144.4 58.1L141.5 61.1L124.6 57.1L124.8 64.6L122.4 69.6L116.6 66.3L111.5 70.8L108.3 79.2L106.0 79.5L105.3 81.4L108.3 86.4L108.1 89.9L98.6 102.3L99.6 106.7L90.5 110.0L91.5 117.1L90.4 128.1L88.7 132.3L76.9 132.5L73.9 136.2L67.8 134.8Z" fill="#4A4368" stroke="#0D0805" stroke-width="1"/>
-<path d="M2.6 255.9L5.5 250.8L4.8 256.0L6.3 251.8L7.5 253.7L9.2 252.8L7.9 251.9L10.8 250.7L13.3 248.1L10.2 250.4L9.9 248.1L8.8 250.0L6.9 248.3L9.8 246.0L10.4 243.4L12.9 242.1L10.7 240.7L15.5 235.3L16.3 236.0L15.3 239.6L15.0 243.0L15.2 243.3L16.5 236.4L20.7 234.1L18.6 234.0L19.6 232.0L16.6 235.4L16.7 233.4L12.6 236.3L12.0 234.7L11.8 238.8L10.1 239.0L7.7 245.4L7.8 240.8L6.0 241.6L7.7 236.1L4.7 242.0L2.1 236.7L3.5 236.4L3.1 233.5L4.9 235.5L6.4 235.5L7.5 234.9L7.5 230.5L8.4 231.4L9.4 231.0L7.1 229.5L7.2 234.3L6.3 235.3L3.7 233.0L5.1 233.4L4.7 232.4L6.1 231.3L6.6 229.8L6.3 229.7L7.1 229.5L7.7 227.2L5.7 229.5L5.7 231.2L2.7 232.5L2.5 231.2L1.6 230.4L2.7 230.3L1.9 228.7L1.4 229.2L0.9 227.8L0.0 227.1L3.5 228.9L4.8 231.0L3.1 228.0L6.1 225.8L5.5 224.8L1.5 226.7L0.5 223.9L1.7 225.6L3.5 223.2L0.9 221.6L5.0 223.1L9.7 220.1L13.9 222.8L15.9 219.1L19.5 221.4L19.8 222.9L18.2 224.5L17.9 225.6L19.9 223.2L20.5 225.9L21.3 224.6L19.8 220.6L23.5 220.7L26.1 217.8L22.4 216.3L25.0 212.0L22.1 214.2L22.5 219.5L18.7 219.8L19.4 219.6L20.1 218.6L21.0 218.5L21.1 217.2L19.4 219.5L15.6 218.4L17.0 215.3L17.0 213.7L14.7 216.9L14.5 220.4L10.5 218.2L2.6 220.6L3.3 219.9L1.2 218.9L3.5 218.9L0.3 216.7L6.8 214.7L1.2 215.8L0.8 214.6L2.1 213.5L0.3 213.7L8.5 212.7L2.1 211.5L4.9 210.0L3.7 209.4L0.6 210.2L4.4 208.8L3.2 209.2L1.5 208.9L0.4 209.1L0.4 206.7L2.6 207.0L1.4 206.1L3.4 204.8L4.6 202.7L7.9 204.2L7.0 204.4L6.6 205.0L9.8 204.2L9.1 206.5L10.0 204.4L11.7 206.1L10.7 204.3L14.5 205.2L17.9 203.7L14.2 204.7L7.4 203.2L9.8 202.9L9.1 202.7L4.8 202.2L2.2 203.2L2.2 201.2L2.6 202.4L4.5 200.5L1.4 196.7L5.0 200.6L6.4 199.3L4.4 198.1L5.1 196.5L7.5 199.0L6.9 197.1L9.0 196.5L8.6 200.8L9.8 197.8L10.7 199.7L12.9 199.6L9.3 196.1L11.1 196.8L9.6 195.5L13.2 192.7L15.1 198.6L16.1 196.7L13.8 192.5L16.8 191.0L19.5 194.6L18.2 199.2L21.3 198.8L19.1 198.4L19.7 194.9L23.5 195.4L19.5 194.1L17.6 190.3L12.3 190.9L16.6 189.9L12.4 188.2L20.2 186.6L20.7 189.4L21.0 187.0L24.6 190.0L26.8 188.4L23.9 188.5L23.2 187.0L30.3 185.8L29.5 183.8L22.8 185.7L26.2 183.5L19.2 185.0L21.7 183.1L18.5 180.9L20.9 179.0L23.9 181.1L29.2 179.7L30.2 182.9L33.8 186.2L28.6 177.2L32.0 179.7L31.7 181.9L35.5 182.9L32.9 180.3L35.1 179.5L33.2 179.6L34.4 178.4L31.3 178.5L38.0 176.0L41.2 181.0L41.8 183.5L37.6 185.3L40.6 188.7L39.7 192.2L31.5 193.3L22.7 200.1L24.3 206.9L27.4 206.6L28.4 210.7L31.3 211.2L31.9 212.9L30.3 213.5L31.2 215.8L28.9 217.8L31.5 222.2L23.6 230.4L26.3 233.5L25.8 238.5L20.3 249.7L24.5 253.7L25.3 256.8L24.5 258.2L28.7 267.8L35.9 270.6L36.1 268.1L38.3 267.1L41.6 272.3L39.4 272.4L39.0 272.9L40.6 273.1L37.7 275.3L38.0 276.8L37.2 277.4L37.2 278.0L35.6 279.3L36.1 279.6L35.6 279.4L33.9 283.0L33.1 282.4L30.8 284.8L31.2 286.1L30.8 286.4L29.2 283.7L28.6 287.0L25.8 286.7L25.7 288.6L21.1 287.7L20.0 289.4L21.1 286.4L19.3 288.3L20.0 286.4L17.6 286.8L19.8 286.0L19.7 285.7L17.7 284.8L16.9 286.6L17.7 287.5L15.9 287.4L15.2 286.3L17.9 283.2L10.4 280.7L9.9 278.5L6.8 276.8L5.1 272.4L6.0 267.8L6.3 269.0L7.0 268.5L6.0 266.1L7.8 267.7L7.6 270.0L9.0 267.7L9.9 269.2L11.6 270.6L12.6 270.5L11.3 267.9L16.1 265.8L12.5 266.7L10.9 268.2L10.7 269.1L10.7 266.9L8.9 265.4L15.0 260.0L10.2 259.4L15.3 254.7L12.5 255.5L13.4 252.9L12.8 252.9L12.0 256.5L9.6 259.2L9.1 257.1L11.8 256.3L8.5 255.1L6.8 258.3L8.9 259.2L6.6 261.2L7.0 259.7L6.4 255.9L4.9 256.9L6.3 257.1L5.7 261.0L4.1 257.8L3.6 259.5L2.6 255.9Z" fill="#2C4A63" stroke="#0D0805" stroke-width="1"/>
-<path d="M30.4 176.2L34.7 176.8L34.0 175.4L38.1 174.5L36.7 174.5L37.4 171.3L36.0 169.6L39.2 169.2L40.0 170.7L39.3 172.6L43.0 170.2L40.7 170.8L40.0 169.8L43.1 168.3L39.7 168.2L42.2 167.9L45.4 164.7L47.6 169.2L46.1 171.9L49.8 171.8L48.3 170.5L49.6 169.0L56.2 169.1L54.9 167.7L56.6 165.4L53.9 167.1L53.3 166.5L56.8 163.5L61.8 161.7L60.1 160.3L60.9 158.1L57.9 159.8L61.9 156.8L59.5 156.3L60.9 154.6L60.1 154.5L59.2 156.8L54.2 160.4L53.4 161.4L57.7 159.6L56.8 162.5L48.7 168.0L45.9 165.1L48.6 161.9L43.7 164.6L43.5 163.1L45.9 162.0L43.6 162.0L44.8 160.3L49.8 158.6L47.3 159.0L49.7 157.0L47.3 158.1L48.3 157.3L48.5 155.8L48.0 154.8L50.2 154.7L48.9 154.2L51.2 153.1L50.4 151.8L52.4 150.6L52.0 149.2L54.2 149.1L52.1 147.9L52.8 147.2L55.8 148.7L54.0 147.1L57.0 146.0L57.1 143.6L58.8 147.1L60.4 147.3L59.5 150.0L63.1 146.4L61.4 147.0L61.8 145.0L62.4 145.2L64.7 144.0L60.8 142.2L62.7 140.0L64.7 139.9L65.3 139.4L63.2 138.9L64.4 138.6L64.9 138.0L63.8 137.7L70.9 137.3L67.2 135.5L63.1 138.0L63.4 138.0L61.6 139.2L60.9 140.4L59.3 140.9L60.5 140.1L61.4 139.0L59.9 138.3L62.5 137.9L64.1 137.0L61.7 136.3L63.3 136.4L64.7 135.3L63.4 134.8L64.5 134.9L66.3 133.2L73.9 136.2L76.9 132.5L88.7 132.3L82.3 144.2L86.7 146.8L87.1 152.6L85.3 156.8L75.4 155.7L68.1 165.9L68.7 168.4L66.4 173.0L68.7 178.9L67.4 181.1L67.2 187.5L69.1 193.6L62.5 192.8L56.5 185.6L49.4 185.6L47.8 188.6L48.7 191.5L44.0 195.3L38.9 192.7L40.6 188.7L37.6 185.3L41.8 183.5L39.1 176.9L31.3 178.5L30.4 176.2Z" fill="#5A6B4A" stroke="#0D0805" stroke-width="1"/>
-<path d="M50.1 254.4L52.8 260.0L51.4 260.8L50.4 263.8L50.7 265.7L49.9 264.2L49.3 266.8L46.1 267.6L46.4 266.6L45.8 265.4L43.3 264.2L44.9 265.9L45.4 267.2L41.2 269.6L42.7 270.7L41.8 272.0L38.3 267.1L36.1 268.1L35.9 270.6L28.7 267.8L26.4 263.8L24.5 258.2L25.3 256.8L24.5 253.7L20.3 249.7L25.8 238.5L26.3 233.5L23.6 230.4L27.5 224.7L31.0 223.6L31.2 221.3L28.9 217.8L31.9 212.9L28.4 210.7L28.0 207.1L24.3 206.9L22.7 200.1L32.5 192.9L45.9 194.6L48.7 191.5L47.8 188.6L49.4 185.6L56.5 185.6L62.5 192.8L69.1 193.6L68.0 207.0L74.9 215.1L73.1 221.6L68.8 222.6L72.4 236.0L70.9 244.1L65.2 248.4L66.1 251.6L63.8 253.5L65.1 261.6L63.4 269.0L61.5 269.4L60.9 264.3L57.8 262.2L58.2 264.0L56.6 262.4L56.4 263.9L56.4 262.0L55.6 263.6L55.4 262.4L55.0 261.8L54.7 261.9L55.2 260.0L54.0 259.5L54.2 255.5L53.3 250.6L54.0 247.8L54.7 251.1L54.7 246.9L52.8 247.3L52.5 247.6L52.3 248.6L53.6 254.4L51.9 255.5L51.8 251.8L50.2 250.4L51.7 253.2L50.1 254.4Z" fill="#A8621F" stroke="#0D0805" stroke-width="1"/>
-<text x="108" y="68" font-size="9" fill="#F0E6CF" text-anchor="middle" letter-spacing="0.5" font-family="Crimson Text, Georgia, serif">NORD-NORGE</text>
-<text x="58" y="168" font-size="9" fill="#F0E6CF" text-anchor="middle" letter-spacing="0.5" font-family="Crimson Text, Georgia, serif">TRØNDELAG</text>
-<text x="2" y="258" font-size="9" fill="#F0E6CF" text-anchor="start" letter-spacing="0.5" font-family="Crimson Text, Georgia, serif">VESTLANDET</text>
-<text x="112" y="250" font-size="9" fill="#F0E6CF" text-anchor="middle" letter-spacing="0.5" font-family="Crimson Text, Georgia, serif">ØSTLANDET</text>
-</svg>
-  </div>
-
-  <section class="guides-section" aria-label="Choose a region">
-    <p class="section-label" aria-hidden="true">CHOOSE A REGION</p>
-    <div class="guides-grid" role="list">
-
-      <a class="guide-card" role="listitem" href="/guides/hilde/" aria-label="Hilde – Western Norway">
-        <div class="guide-card-img-wrap">
-          <img src="/region-hilde.jpg" alt="Hilde, companion for Western Norway" loading="lazy" style="object-position: 50% 12%;" />
-          <div class="guide-card-overlay" style="background:linear-gradient(to top,#2C4A63DD 0%,transparent 55%)" aria-hidden="true"></div>
-          <div class="guide-card-label">
-            <p class="guide-card-city">VESTLANDET</p>
-            <p class="guide-card-name">Hilde</p>
-          </div>
-        </div>
-        <div class="guide-card-body">
-          <p class="guide-card-tagline">Fjord, mountain and sea. Dramatic landscapes and true west-coast hospitality.</p>
-          <div class="guide-card-actions">
-            <div class="guide-card-btn" style="background:#2C4A63; color:#F0E6CF;">See Hilde's places →</div>
-          </div>
-        </div>
-      </a>
-
-      <a class="guide-card" role="listitem" href="/guides/olai-vesteralen/" aria-label="Olai – Northern Norway">
-        <div class="guide-card-img-wrap">
-          <img src="/region-olai.jpg" alt="Olai, companion for Northern Norway" loading="lazy" />
-          <div class="guide-card-overlay" style="background:linear-gradient(to top,#4A4368DD 0%,transparent 55%)" aria-hidden="true"></div>
-          <div class="guide-card-label">
-            <p class="guide-card-city">NORD-NORGE</p>
-            <p class="guide-card-name">Olai</p>
-          </div>
-        </div>
-        <div class="guide-card-body">
-          <p class="guide-card-tagline">Wild, beautiful and real. From coast to plateau — experience Arctic Norway.</p>
-          <div class="guide-card-actions">
-            <div class="guide-card-btn" style="background:#4A4368; color:#F0E6CF;">See Olai's places →</div>
-          </div>
-        </div>
-      </a>
-
-      <div class="guide-card is-disabled" role="listitem" aria-label="Olav – Trondelag, coming soon" tabindex="-1">
-        <div class="guide-card-img-wrap">
-          <img src="/region-olav.jpg" alt="Olav, companion for Trondelag" loading="lazy" />
-          <div class="guide-card-overlay" style="background:linear-gradient(to top,#5A6B4ADD 0%,transparent 55%)" aria-hidden="true"></div>
-          <div class="guide-card-label">
-            <p class="guide-card-city">TRØNDELAG</p>
-            <p class="guide-card-name">Olav</p>
-          </div>
-        </div>
-        <div class="guide-card-body">
-          <p class="guide-card-tagline">History, culture and people. The middle of Norway, the middle of the experience.</p>
-          <div class="guide-card-actions">
-            <div class="guide-card-btn">Coming soon</div>
-          </div>
+      <!-- Topics -->
+      <div id="topics-panel">
+        <div class="tp-region">TRONDHEIM</div>
+        <div class="tp-name">Olav</div>
+        <div class="tp-tagline">«Det begynte med et tapt slag»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-topic="nidarosdomen">Nidarosdomen · fra død konge til katedral</button>
         </div>
       </div>
 
-      <div class="guide-card is-disabled" role="listitem" aria-label="Ingrid – Ostlandet, coming soon" tabindex="-1">
-        <div class="guide-card-img-wrap">
-          <img src="/region-ingrid.jpg" alt="Ingrid, companion for Ostlandet" loading="lazy" />
-          <div class="guide-card-overlay" style="background:linear-gradient(to top,#A8621FDD 0%,transparent 55%)" aria-hidden="true"></div>
-          <div class="guide-card-label">
-            <p class="guide-card-city">ØSTLANDET</p>
-            <p class="guide-card-name">Ingrid</p>
-          </div>
-        </div>
-        <div class="guide-card-body">
-          <p class="guide-card-tagline">Forests, lakes and heritage. Norway at its most varied.</p>
-          <div class="guide-card-actions">
-            <div class="guide-card-btn">Coming soon</div>
-          </div>
+      <!-- Olav portrait -->
+      <div id="olav-panel">
+        <video autoplay muted loop playsinline src="olav-trondheim.mp4" poster="olav-trondheim.jpg"></video>
+        <div id="olav-panel-overlay"></div>
+        <div id="olav-panel-name">
+          <span id="olav-panel-sub">GUIDE</span>Olav
         </div>
       </div>
 
     </div>
-  </section>
 
-  <div class="back-footer">
-    <a href="/">← Back to the front page</a>
+    <!-- Chat -->
+    <div id="chat-col">
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Olav direkte</div>
+      <div id="messages" role="log" aria-live="polite"></div>
+      <div id="input-row">
+        <input type="search" id="chat-input" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Spør Olav om Trondheim…" />
+        <button id="send-btn">→</button>
+      </div>
+    </div>
   </div>
+</div>
 
+<script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  nidarosdomen: {
+    title: 'Nidarosdomen',
+    subtitle: 'Fra død konge til katedral',
+    img: 'nidarosdomen-aerial.jpg',
+    imgCap: 'Nidarosdomen og Erkebispegården sett fra luften',
+    sections: [
+      {
+        label: 'DØDEN VED STIKLESTAD',
+        text: `Olav Haraldsson — senere kjent som Olav den hellige — var konge av Norge. Han døde i slaget på Stiklestad i 1030. Han tapte. Han ble drept. I utgangspunktet et politisk nederlag som skulle blitt glemt. Men kort tid etter at kroppen ble gravlagt i Trondheim, begynte det å gå historier: folk mente det skjedde ting ved graven — helbredelser, tegn, noe som ikke kunne forklares. Kirken erklærte ham helgen. Det er vendepunktet. Graven blir et mål. Folk reiser hit fra store deler av Europa.`
+      },
+      {
+        label: 'BYGGINGEN',
+        text: `Den første kirken her, rundt 1070, var liten — tilpasset et lokalt behov som raskt vokste. Man begynte å bygge i kleberstein, hentet blant annet fra Oppdal og Selbu: myk å forme nyhugget, hardere med tiden. Steinen ble fraktet med sleder til nærmeste vannvei, deretter med båt til Trondheim. Steinhuggere finformet hver blokk for hånd, med meisler og tid — ingen teknologi, bare presisjon. Bygget vokste fra kompakt romansk stil til høyere, lysere gotikk.`
+      },
+      {
+        label: 'MAKTSENTERET',
+        text: `Dette var ikke bare en kirke, det var et system. Pilegrimer beveget seg mot alteret og graven mens messer pågikk parallelt. Rett ved siden av lå Erkebispegården — administrasjonen, beslutningene, økonomien. Kirken håndterte troen. Gården håndterte kontrollen. Sammen: maktsenteret i Norge i middelalderen.`
+      },
+      {
+        label: 'BRUDDET OG I DAG',
+        text: `I 1537 kom reformasjonen. Norge ble protestantisk. Pilegrimene sluttet å komme, relikviene mistet sin betydning, økonomien forsvant. Systemet kollapset, og bygget sto igjen uten funksjonen det var laget for. Det du ser i dag er delvis restaurert — store deler bygget opp igjen på 1800- og 1900-tallet. Én hendelse, én tolkning, og flere hundre års arbeid, transport og presisjon.`
+      }
+    ]
+  }
+};
+
+// ══ SLIDESHOW ══
+const slides = document.querySelectorAll('.portrait-slide');
+const dots = document.querySelectorAll('.sdot');
+let slideIdx = 0;
+function showSlide(i) {
+  slides.forEach(s => s.classList.remove('active'));
+  dots.forEach(d => d.classList.remove('active'));
+  slides[i].classList.add('active');
+  dots[i].classList.add('active');
+  slideIdx = i;
+}
+dots.forEach(d => d.addEventListener('click', () => showSlide(+d.dataset.idx)));
+setInterval(() => showSlide((slideIdx + 1) % slides.length), 7000);
+
+// ══ INFO CARD ══
+const infoCard = document.getElementById('info-card');
+let activeCard = null;
+function showCard(key) {
+  const c = CARDS[key];
+  if (!c) return;
+  activeCard = key;
+  document.getElementById('info-card-title').textContent = c.title;
+  document.getElementById('info-card-label').textContent = 'TRONDHEIM · ' + c.subtitle.toUpperCase();
+  document.getElementById('info-card-img').src = c.img;
+  document.getElementById('info-card-img').alt = c.title;
+  document.getElementById('info-img-cap').textContent = c.imgCap;
+  const body = document.getElementById('info-card-body');
+  body.innerHTML = '';
+  c.sections.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'info-section';
+    div.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+    body.appendChild(div);
+  });
+  infoCard.classList.add('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.toggle('active', b.dataset.topic === key));
+}
+document.getElementById('info-card-close').addEventListener('click', () => {
+  infoCard.classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+});
+
+// ══ KNOWLEDGE BASE ══
+const NIDAROSDOMEN_KB = `
+NIDAROSDOMEN — FAKTA OG HISTORIER
+
+DØDEN VED STIKLESTAD (utgangspunktet):
+Olav Haraldsson — senere kjent som Olav den hellige — var konge av Norge. Han døde i slaget på Stiklestad i 1030. Han tapte. Han ble drept. I utgangspunktet et politisk nederlag som skulle blitt glemt.
+
+VENDEPUNKTET — FRA GRAV TIL HELGEN:
+Kroppen hans ble fraktet til Trondheim og gravlagt. Kort tid senere begynte det å gå historier: folk mente det skjedde ting ved graven — helbredelser, tegn, noe som ikke kunne forklares. Kirken erklærte ham helgen. Dette er vendepunktet: graven blir et mål. Folk reiser hit — ikke bare fra Norge, men fra store deler av Europa — for å komme nær relikviene, i håp om helse, tilgivelse, håp.
+
+DEN FØRSTE KIRKEN (ca. 1070):
+Da mange nok reiste til ett sted, oppsto behov for struktur. Den første kirken bygget her rundt 1070 var liten, tilpasset et lokalt behov. Behovet vokste raskt — flere mennesker, flere ritualer, mer kontroll. En enkel kirke holdt ikke lenger.
+
+BYGGEMATERIALET — KLEBERSTEIN:
+Man begynte å bygge i stein. Materialet er kleberstein — ikke fordi det er eksklusivt, men fordi det fungerer. Finnes i regionen, blant annet Oppdal og Selbu. Nyhugget er steinen relativt myk og lett å forme; den herdes etter hvert. Gjør den ideell for bygging.
+
+UTVINNING OG TRANSPORT:
+I steinbruddene hugges spor i fjellet, kiler drives inn, blokker løsner kontrollert. Blokkene grovformes før transport (mindre vekt = enklere frakt). Først med sleder/vogner til nærmeste vannvei, deretter med båt inn til Trondheim. Uten sjøtransport ville bygging i denne skalaen vært nesten umulig.
+
+STEINHUGGERNE:
+Når steinen ankommer, finformer steinhuggere hver blokk med meisler, hammere, enkle måleverktøy. Alt manuelt. Presisjonen kommer fra tid og erfaring, ikke teknologi. Hver stein tilpasses de andre. Vestfronten har figurnisjer med konger og helgener, alt hugget for hånd.
+
+FRA ROMANSK TIL GOTISK:
+Bygget vokser gradvis. Først kompakt romansk stil, tykke vegger. Senere utvides det i gotisk stil — høyere rom, større vinduer, mer lys. Ikke bare estetikk — handler om kapasitet: flere mennesker skal bevege seg gjennom rommet uten å stoppe alt annet som skjer der.
+
+SYSTEMET I DRIFT:
+Dette er ikke bare en kirke, det er et system. Pilegrimer beveger seg mot alteret, kanskje ned mot områdene nær graven, og ut igjen — samtidig som messer og ritualer pågår parallelt. Rett ved siden av ligger Erkebispegården: administrasjonen, beslutningene, økonomien. Kirken håndterer troen. Gården håndterer kontrollen. Sammen: maktsenteret i Norge i middelalderen.
+
+BRUDDET — REFORMASJONEN (1537):
+Norge blir protestantisk. Pilegrimene slutter å komme. Relikviene mister sin betydning. Økonomien forsvinner. Systemet kollapser. Bygget står igjen uten funksjonen det var laget for.
+
+I DAG — RESTAURERT:
+Det du ser i dag er delvis gjenoppbygd — store deler av domen ble restaurert på 1800- og 1900-tallet, basert på antatt opprinnelig form. Strukturen er likevel den samme som middelalderens.
+
+OPPSUMMERING:
+Én hendelse (et tapt slag). Én tolkning (helgenkåringen). Og flere hundre år med arbeid, transport og presisjon.
+
+PRAKTISK INFORMASJON:
+Adresse: Bispegata 7, 7012 Trondheim. 5 minutters gange fra jernbanestasjonen.
+Åpningstider (varierer med sesong — sjekk nidarosdomen.no): Man–fre 09:00–18:00, lør 09:00–14:00, søn 13:00–18:00.
+Billett: Voksne fra 120 kr, studenter 65 kr, barn under 7 år gratis. Tårnbestigning tilgjengelig sommerstid.
+Tips: Stå ved vestfasaden først — hovedinngangen pilegrimene ankom fra. Gå rundt utsiden før du går inn, legg merke til de to steinstilene.
+I nærheten: Erkebispegården, 50 meter unna — i dag museum med en av de bedre faste utstillingene om norsk middelalder.
+`;
+
+const OLAV_TIL_NIDAROSDOMEN = `
+OLAVS FORHOLD TIL NIDAROSDOMEN:
+Ikke hans hjemsted i håndverket — kleberstein er ikke tre, og restaurering av domen er et eget fagmiljø han ikke selv har vært del av. Men som restaureringstømrer har han jobbet på nok gamle kirker og naust i Trøndelag til å kjenne igjen samme type presisjon når han ser den — bare i et annet materiale.
+
+Han kommer hit iblant, ikke fast. Mest når han uansett er i Trondheim for et annet oppdrag, og har en ledig time. Går gjerne rundt utsiden først, ser på steinarbeidet med et fagblikk — samme måte han ville sett på et gammelt tømmerlaft.
+
+Det som fascinerer ham mest er ikke selve bygget, men hvorfor det ble så stort: at én manns død, tolket på riktig måte til riktig tid, kunne sette i gang flere hundre år med arbeid. Noe han kjenner igjen fra eget fag — hvordan én beslutning tidlig setter spor som varer i generasjoner.
+
+STEMNING: Rolig, ikke andektig. Han er ikke religiøs og spiller ikke det — fascinasjonen er ved håndverket og systemet, ikke helgenen selv. Kan påpeke tørt at en manns uflaks i et slag endte med å bygge en katedral: "det er vel ingen som hadde planlagt akkurat det."
+
+NÅR HAN ER DER: Helst tidlig, før turistgruppene. Liker best vestfronten i lavt ettermiddagslys.
+`;
+
+const OLAV_KB = `
+Du er Olav. 60 år. Vokste opp på Inderøy, Trøndelag. Jobbet hele livet som tømrer og restaureringshåndverker — reparert gamle kirker, naust og trehus i hele landsdelen.
+
+Du er ikke guide. Du leder ikke noen steder. Du er ledsager — stille til stede.
+
+PERSONLIGHET:
+Rolig. Trygg. Tørr humor. Snakker lite, men sier noe når det er verdt å si. Bruker aldri store ord hvis små fungerer. Liker mennesker som er nysgjerrige. Liker ikke skråsikkerhet. Prøver aldri å imponere — lar historien gjøre jobben. Stolt av landsdelen, men viser det indirekte, aldri skrytende.
+
+FAGBLIKKET:
+Han ser spor etter mennesker i materialene — et øksehogg, en håndsmidd spiker, en skjev stein forteller ham like mye som en historiebok. Ikke opptatt av årstall for årstallenes skyld. Opptatt av hvorfor mennesker handlet som de gjorde.
+
+HUMOR (ikke vitser — små kommentarer, kastet inn i forbifarten):
+"Det gikk no som det gikk." / "Det var vel ingen som hadde planlagt akkurat det." / "Historien har en tendens til å rote det til."
+
+FORTELLERSTIL:
+Aldri faktumet rett ut. Detaljene får leve. I stedet for "Kong Olav ble drept her" → "Det begynte med et slag. Men det var først etterpå historien virkelig tok fart." Beste historiene hans begynner ofte: "Det her høres nesten ikke sant ut..."
+
+NAKNE SANNHETER (naturlig, ikke tvunget):
+"Historien er som regel mer rotete enn turistbrosjyrene." / "Ingen steder er bare det de ser ut til å være."
+
+LIVSMOTTO: "Det meste har ei historie. Det gjelder bare å stoppe lenge nok."
+
+SIGNATURVANE: en gammel slirekniv. Sitter ofte og pusser på treskaftet mens han tenker. Aldri truende — bare en vane.
+
+KULTURELL BREDDE:
+Olav er IKKE ekspert på alt i Trøndelag. Gjennom yrkeslivet har han jobbet på kirker, naust og stabbur over store deler av regionen, og møtt mennesker fra ulike miljøer underveis — sørsamisk reindrift, kystkultur, gruvesamfunnet i Røros, pilegrimstradisjonen. Møter disse temaene med respekt og nysgjerrighet, ALDRI som om han eier eller taler for kulturen.
+
+STOLTHET (uten skryt): Trøndere er blant Norges beste idrettsutøvere, spesielt skisport. Trønderrock er en kjent sjanger. Kan nevnes med stillfaren selvsikkerhet, aldri skryt. Barten hans er nærmest en trøndersk greie i seg selv. Karsk (kaffe blandet med hjemmebrent) er en kjent skikk — mynten i koppen tester styrken: ser du den, er det passe sterkt. Ren kulturreferanse, ALDRI en oppfordring til å lage eller innta hjemmebrent (ulovlig i Norge).
+
+PUBLIKUM: Olav vet aldri på forhånd hvem han snakker med. Antar ingenting om forkunnskap — verken at en utenlandsk turist er blank, eller at en nordmann kjenner historien fra før. Kalibrerer naturlig ut fra bli-kjent-fasen, ikke ved å spørre rett ut. Aldri nedlatende mot nordmenn, aldri over-forklarende mot utlendinger.
+
+BLI-KJENT-FASEN: Start alltid med å bli kjent. Spør hvem de er. Hva som tok dem hit.
+
+TEKNISKE RAMMER:
+- Første setning alltid substans — aldri stemning/handling først
+- Handling i kursiv: maks én gang per tre svar
+- Maks 45 ord per svar
+- Alltid norsk
+`;
+
+function getSystemPrompt() {
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
+      + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+  }
+  return OLAV_KB
+    + '\n\nSTEDSKUNNSKAP:\n' + NIDAROSDOMEN_KB
+    + '\n\n' + OLAV_TIL_NIDAROSDOMEN
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 45 ord. Aldri punktlister. Aldri oppsummeringer.'
+    + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
+    + '\nAltid norsk.';
+}
+
+// ══ CHAT ══
+let history = [], loading = false;
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
+
+function parse(t) {
+  return t.replace(/<!--[^>]*-->/g,'').trim()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.src = 'olav-trondheim.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
+    row.appendChild(av);
+  }
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  bub.innerHTML = parse(text);
+  if (withSpeak && ELEVEN_KEY) {
+    const sp = document.createElement('button');
+    sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
+    sp.onclick = () => speak(text, sp);
+    bub.appendChild(sp);
+  }
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addTyping() {
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-row';
+  const av = document.createElement('img');
+  av.src = 'olav-trondheim.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
+  row.appendChild(av);
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
+
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+  addTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: getSystemPrompt(), sted: 'trondheim' })
+    });
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
+    else {
+      const data = await res.json();
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || '';
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
+      }
+    }
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
+}
+
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
+
+// ══ TTS ══
+let ELEVEN_KEY = null;
+let VOICE_ID = ''; // [ÅPENT: ingen ElevenLabs voice ID valgt ennå for Olav]
+let voiceOn = false;
+let currentAudio = null;
+
+async function speak(text, btn) {
+  if (!ELEVEN_KEY || !VOICE_ID) return;
+  const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
+  if (!plain) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.1, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
+    currentAudio = new Audio(url);
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
+    currentAudio.onended = () => {
+      if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      currentAudio = null;
+    };
+    currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) {
+        currentAudio.pause(); currentAudio = null;
+        btn.textContent = '🔊 Hør'; btn.classList.remove('playing');
+      } else speak(text, btn);
+    };
+  } catch(e) {
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+  }
+}
+
+// ══ OPENING ══
+window.addEventListener('DOMContentLoaded', () => {
+  addMsg('assistant', 'Du fant Trondheim, da.\n\nHva tar deg hit?');
+});
+</script>
 </body>
 </html>
