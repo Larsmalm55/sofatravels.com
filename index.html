@@ -157,15 +157,18 @@
     .hero-cta-row {
       display:flex; flex-direction:column; align-items:center; gap:12px;
       animation:fade-up .9s .42s ease both;
+      width:100%;
     }
     .btn-primary {
-      display:inline-flex; align-items:center; gap:10px;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
       background:var(--gold); color:var(--bg);
       font-family:'Crimson Text',serif; font-size:1rem;
       font-weight:600; letter-spacing:.1em;
       padding:15px 42px; border-radius:3px;
       text-decoration:none; transition:all .22s;
       white-space:nowrap;
+      max-width:100%;
+      text-align:center;
     }
     .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,168,76,.2); }
 
@@ -203,6 +206,20 @@
         background:rgba(9,6,4,.72);
       }
       .hero-center > * { position:relative; z-index:1; }
+      .btn-primary {
+        white-space:normal;
+        padding:15px 24px;
+        font-size:.92rem;
+        line-height:1.4;
+      }
+      #how > div[style*="grid-template-columns"] {
+        grid-template-columns:1fr !important;
+      }
+      #how > div[style*="grid-template-columns"] > div {
+        border-right:1px solid #2E1A0C !important;
+        border-radius:5px !important;
+        margin-bottom:16px;
+      }
     }
   </style>
 </head>
