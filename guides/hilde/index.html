@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-50X2YGHD2J');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hilde, your companion for Western Norway — Bergen, Kristiansand, and the fjord country between." />
+  <title>Hilde · Western Norway — SofaTravels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #130C06; --panel: #1A0D06; --card: #1E0F07; --border: #3A2010;
+      --gold: #C9A84C; --text: #F0E6CF; --muted: #907055; --sub: #B09870;
+    }
+    html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; }
+
+    /* ── TOP BAR ── */
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; }
+    .topbar a { color: var(--gold); text-decoration: none; font-size: .85rem; letter-spacing: .08em; }
+    .topbar a:hover { color: #DDB85C; }
+    .topbar .wordmark { font-family: 'Playfair Display', Georgia, serif; font-size: .95rem; letter-spacing: .25em; color: var(--muted); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 20px 32px 50px; text-align: center;
+      background: linear-gradient(170deg, #221008 0%, var(--bg) 100%);
+      border-bottom: 1px solid rgba(201,168,76,.15);
+    }
+    .hero-eyebrow { letter-spacing: .45em; font-size: 11px; color: var(--gold); margin-bottom: 18px; }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      color: var(--text); margin-bottom: 18px; line-height: 1.1; font-weight: 700;
+    }
+    .hero p { font-size: 1.05rem; color: var(--sub); font-style: italic; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── GUIDE GRID (reused from from-the-sofa.html) ── */
+    .guides-section { max-width: 900px; margin: 0 auto; padding: 56px 32px 80px; }
+    .section-label { letter-spacing: .35em; font-size: 10.5px; color: rgba(201,168,76,.55); text-align: center; margin-bottom: 40px; }
+    .guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px; }
+    .guide-card {
+      display: block; text-decoration: none;
+      cursor: pointer; border-radius: 6px; overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      transition: transform .22s, border-color .22s, box-shadow .22s; outline: none;
+    }
+    .guide-card:hover, .guide-card:focus { transform: translateY(-4px); }
+    .guide-card-img-wrap { position: relative; height: 210px; overflow: hidden; }
+    .guide-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .guide-card:hover .guide-card-img-wrap img,
+    .guide-card:focus .guide-card-img-wrap img { transform: scale(1.05); }
+    .guide-card-overlay { position: absolute; inset: 0; }
+    .guide-card-label { position: absolute; bottom: 12px; left: 14px; }
+    .guide-card-city { letter-spacing: .22em; font-size: 9.5px; color: var(--gold); margin-bottom: 2px; }
+    .guide-card-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; color: var(--text); font-weight: 700; }
+    .guide-card-body { padding: 14px 16px 18px; }
+    .guide-card-tagline { font-size: .8rem; color: var(--muted); line-height: 1.55; font-style: italic; min-height: 44px; margin-bottom: 14px; }
+    .guide-card-btn { border-radius: 4px; padding: 8px 0; text-align: center; font-size: .82rem; color: var(--text); letter-spacing: .08em; flex: 1; }
+    .guide-card-actions { display: flex; gap: 8px; align-items: stretch; }
+
+    /* ── FOOTER LINK ── */
+    .back-footer { text-align: center; padding: 0 32px 60px; }
+    .back-footer a { color: var(--muted); text-decoration: none; font-size: .85rem; }
+    .back-footer a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="/regions/">← Regions</a>
+    <span class="wordmark">SOFATRAVELS</span>
+  </div>
+
+  <header class="hero" role="banner">
+    <p class="hero-eyebrow" aria-hidden="true">HILDE · WESTERN NORWAY</p>
+    <h1>Fjord, mountain and sea</h1>
+    <p>Hilde grew up on the west coast and lives in Bergen. She's not a guide in the usual sense — more someone who happens to know the way, and the stories that don't make it into the brochures.</p>
+  </header>
+
+  <section class="guides-section" aria-label="Hilde's places">
+    <p class="section-label" aria-hidden="true">CHOOSE A PLACE</p>
+    <div class="guides-grid" role="list">
+
+      <a class="guide-card" role="listitem" href="/guides/hilde-bergen/" aria-label="Hilde – guide to Bergen">
+        <div class="guide-card-img-wrap">
+          <img src="/hilde-bergen.jpg" alt="Hilde, guide to Bergen" loading="lazy" />
+          <div class="guide-card-overlay" style="background:linear-gradient(to top,#1A2D3ADD 0%,transparent 55%)" aria-hidden="true"></div>
+          <div class="guide-card-label">
+            <p class="guide-card-city">BERGEN</p>
+            <p class="guide-card-name">Hilde</p>
+          </div>
+        </div>
+        <div class="guide-card-body">
+          <p class="guide-card-tagline">The wooden town, the harbor, and the layers no one sees</p>
+          <div class="guide-card-actions">
+            <div class="guide-card-btn" style="background:#1A2D3A">Start the journey →</div>
+          </div>
+        </div>
+      </a>
+
+      <a class="guide-card" role="listitem" href="/guides/hilde-kristiansand/" aria-label="Hilde – guide to Kristiansand">
+        <div class="guide-card-img-wrap">
+          <img src="/hilde-kristiansand.jpg" alt="Hilde, guide to Kristiansand" loading="lazy" />
+          <div class="guide-card-overlay" style="background:linear-gradient(to top,#1A2E22DD 0%,transparent 55%)" aria-hidden="true"></div>
+          <div class="guide-card-label">
+            <p class="guide-card-city">KRISTIANSAND</p>
+            <p class="guide-card-name">Hilde</p>
+          </div>
+        </div>
+        <div class="guide-card-body">
+          <p class="guide-card-tagline">The city most people just walk straight through</p>
+          <div class="guide-card-actions">
+            <div class="guide-card-btn" style="background:#1A2E22">Start the journey →</div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="back-footer">
+    <a href="/regions/">← Back to all four regions</a>
+  </div>
+
+</body>
+</html>
