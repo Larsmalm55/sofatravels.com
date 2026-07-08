@@ -345,7 +345,7 @@
 
   <!-- LEFT: SLIDESHOW + INFO CARD -->
   <div id="left-col">
-    <img class="portrait-slide active" src="olav-trondheim.jpg" alt="Olav" />
+    <img class="portrait-slide active" src="olav-nidarosdomen.jpg" alt="Olav ved Nidarosdomen" />
     <img class="portrait-slide" src="nidarosdomen-aerial.jpg" alt="Nidarosdomen sett fra luften" />
     <img class="portrait-slide" src="kort-stiklestad.jpg" alt="Slaget på Stiklestad, 1030 — kunstnerisk gjengivelse" />
     <img class="portrait-slide" src="kort-kirke1070.jpg" alt="Den første kirken, bygget rundt 1070 — kunstnerisk gjengivelse" />
@@ -353,7 +353,7 @@
     <div id="left-mist"></div>
     <div id="left-mist-side"></div>
     <div id="guide-badge">
-      <div class="badge-av"><img src="olav-trondheim.jpg" alt="Olav" /></div>
+      <div class="badge-av"><img src="olav-video-poster.jpg" alt="Olav" /></div>
       <span class="badge-name">Olav</span>
       <span class="online-dot"></span>
     </div>
@@ -405,7 +405,7 @@
 
       <!-- Olav portrait -->
       <div id="olav-panel">
-        <video autoplay muted loop playsinline src="olav-trondheim.mp4" poster="olav-trondheim.jpg"></video>
+        <video autoplay muted loop playsinline src="olav-trondheim.mp4" poster="olav-video-poster.jpg"></video>
         <div id="olav-panel-overlay"></div>
         <div id="olav-panel-name">
           <span id="olav-panel-sub">GUIDE</span>Olav
@@ -635,7 +635,7 @@ function addMsg(role, text, withSpeak=false) {
   row.className = 'msg-row' + (role==='user' ? ' user' : '');
   if (role !== 'user') {
     const av = document.createElement('img');
-    av.src = 'olav-trondheim.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
+    av.src = 'olav-video-poster.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
     row.appendChild(av);
   }
   const bub = document.createElement('div');
@@ -656,7 +656,7 @@ function addTyping() {
   const row = document.createElement('div');
   row.className = 'msg-row'; row.id = 'typing-row';
   const av = document.createElement('img');
-  av.src = 'olav-trondheim.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
+  av.src = 'olav-video-poster.jpg'; av.className = 'msg-av'; av.alt = 'Olav';
   row.appendChild(av);
   const bub = document.createElement('div');
   bub.className = 'msg-bubble bot';
