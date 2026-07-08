@@ -380,7 +380,7 @@
       </div>
       <div id="info-card-image">
         <img id="info-card-img" src="" alt="" />
-        <div id="info-card-image-cap" id="info-img-cap"></div>
+        <div id="info-card-image-cap"></div>
       </div>
       <div id="info-card-body"></div>
       <div id="info-card-footer">💬 Spør Olav i chatten — han ser det samme som deg</div>
@@ -482,7 +482,7 @@ function showCard(key) {
   document.getElementById('info-card-label').textContent = 'TRONDHEIM · ' + c.subtitle.toUpperCase();
   document.getElementById('info-card-img').src = c.img;
   document.getElementById('info-card-img').alt = c.title;
-  document.getElementById('info-img-cap').textContent = c.imgCap;
+  document.getElementById('info-card-image-cap').textContent = c.imgCap;
   const body = document.getElementById('info-card-body');
   body.innerHTML = '';
   c.sections.forEach(s => {
