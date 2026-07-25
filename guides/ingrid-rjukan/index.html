@@ -216,9 +216,21 @@
       width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
       position: relative; background: #050A0F;
     }
-    #info-card-image img {
+    #info-card-img-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      filter: blur(22px) brightness(.5) saturate(1.1);
+      transform: scale(1.15);
+      opacity: 0; transition: opacity .25s ease; z-index: 0;
+    }
+    #info-card-img-bg.show { opacity: 1; }
+    #info-card-image img#info-card-img {
+      position: relative; z-index: 1;
       width: 100%; height: 100%; object-fit: cover; object-position: center;
       opacity: .8;
+    }
+    #info-card-image img#info-card-img.contain-mode {
+      object-fit: contain; opacity: 1;
     }
     #info-card-image-cap {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -507,7 +519,7 @@
 <body>
 
 <header id="top-bar">
-  <a href="/guides/ingrid/" id="back-btn">← Guider</a>
+  <a href="/regions/" id="back-btn">← Guider</a>
   <div class="hdr-center">SOFATRAVELS · <span>RJUKAN</span></div>
   <div class="hdr-right">
     <button class="hdr-btn" id="voice-btn" title="Ingrids stemme">🔇</button>
@@ -560,6 +572,7 @@
         <button id="info-card-close" title="Tilbake til bildene">✕</button>
       </div>
       <div id="info-card-image">
+        <img id="info-card-img-bg" src="" alt="" aria-hidden="true" />
         <img id="info-card-img" src="" alt="" />
         <div id="info-card-image-cap" id="info-img-cap"></div>
       </div>
@@ -660,7 +673,7 @@ const CARDS = {
     title: 'Rjukanfossen',
     subtitle: 'Dalen før industrien',
     img: 'kort-rjukanfossen.jpg',
-    imgCap: 'Vestfjorddalen med Gaustatoppen i bakgrunnen, før industribyggingen',
+    imgCap: 'Rjukanfossen',
     sections: [
       {
         label: 'NAVNET',
@@ -804,14 +817,20 @@ function showCard(key) {
 
   document.getElementById('info-card-title').textContent = card.title;
   const cardImgEl = document.getElementById('info-card-img');
-  cardImgEl.style.objectPosition = 'center'; // nullstill før ny sjekk
+  const cardImgBg = document.getElementById('info-card-img-bg');
+  cardImgEl.classList.remove('contain-mode');
+  cardImgBg.classList.remove('show');
   cardImgEl.onload = () => {
-    // Stående bilder (portretter) beskjæres hardt av "cover" i denne brede/lave boksen.
-    // Flytt fokuspunktet mot toppen så ansikt/hode blir med, i stedet for midten av kroppen.
-    if (cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05) {
-      cardImgEl.style.objectPosition = 'center 12%';
+    // Stående bilder passer ikke i den brede/lave boksen uansett fokuspunkt.
+    // Vis da hele bildet (contain), med en utsmurt kopi av samme bilde som fyller resten.
+    const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
+    if (isPortrait) {
+      cardImgEl.classList.add('contain-mode');
+      cardImgBg.src = card.img;
+      cardImgBg.classList.add('show');
     } else {
-      cardImgEl.style.objectPosition = 'center';
+      cardImgEl.classList.remove('contain-mode');
+      cardImgBg.classList.remove('show');
     }
   };
   cardImgEl.src = card.img;
