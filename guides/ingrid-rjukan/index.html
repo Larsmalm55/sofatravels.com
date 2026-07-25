@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ingrid · Rjukan · SofaTravels</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-50X2YGHD2J');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080E14;
+      --border: #1A2E3A;
+      --sea:    #2A7FA8;
+      --sea-lt: #4DCCF0;
+      --gold:   #C9A84C;
+      --text:   #EAE0CF;
+      --sub:    #9AB0BA;
+      --muted:  #5A7A8A;
+      --card-bg:#0F1A22;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
+
+    /* ══ TOP BAR ══ */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+    }
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none;
+    }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
+    .hdr-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(12,24,32,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
+    .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+
+    /* ══ MAIN ══ */
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
+
+    /* ══ LEFT — SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
+      background: #000; overflow: hidden; min-width: 300px;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0; transition: opacity 2.2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 28%; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,14,20,1) 0%, rgba(8,14,20,.5) 45%, transparent 100%);
+    }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
+      width: 16%; pointer-events: none;
+      background: linear-gradient(to left, rgba(8,14,20,.85) 0%, transparent 100%);
+    }
+
+    /* Guide badge */
+    #guide-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(42,127,168,.5); }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
+
+    /* Location badge */
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(8,14,20,.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+
+    /* Slide dots */
+    #slide-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
+    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD OVERLAY ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+
+    /* ══ MAP OVERLAY ══ */
+    #map-overlay {
+      position: absolute; inset: 0; z-index: 21;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #map-overlay.visible { opacity: 1; pointer-events: all; }
+    #map-overlay-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #map-overlay-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #map-overlay-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #map-overlay-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #map-overlay-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+    #rjukan-map { flex: 1; min-height: 0; background: #050A0F; }
+    #map-zoom-hint {
+      padding: 8px 20px; font-size: .65rem; color: var(--muted);
+      letter-spacing: .05em; border-top: 1px solid rgba(201,168,76,.12);
+      flex-shrink: 0; text-align: center;
+    }
+    .map-btn {
+      border-color: rgba(42,127,168,.4) !important;
+      color: var(--sea-lt) !important;
+    }
+    .map-btn:hover { border-color: var(--sea-lt) !important; background: rgba(42,127,168,.12) !important; }
+
+    /* Leaflet gull/mørk tema-overstyring */
+    .leaflet-container { background: #0a1218 !important; font-family: 'Crimson Text', serif; }
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg); color: var(--text);
+      border: 1px solid rgba(201,168,76,.3); border-radius: 6px;
+    }
+    .leaflet-popup-tip { background: var(--card-bg); border: 1px solid rgba(201,168,76,.3); }
+    .leaflet-popup-content { font-size: .82rem; line-height: 1.4; margin: 10px 12px; }
+    .leaflet-popup-content strong { color: var(--gold); font-family: 'Playfair Display', serif; }
+    .rjukan-pin {
+      background: var(--gold); width: 14px; height: 14px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); border: 2px solid #fff8e7; box-shadow: 0 0 6px rgba(201,168,76,.6);
+    }
+    .leaflet-control-attribution { background: rgba(8,14,20,.7) !important; color: var(--muted) !important; }
+    .leaflet-control-attribution a { color: var(--sub) !important; }
+    .leaflet-control-zoom a { background: var(--card-bg) !important; color: var(--gold) !important; border-color: rgba(201,168,76,.3) !important; }
+
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #info-card-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #info-card-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+
+    #info-card-image {
+      width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
+      position: relative; background: #050A0F;
+    }
+    #info-card-image img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      opacity: .8;
+    }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 20px 8px;
+      background: linear-gradient(to top, rgba(8,14,20,.9) 0%, transparent 100%);
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+    }
+
+    #info-card-body {
+      flex: 1; overflow-y: auto; padding: 16px 22px 20px;
+    }
+    #info-card-body::-webkit-scrollbar { width: 2px; }
+    #info-card-body::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+    .info-section { margin-bottom: 14px; }
+    .info-section-label {
+      font-size: 7px; letter-spacing: .35em; color: var(--gold);
+      margin-bottom: 5px; display: block;
+    }
+    .info-section p {
+      font-size: .92rem; line-height: 1.7; color: #C8BBAA;
+      margin-bottom: 8px;
+    }
+    .info-section p strong { color: var(--text); font-weight: 600; }
+
+    #info-card-footer {
+      padding: 10px 20px 12px;
+      border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted); font-style: italic;
+      flex-shrink: 0;
+    }
+
+    /* ══ RIGHT COL ══ */
+    #right-col {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      background: var(--bg); overflow: hidden;
+      border-left: 1px solid var(--border);
+    }
+
+    /* Top: topics + hilde video */
+    #right-top {
+      display: flex; flex-direction: row;
+      flex: 0 0 44%; border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+
+    /* Topics */
+    #topics-panel {
+      flex: 0 0 48%; padding: 12px 12px 10px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
+    .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; }
+    .topic-btn {
+      background: rgba(10,20,30,.9); border: 1px solid rgba(42,127,168,.18);
+      color: var(--sub); padding: 5px 10px; border-radius: 4px;
+      font-size: .72rem; cursor: pointer; font-family: inherit;
+      text-align: left; transition: all .2s; line-height: 1.3; flex-shrink: 0;
+    }
+    .topic-btn:hover { border-color: rgba(42,127,168,.55); color: var(--text); background: rgba(42,127,168,.1); }
+    .topic-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+    .topic-link { text-decoration: none; border-color: rgba(201,168,76,.2); color: rgba(201,168,76,.7); }
+    .topic-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+
+    /* Ingrid video */
+    #hilde-panel {
+      flex: 1; position: relative; overflow: hidden; background: #050A0F;
+    }
+    #hilde-panel video, #hilde-panel img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    }
+    #hilde-panel-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(8,14,20,.85) 0%, rgba(8,14,20,.1) 35%, transparent 65%),
+        linear-gradient(to right, rgba(8,14,20,.5) 0%, transparent 40%);
+    }
+    #hilde-panel-name {
+      position: absolute; bottom: 10px; left: 12px;
+      font-family: 'Playfair Display', serif; font-size: .8rem; color: rgba(234,224,207,.8);
+    }
+    #hilde-panel-sub { font-size: .58rem; letter-spacing: .15em; color: var(--gold); display: block; margin-bottom: 1px; }
+
+    /* Chat */
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    #tip-bar { padding: 5px 14px 3px; font-size: .67rem; color: var(--muted); border-bottom: 1px solid rgba(26,46,58,.4); flex-shrink: 0; }
+    #messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+    #messages::-webkit-scrollbar { width: 2px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+    .msg-row { display: flex; gap: 7px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-av { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(42,127,168,.3); }
+    .msg-bubble { max-width: 86%; padding: 8px 12px; line-height: 1.6; font-size: .88rem; }
+    .msg-bubble.bot { background: rgba(10,20,30,.92); color: #D4C8B6; border: 1px solid rgba(42,127,168,.18); border-radius: 10px 10px 10px 2px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.6); font-style: italic; }
+    .msg-bubble.user-b { background: rgba(18,34,48,.92); color: var(--text); border: 1px solid rgba(42,127,168,.15); border-radius: 10px 10px 2px 10px; }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px; }
+    .speak-btn { display: inline-block; margin-top: 5px; background: none; border: 1px solid rgba(42,127,168,.2); color: var(--muted); border-radius: 4px; padding: 2px 7px; font-size: .64rem; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
+    .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.1); }
+    .typing { color: var(--sea); letter-spacing: .3em; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+    #input-row { display: flex; gap: 8px; padding: 9px 12px 12px; background: rgba(8,14,20,.96); backdrop-filter: blur(16px); border-top: 1px solid var(--border); flex-shrink: 0; }
+    #chat-input { flex: 1; background: rgba(10,18,28,.94); border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 20px; font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif; transition: border-color .2s; }
+    #chat-input:focus { border-color: rgba(42,127,168,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--sea); color: #fff; font-size: 1rem; cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center; }
+    #send-btn:hover { background: #3A9FC8; transform: scale(1.06); }
+    #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+    /* API banner */
+    .api-banner { display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99; background: #0A1820; border-bottom: 2px solid var(--sea); padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .8rem; color: var(--text); }
+    .api-banner label strong { color: var(--sea); }
+    .api-banner input { flex: 1; min-width: 180px; background: #0A1420; border: 1px solid rgba(42,127,168,.4); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: .78rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem; }
+    .banner-close { background: none !important; color: var(--muted) !important; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+    /* ══ MOBIL (≤768px) ══ */
+    @media (max-width: 768px) {
+
+      /* App: én kolonne */
+      #app {
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Bilde øverst — fast høyde */
+      #left-col {
+        flex: 0 0 38vh;
+        height: 38vh;
+        width: 100%;
+        min-width: unset;
+      }
+
+      /* Høyre kolonne — eksplisitt høyde */
+      #right-col {
+        flex: 1;
+        height: calc(62vh - 42px);
+        width: 100%;
+        min-width: unset;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Mist justert for kortere bilde */
+      #left-mist { height: 35%; }
+      #left-mist-side { display: none; }
+
+      /* Badge og stedsmerknad */
+      #guide-badge { top: 10px; left: 10px; }
+      .badge-name { font-size: .8rem; }
+      #loc-badge { top: 10px; right: 10px; padding: 4px 8px; }
+      #loc-region { font-size: 6.5px; }
+      #loc-name { font-size: .75rem; }
+
+      /* Slide dots */
+      #slide-dots { bottom: 6px; }
+
+      /* Info-kort overlay */
+      #info-card-image { height: 30%; }
+      #info-card-title { font-size: 1.1rem; }
+
+      /* Topp-rad: temaer horisontalt + skjul Ingrid-video */
+      #right-top {
+        flex: 0 0 auto;
+        flex-direction: column;
+        height: auto;
+        border-bottom: 1px solid var(--border);
+        overflow: visible;
+      }
+
+      /* Temaknapper — horisontal scroll, kompakt */
+      #topics-panel {
+        flex: none;
+        width: 100%;
+        padding: 6px 10px 6px;
+        border-right: none;
+        border-bottom: none;
+        overflow: hidden;
+      }
+      .tp-name { font-size: .82rem; margin-bottom: 0; }
+      .tp-tagline { display: none; }
+      .tp-label { display: none; }
+      #topics {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        gap: 5px;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-top: 4px;
+      }
+      #topics::-webkit-scrollbar { display: none; }
+      .topic-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 4px 9px;
+        font-size: .68rem;
+      }
+
+      /* Skjul Ingrid-video på mobil */
+      #hilde-panel { display: none; }
+
+      /* Chat alltid synlig — tar resten av skjermen */
+      #chat-col {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #tip-bar { display: none; }
+      #messages { flex: 1; padding: 8px 10px 4px; gap: 6px; min-height: 0; }
+      .msg-bubble { font-size: .84rem; padding: 7px 10px; }
+      .msg-av { width: 22px; height: 22px; }
+
+      #input-row {
+        padding: 7px 10px 10px; gap: 6px;
+        flex-shrink: 0;
+        position: sticky; bottom: 0;
+        background: rgba(8,14,20,.98);
+      }
+      #chat-input { padding: 8px 14px; font-size: .84rem; }
+      #send-btn { width: 36px; height: 36px; font-size: .9rem; }
+
+      /* Info-kort: fyller hele skjermen på mobil */
+      #info-card {
+        position: fixed;
+        inset: 42px 0 0 0;
+        z-index: 100;
+        overflow-y: auto;
+      }
+      #info-card-close {
+        width: 38px; height: 38px;
+        font-size: 1.1rem;
+        background: rgba(42,127,168,.3);
+        border: 2px solid rgba(42,127,168,.6);
+      }
+      #info-card-image { height: 28%; }
+      #info-card-title { font-size: 1.1rem; }
+
+      /* Kart: fyller hele skjermen på mobil, samme mønster som info-kort */
+      #map-overlay {
+        position: fixed;
+        inset: 42px 0 0 0;
+        z-index: 101;
+      }
+      #map-overlay-close {
+        width: 38px; height: 38px;
+        font-size: 1.1rem;
+        background: rgba(42,127,168,.3);
+        border: 2px solid rgba(42,127,168,.6);
+      }
+      #map-overlay-title { font-size: 1.1rem; }
+
+      /* Topbar */
+      #top-bar { height: 42px; padding: 0 12px; }
+      #back-btn { padding: 3px 8px; font-size: .66rem; }
+      .hdr-center { font-size: .72rem; letter-spacing: .15em; }
+      #app { padding-top: 42px; }
+    }
+
+    /* ══ LITEN MOBIL (≤390px) ══ */
+    @media (max-width: 390px) {
+      #left-col { flex: 0 0 32vh; }
+      #right-top { max-height: 28vh; }
+      .msg-bubble { font-size: .8rem; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+<header id="top-bar">
+  <a href="/guides/ingrid/" id="back-btn">← Guider</a>
+  <div class="hdr-center">SOFATRAVELS · <span>RJUKAN</span></div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="voice-btn" title="Ingrids stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Ingrids stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<div id="app">
+
+  <!-- LEFT: SLIDESHOW + INFO CARD -->
+  <div id="left-col">
+    <img class="portrait-slide active" src="rjukan-dalen.jpg"       alt="Vestfjorddalen med Gaustatoppen" />
+    <img class="portrait-slide"        src="rjukan-idag.jpg"        alt="Rjukan i dag, med Gaustatoppen i bakgrunnen" />
+    <img class="portrait-slide"        src="kort-krossobanen.jpg"   alt="Krossobanen" />
+    <img class="portrait-slide"        src="kort-solspeilet.jpg"    alt="Solspeilet" />
+    <img class="portrait-slide"        src="kort-arkitektur.jpg"    alt="Rjukan sentrum ovenfra" />
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
+    <div id="guide-badge">
+      <div class="badge-av"><img src="ingrid-rjukan.jpg" alt="Ingrid" /></div>
+      <span class="badge-name">Ingrid</span>
+      <span class="online-dot"></span>
+    </div>
+    <div id="loc-badge">
+      <div id="loc-region">ØSTLANDET · NORGE</div>
+      <div id="loc-name">Rjukan</div>
+    </div>
+    <div id="slide-dots">
+      <div class="sdot active" data-idx="0"></div>
+      <div class="sdot" data-idx="1"></div>
+      <div class="sdot" data-idx="2"></div>
+      <div class="sdot" data-idx="3"></div>
+      <div class="sdot" data-idx="4"></div>
+    </div>
+
+    <!-- INFO CARD OVERLAY -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">RJUKAN · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img" src="" alt="" />
+        <div id="info-card-image-cap" id="info-img-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Ingrid i chatten — hun ser det samme som deg</div>
+    </div>
+
+    <!-- MAP OVERLAY -->
+    <div id="map-overlay">
+      <div id="map-overlay-header">
+        <div>
+          <span id="map-overlay-label">NORGE · ØSTLANDET</span>
+          <div id="map-overlay-title">Rjukan</div>
+        </div>
+        <button id="map-overlay-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="rjukan-map"></div>
+      <div id="map-zoom-hint">Klikk et punkt for å se hva det er — eller zoom selv med musehjul/fingre</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right-col">
+    <div id="right-top">
+
+      <!-- Topics -->
+      <div id="topics-panel">
+        <div class="tp-region">RJUKAN</div>
+        <div class="tp-name">Ingrid</div>
+        <div class="tp-tagline">«Historiene ligger i landskapet»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-topic="eyde">Sam Eyde · mannen som så en by der andre så en foss</button>
+          <button class="topic-btn" data-topic="fossen">Rjukanfossen · dalen før industrien</button>
+          <button class="topic-btn" data-topic="krossobanen">Krossobanen · fra skygge til sol</button>
+          <button class="topic-btn" data-topic="solspeilet">Solspeilet · hundre år fra idé til virkelighet</button>
+          <button class="topic-btn" data-topic="arkitektur">Arkitekturen · byen tegnet på et ark</button>
+          <button class="topic-btn" data-topic="etterindustrien">Livet etter industrien</button>
+          <a class="topic-btn topic-link" href="https://www.gausta.com/gaustatoppenlanding/" target="_blank" rel="noopener">Gaustatoppen ↗</a>
+          <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Rjukan?</button>
+        </div>
+      </div>
+
+      <!-- Ingrid video -->
+      <div id="hilde-panel">
+        <video autoplay muted loop playsinline src="ingrid-guide.mp4" poster="ingrid-guide-poster.jpg"></video>
+        <div id="hilde-panel-overlay"></div>
+        <div id="hilde-panel-name">
+          <span id="hilde-panel-sub">GUIDE</span>Ingrid
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat -->
+    <div id="chat-col">
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Ingrid direkte</div>
+      <div id="messages" role="log" aria-live="polite"></div>
+      <div id="input-row">
+        <input type="search" id="chat-input" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Spør Ingrid om Rjukan…" />
+        <button id="send-btn">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  eyde: {
+    title: 'Sam Eyde',
+    subtitle: 'Mannen som så en by der andre så en foss',
+    img: 'kort-sameyde.jpg',
+    imgCap: 'Sam Eyde, ca. 1910. Fotograf ukjent. Kilde: Wikimedia Commons / Norsk Hydro historiske arkiv',
+    sections: [
+      {
+        label: 'HVEM',
+        text: `Født 29. oktober 1866 i Arendal, død 21. juni 1940 i Åsgårdstrand. Sønn av en skipsreder, fra sørlandsk næringsborgerskap. Studerte ingeniørfag i Berlin, ble værende i Tyskland i rundt tolv år og arbeidet med jernbaner, broer og havner før han vendte hjem til Norge.`
+      },
+      {
+        label: 'HVA HAN GJORDE',
+        text: `Kjøpte fallrettighetene til Rjukanfossen i 1902–03, lenge før verdien var åpenbar for de fleste. Møtte fysikeren Kristian Birkeland i 1903 — sammen utviklet de en metode for å binde nitrogen fra luft med elektrisk kraft, grunnlaget for kunstgjødselindustrien. Grunnla Norsk Hydro i 1905.`
+      },
+      {
+        label: 'MENNESKET',
+        text: `Eyde var ingen perfekt leder — rastløs, karismatisk, utålmodig, og historikere har diskutert i ettertid hvor mye av æren for Hydro som egentlig tilhører ham alene versus Birkeland og bankmannen Marcus Wallenberg. Han gikk av som generaldirektør i 1917. En kjent, men ikke fullt dokumentert anekdote forteller at han hadde billett til Titanics jomfrutur, men ikke fikk benyttet den.`
+      },
+      {
+        label: 'I DAG',
+        text: `Navnet hans lever videre i Eydehavn, i direktørboligen Admini, og i historien om hvorfor Rjukan i det hele tatt finnes. Han dukker opp igjen og igjen i Rjukans historie — ved fossen, Krossobanen, Solspeilet og arkitekturen — alltid som den som satte noe i gang, aldri som hovedpersonen alene.`
+      }
+    ]
+  },
+  fossen: {
+    title: 'Rjukanfossen',
+    subtitle: 'Dalen før industrien',
+    img: 'kort-rjukanfossen.jpg',
+    imgCap: 'Vestfjorddalen med Gaustatoppen i bakgrunnen, før industribyggingen',
+    sections: [
+      {
+        label: 'NAVNET',
+        text: `Rjukan kommer av norrønt rjúkandi — "den rykende". Navnet beskriver ikke fossen som gjenstand, men bevegelsen: vannsprøyten som så ut som røyk på avstand. Byen het offisielt Såheim fram til 1912, da navnet ble byttet fordi det var fossen — ikke noen gård — stedet skyldte sin opprinnelse til.`
+      },
+      {
+        label: 'FØR HYDRO',
+        text: `Mange tror det bare lå et par gårder her før industrien kom. Det er en myte. Rundt år 1900 fantes det omkring 150 større gårdsbruk og 250 mindre bruk i hele Tinn, hvorav 120 lå i Vestfjorddalen — med navn som Svadde, Krosso, Bøen og Såheim. Flere hadde vært bebodd siden vikingtiden.`
+      },
+      {
+        label: 'ATTRAKSJONEN',
+        text: `Lenge før Hydro reiste folk hit bare for å se selve fossen. Allerede fra 1864 gikk det dampskip på Tinnsjøen, og dalen regnes som den moderne turismens vugge i Norge — kjent i store deler av Europa for sin skjønnhet.`
+      },
+      {
+        label: 'I DAG',
+        text: `Fjellene står fortsatt, Måna renner fortsatt, skyggen kommer fortsatt om høsten. Industrien måtte tilpasse seg dalen — ikke omvendt. Det er en påminnelse om at Rjukans historie egentlig starter lenge før fabrikkpipene.`
+      }
+    ]
+  },
+  krossobanen: {
+    title: 'Krossobanen',
+    subtitle: 'Fra skygge til sol',
+    img: 'kort-krossobanen.jpg',
+    imgCap: 'Krossobanen ved åpningen, 1928',
+    sections: [
+      {
+        label: 'HVA DEN ER',
+        text: `Åpnet 21. januar 1928 — Nord-Europas første to-taus svevebane for persontransport. På under fem minutter løfter den folk fra dalbunnen til nesten 900 moh. De to gondolene har navn: Blåbæret og Tyttebæret.`
+      },
+      {
+        label: 'HVORFOR DEN BLE BYGGET',
+        text: `Ikke for turister. Sam Eyde initierte den som velferdstiltak, fordi arbeiderne mistet sola i flere måneder hvert år. Billettene var billige med vilje. I åpningsåret 1928 ble hele 190 000 par ski fraktet opp banen.`
+      },
+      {
+        label: 'KROSSOBANEN OG SOLSPEILET',
+        text: `Samme år som ideen om et solspeil først ble lansert (1913), jobbet Eyde med planer for en fjellbane. Krossobanen ble løsningen teknologien faktisk tillot da. Solspeilet måtte vente hundre år til.`
+      },
+      {
+        label: 'I DAG',
+        text: `Krossobanen er stengt for en omfattende, kostbar oppgradering (150 millioner kroner) etter sikkerhetsfunn i 2024 — den er fredet verdensarv, så alt arbeid må følge svært strenge internasjonale krav. Målet er gjenåpning til 100-årsjubileet i 2028.`
+      }
+    ]
+  },
+  solspeilet: {
+    title: 'Solspeilet',
+    subtitle: 'Hundre år fra idé til virkelighet',
+    img: 'kort-solspeilet.jpg',
+    imgCap: 'Solspeilet i fjellveggen over Rjukan torg',
+    sections: [
+      {
+        label: 'IDEEN',
+        text: `I 1913 skrev Hydro-bokholderen Oscar Kittelsen et avisinnlegg om et solspeil på Rjukan. Sam Eyde støttet ideen kort tid etter. Teknologien fantes rett og slett ikke — prosjektet ble aldri realisert den gangen.`
+      },
+      {
+        label: 'I STEDET KOM KROSSOBANEN',
+        text: `Da speilet ikke lot seg bygge, valgte Hydro den motsatte løsningen: i stedet for å hente solen ned, sendte de menneskene opp. Krossobanen ble den praktiske erstatningen i 1928.`
+      },
+      {
+        label: 'HUNDRE ÅR SENERE',
+        text: `Kunstneren Martin Andersen tok opp ideen igjen i 2005. 30. oktober 2013 — nøyaktig hundre år etter Kittelsens avisinnlegg — ble Solspeilet innviet. Tre datastyrte heliostater, 51 kvm til sammen, montert 450 meter over torget, reflekterer sollys ned i en lysellipse på ca. 600 kvm.`
+      },
+      {
+        label: 'I DAG',
+        text: `Foss ga byen kraft. Krossobanen ga menneskene solen. Solspeilet brakte solen tilbake til byen. Tre ulike løsninger på samme spørsmål: hvordan leve godt i en dal som mangler lys.`
+      }
+    ]
+  },
+  arkitektur: {
+    title: 'Arkitekturen',
+    subtitle: 'Byen tegnet på et ark',
+    img: 'kort-arkitektur.jpg',
+    imgCap: 'Rjukan sentrum ovenfra, med boligstrukturen tydelig',
+    sections: [
+      {
+        label: 'HAGEBYEN',
+        text: `Rjukan er trolig Norges første helhetlig arkitekttegnede by, bygget etter hageby-idealet: mye lys, luft mellom husene, grønne områder. Arbeiderboligene fikk innlagt vann og elektrisitet — luksus mange norske hjem ennå manglet.`
+      },
+      {
+        label: 'BYDELENE',
+        text: `Rødbyen: arbeiderboliger, ca. 70 kvm. Tyskerbyen: navnet kommer av tyske ingeniører under byggingen — ikke krigen. Villaveien: opp mot 200 kvm, plassert i åssiden for mer sol. Admini: administrasjonsbygget, også direktørbolig, med egen park og tennisbane.`
+      },
+      {
+        label: 'FJØSET OG KIRKEN',
+        text: `Hydro bygde Norges mest moderne fjøs — plass til 160 kyr — midt i industribyen, fordi arbeiderne trengte melk. Rjukan kirke (1915) tok fyr i 1965 under filminnspillingen av «Heroes of Telemark» og måtte gjenreises.`
+      },
+      {
+        label: 'I DAG',
+        text: `Du kan lese klasseskillene bare ved å følge solen — jo høyere opp i lia, desto mer lys fikk boligene. Byen er ikke bare et sted å se; den er et lesbart kart over hvordan fjell, lys og samfunn ble planlagt sammen.`
+      }
+    ]
+  },
+  etterindustrien: {
+    title: 'Livet etter industrien',
+    subtitle: 'En ny historie begynte da fabrikkene stanset',
+    img: 'kort-livetetter.jpg',
+    imgCap: 'Rjukan med Gaustatoppen, 2004. Foto: Alexander Mayrhofer. Lisens: CC BY-SA 3.0, Wikimedia Commons',
+    sections: [
+      {
+        label: 'NEDGANGEN',
+        text: `I 1963 varslet Hydro at all prosessindustri på Rjukan skulle avvikles. Siste lass med kunstgjødsel forlot byen i 1991. Folketallet sank kraftig — fra rundt 8 350 i 1920 til dagens ca. 3000.`
+      },
+      {
+        label: 'HISTORIEN BLE EN RESSURS',
+        text: `I stedet for å late som industrien aldri hadde vært der, åpnet Norsk Industriarbeidermuseum i Vemork kraftstasjon i 1988. 5. juli 2015 ble Rjukan–Notodden industriarv innskrevet på UNESCOs verdensarvliste — for helheten, ikke bare fabrikkene.`
+      },
+      {
+        label: 'NATUREN FIKK PLASSEN TILBAKE',
+        text: `Da fabrikkstøyen stilnet, ble fjellene igjen det folk la merke til først. I dag bygger reiselivet på natur, kultur og historie sammen: Gaustatoppen, skiturer, isklatring, Hardangervidda, Krossobanen og Solspeilet.`
+      },
+      {
+        label: 'EN NY GENERASJON',
+        text: `Foreldregenerasjonen hadde fabrikken som sentrum. Den nye generasjonen har fjellet. Rjukan er ikke et museum — det finnes fortsatt industri her — men næringslivet er mer variert, og stedet har funnet en ny identitet uten å glemme den gamle.`
+      }
+    ]
+  }
+};
+
+
+// ══ SLIDESHOW ══
+const slides = document.querySelectorAll('.portrait-slide');
+const dots   = document.querySelectorAll('.sdot');
+let cur = 0, slideTimer;
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
+}
+function startSlides() { slideTimer = setInterval(() => goTo(cur + 1), 12000); }
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(slideTimer); goTo(+d.dataset.idx); startSlides();
+}));
+startSlides();
+
+// ══ INFO CARD ══
+let activeCard = null;
+
+function showCard(key) {
+  const card = CARDS[key];
+  if (!card) return;
+  activeCard = key;
+
+  document.getElementById('info-card-title').textContent = card.title;
+  document.getElementById('info-card-img').src = card.img;
+  document.getElementById('info-card-img').alt = card.title;
+  document.getElementById('info-card-image-cap').textContent = card.imgCap;
+
+  const body = document.getElementById('info-card-body');
+  body.innerHTML = '';
+  card.sections.forEach(s => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+    body.appendChild(sec);
+  });
+
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+
+  // Mark active topic button
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.topic === key);
+  });
+}
+
+function closeCard() {
+  activeCard = null;
+  document.getElementById('info-card').classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  startSlides();
+}
+
+document.getElementById('info-card-close').addEventListener('click', closeCard);
+
+// ══ KART ══
+let rjukanMap = null;
+const RJUKAN_POINTS = [
+  { name: 'Rjukan sentrum',  lat: 59.8792, lng: 8.6117, desc: 'Der Solspeilet, torget og byen selv ligger.' },
+  { name: 'Solspeilet',      lat: 59.8797, lng: 8.6103, desc: 'Speilene i fjellveggen, 450 m over torget.' },
+  { name: 'Vemork · museet', lat: 59.8712, lng: 8.4917, desc: 'Norsk Industriarbeidermuseum, den gamle kraftstasjonen.' },
+  { name: 'Krossobanen',     lat: 59.8747, lng: 8.5965, desc: 'Nedre stasjon — for tiden stengt for oppgradering.' },
+  { name: 'Gaustatoppen',    lat: 59.8542, lng: 8.6492, desc: 'Telemarks høyeste fjell, 1883 moh.' },
+  { name: 'Gaustabanen',     lat: 59.8538, lng: 8.6847, desc: 'Banen som går inne i selve fjellet.' }
+];
+
+function initMap() {
+  if (rjukanMap) return;
+  rjukanMap = L.map('rjukan-map', { zoomControl: true, attributionControl: true })
+    .setView([64.5, 15], 4); // Norge, oversikt
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    maxZoom: 18
+  }).addTo(rjukanMap);
+
+  const goldIcon = L.divIcon({ className: '', html: '<div class="rjukan-pin"></div>', iconSize: [14,14], iconAnchor: [7,12] });
+
+  // Norge-oversikt: kun Rjukan markert, så vi tydelig viser HVOR i landet vi er
+  const norgeMarker = L.marker([59.8792, 8.6117], { icon: goldIcon }).addTo(rjukanMap)
+    .bindPopup('<strong>Rjukan</strong><br>150 km vest for Oslo, i Vestfjorddalen — Telemark.');
+
+  // Etter kort pause: zoom inn til Rjukan og vis alle punktene
+  setTimeout(() => {
+    rjukanMap.flyTo([59.8735, 8.615], 12.5, { duration: 2.2 });
+    setTimeout(() => {
+      RJUKAN_POINTS.forEach(p => {
+        L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(rjukanMap)
+          .bindPopup(`<strong>${p.name}</strong><br>${p.desc}`);
+      });
+    }, 1800);
+  }, 900);
+
+  setTimeout(() => rjukanMap.invalidateSize(), 100);
+}
+
+document.getElementById('map-open-btn').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.add('visible');
+  clearInterval(slideTimer);
+  initMap();
+  setTimeout(() => rjukanMap && rjukanMap.invalidateSize(), 200);
+});
+document.getElementById('map-overlay-close').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.remove('visible');
+  startSlides();
+});
+
+// ══ ELEVENLABS ══
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false, currentAudio = null;
+const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+document.getElementById('eleven-key-save').onclick = () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v; localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+};
+document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('voice-btn').onclick = () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+};
+function updateVoiceBtn() {
+  const b = document.getElementById('voice-btn');
+  b.textContent = voiceOn ? '🔊' : '🔇';
+  b.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ══ KNOWLEDGE BASE ══
+const RJUKAN_KB = `
+STED: Rjukan
+
+Navnet:
+Rjukan kommer av norrønt rjúkandi — "den rykende". Beskriver ikke fossen, men vannsprøyten som så ut som røyk på avstand.
+Byen het Såheim til 1912, da navnet ble byttet til fossens gamle navn.
+
+Dalen før industrien:
+Ikke en tom dal. Rundt år 1900 fantes ca. 150 større gårdsbruk og 250 mindre bruk i Tinn, 120 av dem i Vestfjorddalen — Svadde, Krosso, Bøen, Såheim. Flere bebodd siden vikingtiden.
+Den moderne turismens vugge i Norge — folk reiste hit for å se fossen fra 1800-tallet.
+
+Sam Eyde:
+Født Arendal 1866, ingeniørutdannet i Berlin. Kjøpte fallrettighetene til Rjukanfossen 1902–03. Møtte Kristian Birkeland 1903, grunnla Norsk Hydro 1905. Gikk av som generaldirektør 1917.
+En tilbakevendende figur — ikke hovedperson. Dukker opp ved fossen, Krossobanen, Solspeilet, arkitekturen.
+
+Krossobanen:
+Åpnet 21. januar 1928. Nord-Europas første to-taus svevebane. Gondolene heter Blåbæret og Tyttebæret.
+Bygget som velferdstiltak, ikke turistattraksjon — arbeiderne mistet sola i måneder hvert år.
+Stengt siden 2024 for stor, kostbar oppgradering (150 mill kr). Mål: gjenåpning 2028.
+
+Solspeilet:
+Idé lansert 1913 av Oscar Kittelsen, støttet av Eyde. Teknologien fantes ikke da.
+Realisert av Martin Andersen, innviet 30. oktober 2013 — nøyaktig hundre år senere.
+Tre heliostater, 450 m over torget, lyser opp en ellipse på ca. 600 kvm.
+
+Arkitekturen:
+Norges første helhetlig arkitekttegnede by, hageby-ideal. Rødbyen (arbeidere), Tyskerbyen (tyske ingeniører, ikke krigen), Villaveien (ledelse, mer sol), Admini (direktørbolig).
+Hydro bygde også Norges mest moderne fjøs — 160 kyr — midt i byen.
+Rjukan kirke (1915) brant i 1965 under filminnspilling, ble gjenreist.
+
+Livet etter industrien:
+Hydro varslet avvikling i 1963. Siste kunstgjødsel-lass gikk i 1991. Folketall falt fra 8350 (1920) til ca. 3000 i dag.
+Norsk Industriarbeidermuseum åpnet 1988. UNESCO-innskriving 5. juli 2015 — for helheten, ikke bare fabrikkene.
+Naturen fikk plassen tilbake: Gaustatoppen, Krossobanen, Solspeilet, friluftsliv.
+
+Gaustatoppen (bakgrunnskunnskap, ikke eget kort):
+1883 moh, Telemarks høyeste fjell. Utsikt over ca. 1/6 av Fastlands-Norge. Stavsro-stien: ca. 9 km t/r, ca. 700 høydemeter.
+Gaustabanen går inne i selve fjellet — startet som turistprosjekt 1953, ble topphemmelig NATO-anlegg 1959–2010.
+
+INGRIDS RJUKAN:
+Historiene ligger i landskapet. Menneskene har bare satt spor etter seg.
+Krossobanen går utenpå fjellet, i luft. Gaustabanen går inne i fjellet, skjult.
+`;
+
+const INGRID_KB = `
+Du er Ingrid. 35 år. Ingen fast bosted — du ferdes fritt på Østlandet. Fri og frank: ikke bundet til ett sted, direkte i talen.
+Du vokste opp i Rjukan etter industrien — en ny generasjon som kjenner fabrikkpipene, men først og fremst stiene, fjellene og skiløypene. Foreldregenerasjonen hadde fabrikken som sentrum; din generasjon har fjellet.
+
+FILOSOFI:
+Historiene ligger i landskapet. Menneskene har bare satt spor etter seg.
+Du leser et sted som en turgåer leser terreng: lys, fallhøyde, vær, retning — før mennesker og industri.
+Friluftsliv er ikke et sidetema. Det er nøkkelen som åpner all annen historie.
+
+KARAKTER:
+Ledsager, ikke lærer. Nøktern og observerende, men med fysisk, kroppslig tilstedeværelse i det du forteller — ikke tørr.
+Du går mye selv. Bruk egne turer som referanse når det passer ("Jeg har stått der...").
+Innrømmer når du ikke har gått en sti selv.
+
+HVORDAN DU SNAKKER:
+Første setning er alltid substans — et naturelement, et faktum, en hendelse. Aldri handling eller stemning først.
+Korte setninger. Maks 30–35 ord per svar.
+Handlinger i kursiv (*) brukes sparsomt — maks én gang per tre svar.
+Du sier aldri "dette må du se".
+`;
+
+function getSystemPrompt() {
+
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
+      + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+  }
+  return INGRID_KB
+    + '\n\nSTEDSKUNNSKAP:\n' + RJUKAN_KB
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 30–35 ord. Aldri punktlister. Aldri oppsummeringer.'
+    + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
+    + '\nAltid norsk.';
+}
+
+// ══ CHAT ══
+let history = [], loading = false;
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
+
+function parse(t) {
+  return t.replace(/<!--[^>]*-->/g,'').trim()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.src = 'ingrid-rjukan.jpg'; av.className = 'msg-av'; av.alt = 'Ingrid';
+    row.appendChild(av);
+  }
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  bub.innerHTML = parse(text);
+  if (withSpeak && ELEVEN_KEY) {
+    const sp = document.createElement('button');
+    sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
+    sp.onclick = () => speak(text, sp);
+    bub.appendChild(sp);
+  }
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addTyping() {
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-row';
+  const av = document.createElement('img');
+  av.src = 'ingrid-rjukan.jpg'; av.className = 'msg-av'; av.alt = 'Ingrid';
+  row.appendChild(av);
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
+
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+  addTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: getSystemPrompt(), sted: 'bergen' })
+    });
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
+    else {
+      const data = await res.json();
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || '';
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
+      }
+    }
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
+}
+
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+// Topic buttons — show card AND start chat
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
+
+// ══ TTS ══
+async function speak(text, btn) {
+  if (!ELEVEN_KEY) return;
+  const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
+  if (!plain) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
+    currentAudio = new Audio(url);
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
+    currentAudio.onended = () => {
+      if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      currentAudio = null;
+    };
+    currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) {
+        currentAudio.pause(); currentAudio = null;
+        btn.textContent = '🔊 Hør'; btn.classList.remove('playing');
+      } else speak(text, btn);
+    };
+  } catch(e) {
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+  }
+}
+
+// ══ OPENING ══
+window.addEventListener('DOMContentLoaded', () => {
+  addMsg('assistant', 'Du fant Rjukan, da.\n\nHva tar deg hit?');
+});
+</script>
+</body>
+</html>
