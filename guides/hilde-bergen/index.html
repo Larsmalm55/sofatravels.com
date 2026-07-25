@@ -711,8 +711,19 @@ function showCard(key) {
   activeCard = key;
 
   document.getElementById('info-card-title').textContent = card.title;
-  document.getElementById('info-card-img').src = card.img;
-  document.getElementById('info-card-img').alt = card.title;
+  const cardImgEl = document.getElementById('info-card-img');
+  cardImgEl.style.objectPosition = 'center'; // nullstill før ny sjekk
+  cardImgEl.onload = () => {
+    // Stående bilder (portretter) beskjæres hardt av "cover" i denne brede/lave boksen.
+    // Flytt fokuspunktet mot toppen så ansikt/hode blir med, i stedet for midten av kroppen.
+    if (cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05) {
+      cardImgEl.style.objectPosition = 'center 12%';
+    } else {
+      cardImgEl.style.objectPosition = 'center';
+    }
+  };
+  cardImgEl.src = card.img;
+  cardImgEl.alt = card.title;
   document.getElementById('info-card-image-cap').textContent = card.imgCap;
 
   const body = document.getElementById('info-card-body');
