@@ -286,7 +286,9 @@
     .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
     .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
     .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
-    #topics { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; flex: 1; scrollbar-width: thin; scrollbar-color: rgba(201,168,76,.3) transparent; }
+    #topics::-webkit-scrollbar { width: 5px; }
+    #topics::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 3px; }
     .topic-btn {
       background: rgba(10,20,30,.9); border: 1px solid rgba(42,127,168,.18);
       color: var(--sub); padding: 5px 10px; border-radius: 4px;
