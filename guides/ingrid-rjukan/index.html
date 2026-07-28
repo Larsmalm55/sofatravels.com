@@ -174,7 +174,7 @@
 
     /* Leaflet gull/mørk tema-overstyring */
     .leaflet-container { background: #0a1218 !important; font-family: 'Crimson Text', serif; }
-    .leaflet-tile-pane { filter: brightness(1.55) contrast(1.15) saturate(1.05); }
+    .leaflet-tile-pane { filter: saturate(.9) brightness(.98); }
     .leaflet-popup-content-wrapper {
       background: var(--card-bg); color: var(--text);
       border: 1px solid rgba(201,168,76,.3); border-radius: 6px;
@@ -885,9 +885,9 @@ function initMap() {
   rjukanMap = L.map('rjukan-map', { zoomControl: true, attributionControl: true })
     .setView([64.5, 15], 4); // Norge, oversikt
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
-    maxZoom: 18
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
   }).addTo(rjukanMap);
 
   const goldIcon = L.divIcon({ className: '', html: '<div class="rjukan-pin"></div>', iconSize: [14,14], iconAnchor: [7,12] });
