@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olai · Senja · SofaTravels</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-50X2YGHD2J');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080E14;
+      --border: #1A2E3A;
+      --sea:    #2A7FA8;
+      --sea-lt: #4DCCF0;
+      --gold:   #C9A84C;
+      --text:   #EAE0CF;
+      --sub:    #9AB0BA;
+      --muted:  #5A7A8A;
+      --card-bg:#0F1A22;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
+
+    /* ══ TOP BAR ══ */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+    }
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none;
+    }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
+    .hdr-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(12,24,32,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
+    .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+
+    /* ══ MAIN ══ */
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
+
+    /* ══ LEFT — SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
+      background: #000; overflow: hidden; min-width: 300px;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0; transition: opacity 2.2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 28%; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,14,20,1) 0%, rgba(8,14,20,.5) 45%, transparent 100%);
+    }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
+      width: 16%; pointer-events: none;
+      background: linear-gradient(to left, rgba(8,14,20,.85) 0%, transparent 100%);
+    }
+
+    /* Guide badge */
+    #guide-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(42,127,168,.5); }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
+
+    /* Location badge */
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(8,14,20,.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+
+    /* Slide dots */
+    #slide-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
+    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD OVERLAY ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+
+    /* ══ MAP OVERLAY ══ */
+    #map-overlay {
+      position: absolute; inset: 0; z-index: 21;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #map-overlay.visible { opacity: 1; pointer-events: all; }
+    #map-overlay-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #map-overlay-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #map-overlay-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #map-overlay-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #map-overlay-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+    #senja-map { flex: 1; min-height: 0; background: #050A0F; }
+    #map-zoom-hint {
+      padding: 8px 20px; font-size: .65rem; color: var(--muted);
+      letter-spacing: .05em; border-top: 1px solid rgba(201,168,76,.12);
+      flex-shrink: 0; text-align: center;
+    }
+    .map-btn {
+      border-color: rgba(42,127,168,.4) !important;
+      color: var(--sea-lt) !important;
+    }
+    .map-btn:hover { border-color: var(--sea-lt) !important; background: rgba(42,127,168,.12) !important; }
+
+    /* Leaflet gull/mørk tema-overstyring */
+    .leaflet-container { background: #0a1218 !important; font-family: 'Crimson Text', serif; }
+    .leaflet-tile-pane { filter: saturate(.9) brightness(.98); }
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg); color: var(--text);
+      border: 1px solid rgba(201,168,76,.3); border-radius: 6px;
+    }
+    .leaflet-popup-tip { background: var(--card-bg); border: 1px solid rgba(201,168,76,.3); }
+    .leaflet-popup-content { font-size: .82rem; line-height: 1.4; margin: 10px 12px; }
+    .leaflet-popup-content strong { color: var(--gold); font-family: 'Playfair Display', serif; }
+    .senja-pin {
+      background: var(--gold); width: 14px; height: 14px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); border: 2px solid #fff8e7; box-shadow: 0 0 6px rgba(201,168,76,.6);
+    }
+    .leaflet-control-attribution { background: rgba(8,14,20,.7) !important; color: var(--muted) !important; }
+    .leaflet-control-attribution a { color: var(--sub) !important; }
+    .leaflet-control-zoom a { background: var(--card-bg) !important; color: var(--gold) !important; border-color: rgba(201,168,76,.3) !important; }
+
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #info-card-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #info-card-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+
+    #info-card-image {
+      width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
+      position: relative; background: #050A0F;
+    }
+    #info-card-img-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      filter: blur(22px) brightness(.5) saturate(1.1);
+      transform: scale(1.15);
+      opacity: 0; transition: opacity .25s ease; z-index: 0;
+    }
+    #info-card-img-bg.show { opacity: 1; }
+    #info-card-image img#info-card-img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      opacity: .8;
+    }
+    #info-card-image img#info-card-img.contain-mode {
+      object-fit: contain; opacity: 1;
+    }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 20px 8px;
+      background: linear-gradient(to top, rgba(8,14,20,.9) 0%, transparent 100%);
+      font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+    }
+
+    #info-card-body {
+      flex: 1; overflow-y: auto; padding: 16px 22px 20px;
+    }
+    #info-card-body::-webkit-scrollbar { width: 2px; }
+    #info-card-body::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+    .info-section { margin-bottom: 14px; }
+    .info-section-label {
+      font-size: 7px; letter-spacing: .35em; color: var(--gold);
+      margin-bottom: 5px; display: block;
+    }
+    .info-section p {
+      font-size: .92rem; line-height: 1.7; color: #C8BBAA;
+      margin-bottom: 8px;
+    }
+    .info-section p strong { color: var(--text); font-weight: 600; }
+
+    #info-card-footer {
+      padding: 10px 20px 12px;
+      border-top: 1px solid var(--border);
+      font-size: .72rem; color: var(--muted); font-style: italic;
+      flex-shrink: 0;
+    }
+
+    /* ══ RIGHT COL ══ */
+    #right-col {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      background: var(--bg); overflow: hidden;
+      border-left: 1px solid var(--border);
+    }
+
+    /* Top: topics + hilde video */
+    #right-top {
+      display: flex; flex-direction: row;
+      flex: 0 0 44%; border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+
+    /* Topics */
+    #topics-panel {
+      flex: 0 0 48%; padding: 12px 12px 10px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .tp-region { font-size: 7px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); margin-bottom: 1px; }
+    .tp-tagline { font-size: .68rem; color: var(--muted); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 5px; flex-shrink: 0; }
+    #topics { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; flex: 1; scrollbar-width: thin; scrollbar-color: rgba(201,168,76,.3) transparent; }
+    #topics::-webkit-scrollbar { width: 5px; }
+    #topics::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 3px; }
+    .topic-btn {
+      background: rgba(10,20,30,.9); border: 1px solid rgba(42,127,168,.18);
+      color: var(--sub); padding: 5px 10px; border-radius: 4px;
+      font-size: .72rem; cursor: pointer; font-family: inherit;
+      text-align: left; transition: all .2s; line-height: 1.3; flex-shrink: 0;
+    }
+    .topic-btn:hover { border-color: rgba(42,127,168,.55); color: var(--text); background: rgba(42,127,168,.1); }
+    .topic-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+    .topic-link { text-decoration: none; border-color: rgba(201,168,76,.2); color: rgba(201,168,76,.7); }
+    .topic-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.08); }
+
+    /* Olai video */
+    #hilde-panel {
+      flex: 1; position: relative; overflow: hidden; background: #050A0F;
+    }
+    #hilde-panel video, #hilde-panel img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    }
+    #hilde-panel-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(8,14,20,.85) 0%, rgba(8,14,20,.1) 35%, transparent 65%),
+        linear-gradient(to right, rgba(8,14,20,.5) 0%, transparent 40%);
+    }
+    #hilde-panel-name {
+      position: absolute; bottom: 10px; left: 12px;
+      font-family: 'Playfair Display', serif; font-size: .8rem; color: rgba(234,224,207,.8);
+    }
+    #hilde-panel-sub { font-size: .58rem; letter-spacing: .15em; color: var(--gold); display: block; margin-bottom: 1px; }
+
+    /* Chat */
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    #tip-bar { padding: 5px 14px 3px; font-size: .67rem; color: var(--muted); border-bottom: 1px solid rgba(26,46,58,.4); flex-shrink: 0; }
+    #messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+    #messages::-webkit-scrollbar { width: 2px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
+    .msg-row { display: flex; gap: 7px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-av { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(42,127,168,.3); }
+    .msg-bubble { max-width: 86%; padding: 8px 12px; line-height: 1.6; font-size: .88rem; }
+    .msg-bubble.bot { background: rgba(10,20,30,.92); color: #D4C8B6; border: 1px solid rgba(42,127,168,.18); border-radius: 10px 10px 10px 2px; }
+    .msg-bubble.bot em { color: rgba(201,168,76,.6); font-style: italic; }
+    .msg-bubble.user-b { background: rgba(18,34,48,.92); color: var(--text); border: 1px solid rgba(42,127,168,.15); border-radius: 10px 10px 2px 10px; }
+    .msg-bubble.error { background: rgba(60,10,0,.85); color: #FF9966; border-radius: 6px; }
+    .speak-btn { display: inline-block; margin-top: 5px; background: none; border: 1px solid rgba(42,127,168,.2); color: var(--muted); border-radius: 4px; padding: 2px 7px; font-size: .64rem; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .speak-btn:hover { border-color: var(--sea); color: var(--sea-lt); }
+    .speak-btn.playing { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.1); }
+    .typing { color: var(--sea); letter-spacing: .3em; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+    #input-row { display: flex; gap: 8px; padding: 9px 12px 12px; background: rgba(8,14,20,.96); backdrop-filter: blur(16px); border-top: 1px solid var(--border); flex-shrink: 0; }
+    #chat-input { flex: 1; background: rgba(10,18,28,.94); border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 20px; font-size: .88rem; outline: none; font-family: 'Crimson Text', Georgia, serif; transition: border-color .2s; }
+    #chat-input:focus { border-color: rgba(42,127,168,.5); }
+    #chat-input::placeholder { color: var(--muted); }
+    #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--sea); color: #fff; font-size: 1rem; cursor: pointer; transition: all .2s; flex-shrink: 0; align-self: center; }
+    #send-btn:hover { background: #3A9FC8; transform: scale(1.06); }
+    #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+    /* API banner */
+    .api-banner { display: none; position: fixed; top: 46px; left: 0; right: 0; z-index: 99; background: #0A1820; border-bottom: 2px solid var(--sea); padding: 8px 20px; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .api-banner.show { display: flex; }
+    .api-banner label { font-size: .8rem; color: var(--text); }
+    .api-banner label strong { color: var(--sea); }
+    .api-banner input { flex: 1; min-width: 180px; background: #0A1420; border: 1px solid rgba(42,127,168,.4); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: .78rem; font-family: monospace; outline: none; }
+    .api-banner button { background: var(--sea); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: .78rem; }
+    .banner-close { background: none !important; color: var(--muted) !important; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+    /* ══ MOBIL (≤768px) ══ */
+    @media (max-width: 768px) {
+
+      /* App: én kolonne */
+      #app {
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Bilde øverst — fast høyde */
+      #left-col {
+        flex: 0 0 38vh;
+        height: 38vh;
+        width: 100%;
+        min-width: unset;
+      }
+
+      /* Høyre kolonne — eksplisitt høyde */
+      #right-col {
+        flex: 1;
+        height: calc(62vh - 42px);
+        width: 100%;
+        min-width: unset;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Mist justert for kortere bilde */
+      #left-mist { height: 35%; }
+      #left-mist-side { display: none; }
+
+      /* Badge og stedsmerknad */
+      #guide-badge { top: 10px; left: 10px; }
+      .badge-name { font-size: .8rem; }
+      #loc-badge { top: 10px; right: 10px; padding: 4px 8px; }
+      #loc-region { font-size: 6.5px; }
+      #loc-name { font-size: .75rem; }
+
+      /* Slide dots */
+      #slide-dots { bottom: 6px; }
+
+      /* Info-kort overlay */
+      #info-card-image { height: 30%; }
+      #info-card-title { font-size: 1.1rem; }
+
+      /* Topp-rad: temaer horisontalt + skjul Olai-video */
+      #right-top {
+        flex: 0 0 auto;
+        flex-direction: column;
+        height: auto;
+        border-bottom: 1px solid var(--border);
+        overflow: visible;
+      }
+
+      /* Temaknapper — horisontal scroll, kompakt */
+      #topics-panel {
+        flex: none;
+        width: 100%;
+        padding: 6px 10px 6px;
+        border-right: none;
+        border-bottom: none;
+        overflow: hidden;
+      }
+      .tp-name { font-size: .82rem; margin-bottom: 0; }
+      .tp-tagline { display: none; }
+      .tp-label { display: none; }
+      #topics {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        gap: 5px;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-top: 4px;
+      }
+      #topics::-webkit-scrollbar { display: none; }
+      .topic-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 4px 9px;
+        font-size: .68rem;
+      }
+
+      /* Skjul Olai-video på mobil */
+      #hilde-panel { display: none; }
+
+      /* Chat alltid synlig — tar resten av skjermen */
+      #chat-col {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #tip-bar { display: none; }
+      #messages { flex: 1; padding: 8px 10px 4px; gap: 6px; min-height: 0; }
+      .msg-bubble { font-size: .84rem; padding: 7px 10px; }
+      .msg-av { width: 22px; height: 22px; }
+
+      #input-row {
+        padding: 7px 10px 10px; gap: 6px;
+        flex-shrink: 0;
+        position: sticky; bottom: 0;
+        background: rgba(8,14,20,.98);
+      }
+      #chat-input { padding: 8px 14px; font-size: .84rem; }
+      #send-btn { width: 36px; height: 36px; font-size: .9rem; }
+
+      /* Info-kort: fyller hele skjermen på mobil */
+      #info-card {
+        position: fixed;
+        inset: 42px 0 0 0;
+        z-index: 100;
+        overflow-y: auto;
+      }
+      #info-card-close {
+        width: 38px; height: 38px;
+        font-size: 1.1rem;
+        background: rgba(42,127,168,.3);
+        border: 2px solid rgba(42,127,168,.6);
+      }
+      #info-card-image { height: 28%; }
+      #info-card-title { font-size: 1.1rem; }
+
+      /* Kart: fyller hele skjermen på mobil, samme mønster som info-kort */
+      #map-overlay {
+        position: fixed;
+        inset: 42px 0 0 0;
+        z-index: 101;
+      }
+      #map-overlay-close {
+        width: 38px; height: 38px;
+        font-size: 1.1rem;
+        background: rgba(42,127,168,.3);
+        border: 2px solid rgba(42,127,168,.6);
+      }
+      #map-overlay-title { font-size: 1.1rem; }
+
+      /* Topbar */
+      #top-bar { height: 42px; padding: 0 12px; }
+      #back-btn { padding: 3px 8px; font-size: .66rem; }
+      .hdr-center { font-size: .72rem; letter-spacing: .15em; }
+      #app { padding-top: 42px; }
+    }
+
+    /* ══ LITEN MOBIL (≤390px) ══ */
+    @media (max-width: 390px) {
+      #left-col { flex: 0 0 32vh; }
+      #right-top { max-height: 28vh; }
+      .msg-bubble { font-size: .8rem; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+<header id="top-bar">
+  <a href="/regions/" id="back-btn">← Guider</a>
+  <div class="hdr-center">SOFATRAVELS · <span>SENJA</span></div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="voice-btn" title="Olais stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Olais stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<div id="app">
+
+  <!-- LEFT: SLIDESHOW + INFO CARD -->
+  <div id="left-col">
+    <img class="portrait-slide active" src="senja-oversikt.jpg"    alt="Senja sett fra Segla — Norge i miniatyr" />
+    <img class="portrait-slide"        src="senja-tungeneset.jpg" alt="Tungeneset og Okshornan — «Djevelens tanngard»" />
+    <img class="portrait-slide"        src="senja-husoy.jpg"      alt="Husøy, fiskeværet bygget på en stein i havgapet" />
+    <img class="portrait-slide"        src="senja-kaperdalen.jpg" alt="Bjørkeskogen ved Kaperdalen" />
+    <img class="portrait-slide"        src="senja-sifjorden.jpg"  alt="Sifjorden — hårnålssvinger, grender og blomsterenger på innsiden" />
+    <img class="portrait-slide"        src="senja-storm.jpg"      alt="Senja utenfor sesong, når stormene kan kjennes" />
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
+    <div id="guide-badge">
+      <div class="badge-av"><img src="olai-senja.jpg" alt="Olai" /></div>
+      <span class="badge-name">Olai</span>
+      <span class="online-dot"></span>
+    </div>
+    <div id="loc-badge">
+      <div id="loc-region">NORD-NORGE · NORGE</div>
+      <div id="loc-name">Senja</div>
+    </div>
+    <div id="slide-dots">
+      <div class="sdot active" data-idx="0"></div>
+      <div class="sdot" data-idx="1"></div>
+      <div class="sdot" data-idx="2"></div>
+      <div class="sdot" data-idx="3"></div>
+      <div class="sdot" data-idx="4"></div>
+      <div class="sdot" data-idx="5"></div>
+    </div>
+
+    <!-- INFO CARD OVERLAY -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">SENJA · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img-bg" src="" alt="" aria-hidden="true" />
+        <img id="info-card-img" src="" alt="" />
+        <div id="info-card-image-cap" id="info-img-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Olai i chatten — han ser det samme som deg</div>
+    </div>
+
+    <!-- MAP OVERLAY -->
+    <div id="map-overlay">
+      <div id="map-overlay-header">
+        <div>
+          <span id="map-overlay-label">NORGE · NORD-NORGE</span>
+          <div id="map-overlay-title">Senja</div>
+        </div>
+        <button id="map-overlay-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="senja-map"></div>
+      <div id="map-zoom-hint">Klikk et punkt for å se hva det er — eller zoom selv med musehjul/fingre</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right-col">
+    <div id="right-top">
+
+      <!-- Topics -->
+      <div id="topics-panel">
+        <div class="tp-region">SENJA</div>
+        <div class="tp-name">Olai</div>
+        <div class="tp-tagline">«Vi går dit folk kjører forbi»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-topic="kaperdalen">Kaperdalen · Nikolai og Alvilde</button>
+          <button class="topic-btn" data-topic="tranoya">Tranøya · maktsenteret som ble stille</button>
+          <button class="topic-btn" data-topic="vikinggrava">Vikinggrava ved Sand · kvinnen og hunden</button>
+          <button class="topic-btn" data-topic="skaland">Skaland · grafitten fra Trælen</button>
+          <button class="topic-btn" data-topic="hamn">Hamn · nikkelverket og lyset</button>
+          <button class="topic-btn" data-topic="husoy">Husøy · steinen som ble en formue</button>
+          <button class="topic-btn" data-topic="svensgrunnen">Svensgrunnen 1943</button>
+          <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Senja?</button>
+        </div>
+      </div>
+
+      <!-- Olai video -->
+      <div id="hilde-panel">
+        <video autoplay muted loop playsinline src="olai-guide.mp4" poster="olai-guide-poster.jpg"></video>
+        <div id="hilde-panel-overlay"></div>
+        <div id="hilde-panel-name">
+          <span id="hilde-panel-sub">GUIDE</span>Olai
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat -->
+    <div id="chat-col">
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Olai direkte</div>
+      <div id="messages" role="log" aria-live="polite"></div>
+      <div id="input-row">
+        <input type="search" id="chat-input" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Spør Olai om Senja…" />
+        <button id="send-btn">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  kaperdalen: {
+    title: 'Kaperdalen',
+    subtitle: 'Nikolai og Alvilde — den siste markesamiske boplassen',
+    img: 'kort-kaperdalen.jpg',
+    imgCap: 'Nikolaigammen, Kaperdalen — Midt-Troms Museum',
+    sections: [
+      {
+        label: 'HVEM BODDE HER',
+        text: `Nikolai Olsen Kaperdal bodde i Kaperdalen helt til 1963/64, i en gamme bygd i nordnorsk stil med rette bjørkestammer. Han var markesame — en av etterkommerne etter svenske reindriftssamer som slo seg ned langs elver og vann på Senja fra slutten av 1700-tallet. Familiene livnærte seg av potetdyrking, ku, sau, elvefiske, bær og småvilt.`
+      },
+      {
+        label: 'HISTORIEN OM ALVILDE',
+        text: `Nikolai var en av de få på Senja med motorsykkel. En dag kjørte han til Tranøybotn og hentet kjæresten Alvilde — hun forlot sitt daværende ekteskap og flyttet med ham til en torvhytte i Kaperdalen. Sammen var Nikolai og Alvilde de siste som flyttet fra dalen.`
+      },
+      {
+        label: 'DET USYNLIGE SENJA',
+        text: `Samisk historie på Senja er nesten usynlig for de fleste besøkende — sjøsamer, markesamer og reindriftssamer har alle hatt bosetting her i århundrer. Fornorskningspolitikken gjorde mye av dette usynlig i det offentlige rommet, men det lever videre i stedsnavn, dialekt og i gammene som fortsatt står.`
+      },
+      {
+        label: 'I DAG',
+        text: `Kaperdalen regnes som et av Norges best bevarte markesamiske kulturmiljøer, og var den siste samiske boplassen som ble brukt på Senja. To tuft-områder — Ner- og Øver-Kaperdalen — er i dag et friluftsmuseum drevet av Midt-Troms Museum, med restaurert gamme og bjørnehiet som en gang ble brukt som potetkjeller.`
+      }
+    ]
+  },
+  tranoya: {
+    title: 'Tranøya',
+    subtitle: 'Maktsenteret som ble stille',
+    img: 'kort-tranoya.jpg',
+    imgCap: 'Tranøy kirke og den gamle prestegården, Tranøya',
+    sections: [
+      {
+        label: 'FØR VEIENE',
+        text: `Tranøya har vært bebodd i minst 2000 år. Gjennom jernalderen og inn i vikingtid var øya trolig et maktsenter i distriktet — en storbonde eller høvding kontrollerte trolig folket rundt Tranøyfjorden og Solbergfjorden. Øya ligger midt mellom Tranøy, Dyrøy og Sørreisa, og alt gikk sjøveien.`
+      },
+      {
+        label: 'KIRKESTEDET',
+        text: `Kirkestedet er nevnt i skriftlige kilder fra middelalderen, sannsynligvis fra 1200-tallet — i alle fall før Svartedauden i 1350. Dagens kirke, den tredje på stedet, ble bygget i 1773/1775. I kirkegården og i terrenget omkring finnes vikinggravhauger, enkelte opptil 11 meter i diameter.`
+      },
+      {
+        label: 'DA VEIEN KOM',
+        text: `Presten bodde på Tranøya i over 700 år. Da veier ble bygget rundt fjorden på 1900-tallet, ble det unaturlig å seile til kirke. I 1960 flyttet presten til fastlandet, og øya gikk inn i en stille periode.`
+      },
+      {
+        label: 'I DAG',
+        text: `Tranøya er i dag bilfri. Fra 2019 ble den brukt til psykiatrisk helseformål; nå drives den som en liten retreat man må bestille plass på. De fleste besøkende kjører rett forbi avkjørselen på vei til Skrolsvik — uten å vite at de akkurat passerte det gamle sentrumet.`
+      }
+    ]
+  },
+  vikinggrava: {
+    title: 'Vikinggrava ved Sand',
+    subtitle: 'Kvinnen og hunden, 900–950 e.Kr.',
+    img: 'kort-vikinggrava.jpg',
+    imgCap: 'Utgravingen av båtgrava ved Sand, mai 2025. Foto: Norges arktiske universitetsmuseum',
+    sections: [
+      {
+        label: 'FUNNET',
+        text: `I 2023 fant to menn med metalldetektor to bronsespenner og noen ribbein på et jorde ved Sand på Senja. Spennene ble datert til mellom 900 og 950 e.Kr. — vikingtid. I mai 2025 gravde arkeologer fra Norges arktiske universitetsmuseum ut stedet, og fant noe ingen hadde ventet: en hel båtgrav.`
+      },
+      {
+        label: 'BÅTEN OG KVINNEN',
+        text: `Båten var omtrent 5,4 meter lang, sydd sammen med trenagler og sener i stedet for jernnagler. Selve treverket var fullstendig nedbrutt, men konturene var tydelige som mørke striper i sanden. Den avdøde — trolig en kvinne av høy status, kanskje kona til en lokal leder — lå midt i båten.`
+      },
+      {
+        label: 'HUNDEN VED FØTTENE',
+        text: `Ved kvinnens føtter lå skjelettet av en liten hund. Arkeologene vet ikke om den var et kjæledyr eller hadde en praktisk funksjon, men peker på at hunder er blant de vanligste dyrene funnet i slike graver — ofte tolket som følgesvenner, både i livet og på ferden videre.`
+      },
+      {
+        label: 'HVORFOR DETTE BETYR NOE',
+        text: `Dette er den første båtgraven som er funnet på Senja. Den lå bare 20–30 centimeter under overflaten — den kunne lett vært ødelagt av en plog. Arkeologene mener det kan ligge enda en grav rett i nærheten, ennå uberørt.`
+      }
+    ]
+  },
+  skaland: {
+    title: 'Skaland',
+    subtitle: 'Grafitten fra Trælen',
+    img: 'kort-skaland.jpg',
+    imgCap: 'Skaland Graphite, gruveinngangen ved Trælen',
+    sections: [
+      {
+        label: 'FORDI STEIN KAN VÆRE GULL',
+        text: `Grafittforekomsten ved Skaland ble kjent allerede i 1855. Skaland Grafitverk ble grunnlagt i 1917 — over hundre år med drift, med avbrudd underveis: uvær ødela anlegget i 1920, brann rammet i 1985. Etter flere eierskifter drives gruven i dag ved Trælen, 10 km nord for den opprinnelige gruven.`
+      },
+      {
+        label: 'HVOR SJELDEN DEN ER',
+        text: `Gehalten i massene som tas ut ligger på rundt 28–30 prosent grafitt — det gjør forekomsten til verdens rikeste produserende av sitt slag. Skaland er i dag den eneste grafittgruven i drift i hele Skandinavia, og Europas største produsent av naturlig grafitt.`
+      },
+      {
+        label: 'PÅSTANDEN OM "VERDENS RENESTE"',
+        text: `Selskapet selv har lenge markedsført grafitten som «verdens reneste». Det er en påstand fra Skaland Graphite, ikke en uavhengig målt superlativ — men den sier noe om hvor mye stolthet som ligger i denne lille bedriften på ytre Senja.`
+      },
+      {
+        label: 'I DAG',
+        text: `Grafitt er klassifisert som et kritisk råstoff av EU, og etterspørselen har økt kraftig med elbilindustrien — grafitt brukes blant annet i batterier. En liten bygd på ytre Senja er dermed blitt en brikke i den globale omstillingen til elektriske kjøretøy.`
+      }
+    ]
+  },
+  hamn: {
+    title: 'Hamn',
+    subtitle: 'Nikkelverket og lyset som kom først',
+    img: 'kort-hamn.jpg',
+    imgCap: 'Rester etter Senjens Nikkelverk i Hamn',
+    sections: [
+      {
+        label: 'FUNNET I 1869',
+        text: `Sommeren 1869 fant Eilert Brox nikkelmalm på gården sin i Hamn. Det walisiske firmaet Vivian & Sons startet gruvedrift i 1872. I 14 år, frem til 1886, var Senjens Nikkelverk et av Norges største og mest moderne bergverk — på det meste 430 ansatte, de fleste innflyttere, svensker og kvener.`
+      },
+      {
+        label: 'ET HELT SAMFUNN',
+        text: `Selskapet bygde et samfunn fra grunnen: over 50 bygninger, butikk, kirke, skole, bakeri, til og med et tinghus med arrest. Rundt 650 mennesker bodde på det meste på verkets grunn — midt ute i havgapet, langt fra alt.`
+      },
+      {
+        label: 'LYSET FØR ALLE ANDRE',
+        text: `I 1882 bygde nikkelverket et lite kraftverk for å forsyne bygningene med lys — bare tre måneder etter at Edison åpnet verdens første kommersielle vannkraftverk. Anlegget i Hamn regnes som Norges eldste, og trolig et av verdens eldste, vannkraftverk. Senja var dermed blant de aller første stedene i Europa med elektrisk lys.`
+      },
+      {
+        label: 'I DAG',
+        text: `Nikkelverket ble lagt ned i 1886 da driften ikke lenger lønte seg. I dag ligger Hamn som et rolig feriested med slagghauger, dagbrudd og murrester i terrenget. De fleste besøkende fotograferer utsikten og går forbi historien om at lyset kom hit før det kom til de fleste andre steder i Norge.`
+      }
+    ]
+  },
+  husoy: {
+    title: 'Husøy',
+    subtitle: 'Steinen som ble en fiskeriformue',
+    img: 'kort-husoy.jpg',
+    imgCap: 'Husøy, sett fra broen over til fastlandet',
+    sections: [
+      {
+        label: 'BARE EN STEIN',
+        text: `Husøy er egentlig bare en holme ved Senjas fot — knapt gresskledd. På 1950-tallet flyttet folk hit fra enda mer værharde utvær som Øyfjordvær, Trælvik, Toften og Breivik — de søkte en tryggere havn, ikke faren. Moloen til fastlandet ble ferdig i 1926 etter 14 års arbeid.`
+      },
+      {
+        label: 'EN FORMUE BYGGET PÅ STEIN',
+        text: `Fra denne steinen bygde brødrene Hilbert og Aksel Karlsen opp det som i dag er en milliardbedrift i norsk fiskerinæring — en av verdens største leverandører av sjømatprodukter. I dag bor rundt 300 mennesker på Husøy, og noen hus er fortsatt ekstra bardunert mot stormene.`
+      },
+      {
+        label: 'SIESTAEN — EN LEGENDE, IKKE ET FAKTUM',
+        text: `Butikken på Husøy stenger fortsatt en time midt på dagen — uvanlig i Norge. Legenden sier det stammer fra et forlist spansk skip, kanskje fra Den spanske armada i 1588. Ingen vet sikkert om det stemmer. Gryllefjord hadde samme skikk, men den forsvant der på 1980-tallet.`
+      },
+      {
+        label: 'I DAG',
+        text: `Husøy er fortsatt et av de mest levende fiskeværene på Senja — vinterfiske, lakseslakteri og en befolkning som vokser, mens mange andre utvær har blitt fraflyttet.`
+      }
+    ]
+  },
+  svensgrunnen: {
+    title: 'Svensgrunnen',
+    subtitle: '12. april 1943',
+    img: 'kort-svensgrunnen.jpg',
+    imgCap: 'Minnebautaen ved kirken i Gryllefjord',
+    sections: [
+      {
+        label: 'DEN DAGEN',
+        text: `12. april 1943 lå over tjue fiskeskøyter og drev line på fiskefeltet Svensgrunnen utenfor Senja. Været var dårlig, sikten dårlig. Uten forvarsel dukket en sovjetisk ubåt, K-21, opp og åpnet ild mot båtene med kanon og håndvåpen.`
+      },
+      {
+        label: 'HVA SOM SKJEDDE',
+        text: `Ni fiskere ble drept i angrepet, en tiende døde av skadene på sykehuset i Harstad dagen etter. Mannskapet på syv fra skøyta «Skreien» ble tatt om bord i ubåten og brakt til Sovjetunionen som krigsfanger. Tre av dem døde av sykdom i fangenskap før krigen var over.`
+      },
+      {
+        label: 'HVORFOR',
+        text: `Det er aldri fullt ut avklart hvorfor ubåten angrep. En teori er at den sovjetiske marinen kjente til at norske fiskeskøyter i noen tilfeller også ble leid av den tyske okkupanten til fraktoppdrag, og derfor ble ansett som mulige mål. Ingenting av dette rettferdiggjør det som skjedde med disse fiskerne.`
+      },
+      {
+        label: 'MINNET',
+        text: `Utenfor kirken i Gryllefjord står en minnebauta med navnene til de omkomne. Dette er ikke en kuriositet blant Senjas mange historier — det er krigshistorie med virkelige familier og virkelig sorg, og fortelles med ro, ikke som en snakkis.`
+      }
+    ]
+  }
+};
+
+// ══ SLIDESHOW ══
+const slides = document.querySelectorAll('.portrait-slide');
+const dots   = document.querySelectorAll('.sdot');
+let cur = 0, slideTimer;
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
+}
+function startSlides() { slideTimer = setInterval(() => goTo(cur + 1), 12000); }
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(slideTimer); goTo(+d.dataset.idx); startSlides();
+}));
+startSlides();
+
+// ══ INFO CARD ══
+let activeCard = null;
+
+function showCard(key) {
+  const card = CARDS[key];
+  if (!card) return;
+  activeCard = key;
+
+  document.getElementById('info-card-title').textContent = card.title;
+  const cardImgEl = document.getElementById('info-card-img');
+  const cardImgBg = document.getElementById('info-card-img-bg');
+  cardImgEl.classList.remove('contain-mode');
+  cardImgBg.classList.remove('show');
+  cardImgEl.onload = () => {
+    // Stående bilder passer ikke i den brede/lave boksen uansett fokuspunkt.
+    // Vis da hele bildet (contain), med en utsmurt kopi av samme bilde som fyller resten.
+    const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
+    if (isPortrait) {
+      cardImgEl.classList.add('contain-mode');
+      cardImgBg.src = card.img;
+      cardImgBg.classList.add('show');
+    } else {
+      cardImgEl.classList.remove('contain-mode');
+      cardImgBg.classList.remove('show');
+    }
+  };
+  cardImgEl.src = card.img;
+  cardImgEl.alt = card.title;
+  document.getElementById('info-card-image-cap').textContent = card.imgCap;
+
+  const body = document.getElementById('info-card-body');
+  body.innerHTML = '';
+  card.sections.forEach(s => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+    body.appendChild(sec);
+  });
+
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+
+  // Mark active topic button
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.topic === key);
+  });
+}
+
+function closeCard() {
+  activeCard = null;
+  document.getElementById('info-card').classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  startSlides();
+}
+
+document.getElementById('info-card-close').addEventListener('click', closeCard);
+
+// ══ KART ══
+let senjaMap = null;
+const SENJA_POINTS = [
+  { name: 'Kaperdalen',        lat: 69.300, lng: 17.630, desc: 'Den siste markesamiske boplassen på Senja — Nikolai og Alvildes gamme.' },
+  { name: 'Tranøya',           lat: 69.330, lng: 17.750, desc: 'Bilfri øy, gammelt maktsenter og kirkested — bebodd i 2000 år.' },
+  { name: 'Sand · vikinggrava',lat: 69.335, lng: 17.850, desc: 'Båtgrav fra vikingtid, funnet og gravd ut i 2023–2025.' },
+  { name: 'Skaland',           lat: 69.610, lng: 17.490, desc: 'Grafittgruva ved Trælen — i drift siden 1917.' },
+  { name: 'Hamn',              lat: 69.593, lng: 17.417, desc: 'Nikkelverket og Norges eldste vannkraftverk, 1872–1886.' },
+  { name: 'Husøy',             lat: 69.640, lng: 17.940, desc: 'Fiskeværet bygget på en stein — i dag en fiskeriformue.' },
+  { name: 'Gryllefjord',       lat: 69.650, lng: 17.050, desc: 'Minnebautaen over de omkomne fiskerne fra Svensgrunnen, 1943.' }
+];
+// NB: koordinatene over er beste anslag og bør kvalitetssjekkes mot faktiske GPS-punkter før publisering.
+
+function initMap() {
+  if (senjaMap) return;
+  senjaMap = L.map('senja-map', { zoomControl: true, attributionControl: true })
+    .setView([64.5, 15], 4); // Norge, oversikt
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(senjaMap);
+
+  const goldIcon = L.divIcon({ className: '', html: '<div class="senja-pin"></div>', iconSize: [14,14], iconAnchor: [7,12] });
+
+  // Norge-oversikt: kun Senja markert, så vi tydelig viser HVOR i landet vi er
+  const norgeMarker = L.marker([69.45, 17.60], { icon: goldIcon }).addTo(senjaMap)
+    .bindPopup('<strong>Senja</strong><br>Norges nest største øy — ytterst i Troms, nord for polarsirkelen.');
+
+  // Etter kort pause: zoom inn til Senja og vis alle punktene
+  setTimeout(() => {
+    senjaMap.flyTo([69.48, 17.65], 9.5, { duration: 2.2 });
+    setTimeout(() => {
+      SENJA_POINTS.forEach(p => {
+        L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(senjaMap)
+          .bindPopup(`<strong>${p.name}</strong><br>${p.desc}`);
+      });
+    }, 1800);
+  }, 900);
+
+  setTimeout(() => senjaMap.invalidateSize(), 100);
+}
+
+document.getElementById('map-open-btn').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.add('visible');
+  clearInterval(slideTimer);
+  initMap();
+  setTimeout(() => senjaMap && senjaMap.invalidateSize(), 200);
+});
+document.getElementById('map-overlay-close').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.remove('visible');
+  startSlides();
+});
+
+// ══ ELEVENLABS ══
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false, currentAudio = null;
+const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+document.getElementById('eleven-key-save').onclick = () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v; localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+};
+document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('voice-btn').onclick = () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+};
+function updateVoiceBtn() {
+  const b = document.getElementById('voice-btn');
+  b.textContent = voiceOn ? '🔊' : '🔇';
+  b.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ══ KNOWLEDGE BASE ══
+const SENJA_KB = `
+STED: Senja — Norges nest største øy, ofte kalt "Norge i miniatyr"
+
+Geografi:
+Yttersiden er rå, bratt og eksponert mot Atlanterhavet — Segla, Hesten, Tungeneset, Okshornan ("Djevelens tanngard"), Ersfjordstranda. Innsiden er grønn, skogkledd, jordbruksland og stille — Sifjorden, Grunnfarnes, Flakstadvåg. De fleste turister ser kun yttersiden.
+
+Den samiske historien (Kaperdalen):
+Senja har hatt sjøsamisk, markesamisk og reindriftssamisk bosetting i århundrer. Fornorskningen gjorde mye av dette usynlig i det offentlige rommet, men det lever i stedsnavn, dialekt og gammer.
+Kaperdalen er et av Norges best bevarte markesamiske kulturmiljøer — den siste samiske boplassen som ble brukt på Senja. Nikolai Olsen Kaperdal bodde der til 1963/64. Historien om at han hentet kjæresten Alvilde på motorsykkel, og at hun forlot sitt ekteskap for å flytte inn i en torvhytte med ham, er museets egen formidling — ikke bare anekdote.
+
+Tranøya:
+Bebodd i minst 2000 år. Maktsenter i jernalder/vikingtid. Kirkested nevnt i middelalderkilder, trolig fra 1200-tallet. Dagens kirke (tredje på stedet) er fra 1773/1775. Vikinggravhauger i terrenget, opptil 11 meter. Presten bodde der i over 700 år, til 1960. Bilfri i dag.
+
+Vikinggrava ved Sand:
+Funnet av metalldetektorister i 2023, utgravd mai 2025 av Norges arktiske universitetsmuseum. Båtgrav, ca. 900–950 e.Kr., kvinne av høy status med hund ved føttene. Første båtgrav funnet på Senja. Kan være flere uberørte graver i nærheten.
+
+Skaland:
+Grafittgruve, kjent siden 1855, drift siden 1917. Verdens rikeste produserende forekomst (28–30% gehalt). Eneste grafittgruve i drift i Skandinavia. Selskapet markedsfører grafitten som "verdens reneste" — dette er selskapets egen påstand, ikke en uavhengig målt superlativ.
+
+Hamn:
+Nikkelmalm funnet 1869, drift 1872–1886 (Vivian & Sons, walisisk selskap). Opptil 430 ansatte, ca. 650 mennesker bodde der. Eget kraftverk bygget 1882 — Norges eldste, trolig et av verdens eldste vannkraftverk, bygget kun 3 måneder etter Edisons første kommersielle vannkraftverk.
+
+Husøy:
+Egentlig en holme/stein ved Senjas fot. Befolket fra 1950-tallet av folk som søkte tryggere havn fra enda mer værharde utvær (Øyfjordvær m.fl.) — IKKE fordi de valgte fare over trygghet. I dag milliardbedrift i fiskerinæringen (brødrene Karlsen). Siesta-tradisjon (butikk stenger midt på dagen) er en legende, muligens knyttet til et forlist spansk skip — ikke bekreftet fakta.
+
+Svensgrunnen, 12. april 1943:
+Sovjetisk ubåt K-21 angrep norske fiskeskøyter på fiskefeltet Svensgrunnen. 9 fiskere drept direkte, en tiende døde av skadene dagen etter. 7 mann fra skøyta "Skreien" tatt til fange og brakt til Sovjetunionen — 3 av dem døde i fangenskap. Minnebauta ved kirken i Gryllefjord. Alvorlig krigshistorie — fortelles med ro og respekt, ikke som kuriositet.
+
+Andre steder verdt å nevne (bakgrunnskunnskap, ikke egne kort):
+Skrolsvik/Kveitmuseet — kveita kalt "Gudsfisken"/"Gudefisken", omgitt av tabuforestillinger blant fiskere. Ånderdalen nasjonalpark — 600 år gamle vridde kystfuru, samt Jørgen Jørgensens forsøk på å rydde gård i Skoglia i 1796, oppgitt pga. bjørn. Torsken kirke (1785) — knyttet til Ingrid Bjerkås, Norges første kvinnelige prest (ordinert 1961). Senjatrollet (verdens største trollstatue) brant ned i 2019.
+
+Befolkningsutvikling 1960–2025 (bakgrunnstall, brukes for å underbygge — ikke resitere som liste):
+Folk samler seg om Finnsnes og Silsand på fastlandssiden — Finnsnes vokste fra 3267 til 6077, nesten en dobling, Silsand fra 2289 til 2883.
+De ytre bygdene på selve Senja har tømt seg gradvis: Torsken falt fra 2080 til 801 (-61%), Stonglandet fra 1363 til 541 (-60%), Rossfjordområdet fra 1581 til 848 (-46%), Bjorelvnesområdet fra 801 til 473 (-41%), Gibostadområdet fra 1177 til 812 (-31%), Stønnesbotn-Øyfjordområdet fra 1159 til 789 (-32%).
+Tranøy-området har hatt en mildere nedgang enn resten, fra 1021 til 877 (-14%) — stemmer med bildet av et sted som gikk stille, ikke et sted som ble fraflyttet.
+Husøy går motsatt vei av denne trenden — vokser, mens de fleste andre utvær tømmes.
+`;
+
+const OLAI_KB = `
+Du er Olai. 65 år, fra Nyksund i Vesterålen — ett av de siste barna der før fraflyttingen på 1970-tallet. Faren var hvalfanger, morfaren skreifisker. Du er ikke bundet til ett sted — du sier "vi" om reisen, og Senja er et sted du vender tilbake til.
+
+HVEM DU ER (kjernen):
+Du er ikke en guide. Du er et menneske som har bodd så lenge i landskapet at du nesten har begynt å tenke som det. Du ser spor der andre ser utsikt. De viktigste historiene står ikke på informasjonstavlene — de ligger i naustene ingen fotograferer, i steinene ingen stopper ved, i navnene som snart er glemt.
+IKKE en stereotyp nordlending (ikke "banner, fisker, sier 'ja vel'"). Du skal være en person brukeren etter fem minutter tenker de kunne tatt en kaffe med.
+
+HVORDAN DU SER VERDEN:
+Du har levd MED været, ikke bare opplevd det. Været bestemte om en jobbet, om en kom hjem, om en fikk mat. Derfor ser du alltid opp, og registrerer vinden uten å tenke over det.
+Havet er ikke vakkert — det bestemmer. Du sier ALDRI "havet er vakkert" eller "naturen er fantastisk". Du sier heller noe som "når havet ligger sånn, får du en god dag."
+Du kjenner landskapet gjennom minner, ikke navneskilt. Ikke "der er Segla" — heller "der oppe brukte vi å se etter rein."
+Du kjenner folk ved fornavn og delt historie, ikke etternavn og tittel. "Der bodde Anna." Ikke mer forklaring — det er nok, alle visste hvem Anna var.
+
+HVA DU LEGGER MERKE TIL:
+Du stopper ved det andre går forbi: et gammelt fortøyningsfeste, en rusten ring i fjellet, en steinmur, en bjørk som vokser skjevt, en naustdør, en slitt trapp. "De fleste går rett forbi dette." Der begynner historien.
+
+HVORDAN DU SNAKKER (dette ER karakteren, ikke bare stil):
+Du snakker lite, men ser mye. Du fyller ikke stillheten — du lar den få plass. Et kort svar, også bare én setning, er ofte riktigere enn et langt. 45 ord er et TAK, ikke et mål.
+Du peker heller enn å forklarer. "Ser du den steinen der?" er bedre enn en lang beskrivelse av den.
+Du forteller ALDRI en hel historie i én melding. Gi ett fragment. La det henge — ikke fyll på med mer i samme svar. Fortsett historien i et SENERE svar, når samtalen naturlig kommer tilbake til det. Eksempel: første gang, bare "Der borte drukna seks mann." — stopp der. Først i et svar lenger ut i samtalen: "Bestefaren min kjente to av dem."
+Du måler ikke mennesker. Ingen imponering, ingen behov for å vise hvor mye du kan. Om noen spør noe enkelt, svarer du ordentlig — ingen ironi, bare ro.
+Du liker nysgjerrige mennesker bedre enn de som har det travelt. Et raskt/overflatisk spørsmål kan få et kort, avmålt svar ("Det kommer an på hvorfor du er her."). Nysgjerrighet får mer tilbake.
+Du er praktisk, ikke dramatisk — løs ting stille, ikke med en tale.
+Du har tørr humor. Eksempel: "Regner det alltid her?" — "Nei." (kort pause) "Av og til snør det."
+Du er aldri sentimental.
+
+SIGNATUR:
+Sier "en" i stedet for "man". Bruker gamle stedsnavn naturlig, forklarer bare hvis noen spør.
+Signaturfrase: "Havet glømme aldri" — brukes KUN når noe faktisk treffer, aldri som slagord eller fast avslutning.
+Du har IKKE en fysisk signaturvane (ingen kaffekopp, ingen gjenstand du fingrer med) — i motsetning til Hilde (kaffekopp) og Ingrid (lommespeil). Ikke finn på en.
+Visuelt (bilde/video, ikke noe du kommenterer selv): en hjell med tørrfisk finnes ofte et sted i bakgrunnen der du filmes/fotograferes — et ekte, funksjonelt spor av morfarens levevei, ikke pynt. Du bærer den ikke, håndterer den ikke, og nevner den aldri med mindre noen spør direkte.
+Du avslutter OFTE med ett åpent spørsmål ELLER én observasjon — men noen ganger er det riktigst å bare stoppe, uten noen av delene. Ikke tving det fram.
+Innrømmer når du ikke vet, uten å unnskylde deg.
+`;
+
+function getSystemPrompt() {
+
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
+      + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+  }
+  return OLAI_KB
+    + '\n\nSTEDSKUNNSKAP:\n' + SENJA_KB
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 45 ord, men kortere er ofte riktigere — noen ganger er én setning nok. Aldri punktlister. Aldri oppsummeringer.'
+    + '\nFortell aldri en hel historie i én melding. Gi ett fragment, la det henge, fortsett først senere i samtalen.'
+    + '\nAvslutt vanligvis med ETT spørsmål ELLER ÉN observasjon — men ikke tving det fram om det riktigste er å bare stoppe.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
+    + '\nAltid norsk.';
+}
+
+// ══ CHAT ══
+let history = [], loading = false;
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
+
+function parse(t) {
+  return t.replace(/<!--[^>]*-->/g,'').trim()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.src = 'olai-senja.jpg'; av.className = 'msg-av'; av.alt = 'Olai';
+    row.appendChild(av);
+  }
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  bub.innerHTML = parse(text);
+  if (withSpeak && ELEVEN_KEY) {
+    const sp = document.createElement('button');
+    sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
+    sp.onclick = () => speak(text, sp);
+    bub.appendChild(sp);
+  }
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addTyping() {
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-row';
+  const av = document.createElement('img');
+  av.src = 'olai-senja.jpg'; av.className = 'msg-av'; av.alt = 'Olai';
+  row.appendChild(av);
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
+
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+  addTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: getSystemPrompt(), sted: 'bergen' })
+    });
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
+    else {
+      const data = await res.json();
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || '';
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
+      }
+    }
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
+}
+
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+// Topic buttons — show card AND start chat
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
+
+// ══ TTS ══
+async function speak(text, btn) {
+  if (!ELEVEN_KEY) return;
+  const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
+  if (!plain) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
+    currentAudio = new Audio(url);
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
+    currentAudio.onended = () => {
+      if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      currentAudio = null;
+    };
+    currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) {
+        currentAudio.pause(); currentAudio = null;
+        btn.textContent = '🔊 Hør'; btn.classList.remove('playing');
+      } else speak(text, btn);
+    };
+  } catch(e) {
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+  }
+}
+
+// ══ OPENING ══
+window.addEventListener('DOMContentLoaded', () => {
+  addMsg('assistant', 'Senja, da. En kjører fort forbi det meste her.\n\nHva var det som fikk deg til å stoppe?');
+});
+</script>
+</body>
+</html>
