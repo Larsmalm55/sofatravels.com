@@ -616,9 +616,10 @@
           <button class="topic-btn" data-topic="tunnel">Folgefonntunnelen · bygda som gravde sin egen vei</button>
           <button class="topic-btn" data-topic="odda">Odda · turistbyen som ble svelgt</button>
           <button class="topic-btn" data-topic="isberg">Isberg · gården til riksskarpretteren</button>
-          <button class="topic-btn" data-topic="bleie">Bleie-raset · fra katastrofe til verdensmester</button>
-          <button class="topic-btn" data-topic="na">Nå-bygda · Norges Champagne</button>
+          <button class="topic-btn" data-topic="vikebygd">Vikebygd · Norges Champagne</button>
+          <a class="topic-btn topic-link" href="https://tastehardanger.com/aga-vikebygd-og-vestsida-av-sorfjorden/" target="_blank" rel="noopener">Tastehardanger · sidergårdene i Vikebygd ↗</a>
           <button class="topic-btn" data-topic="agatunet">Agatunet · Norges eldste rettsal</button>
+          <a class="topic-btn topic-link" href="https://agatunet.no/historia/" target="_blank" rel="noopener">Agatunet.no · historia ↗</a>
           <button class="topic-btn" data-topic="kleberstein">Kleberstein · fjellet som forsynte Europa</button>
           <button class="topic-btn" data-topic="utne">Utne · Mor Utne og 300 år med gjester</button>
           <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Sørfjorden?</button>
@@ -725,51 +726,27 @@ const CARDS = {
       }
     ]
   },
-  bleie: {
-    title: 'Bleie-raset',
-    subtitle: 'Fra katastrofe til verdensmester',
-    img: 'kort-bleie.jpg',
-    imgCap: 'Eplehage ved Bleie',
-    sections: [
-      {
-        label: 'RASET',
-        text: `En januarmorgen i 1994 kom et snøskred ned over gården Bleie og knuste gårdstun, uthus og tusenvis av frukttrær. Ingen omkom.`
-      },
-      {
-        label: 'GJENOPPBYGGINGEN',
-        text: `Sønnen Olav Bleie bygde opp igjen og startet siderproduksjon på det som var igjen av gården.`
-      },
-      {
-        label: 'ALDE SIDER',
-        text: `I dag er Alde Sider en av Norges mest anerkjente sidergårder, med internasjonale priser for sidrene sine.`
-      },
-      {
-        label: 'NAVNET',
-        text: `Betydningen av navnet Bleie er ikke fastslått med sikkerhet — trolig knyttet til terrenget, kanskje til vann eller lysning, men språkforskere er uenige.`
-      }
-    ]
-  },
-  na: {
-    title: 'Nå-bygda',
+  vikebygd: {
+    title: 'Vikebygd',
     subtitle: 'Norges Champagne',
     img: 'kort-na.jpg',
-    imgCap: 'Sider og epler fra Nå-bygda',
+    imgCap: 'Sider og epler i Vikebygd, vestsiden av Sørfjorden',
     sections: [
       {
-        label: 'MUNKENE',
-        text: `Cistercienserklosteret brakte fruktdyrking til Hardanger på 1200-tallet. Nå-bygda ligger midt i klimasonen der epler, pærer og plommer trives usedvanlig godt så langt nord.`
+        label: 'OMRÅDET',
+        text: `Vikebygd strekker seg langs vestsiden av Sørfjorden og omfatter blant annet Bleie, Nå og Aga — et av Hardangers tetteste konsentrasjoner av sidergårder.`
       },
       {
-        label: 'MIKROKLIMAET',
-        text: `Fjorden reflekterer sollys, Folgefonna demper kald nordavind, og Golfstrømmen holder vintrene milde.`
+        label: 'BLEIE-RASET',
+        text: `En januarmorgen i 1994 kom et snøskred ned over gården Bleie og knuste gårdstun, uthus og tusenvis av frukttrær. Ingen omkom. Sønnen Olav Bleie bygde opp igjen og startet Alde Sider — i dag en av Norges mest anerkjente sidergårder, med internasjonale priser.`
+      },
+      {
+        label: 'MUNKENE OG MIKROKLIMAET',
+        text: `Cistercienserklosteret brakte fruktdyrking hit på 1200-tallet. Fjorden reflekterer sollys, Folgefonna demper nordavind, og Golfstrømmen holder vintrene milde — et klima der epler, pærer og plommer trives usedvanlig godt så langt nord.`
       },
       {
         label: 'BESKYTTET BETEGNELSE',
-        text: `I 2009 fikk «Sider frå Hardanger» beskyttet geografisk betegnelse — én av få europeiske drikkevarer med den statusen.`
-      },
-      {
-        label: 'SIDERGÅRDENE',
-        text: `Flere gårder i Nå driver i dag siderproduksjon som er blitt en del av Hardangers identitet, med røtter flere generasjoner tilbake.`
+        text: `I 2009 fikk «Sider frå Hardanger» beskyttet geografisk betegnelse — én av få europeiske drikkevarer med den statusen. Flere gårder i Vikebygd driver i dag siderproduksjon med røtter flere generasjoner tilbake.`
       }
     ]
   },
@@ -928,8 +905,7 @@ const SORFJORDEN_POINTS = [
   { name: 'Folgefonntunnelen', lat: 60.0480, lng: 6.6050, desc: 'Østportalen ved Eitrheim — reisens startpunkt.' },
   { name: 'Odda sentrum',      lat: 60.0693, lng: 6.5466, desc: 'Fra turistby til industriby og tilbake til ren fjord.' },
   { name: 'Isberg',            lat: 60.1350, lng: 6.5050, desc: 'Veglaus fjellgård — heimen til riksskarpretteren.' },
-  { name: 'Bleie',             lat: 60.1850, lng: 6.5250, desc: 'Der tusenårsraset traff i 1994 — nå Alde Sider.' },
-  { name: 'Nå',                lat: 60.2560, lng: 6.5676, desc: 'Sidergårdene og munkenes gamle fruktklima.' },
+  { name: 'Vikebygd',          lat: 60.2200, lng: 6.5450, desc: 'Bleie, Nå og Aga — sidergårdene og tusenårsraset.' },
   { name: 'Agatunet',          lat: 60.3011, lng: 6.6023, desc: 'Norges eldste rettsal, Lagmannsstova fra middelalderen.' },
   { name: 'Kleberstein',       lat: 60.3300, lng: 6.6400, desc: 'Fjellsiden som forsynte Europa i vikingtiden.' },
   { name: 'Utne',              lat: 60.4231, lng: 6.6192, desc: 'Utne Hotel fra 1722 og Hardanger Folkemuseum.' }
@@ -1021,13 +997,10 @@ Veglaus fjellgård i fjellsiden nord for Eitrheim. Varer ble fraktet med løypes
 Samson Isberg (f. 1795) vokste opp der. Riksskarprettar 1849–1868, henrettelser flere steder i landet, blant annet Kautokeino.
 Gården er fraflyttet i dag. Steingjerdene står fortsatt, synlig fra veien.
 
-Bleie:
-Snøskred januar 1994 knuste gårdstun, uthus og tusenvis av frukttrær. Ingen omkom.
-Sønnen Olav Bleie bygde opp igjen og startet Alde Sider — i dag en anerkjent sidergård med internasjonale priser.
-Navnets opprinnelse er omdiskutert blant språkforskere — usikker etymologi, muligens knyttet til vann eller terreng.
-
-Nå-bygda:
-Cistercienserklosteret brakte fruktdyrking til Hardanger på 1200-tallet.
+Vikebygd (omfatter Bleie, Nå, Aga):
+Strekker seg langs vestsiden av Sørfjorden — et av Hardangers tetteste konsentrasjoner av sidergårder. Se også: https://tastehardanger.com/aga-vikebygd-og-vestsida-av-sorfjorden/
+Bleie: snøskred januar 1994 knuste gårdstun, uthus og tusenvis av frukttrær. Ingen omkom. Sønnen Olav Bleie bygde opp igjen og startet Alde Sider — i dag en anerkjent sidergård med internasjonale priser.
+Cistercienserklosteret brakte fruktdyrking hit på 1200-tallet.
 Mikroklima: fjorden reflekterer sol, Folgefonna demper nordavind, Golfstrømmen holder vintrene milde.
 «Sider frå Hardanger» fikk beskyttet geografisk betegnelse i 2009.
 
@@ -1035,7 +1008,7 @@ Agatunet:
 Lagmannsstova — en av Norges eldste bevarte verdslige bygninger, middelalderopprinnelse.
 Knyttes til ridder Sigurd Brynjulvson Aga og Magnus Lagabøtes rettsreform (1270-tallet).
 Klokkesteinen ved fjorden: lokal tradisjon om en jente fanget inni steinen.
-Et av Norges best bevarte klyngetun.
+Et av Norges best bevarte klyngetun. Se også: https://agatunet.no/historia/
 
 Kleberstein:
 Klebersteinsårer i berget langs vestsiden av fjorden. Eksportert i vikingtiden til De britiske øyer.
