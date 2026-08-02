@@ -1381,12 +1381,17 @@ inputEl.addEventListener('keydown', e => {
 
 // Topic buttons — show card AND start chat
 document.querySelectorAll('.topic-btn[data-topic]').forEach(btn => {
-  btn.addEventListener('click', async () => {
+  btn.addEventListener('click', () => {
     const key = btn.dataset.topic;
     if (!key || !CARDS[key]) return;
-    await showCard(key);
-    const localized = await getLocalizedCard(key, activeLang);
-    send(STRINGS[activeLang].askAbout(localized.title, localized.subtitle));
+    showCard(key); // egen asynkron lasting med lastetilstand — blokkerer ikke chatten under
+
+    // Send chatmeldingen med en gang, uten å vente på oversettelse.
+    // Bruk cachet oversettelse hvis den allerede finnes (øyeblikkelig), ellers norsk original —
+    // Claude svarer uansett på riktig språk siden systemprompten setter standardspråket.
+    const cached = translatedCardsCache[key + '-' + activeLang];
+    const src = (activeLang === 'no') ? CARDS[key] : (cached || CARDS[key]);
+    send(STRINGS[activeLang].askAbout(src.title, src.subtitle));
   });
 });
 
