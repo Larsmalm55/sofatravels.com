@@ -246,6 +246,13 @@
 
     #info-card-body {
       flex: 1; overflow-y: auto; padding: 16px 22px 20px;
+      transition: opacity .2s ease;
+    }
+    #info-card-body.loading { opacity: .5; }
+    .info-loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; color: var(--sea-lt); font-size: 1.4rem;
+      letter-spacing: .3em; animation: blink 1.4s infinite;
     }
     #info-card-body::-webkit-scrollbar { width: 2px; }
     #info-card-body::-webkit-scrollbar-thumb { background: rgba(42,127,168,.2); }
@@ -1041,8 +1048,18 @@ async function showCard(key) {
   document.getElementById('info-card').classList.add('visible');
   clearInterval(slideTimer);
 
+  const cacheKey = key + '-' + activeLang;
+  const alreadyCached = activeLang === 'no' || !!translatedCardsCache[cacheKey];
+  const body = document.getElementById('info-card-body');
+  if (!alreadyCached) {
+    // Ikke i cache — dette blir en live oversettelse, vis tydelig at noe skjer
+    body.innerHTML = '<div class="info-loading">···</div>';
+    body.classList.add('loading');
+  }
+
   const card = await getLocalizedCard(key, activeLang);
   if (activeCard !== key) return; // brukeren rakk å bytte kort/språk i mellomtiden
+  body.classList.remove('loading');
 
   document.getElementById('info-card-title').textContent = card.title;
   const cardImgEl = document.getElementById('info-card-img');
@@ -1066,13 +1083,22 @@ async function showCard(key) {
   cardImgEl.alt = card.title;
   document.getElementById('info-card-image-cap').textContent = card.imgCap;
 
-  const body = document.getElementById('info-card-body');
   body.innerHTML = '';
   card.sections.forEach(s => {
     const sec = document.createElement('div');
     sec.className = 'info-section';
     sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
     body.appendChild(sec);
+  });
+
+  // Varm opp de to andre språkene stille i bakgrunnen, slik at et senere
+  // språkbytte på dette kortet som regel er øyeblikkelig i stedet for å vente.
+  ['no', 'en', 'de'].forEach(otherLang => {
+    if (otherLang === activeLang) return;
+    const otherCacheKey = key + '-' + otherLang;
+    if (otherLang !== 'no' && !translatedCardsCache[otherCacheKey]) {
+      getLocalizedCard(key, otherLang); // fire-and-forget, fyller cache stille
+    }
   });
 }
 
