@@ -620,7 +620,7 @@
           <a class="topic-btn topic-link" href="https://tastehardanger.com/aga-vikebygd-og-vestsida-av-sorfjorden/" target="_blank" rel="noopener">Tastehardanger · sidergårdene i Vikebygd ↗</a>
           <button class="topic-btn" data-topic="agatunet">Agatunet · Norges eldste rettsal</button>
           <a class="topic-btn topic-link" href="https://agatunet.no/historia/" target="_blank" rel="noopener">Agatunet.no · historia ↗</a>
-          <button class="topic-btn" data-topic="kleberstein">Kleberstein · fjellet som forsynte Europa</button>
+          <button class="topic-btn" data-topic="kleberstein">Kleberstein · Raudesteinane over Måge</button>
           <button class="topic-btn" data-topic="utne">Utne · Mor Utne og 300 år med gjester</button>
           <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Sørfjorden?</button>
         </div>
@@ -730,15 +730,31 @@ const CARDS = {
     sections: [
       {
         label: 'GÅRDEN',
-        text: `Den veglause fjellgården Isberg henger i fjellsiden nord for Eitrheim. Ingen vei ned — tunge varer måtte fraktes med løypestreng.`
+        text: `Den veglause fjellgården Isberg henger 600 meter over Sørfjorden, nord for Odda — trolig ryddet som fast bruk rundt 1700, en av Hardangers mest utilgjengelige fjellgårder.`
       },
       {
-        label: 'SAMSON ISBERG',
-        text: `Vokste opp på gården, født 1795. Ble riksskarprettar fra 1849 til 1868, med ansvar for henrettelser flere steder i landet — blant annet i Kautokeino.`
+        label: 'OPPVEKSTEN',
+        text: `Samson Samsonsen Isberg ble født her 26. april 1795, eldste av åtte søsken og odelsgutt til gården. Moren døde da han var fem. Etter konflikter med stemoren dro han som ung til Bergen.`
       },
       {
-        label: 'LIVET DER OPPE',
-        text: `Mellom oppdragene kom han hjem til den stille gården med utsikt over fjorden. Ingen naboer i umiddelbar nærhet.`
+        label: 'FRA SOLDAT TIL SKARPRETTER',
+        text: `I Bergen ble han sersjant, siden underinspektør ved Bergen tukthus. Han ble skarpretter for Bergen by 1836, for Bergens stift og Stavanger amt 1838 — og i 1849, da stillingen i Trondheim ble lagt ned, fikk han hele Norge som ansvarsområde. 15 henrettelser i løpet av karrieren.`
+      },
+      {
+        label: 'KAUTOKEINO-OPPRØRET',
+        text: `Etter det samiske opprøret i 1852 reiste Isberg hele veien fra Bergen til Alta. 14. oktober 1854 halshogg han opprørslederne Aslak Hætta og Mons Somby, med rundt tusen tilskuere til stede.`
+      },
+      {
+        label: 'DEN SISTE OFFENTLIGE HENRETTELSEN',
+        text: `19. april 1864, på Etterstad ved Christiania: Isbergs siste oppdrag, halshuggingen av to menn dømt for et drap i en robåt i havnebassenget. Rundt 5000 mennesker skal ha møtt opp.`
+      },
+      {
+        label: 'MENNESKET BAK ØKSEN',
+        text: `Samtidige beskrev ham som høy, alvorlig og påfallende høflig — en mann det var vanskelig å forestille seg smile. Han skal ha sagt at han tok et glass vann og leste Fadervår før hver henrettelse. Kona døde i 1864; kort etter ba han om avskjed. Han gikk av i 1868.`
+      },
+      {
+        label: 'ØKSEN',
+        text: `Den samme øksen gikk i arv mellom tre skarprettere og ble brukt til 19 henrettelser totalt — 15 av dem Isbergs egne. Den oppbevares i dag ved Politimuseet i Oslo.`
       },
       {
         label: 'I DAG',
@@ -796,25 +812,33 @@ const CARDS = {
   },
   kleberstein: {
     title: 'Kleberstein',
-    subtitle: 'Fjellet som forsynte Europa',
+    subtitle: 'Raudesteinane — 2000 år i fjellet',
     img: 'kort-kleberstein.jpg',
-    imgCap: 'Fjellsiden langs vestsiden av Sørfjorden',
+    imgCap: 'Kleberbruddet Raudesteinane, høyt over Måge',
     sections: [
       {
-        label: 'EKSPORTVAREN',
-        text: `Langs vestsiden av Sørfjorden går det klebersteinsårer i berget. I vikingtiden ble grytene herfra eksportert til De britiske øyer og videre.`
+        label: 'RAUDESTEINANE',
+        text: `Flere hundre meter over fjorden, i bratt terreng ovenfor Måge, går en klebersteinsåre gjennom fjellet. Halvferdige gryter, hakkemerker og underjordiske ganger står fortsatt igjen — et av de best bevarte klebersteinsfeltene på Vestlandet.`
       },
       {
-        label: 'FUNNENE',
-        text: `Klebersteinsgjenstander med opphav fra denne typen bergarter er funnet på steder som York, Dublin og Shetland.`
+        label: 'EN INDUSTRI FRA JERNALDEREN',
+        text: `Trolig i drift fra eldre jernalder, med høydepunkt i vikingtid og middelalder. Gryten ble hogd fri på en liten «tapp» i fjellveggen, så slått løs, uthult og pusset. Sprakk den underveis, ble den liggende — mange slike mislykkede emner finnes fortsatt.`
       },
       {
-        label: 'MYNTSKATTEN',
-        text: `I 1909 fant to gutter en klebersteinsgryte med sølvmynter og armringer gjemt inni, ved gården Måge.`
+        label: 'FRA GRYTER TIL KIRKER',
+        text: `Kleberstein fordelte varmen jevnt og tålte åpen ild — nærmest høyteknologi før støpejernet kom. På 1100- og 1200-tallet endret markedet seg: nå gikk steinen til bygging av steinkirker og klostre.`
+      },
+      {
+        label: 'MÅGESKATTEN',
+        text: `April 1909 fant to gutter en klebergryte gjemt i en steinrøys — 240 sølvmynter, 3 sølvringer og 2 bronsegjenstander. Myntene, blant annet fra Olav Kyrres tid, viser at skatten ble gjemt en gang etter år 1080.`
+      },
+      {
+        label: 'HVOR LANGT REISTE GRYTENE',
+        text: `Sjøveien tok dem til Odda, Bergen og videre langs kysten — det er sikkert. Norske klebergryter er funnet så langt som Island og Shetland, men arkeologer kan sjelden si at en bestemt gryte kom akkurat fra Måge. Norge hadde flere store brudd.`
       },
       {
         label: 'I DAG',
-        text: `Det finnes ikke lenger klebersteinsbrudd i drift i Norge, og flere gamle kirkebygg mangler stein til restaurering.`
+        text: `Det finnes ikke lenger klebersteinsbrudd i drift i Norge. Flere middelalderkirker, blant dem Nidarosdomen, mangler i dag stein til restaurering.`
       }
     ]
   },
@@ -919,15 +943,17 @@ document.getElementById('info-card-close').addEventListener('click', closeCard);
 
 // ══ KART ══
 let sorfjordenMap = null;
-// NB: koordinatene under er anslag hentet fra kartsøk — flere av dem (tunnel, isberg,
-// bleie, kleberstein) bør GPS-verifiseres mot faktisk kartdata før publisering.
+// NB: koordinatene under er anslag hentet fra kartsøk — flere av dem (tunnel, isberg)
+// bør GPS-verifiseres mot faktisk kartdata før publisering. Vikebygd bruker Nå sin
+// bekreftede Wikipedia-koordinat (60.2607, 6.5743). Kleberstein/Måge er MED VILJE
+// utelatt fra kartet inntil videre — ingen pålitelig koordinat funnet. Kortet i
+// temapanelet fungerer likevel som normalt, bare uten kartmarkør.
 const SORFJORDEN_POINTS = [
   { name: 'Folgefonntunnelen', lat: 60.0480, lng: 6.6050, desc: 'Østportalen ved Eitrheim — reisens startpunkt.' },
   { name: 'Odda sentrum',      lat: 60.0693, lng: 6.5466, desc: 'Fra turistby til industriby og tilbake til ren fjord.' },
   { name: 'Isberg',            lat: 60.1350, lng: 6.5050, desc: 'Veglaus fjellgård — heimen til riksskarpretteren.' },
-  { name: 'Vikebygd',          lat: 60.2200, lng: 6.5450, desc: 'Bleie, Nå og Aga — sidergårdene og tusenårsraset.' },
+  { name: 'Vikebygd',          lat: 60.2607, lng: 6.5743, desc: 'Bleie og Nå — sidergårdene og tusenårsraset. (Nå-koordinat verifisert)' },
   { name: 'Agatunet',          lat: 60.3011, lng: 6.6023, desc: 'Norges eldste rettsal, Lagmannsstova fra middelalderen.' },
-  { name: 'Kleberstein',       lat: 60.3300, lng: 6.6400, desc: 'Fjellsiden som forsynte Europa i vikingtiden.' },
   { name: 'Utne',              lat: 60.4231, lng: 6.6192, desc: 'Utne Hotel fra 1722 og Hardanger Folkemuseum.' }
 ];
 
@@ -1020,8 +1046,13 @@ VIKTIG: Boliden Odda (sinkverk på Eitrheimsneset) er en HELT ANNEN fabrikk enn 
 Merk: Odda/Tyssedal er IKKE del av UNESCOs verdensarvliste — kun Rjukan-Notodden (2015) er innskrevet. En utvidelse til å inkludere Odda/Tyssedal har vært planlagt, men er ikke gjennomført.
 
 Isberg:
-Veglaus fjellgård i fjellsiden nord for Eitrheim. Varer ble fraktet med løypestreng.
-Samson Isberg (f. 1795) vokste opp der. Riksskarprettar 1849–1868, henrettelser flere steder i landet, blant annet Kautokeino.
+Veglaus fjellgård 600 m over fjorden, nord for Odda, trolig ryddet som bruk rundt 1700.
+Samson Samsonsen Isberg, født her 26. april 1795, eldste av åtte søsken, odelsgutt. Mor døde da han var 5. Dro til Bergen som ung etter konflikt med stemor.
+Ble sersjant, siden underinspektør ved Bergen tukthus. Skarpretter Bergen by 1836, Bergens stift/Stavanger amt 1838, hele Norge fra 1849. 15 henrettelser totalt.
+14. oktober 1854: halshogg Aslak Hætta og Mons Somby (Kautokeino-opprørets ledere) i Alta, etter lang reise fra Bergen. Ca. 1000 tilskuere.
+19. april 1864: siste offentlige henrettelse i Norge, Etterstad ved Christiania — to menn dømt for drap. Ca. 5000 tilskuere. Isbergs siste oppdrag.
+Beskrevet som høy, alvorlig, høflig. Skal ha sagt at han drakk et glass vann og leste Fadervår før hver henrettelse. Kone døde 1864, han gikk av 1868.
+Øksen ble brukt til 19 henrettelser under tre skarprettere (Isberg utførte 15 av dem selv). Oppbevares i dag ved Politimuseet i Oslo.
 Gården er fraflyttet i dag. Steingjerdene står fortsatt, synlig fra veien.
 
 Vikebygd (omfatter Bleie, Nå, Aga):
@@ -1037,11 +1068,12 @@ Knyttes til ridder Sigurd Brynjulvson Aga og Magnus Lagabøtes rettsreform (1270
 Klokkesteinen ved fjorden: lokal tradisjon om en jente fanget inni steinen.
 Et av Norges best bevarte klyngetun. Se også: https://agatunet.no/historia/
 
-Kleberstein:
-Klebersteinsårer i berget langs vestsiden av fjorden. Eksportert i vikingtiden til De britiske øyer.
-Funn av klebersteinsgjenstander fra denne typen bergarter i York, Dublin, Shetland.
-Myntskatt funnet i en klebersteinsgryte ved Måge i 1909 (sølvmynter og armringer).
-Ingen klebersteinsbrudd i drift i Norge i dag.
+Kleberstein (Raudesteinane, over Måge):
+Klebersteinsbrudd flere hundre meter over fjorden — halvferdige gryter, hakkemerker og underjordiske ganger fortsatt synlige. Ett av de best bevarte klebersteinsfeltene på Vestlandet.
+Trolig i drift fra eldre jernalder, høydepunkt i vikingtid/middelalder. På 1100–1200-tallet gikk mye av produksjonen over til bygningsstein for kirker/klostre.
+Mågeskatten: april 1909, to gutter fant klebergryte med 240 sølvmynter, 3 sølvringer, 2 bronsegjenstander. Mynter bl.a. fra Olav Kyrres tid — skjult en gang etter år 1080.
+Handel: sikkert til Odda/Bergen/Vestlandet via sjøveien. Norske klebergryter er funnet på Island, Shetland m.fl., men arkeologer kan sjelden fastslå at en bestemt gjenstand kom fra akkurat Måge — flere norske brudd fantes.
+Ingen klebersteinsbrudd i drift i Norge i dag. Flere middelalderkirker (bl.a. Nidarosdomen) mangler stein til restaurering.
 
 Utne:
 Utne Hotel åpnet 1722, grunnlagt av tidligere offiser med militærpensjon fra Den store nordiske krigen.
@@ -1086,8 +1118,7 @@ function getSystemPrompt() {
     + '\nMaks 45 ord. Aldri punktlister. Aldri oppsummeringer.'
     + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
     + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
-    + '\nSvar alltid på samme språk som brukeren skriver på. Engelsk → engelsk. Tysk → tysk. Ellers norsk.'
-    + '\nStedsnavn oversettes ALDRI — behold dem norske uansett hvilket språk du svarer på.';
+    + '\nAltid norsk.';
 }
 
 // ══ CHAT ══
