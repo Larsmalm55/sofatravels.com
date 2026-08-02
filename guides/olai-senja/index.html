@@ -62,6 +62,10 @@
     }
     .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
     .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+    #lang-switch { display: flex; gap: 2px; background: rgba(12,24,32,.7); border: 1px solid var(--border); border-radius: 14px; padding: 2px; margin-right: 2px; }
+    .lang-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: .62rem; letter-spacing: .05em; padding: 4px 9px; border-radius: 12px; cursor: pointer; transition: all .2s; }
+    .lang-btn:hover { color: var(--text); }
+    .lang-btn.active { background: var(--sea); color: #fff; }
 
     /* ══ MAIN ══ */
     #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
@@ -502,10 +506,12 @@
       #map-overlay-title { font-size: 1.1rem; }
 
       /* Topbar */
-      #top-bar { height: 42px; padding: 0 12px; }
-      #back-btn { padding: 3px 8px; font-size: .66rem; }
-      .hdr-center { font-size: .72rem; letter-spacing: .15em; }
+      #top-bar { height: 42px; padding: 0 10px; gap: 8px; }
+      #back-btn { padding: 3px 7px; font-size: .62rem; }
+      .hdr-center { font-size: .66rem; letter-spacing: .1em; }
       #app { padding-top: 42px; }
+      .lang-btn { padding: 3px 6px; font-size: .58rem; }
+      .hdr-btn { width: 26px; height: 26px; font-size: .72rem; }
     }
 
     /* ══ LITEN MOBIL (≤390px) ══ */
@@ -525,6 +531,11 @@
   <a href="/regions/" id="back-btn">← Guider</a>
   <div class="hdr-center">SOFATRAVELS · <span>SENJA</span></div>
   <div class="hdr-right">
+    <div id="lang-switch">
+      <button class="lang-btn" data-lang="no">NO</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+    </div>
     <button class="hdr-btn" id="voice-btn" title="Olais stemme">🔇</button>
     <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
   </div>
@@ -820,6 +831,154 @@ const CARDS = {
   }
 };
 
+// ══ SPRÅK / LANGUAGE / SPRACHE ══
+let activeLang = localStorage.getItem('st_lang') || 'no';
+
+const STRINGS = {
+  no: {
+    backBtn: '← Guider',
+    voiceTitle: 'Olais stemme',
+    settingsTitle: 'Innstillinger',
+    tpLabel: 'FORESLÅTTE TEMAER',
+    topics: {
+      kaperdalen: 'Kaperdalen · Nikolai og Alvilde',
+      tranoya: 'Tranøya · maktsenteret som ble stille',
+      vikinggrava: 'Vikinggrava ved Sand · kvinnen og hunden',
+      skaland: 'Skaland · grafitten fra Trælen',
+      hamn: 'Hamn · nikkelverket og lyset',
+      husoy: 'Husøy · steinen som ble en formue',
+      svensgrunnen: 'Svensgrunnen 1943',
+      map: '🗺 Kart · hvor er Senja?'
+    },
+    tipBar: '💬 Klikk et tema for å utforske — eller spør Olai direkte',
+    chatPlaceholder: 'Spør Olai om Senja…',
+    infoCardLabel: 'SENJA · HISTORIE',
+    infoCardFooter: '💬 Spør Olai i chatten — han ser det samme som deg',
+    mapOverlayLabel: 'NORGE · NORD-NORGE',
+    mapZoomHint: 'Klikk et punkt for å se hva det er — eller zoom selv med musehjul/fingre',
+    locRegion: 'NORD-NORGE · NORGE',
+    opening: 'Senja, da. En kjører fort forbi det meste her.\n\nHva var det som fikk deg til å stoppe?',
+    askAbout: (title, subtitle) => `Fortell meg om ${title} — ${subtitle}`,
+    norgeMarkerName: 'Senja',
+    norgeMarkerDesc: 'Norges nest største øy — ytterst i Troms, nord for polarsirkelen.'
+  },
+  en: {
+    backBtn: '← Guides',
+    voiceTitle: "Olai's voice",
+    settingsTitle: 'Settings',
+    tpLabel: 'SUGGESTED TOPICS',
+    topics: {
+      kaperdalen: 'Kaperdalen · Nikolai and Alvilde',
+      tranoya: 'Tranøya · the power center that went quiet',
+      vikinggrava: 'The Viking grave at Sand · the woman and the dog',
+      skaland: 'Skaland · the graphite from Trælen',
+      hamn: 'Hamn · the nickel works and the light',
+      husoy: 'Husøy · the rock that became a fortune',
+      svensgrunnen: 'Svensgrunnen, 1943',
+      map: '🗺 Map · where is Senja?'
+    },
+    tipBar: '💬 Click a topic to explore — or ask Olai directly',
+    chatPlaceholder: 'Ask Olai about Senja…',
+    infoCardLabel: 'SENJA · HISTORY',
+    infoCardFooter: '💬 Ask Olai in the chat — he sees the same thing you do',
+    mapOverlayLabel: 'NORWAY · NORTHERN NORWAY',
+    mapZoomHint: 'Click a point to see what it is — or zoom yourself with mouse wheel/fingers',
+    locRegion: 'NORTHERN NORWAY · NORWAY',
+    opening: "Senja, then. Most people just drive past everything here.\n\nWhat made you stop?",
+    askAbout: (title, subtitle) => `Tell me about ${title} — ${subtitle}`,
+    norgeMarkerName: 'Senja',
+    norgeMarkerDesc: "Norway's second-largest island — out at the edge of Troms, north of the Arctic Circle."
+  },
+  de: {
+    backBtn: '← Guides',
+    voiceTitle: 'Olais Stimme',
+    settingsTitle: 'Einstellungen',
+    tpLabel: 'VORGESCHLAGENE THEMEN',
+    topics: {
+      kaperdalen: 'Kaperdalen · Nikolai und Alvilde',
+      tranoya: 'Tranøya · das Machtzentrum, das still wurde',
+      vikinggrava: 'Das Wikingergrab bei Sand · die Frau und der Hund',
+      skaland: 'Skaland · der Grafit aus Trælen',
+      hamn: 'Hamn · das Nickelwerk und das Licht',
+      husoy: 'Husøy · der Fels, der zum Vermögen wurde',
+      svensgrunnen: 'Svensgrunnen 1943',
+      map: '🗺 Karte · wo liegt Senja?'
+    },
+    tipBar: '💬 Klicke ein Thema an — oder frag Olai direkt',
+    chatPlaceholder: 'Frag Olai zu Senja…',
+    infoCardLabel: 'SENJA · GESCHICHTE',
+    infoCardFooter: '💬 Frag Olai im Chat — er sieht dasselbe wie du',
+    mapOverlayLabel: 'NORWEGEN · NORDNORWEGEN',
+    mapZoomHint: 'Klicke auf einen Punkt, um zu sehen, was es ist — oder zoome selbst mit Mausrad/Fingern',
+    locRegion: 'NORDNORWEGEN · NORWEGEN',
+    opening: 'Senja, also. Die meisten fahren hier einfach an allem vorbei.\n\nWas hat dich zum Anhalten gebracht?',
+    askAbout: (title, subtitle) => `Erzähl mir von ${title} — ${subtitle}`,
+    norgeMarkerName: 'Senja',
+    norgeMarkerDesc: 'Norwegens zweitgrößte Insel — am äußersten Rand von Troms, nördlich des Polarkreises.'
+  }
+};
+
+// Kartpunkt-beskrivelser per språk (rekkefølge matcher SENJA_POINTS)
+const MAP_POINT_DESC = {
+  kaperdalen:   { no: 'Den siste markesamiske boplassen på Senja — Nikolai og Alvildes gamme.', en: 'The last Sami forest settlement on Senja — Nikolai and Alvilde\'s hut.', de: 'Die letzte waldsamische Siedlung auf Senja — Nikolai und Alvildes Hütte.' },
+  tranoya:      { no: 'Bilfri øy, gammelt maktsenter og kirkested — bebodd i 2000 år.', en: 'Car-free island, an old power center and church site — inhabited for 2000 years.', de: 'Autofreie Insel, altes Machtzentrum und Kirchenort — seit 2000 Jahren bewohnt.' },
+  sand:         { no: 'Båtgrav fra vikingtid, funnet og gravd ut i 2023–2025.', en: 'A Viking-age boat grave, discovered and excavated in 2023–2025.', de: 'Ein Bootsgrab aus der Wikingerzeit, entdeckt und ausgegraben 2023–2025.' },
+  skaland:      { no: 'Grafittgruva ved Trælen — i drift siden 1917.', en: 'The graphite mine at Trælen — in operation since 1917.', de: 'Die Grafitmine bei Trælen — in Betrieb seit 1917.' },
+  hamn:         { no: 'Nikkelverket og Norges eldste vannkraftverk, 1872–1886.', en: "The nickel works and Norway's oldest hydroelectric plant, 1872–1886.", de: 'Das Nickelwerk und Norwegens ältestes Wasserkraftwerk, 1872–1886.' },
+  husoy:        { no: 'Fiskeværet bygget på en stein — i dag en fiskeriformue.', en: 'The fishing village built on a rock — today a fishing fortune.', de: 'Das auf einem Felsen erbaute Fischerdorf — heute ein Fischereivermögen.' },
+  gryllefjord:  { no: 'Minnebautaen over de omkomne fiskerne fra Svensgrunnen, 1943.', en: 'The memorial to the fishermen who died at Svensgrunnen, 1943.', de: 'Das Denkmal für die bei Svensgrunnen 1943 umgekommenen Fischer.' }
+};
+
+function applyLang(lang) {
+  activeLang = lang;
+  localStorage.setItem('st_lang', lang);
+  document.documentElement.lang = lang === 'no' ? 'no' : lang;
+  const S = STRINGS[lang];
+
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+  document.getElementById('back-btn').textContent = S.backBtn;
+  document.getElementById('voice-btn').title = S.voiceTitle;
+  document.getElementById('settings-btn').title = S.settingsTitle;
+  document.querySelector('.tp-label').textContent = S.tpLabel;
+
+  document.querySelectorAll('.topic-btn[data-topic]').forEach(btn => {
+    const key = btn.dataset.topic;
+    if (S.topics[key]) btn.textContent = S.topics[key];
+  });
+  document.getElementById('map-open-btn').textContent = S.topics.map;
+
+  document.getElementById('tip-bar').textContent = S.tipBar;
+  document.getElementById('chat-input').placeholder = S.chatPlaceholder;
+  document.getElementById('info-card-label').textContent = S.infoCardLabel;
+  document.getElementById('info-card-footer').textContent = S.infoCardFooter;
+  document.getElementById('map-overlay-label').textContent = S.mapOverlayLabel;
+  document.getElementById('map-zoom-hint').textContent = S.mapZoomHint;
+  document.getElementById('loc-region').textContent = S.locRegion;
+
+  // Oppdater kartpopups hvis kartet allerede er lastet
+  if (senjaMap && norgeMarker) norgeMarker.setPopupContent(`<strong>${S.norgeMarkerName}</strong><br>${S.norgeMarkerDesc}`);
+  if (senjaMap && pointMarkers.length) {
+    pointMarkers.forEach(({ marker, id, name }) => {
+      const d = MAP_POINT_DESC[id];
+      marker.setPopupContent(`<strong>${name}</strong><br>${d ? d[lang] : ''}`);
+    });
+  }
+
+  // Åpningsreplikk — bare bytt hvis brukeren ikke har startet å chatte ennå
+  if (history.length === 0) {
+    const firstBubble = document.querySelector('#messages .msg-bubble.bot');
+    if (firstBubble) firstBubble.innerHTML = parse(S.opening);
+  }
+
+  // Hvis et info-kort er åpent, hent/vis det på nytt språk
+  if (activeCard) showCard(activeCard);
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => applyLang(b.dataset.lang));
+});
+
 // ══ SLIDESHOW ══
 const slides = document.querySelectorAll('.portrait-slide');
 const dots   = document.querySelectorAll('.sdot');
@@ -837,11 +996,53 @@ startSlides();
 
 // ══ INFO CARD ══
 let activeCard = null;
+const translatedCardsCache = {}; // in-memory, per økt — nytt kall kun ved sideoppfriskning
 
-function showCard(key) {
-  const card = CARDS[key];
-  if (!card) return;
+// Henter oversatt kortinnhold. Norsk returneres direkte. Andre språk sjekker
+// minnet først, deretter serveren (som selv cacher permanent i Netlify Blobs).
+async function getLocalizedCard(key, lang) {
+  const original = CARDS[key];
+  if (!original) return null;
+  if (lang === 'no') return original;
+
+  const cacheKey = key + '-' + lang;
+  if (translatedCardsCache[cacheKey]) return translatedCardsCache[cacheKey];
+
+  try {
+    const res = await fetch('/.netlify/functions/translate-card', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cacheKey: key, lang,
+        title: original.title, subtitle: original.subtitle, imgCap: original.imgCap,
+        sections: original.sections
+      })
+    });
+    if (!res.ok) throw new Error('server ' + res.status);
+    const data = await res.json();
+    if (!data.translated) throw new Error('mangler oversettelse');
+    translatedCardsCache[cacheKey] = data.translated;
+    return data.translated;
+  } catch (e) {
+    console.log('Oversettelse feilet, viser norsk:', e.message);
+    return original; // trygg fallback — bedre norsk enn tomt kort
+  }
+}
+
+async function showCard(key) {
+  const original = CARDS[key];
+  if (!original) return;
   activeCard = key;
+
+  // Mark active topic button + vis midlertidig laste-tilstand for tittel
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.topic === key);
+  });
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+
+  const card = await getLocalizedCard(key, activeLang);
+  if (activeCard !== key) return; // brukeren rakk å bytte kort/språk i mellomtiden
 
   document.getElementById('info-card-title').textContent = card.title;
   const cardImgEl = document.getElementById('info-card-img');
@@ -854,14 +1055,14 @@ function showCard(key) {
     const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
     if (isPortrait) {
       cardImgEl.classList.add('contain-mode');
-      cardImgBg.src = card.img;
+      cardImgBg.src = original.img;
       cardImgBg.classList.add('show');
     } else {
       cardImgEl.classList.remove('contain-mode');
       cardImgBg.classList.remove('show');
     }
   };
-  cardImgEl.src = card.img;
+  cardImgEl.src = original.img; // bildefil er språkuavhengig
   cardImgEl.alt = card.title;
   document.getElementById('info-card-image-cap').textContent = card.imgCap;
 
@@ -872,14 +1073,6 @@ function showCard(key) {
     sec.className = 'info-section';
     sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
     body.appendChild(sec);
-  });
-
-  document.getElementById('info-card').classList.add('visible');
-  clearInterval(slideTimer);
-
-  // Mark active topic button
-  document.querySelectorAll('.topic-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.topic === key);
   });
 }
 
@@ -894,14 +1087,16 @@ document.getElementById('info-card-close').addEventListener('click', closeCard);
 
 // ══ KART ══
 let senjaMap = null;
+let norgeMarker = null;
+let pointMarkers = [];
 const SENJA_POINTS = [
-  { name: 'Kaperdalen',        lat: 69.300, lng: 17.630, desc: 'Den siste markesamiske boplassen på Senja — Nikolai og Alvildes gamme.' },
-  { name: 'Tranøya',           lat: 69.330, lng: 17.750, desc: 'Bilfri øy, gammelt maktsenter og kirkested — bebodd i 2000 år.' },
-  { name: 'Sand · vikinggrava',lat: 69.335, lng: 17.850, desc: 'Båtgrav fra vikingtid, funnet og gravd ut i 2023–2025.' },
-  { name: 'Skaland',           lat: 69.610, lng: 17.490, desc: 'Grafittgruva ved Trælen — i drift siden 1917.' },
-  { name: 'Hamn',              lat: 69.593, lng: 17.417, desc: 'Nikkelverket og Norges eldste vannkraftverk, 1872–1886.' },
-  { name: 'Husøy',             lat: 69.640, lng: 17.940, desc: 'Fiskeværet bygget på en stein — i dag en fiskeriformue.' },
-  { name: 'Gryllefjord',       lat: 69.650, lng: 17.050, desc: 'Minnebautaen over de omkomne fiskerne fra Svensgrunnen, 1943.' }
+  { id: 'kaperdalen', name: 'Kaperdalen',        lat: 69.300, lng: 17.630 },
+  { id: 'tranoya',    name: 'Tranøya',           lat: 69.330, lng: 17.750 },
+  { id: 'sand',       name: 'Sand · vikinggrava',lat: 69.335, lng: 17.850 },
+  { id: 'skaland',    name: 'Skaland',            lat: 69.610, lng: 17.490 },
+  { id: 'hamn',       name: 'Hamn',               lat: 69.593, lng: 17.417 },
+  { id: 'husoy',      name: 'Husøy',              lat: 69.640, lng: 17.940 },
+  { id: 'gryllefjord',name: 'Gryllefjord',        lat: 69.650, lng: 17.050 }
 ];
 // NB: koordinatene over er beste anslag og bør kvalitetssjekkes mot faktiske GPS-punkter før publisering.
 
@@ -916,18 +1111,21 @@ function initMap() {
   }).addTo(senjaMap);
 
   const goldIcon = L.divIcon({ className: '', html: '<div class="senja-pin"></div>', iconSize: [14,14], iconAnchor: [7,12] });
+  const S = STRINGS[activeLang];
 
   // Norge-oversikt: kun Senja markert, så vi tydelig viser HVOR i landet vi er
-  const norgeMarker = L.marker([69.45, 17.60], { icon: goldIcon }).addTo(senjaMap)
-    .bindPopup('<strong>Senja</strong><br>Norges nest største øy — ytterst i Troms, nord for polarsirkelen.');
+  norgeMarker = L.marker([69.45, 17.60], { icon: goldIcon }).addTo(senjaMap)
+    .bindPopup(`<strong>${S.norgeMarkerName}</strong><br>${S.norgeMarkerDesc}`);
 
   // Etter kort pause: zoom inn til Senja og vis alle punktene
   setTimeout(() => {
     senjaMap.flyTo([69.48, 17.65], 9.5, { duration: 2.2 });
     setTimeout(() => {
       SENJA_POINTS.forEach(p => {
-        L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(senjaMap)
-          .bindPopup(`<strong>${p.name}</strong><br>${p.desc}`);
+        const d = MAP_POINT_DESC[p.id];
+        const marker = L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(senjaMap)
+          .bindPopup(`<strong>${p.name}</strong><br>${d ? d[activeLang] : ''}`);
+        pointMarkers.push({ marker, id: p.id, name: p.name });
       });
     }, 1800);
   }, 900);
@@ -1054,6 +1252,7 @@ function getSystemPrompt() {
       + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
       + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
   }
+  const langNames = { no: 'norsk', en: 'engelsk', de: 'tysk' };
   return OLAI_KB
     + '\n\nSTEDSKUNNSKAP:\n' + SENJA_KB
     + cardCtx
@@ -1062,7 +1261,8 @@ function getSystemPrompt() {
     + '\nFortell aldri en hel historie i én melding. Gi ett fragment, la det henge, fortsett først senere i samtalen.'
     + '\nAvslutt vanligvis med ETT spørsmål ELLER ÉN observasjon — men ikke tving det fram om det riktigste er å bare stoppe.'
     + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
-    + '\nSvar alltid på samme språk som brukeren skriver på. Engelsk → engelsk. Tysk → tysk. Ellers norsk.'
+    + `\nBrukerens valgte grensesnittspråk er ${langNames[activeLang] || 'norsk'} — svar på dette språket som standard.`
+    + '\nMen: svar alltid på samme språk som brukeren SKRIVER på, hvis det avviker fra grensesnittspråket. Engelsk → engelsk. Tysk → tysk. Ellers norsk.'
     + '\nStedsnavn oversettes ALDRI — behold dem norske uansett hvilket språk du svarer på.';
 }
 
@@ -1154,12 +1354,13 @@ inputEl.addEventListener('keydown', e => {
 });
 
 // Topic buttons — show card AND start chat
-document.querySelectorAll('.topic-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
+document.querySelectorAll('.topic-btn[data-topic]').forEach(btn => {
+  btn.addEventListener('click', async () => {
     const key = btn.dataset.topic;
-    const card = CARDS[key];
-    showCard(key);
-    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+    if (!key || !CARDS[key]) return;
+    await showCard(key);
+    const localized = await getLocalizedCard(key, activeLang);
+    send(STRINGS[activeLang].askAbout(localized.title, localized.subtitle));
   });
 });
 
@@ -1201,7 +1402,8 @@ async function speak(text, btn) {
 
 // ══ OPENING ══
 window.addEventListener('DOMContentLoaded', () => {
-  addMsg('assistant', 'Senja, da. En kjører fort forbi det meste her.\n\nHva var det som fikk deg til å stoppe?');
+  applyLang(activeLang);
+  addMsg('assistant', STRINGS[activeLang].opening);
 });
 </script>
 </body>
