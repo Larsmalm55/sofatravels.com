@@ -142,6 +142,28 @@
       background: none; border: 1px solid var(--border); color: var(--muted);
     }
     .action-ignore:hover { border-color: rgba(200,74,74,.4); color: var(--red); }
+    .action-suggest {
+      background: rgba(42,127,168,.1); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sea);
+    }
+    .action-suggest:hover { background: rgba(42,127,168,.2); }
+    .action-suggest:disabled { opacity: .5; cursor: wait; }
+
+    .suggest-box {
+      margin-top: 12px; padding: 14px 16px;
+      background: rgba(42,127,168,.06); border: 1px solid rgba(42,127,168,.25);
+      border-radius: 6px; display: none;
+    }
+    .suggest-box.vis { display: block; }
+    .suggest-label {
+      font-size: 7px; letter-spacing: .3em; color: var(--sea); margin-bottom: 8px;
+    }
+    .suggest-tekst {
+      font-size: .82rem; color: var(--text); line-height: 1.65;
+      white-space: pre-wrap; margin-bottom: 10px;
+    }
+    .suggest-tekst.feil { color: var(--red); }
+    .suggest-tekst.ingen-kilder { color: var(--gold); }
 
     /* TOM */
     #tom {
@@ -198,6 +220,7 @@
     <button class="filter-btn" data-filter="kristiansand">Kristiansand</button>
     <button class="filter-btn" data-filter="vikten">Vikten</button>
     <button class="filter-btn" data-filter="vagar">Vågar</button>
+    <button class="filter-btn" data-filter="sorfjorden">Sørfjorden</button>
   </div>
 
   <div id="laster">Henter loggoppføringer…</div>
@@ -234,9 +257,10 @@ function visOppforinger(data) {
   }
   tom.style.display = 'none';
 
-  filtrert.forEach(o => {
+  filtrert.forEach((o, i) => {
     const el = document.createElement('div');
     el.className = `entry ${o.type}`;
+    const idx = `entry-${o.tidspunkt}-${i}`.replace(/[^a-zA-Z0-9-]/g, '');
     el.innerHTML = `
       <div class="entry-meta">
         <span class="entry-type ${o.type}">${o.type === 'vet-ikke' ? 'VET IKKE' : 'KORT SVAR'}</span>
@@ -249,8 +273,21 @@ function visOppforinger(data) {
         <button class="action-btn action-add" onclick="kopierKB(this)" data-tekst="${encodeURIComponent(o.sporsmal + '\n\n' + o.svar)}">
           + Kopi til KB
         </button>
+        <button class="action-btn action-suggest" onclick="foreslaTillegg(this, '${idx}')"
+          data-sporsmal="${encodeURIComponent(o.sporsmal || '')}"
+          data-svar="${encodeURIComponent(o.svar || '')}"
+          data-sted="${encodeURIComponent(o.sted || '')}">
+          🔍 Foreslå tillegg
+        </button>
         <button class="action-btn action-ignore" onclick="this.closest('.entry').style.opacity='.3'">
           Ignorer
+        </button>
+      </div>
+      <div class="suggest-box" id="suggest-${idx}">
+        <div class="suggest-label">FORSLAG TIL KB-TEKST (SJEKK FØR BRUK)</div>
+        <div class="suggest-tekst" id="suggest-tekst-${idx}"></div>
+        <button class="action-btn action-add" style="display:none" id="suggest-kopi-${idx}" onclick="kopierForslag(this, '${idx}')">
+          + Kopi forslag
         </button>
       </div>
     `;
@@ -289,6 +326,59 @@ function kopierKB(btn) {
   navigator.clipboard.writeText(tekst).then(() => {
     btn.textContent = '✓ Kopiert';
     setTimeout(() => { btn.textContent = '+ Kopi til KB'; }, 2000);
+  });
+}
+
+async function foreslaTillegg(btn, idx) {
+  const sporsmal = decodeURIComponent(btn.dataset.sporsmal);
+  const svar = decodeURIComponent(btn.dataset.svar);
+  const sted = decodeURIComponent(btn.dataset.sted);
+
+  const boks = document.getElementById(`suggest-${idx}`);
+  const tekstEl = document.getElementById(`suggest-tekst-${idx}`);
+  const kopiBtn = document.getElementById(`suggest-kopi-${idx}`);
+
+  boks.classList.add('vis');
+  tekstEl.className = 'suggest-tekst';
+  tekstEl.textContent = 'Researcher og sjekker kilder …';
+  kopiBtn.style.display = 'none';
+  btn.disabled = true;
+  const originalTekst = btn.textContent;
+  btn.textContent = '🔍 Jobber …';
+
+  try {
+    const res = await fetch('/.netlify/functions/suggest-kb', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sporsmal, svar, sted }),
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      tekstEl.className = 'suggest-tekst feil';
+      tekstEl.textContent = 'Feil: ' + data.error;
+    } else if (data.forslag && data.forslag.startsWith('INGEN PÅLITELIGE KILDER')) {
+      tekstEl.className = 'suggest-tekst ingen-kilder';
+      tekstEl.textContent = data.forslag;
+    } else {
+      tekstEl.textContent = data.forslag || '(Tomt svar)';
+      kopiBtn.style.display = 'inline-block';
+      kopiBtn.dataset.tekst = encodeURIComponent(data.forslag || '');
+    }
+  } catch (e) {
+    tekstEl.className = 'suggest-tekst feil';
+    tekstEl.textContent = 'Kunne ikke nå funksjonen: ' + e.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = originalTekst;
+}
+
+function kopierForslag(btn, idx) {
+  const tekst = decodeURIComponent(btn.dataset.tekst);
+  navigator.clipboard.writeText(tekst).then(() => {
+    btn.textContent = '✓ Kopiert';
+    setTimeout(() => { btn.textContent = '+ Kopi forslag'; }, 2000);
   });
 }
 
