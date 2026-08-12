@@ -582,7 +582,7 @@
       <div id="info-card-image">
         <img id="info-card-img-bg" src="" alt="" aria-hidden="true" />
         <img id="info-card-img" src="" alt="" />
-        <video id="info-card-video" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#050A0F;z-index:1;" autoplay muted loop playsinline></video>
+        <video id="info-card-video" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#050A0F;z-index:1;" autoplay muted loop playsinline></video>
         <div id="info-card-image-cap" id="info-img-cap"></div>
       </div>
       <div id="info-card-body"></div>
@@ -900,6 +900,7 @@ function showCard(key) {
   const cardImageContainer = document.getElementById('info-card-image');
   if (card.video) {
     // Video-kort: ingen bilde, ingen tekstseksjoner — bare et lite spillende klipp.
+    // Kollaps tekstfeltet helt, slik at videoen alene fyller all ledig plass.
     cardImageContainer.classList.add('video-mode');
     cardImgEl.style.display = 'none';
     cardImgBg.style.display = 'none';
@@ -907,9 +908,12 @@ function showCard(key) {
     cardVideoEl.style.display = 'block';
     cardVideoEl.src = card.video;
     document.getElementById('info-card-image-cap').textContent = card.imgCap || '';
-    document.getElementById('info-card-body').innerHTML = '';
+    const bodyEl = document.getElementById('info-card-body');
+    bodyEl.innerHTML = '';
+    bodyEl.style.display = 'none';
   } else {
     cardImageContainer.classList.remove('video-mode');
+    document.getElementById('info-card-body').style.display = '';
     cardVideoEl.pause();
     cardVideoEl.style.display = 'none';
     cardVideoEl.removeAttribute('src');
