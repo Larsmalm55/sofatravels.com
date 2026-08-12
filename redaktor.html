@@ -123,8 +123,7 @@
       border-top: 1px solid rgba(255,255,255,.05);
       padding-top: 8px; margin-top: 4px;
     }
-    .entry-svar::before {
-      content: 'Hilde: ';
+    .entry-svar-label {
       color: var(--muted); font-size: .72rem; letter-spacing: .1em;
     }
 
@@ -239,6 +238,15 @@ function formaterTid(iso) {
     + ' · ' + d.toLocaleTimeString('no-NO', { hour:'2-digit', minute:'2-digit' });
 }
 
+const GUIDE_PR_STED = {
+  bergen: 'Hilde', kristiansand: 'Hilde', sorfjorden: 'Hilde',
+  vikten: 'Hilde', vagar: 'Hilde',
+  senja: 'Olai', trondheim: 'Olav', rjukan: 'Ingrid',
+};
+function guideNavn(sted) {
+  return GUIDE_PR_STED[(sted || '').toLowerCase()] || 'Guide';
+}
+
 function visOppforinger(data) {
   const container = document.getElementById('entries');
   const tom = document.getElementById('tom');
@@ -268,7 +276,7 @@ function visOppforinger(data) {
         <span class="entry-tid">${formaterTid(o.tidspunkt)}</span>
       </div>
       <div class="entry-sporsmal">${o.sporsmal || '—'}</div>
-      <div class="entry-svar">${o.svar || '—'}</div>
+      <div class="entry-svar"><span class="entry-svar-label">${guideNavn(o.sted)}: </span>${o.svar || '—'}</div>
       <div class="entry-actions">
         <button class="action-btn action-add" onclick="kopierKB(this)" data-tekst="${encodeURIComponent(o.sporsmal + '\n\n' + o.svar)}">
           + Kopi til KB
