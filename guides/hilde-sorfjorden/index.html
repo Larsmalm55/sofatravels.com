@@ -217,6 +217,7 @@
       width: 100%; height: 38%; flex-shrink: 0; overflow: hidden;
       position: relative; background: #050A0F;
     }
+    #info-card-image.video-mode { height: auto; flex: 1; }
     #info-card-img-bg {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; object-position: center;
@@ -896,8 +897,10 @@ function showCard(key) {
   const cardImgBg = document.getElementById('info-card-img-bg');
   const cardVideoEl = document.getElementById('info-card-video');
 
+  const cardImageContainer = document.getElementById('info-card-image');
   if (card.video) {
     // Video-kort: ingen bilde, ingen tekstseksjoner — bare et lite spillende klipp.
+    cardImageContainer.classList.add('video-mode');
     cardImgEl.style.display = 'none';
     cardImgBg.style.display = 'none';
     cardImgBg.classList.remove('show');
@@ -906,6 +909,7 @@ function showCard(key) {
     document.getElementById('info-card-image-cap').textContent = card.imgCap || '';
     document.getElementById('info-card-body').innerHTML = '';
   } else {
+    cardImageContainer.classList.remove('video-mode');
     cardVideoEl.pause();
     cardVideoEl.style.display = 'none';
     cardVideoEl.removeAttribute('src');
@@ -1129,8 +1133,12 @@ function getSystemPrompt() {
   if (activeCard && CARDS[activeCard]) {
     const c = CARDS[activeCard];
     cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
-      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`
-      + `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`;
+    if (c.sections && c.sections.length) {
+      cardCtx += `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+    } else if (c.video) {
+      cardCtx += `\nDette er et rent videokort uten tekst — bruk kun stedskunnskapen under for fakta om ${c.title}.`;
+    }
   }
   return HILDE_KB
     + '\n\nSTEDSKUNNSKAP:\n' + SORFJORDEN_KB
