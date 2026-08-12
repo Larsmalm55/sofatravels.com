@@ -581,6 +581,7 @@
       <div id="info-card-image">
         <img id="info-card-img-bg" src="" alt="" aria-hidden="true" />
         <img id="info-card-img" src="" alt="" />
+        <video id="info-card-video" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;" autoplay muted loop playsinline></video>
         <div id="info-card-image-cap" id="info-img-cap"></div>
       </div>
       <div id="info-card-body"></div>
@@ -613,8 +614,8 @@
         <div class="tp-tagline">«Fra bøddelgård til blomstring»</div>
         <div class="tp-label">FORESLÅTTE TEMAER</div>
         <div id="topics">
-          <button class="topic-btn" data-topic="tunnel">Folgefonntunnelen · bygda som gravde sin egen vei</button>
           <button class="topic-btn" data-topic="odda">Odda · fra turistbygd til fabrikkby</button>
+          <button class="topic-btn" data-topic="adnafossen">Ædnafossen 🎬</button>
           <button class="topic-btn" data-topic="isberg">Isberg · gården til riksskarpretteren</button>
           <button class="topic-btn" data-topic="vikebygd">Vikebygd · Norges Champagne</button>
           <a class="topic-btn topic-link" href="https://tastehardanger.com/aga-vikebygd-og-vestsida-av-sorfjorden/" target="_blank" rel="noopener">Tastehardanger · sidergårdene i Vikebygd ↗</a>
@@ -654,36 +655,16 @@
 <script>
 // ══ INFO CARD DATA ══
 const CARDS = {
-  tunnel: {
-    title: 'Folgefonntunnelen',
-    subtitle: 'Bygda som gravde sin egen vei',
-    img: 'kort-tunnel.jpg',
-    imgCap: 'Folgefonntunnelen — 11 150 meter under isbreen, åpnet 2001',
-    sections: [
-      {
-        label: 'FØR TUNNELEN',
-        text: `Før tunnelen åpnet i 2001 tok det rundt fire timer å kjøre mellom Odda og Austrepollen. I dag tar det rundt ti minutter.`
-      },
-      {
-        label: 'HVEM BYGDE DEN',
-        text: `Det var ikke staten som tok initiativet. Lokalbefolkningens eget selskap, stiftet i 1987, lobbet i fjorten år for å få prosjektet realisert.`
-      },
-      {
-        label: 'ISKLAR',
-        text: `Kildevannet til Isklar tappes noen hundre meter under selve breen, rett over tunneltraséen du nettopp kjørte gjennom.`
-      },
-      {
-        label: 'I DAG',
-        text: `Inngangsporten til hele reisen langs Sørfjorden — fra is og fjell til fjord og fruktblomstring på under en time.`
-      }
-    ]
-  },
   odda: {
     title: 'Odda',
     subtitle: 'Fra turistbygd til fabrikkby',
     img: 'kort-odda.jpg',
     imgCap: 'Odda sentrum ved fjorden',
     sections: [
+      {
+        label: 'INNGANGSPORTEN',
+        text: `Folgefonntunnelen, 11 150 meter under isbreen, kutter reisetiden fra Austrepollen fra fire timer til ti minutter. Åpnet 2001 — ikke av staten, men av et lokalt selskap som lobbet i fjorten år. Isklar-kildevannet tappes noen hundre meter under selve breen, rett over traséen.`
+      },
       {
         label: 'TURISTBYGDA',
         text: `Fram til tidlig 1900-tall var Odda en liten bygd med småbruk og fruktdyrking. Om sommeren kom engelske turister for fossene, Folgefonna og den dramatiske naturen.`
@@ -721,6 +702,12 @@ const CARDS = {
         text: `Rett ved siden av lå hele tiden en annen industri: sinkverket på Eitrheimsneset, grunnlagt 1924 — i dag Boliden Odda. Den stanset aldri. 17. mars 2025 åpnet et nybygget anlegg til 950 millioner euro der, kalt verdens mest klimaeffektive sinkverk: produksjonen økte 75 %, utslippene per tonn falt 15 %. Én industriepoke i Odda tok slutt i 2003. En annen har gått uavbrutt i hundre år — og fornyer seg akkurat nå.`
       }
     ]
+  },
+  adnafossen: {
+    title: 'Ædnafossen',
+    subtitle: 'Fossen fra andre siden av fjorden',
+    video: 'adnafossen.mp4',
+    imgCap: 'Ædnafossen — 175 meter, sett fra vestsiden av Sørfjorden'
   },
   isberg: {
     title: 'Isberg',
@@ -907,33 +894,51 @@ function showCard(key) {
   document.getElementById('info-card-title').textContent = card.title;
   const cardImgEl = document.getElementById('info-card-img');
   const cardImgBg = document.getElementById('info-card-img-bg');
-  cardImgEl.classList.remove('contain-mode');
-  cardImgBg.classList.remove('show');
-  cardImgEl.onload = () => {
-    // Stående bilder passer ikke i den brede/lave boksen uansett fokuspunkt.
-    // Vis da hele bildet (contain), med en utsmurt kopi av samme bilde som fyller resten.
-    const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
-    if (isPortrait) {
-      cardImgEl.classList.add('contain-mode');
-      cardImgBg.src = card.img;
-      cardImgBg.classList.add('show');
-    } else {
-      cardImgEl.classList.remove('contain-mode');
-      cardImgBg.classList.remove('show');
-    }
-  };
-  cardImgEl.src = card.img;
-  cardImgEl.alt = card.title;
-  document.getElementById('info-card-image-cap').textContent = card.imgCap;
+  const cardVideoEl = document.getElementById('info-card-video');
 
-  const body = document.getElementById('info-card-body');
-  body.innerHTML = '';
-  card.sections.forEach(s => {
-    const sec = document.createElement('div');
-    sec.className = 'info-section';
-    sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
-    body.appendChild(sec);
-  });
+  if (card.video) {
+    // Video-kort: ingen bilde, ingen tekstseksjoner — bare et lite spillende klipp.
+    cardImgEl.style.display = 'none';
+    cardImgBg.style.display = 'none';
+    cardImgBg.classList.remove('show');
+    cardVideoEl.style.display = 'block';
+    cardVideoEl.src = card.video;
+    document.getElementById('info-card-image-cap').textContent = card.imgCap || '';
+    document.getElementById('info-card-body').innerHTML = '';
+  } else {
+    cardVideoEl.pause();
+    cardVideoEl.style.display = 'none';
+    cardVideoEl.removeAttribute('src');
+    cardImgEl.style.display = '';
+    cardImgBg.style.display = '';
+    cardImgEl.classList.remove('contain-mode');
+    cardImgBg.classList.remove('show');
+    cardImgEl.onload = () => {
+      // Stående bilder passer ikke i den brede/lave boksen uansett fokuspunkt.
+      // Vis da hele bildet (contain), med en utsmurt kopi av samme bilde som fyller resten.
+      const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
+      if (isPortrait) {
+        cardImgEl.classList.add('contain-mode');
+        cardImgBg.src = card.img;
+        cardImgBg.classList.add('show');
+      } else {
+        cardImgEl.classList.remove('contain-mode');
+        cardImgBg.classList.remove('show');
+      }
+    };
+    cardImgEl.src = card.img;
+    cardImgEl.alt = card.title;
+    document.getElementById('info-card-image-cap').textContent = card.imgCap;
+
+    const body = document.getElementById('info-card-body');
+    body.innerHTML = '';
+    (card.sections || []).forEach(s => {
+      const sec = document.createElement('div');
+      sec.className = 'info-section';
+      sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+      body.appendChild(sec);
+    });
+  }
 
   document.getElementById('info-card').classList.add('visible');
   clearInterval(slideTimer);
@@ -946,6 +951,7 @@ function showCard(key) {
 
 function closeCard() {
   activeCard = null;
+  document.getElementById('info-card-video').pause();
   document.getElementById('info-card').classList.remove('visible');
   document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
   startSlides();
@@ -955,13 +961,14 @@ document.getElementById('info-card-close').addEventListener('click', closeCard);
 
 // ══ KART ══
 let sorfjordenMap = null;
-// NB: koordinatene under er anslag hentet fra kartsøk — flere av dem (tunnel, isberg)
-// bør GPS-verifiseres mot faktisk kartdata før publisering. Vikebygd bruker Nå sin
+// NB: koordinatene under er anslag hentet fra kartsøk — isberg-punktet bør
+// GPS-verifiseres mot faktisk kartdata før publisering. Ædnafossen har en bekreftet
+// koordinat fra Wikipedia/geohack (60.133655, 6.535749). Vikebygd bruker Nå sin
 // bekreftede Wikipedia-koordinat (60.2607, 6.5743). Kleberstein/Måge er MED VILJE
 // utelatt fra kartet inntil videre — ingen pålitelig koordinat funnet. Kortet i
 // temapanelet fungerer likevel som normalt, bare uten kartmarkør.
 const SORFJORDEN_POINTS = [
-  { name: 'Folgefonntunnelen', lat: 60.0480, lng: 6.6050, desc: 'Østportalen ved Eitrheim — reisens startpunkt.' },
+  { name: 'Ædnafossen',        lat: 60.133655, lng: 6.535749, desc: 'Foss på vestsiden av Sørfjorden, 175 m høy, best sett fra Tyssedal.' },
   { name: 'Odda sentrum',      lat: 60.0693, lng: 6.5466, desc: 'Fra turistby til industriby og tilbake til ren fjord.' },
   { name: 'Isberg',            lat: 60.1350, lng: 6.5050, desc: 'Veglaus fjellgård — heimen til riksskarpretteren.' },
   { name: 'Vikebygd',          lat: 60.2607, lng: 6.5743, desc: 'Bleie og Nå — sidergårdene og tusenårsraset. (Nå-koordinat verifisert)' },
@@ -1039,12 +1046,11 @@ if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
 const SORFJORDEN_KB = `
 STED: Sørfjorden, Hardanger — vestsiden fra Odda til Utne (ca. 40 km)
 
-Folgefonntunnelen:
-11 150 meter, åpnet 2001. Kuttet reisetid Odda–Austrepollen fra ca. fire timer til ti minutter.
-Ikke statsinitiert — lokalbefolkningens eget selskap (stiftet 1987) lobbet i fjorten år.
-Isklar-kildevann tappes noen hundre meter under selve breen, rett over tunneltraséen.
+Ædnafossen:
+Foss på vestsiden av Sørfjorden i Ullensvang, ca. 8 km nord for Odda. Hovedfallet 175 meter høyt, ca. 130 meter bredt — Norges 53. høyeste foss ut fra totalt fall. Fylkesveg 550 krysser nederste del av fossen på bru. Best inntrykk får man fra andre siden av fjorden, f.eks. fra kaia i Tyssedal. Dette temaet har KUN video, ingen tekst — ikke finn på faktapåstander om Ædnafossen i chat utover det som står her.
 
 Odda:
+Inngangsport: Folgefonntunnelen (11 150 m, åpnet 2001, ikke statsinitiert — lokalt selskap stiftet 1987 lobbet i 14 år) kuttet reisetid Odda–Austrepollen fra ca. fire timer til ti minutter. Isklar-kildevann tappes rett over traséen.
 Liten bygd med småbruk og fruktdyrking til tidlig 1900-tall. Engelske turister kom for fossene og Folgefonna.
 A/S Tyssefaldene sikret fossefallene i Tyssedal 1906 — Sam Eyde og de svenske Wallenberg-brødrene bak selskapet.
 Svenske Albert Petersson, tidligere ved Alby-fabrikken i Sverige, fant Odda og ble smelteverkets første direktør.
