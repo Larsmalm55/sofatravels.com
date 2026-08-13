@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hilde · Odda og omegn · SofaTravels</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-50X2YGHD2J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-50X2YGHD2J');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #080E14;
+      --border: #1A2E3A;
+      --sea:    #2A7FA8;
+      --sea-lt: #4DCCF0;
+      --gold:   #C9A84C;
+      --text:   #EAE0CF;
+      --sub:    #9AB0BA;
+      --muted:  #5A7A8A;
+      --card-bg:#0F1A22;
+    }
+    html, body {
+      height: 100%; background: var(--bg);
+      font-family: 'Crimson Text', Georgia, serif;
+      color: var(--text); overflow: hidden;
+    }
+
+    /* ══ TOP BAR ══ */
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 46px;
+      background: rgba(8,14,20,.96); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+    }
+    #back-btn {
+      background: none; border: 1px solid rgba(201,168,76,.3); color: var(--gold);
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+      font-size: .72rem; letter-spacing: .1em; font-family: inherit;
+      transition: all .2s; text-decoration: none;
+    }
+    #back-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .hdr-center {
+      flex: 1; text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .8rem; letter-spacing: .25em; color: var(--sub);
+    }
+    .hdr-center span { color: var(--gold); }
+    .hdr-right { display: flex; gap: 6px; }
+    .hdr-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(12,24,32,.7); border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .hdr-btn:hover { border-color: var(--sea); color: var(--text); }
+    .hdr-btn.active { border-color: var(--sea); color: var(--sea-lt); background: rgba(42,127,168,.15); }
+
+    /* ══ MAIN ══ */
+    #app { display: flex; height: 100vh; padding-top: 46px; overflow: hidden; }
+
+    /* ══ LEFT — SLIDESHOW ══ */
+    #left-col {
+      flex: 0 0 62%; position: relative;
+      background: #000; overflow: hidden; min-width: 300px;
+    }
+    .portrait-slide {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0; transition: opacity 2.2s ease;
+    }
+    .portrait-slide.active { opacity: 1; }
+    #left-mist {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 28%; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,14,20,1) 0%, rgba(8,14,20,.5) 45%, transparent 100%);
+    }
+    #left-mist-side {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 2;
+      width: 16%; pointer-events: none;
+      background: linear-gradient(to left, rgba(8,14,20,.85) 0%, transparent 100%);
+    }
+
+    /* Guide badge */
+    #guide-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 10;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .badge-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgba(42,127,168,.5); }
+    .badge-av img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CC87A; box-shadow: 0 0 6px rgba(76,200,122,.8); animation: pdot 3s infinite; }
+    @keyframes pdot { 0%,100%{box-shadow:0 0 4px rgba(76,200,122,.4)} 50%{box-shadow:0 0 10px rgba(76,200,122,.9)} }
+
+    /* Location badge */
+    #loc-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 10;
+      background: rgba(8,14,20,.65); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,168,76,.25); border-radius: 4px;
+      padding: 5px 12px; text-align: right;
+    }
+    #loc-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 1px; }
+    #loc-name { font-family: 'Playfair Display', serif; font-size: .85rem; color: var(--text); }
+
+    /* Slide dots */
+    #slide-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 6px;
+    }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; cursor: pointer; }
+    .sdot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ══ INFO CARD OVERLAY ══ */
+    #info-card {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #info-card.visible { opacity: 1; pointer-events: all; }
+    #info-card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #info-card-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #info-card-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #info-card-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+    #info-card-image {
+      position: relative; flex-shrink: 0; height: 34%; min-height: 140px;
+      background: #050A0F; overflow: hidden;
+    }
+    #info-card-image.video-mode { height: 60%; }
+    #info-card-img-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; filter: blur(22px) brightness(.55); transform: scale(1.15);
+      opacity: 0; transition: opacity .3s;
+    }
+    #info-card-img-bg.show { opacity: 1; }
+    #info-card-img {
+      position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover;
+    }
+    #info-card-img.contain-mode { object-fit: contain; }
+    #info-card-image-cap {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      font-size: .68rem; color: var(--sub); padding: 6px 14px;
+      background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
+    }
+    #info-card-body {
+      flex: 1; overflow-y: auto; padding: 18px 22px 8px;
+    }
+    .info-section { margin-bottom: 18px; }
+    .info-section-label {
+      display: block; font-size: 7.5px; letter-spacing: .3em; color: var(--gold);
+      margin-bottom: 5px;
+    }
+    .info-section p { font-size: .92rem; line-height: 1.55; color: var(--text); }
+    #info-card-footer {
+      flex-shrink: 0; padding: 10px 22px; font-size: .7rem; color: var(--muted);
+      border-top: 1px solid rgba(201,168,76,.12); text-align: center;
+    }
+
+    /* ══ MAP OVERLAY ══ */
+    #map-overlay {
+      position: absolute; inset: 0; z-index: 21;
+      background: rgba(8,14,20,.97);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+      overflow: hidden;
+    }
+    #map-overlay.visible { opacity: 1; pointer-events: all; }
+    #map-overlay-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #map-overlay-label {
+      font-size: 7.5px; letter-spacing: .4em; color: var(--gold);
+      margin-bottom: 4px; display: block;
+    }
+    #map-overlay-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--text); line-height: 1.2;
+    }
+    #map-overlay-close {
+      background: rgba(42,127,168,.15); border: 1px solid rgba(42,127,168,.3);
+      color: var(--sub); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: .85rem; flex-shrink: 0; margin-left: 12px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 4px;
+    }
+    #map-overlay-close:hover { border-color: var(--sea); color: var(--text); background: rgba(42,127,168,.25); }
+    #odda-map { flex: 1; min-height: 0; background: #050A0F; }
+    #map-zoom-hint {
+      padding: 8px 20px; font-size: .65rem; color: var(--muted);
+      letter-spacing: .05em; border-top: 1px solid rgba(201,168,76,.12);
+      flex-shrink: 0; text-align: center;
+    }
+    .map-btn {
+      border-color: rgba(42,127,168,.4) !important;
+      color: var(--sea-lt) !important;
+    }
+    .map-btn:hover { border-color: var(--sea-lt) !important; background: rgba(42,127,168,.12) !important; }
+
+    /* Leaflet gull/mørk tema-overstyring */
+    .leaflet-container { background: #0a1218 !important; font-family: 'Crimson Text', serif; }
+    .leaflet-tile-pane { filter: saturate(.9) brightness(.98); }
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg); color: var(--text);
+      border: 1px solid rgba(201,168,76,.3); border-radius: 6px;
+    }
+    .leaflet-popup-tip { background: var(--card-bg); border: 1px solid rgba(201,168,76,.3); }
+    .leaflet-popup-content { font-size: .82rem; line-height: 1.4; margin: 10px 12px; }
+    .leaflet-popup-content strong { color: var(--gold); font-family: 'Playfair Display', serif; }
+    .odda-pin {
+      background: var(--gold); width: 14px; height: 14px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); border: 2px solid #fff8e7; box-shadow: 0 0 6px rgba(201,168,76,.6);
+    }
+    .leaflet-control-attribution { background: rgba(8,14,20,.7) !important; color: var(--muted) !important; }
+    .leaflet-control-attribution a { color: var(--sub) !important; }
+
+    /* ══ RIGHT COLUMN ══ */
+    #right-col { flex: 1; display: flex; flex-direction: column; min-width: 320px; }
+    #right-top { display: flex; height: 44%; border-bottom: 1px solid var(--border); }
+
+    /* Topics panel */
+    #topics-panel {
+      flex: 0 0 48%; padding: 16px 14px; overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+    .tp-region { font-size: 7.5px; letter-spacing: .35em; color: var(--gold); margin-bottom: 2px; }
+    .tp-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 3px; }
+    .tp-tagline { font-size: .78rem; color: var(--sub); font-style: italic; margin-bottom: 14px; }
+    .tp-label { font-size: 7px; letter-spacing: .3em; color: var(--muted); margin-bottom: 8px; }
+    #topics { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+    .topic-btn {
+      background: rgba(15,26,34,.6); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 12px; border-radius: 5px; font-size: .78rem; text-align: left;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+      text-decoration: none; display: block;
+    }
+    .topic-btn:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+    .topic-btn.active { border-color: var(--gold); background: rgba(201,168,76,.14); color: var(--gold); }
+    .topic-link { color: var(--gold); font-size: .72rem; opacity: .85; }
+
+    /* Hilde video panel */
+    #hilde-panel { flex: 1; position: relative; overflow: hidden; background: #000; }
+    #hilde-panel video { width: 100%; height: 100%; object-fit: cover; }
+    #hilde-panel-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,14,20,.85) 0%, transparent 40%);
+    }
+    #hilde-panel-name {
+      position: absolute; bottom: 8px; left: 10px;
+      font-family: 'Playfair Display', serif; font-size: .95rem; color: #fff;
+      text-shadow: 0 1px 8px rgba(0,0,0,.9);
+    }
+    #hilde-panel-sub {
+      display: block; font-size: 6.5px; letter-spacing: .3em; color: var(--gold);
+    }
+
+    /* Chat column */
+    #chat-col { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    #tip-bar {
+      flex-shrink: 0; padding: 6px 16px; font-size: .68rem; color: var(--muted);
+      border-bottom: 1px solid var(--border); background: rgba(15,26,34,.4);
+    }
+    #messages { flex: 1; overflow-y: auto; padding: 14px 16px; }
+    .msg-row { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-start; }
+    .msg-row.user { flex-direction: row-reverse; }
+    .msg-av { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
+    .msg-bubble {
+      max-width: 78%; padding: 9px 13px; border-radius: 10px; font-size: .88rem; line-height: 1.5;
+    }
+    .msg-bubble.bot { background: var(--card-bg); border: 1px solid var(--border); }
+    .msg-bubble.user-b { background: rgba(42,127,168,.18); border: 1px solid rgba(42,127,168,.35); }
+    .msg-bubble.error { background: rgba(180,60,60,.15); border: 1px solid rgba(180,60,60,.4); color: #e0a0a0; }
+    .typing { letter-spacing: 2px; animation: blink 1.2s infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+    .speak-btn {
+      display: inline-block; margin-top: 6px; background: none; border: 1px solid rgba(201,168,76,.3);
+      color: var(--gold); font-size: .68rem; padding: 3px 9px; border-radius: 10px; cursor: pointer;
+      font-family: inherit;
+    }
+    .speak-btn.playing { border-color: var(--sea-lt); color: var(--sea-lt); }
+    #input-row {
+      flex-shrink: 0; display: flex; gap: 8px; padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+    #chat-input {
+      flex: 1; background: var(--card-bg); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 14px; border-radius: 20px; font-size: .88rem; font-family: inherit; outline: none;
+    }
+    #chat-input:focus { border-color: var(--gold); }
+    #send-btn {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--sea);
+      border: none; color: #fff; font-size: 1.1rem; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; transition: background .2s;
+    }
+    #send-btn:hover { background: var(--sea-lt); }
+    #send-btn:disabled { opacity: .5; cursor: default; }
+
+    /* API banner */
+    .api-banner {
+      position: fixed; top: 46px; left: 0; right: 0; z-index: 60;
+      background: rgba(15,26,34,.98); border-bottom: 1px solid var(--gold);
+      padding: 10px 16px; display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+      font-size: .78rem;
+    }
+    .api-banner.show { display: flex; }
+    .api-banner input {
+      flex: 1; min-width: 160px; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 10px; border-radius: 4px; font-family: inherit;
+    }
+    .api-banner button {
+      background: var(--sea); border: none; color: #fff; padding: 6px 14px;
+      border-radius: 4px; cursor: pointer; font-family: inherit; font-size: .78rem;
+    }
+    .banner-close {
+      background: none !important; color: var(--muted) !important; padding: 2px 8px !important;
+    }
+
+    /* ══ RESPONSIVE — MOBIL ══ */
+    @media (max-width: 720px) {
+      #app { flex-direction: column; }
+      #left-col { flex: 0 0 38vh; min-width: 0; }
+      #right-col { flex: 1; min-width: 0; }
+      #right-top { height: auto; flex: 0 0 30vh; }
+      #topics-panel { flex: 0 0 55%; }
+      .tp-name { font-size: 1.1rem; }
+      .topic-btn { font-size: .74rem; padding: 7px 10px; }
+      #info-card-title { font-size: 1.15rem; }
+      #info-card-image { height: 28%; min-height: 110px; }
+      .msg-bubble { max-width: 85%; font-size: .84rem; }
+
+      #map-overlay-title { font-size: 1.1rem; }
+
+      /* Topbar */
+      #top-bar { height: 42px; padding: 0 12px; }
+      #back-btn { padding: 3px 8px; font-size: .66rem; }
+      .hdr-center { font-size: .72rem; letter-spacing: .15em; }
+      #app { padding-top: 42px; }
+    }
+
+    /* ══ LITEN MOBIL (≤390px) ══ */
+    @media (max-width: 390px) {
+      #left-col { flex: 0 0 32vh; }
+      #right-top { max-height: 28vh; }
+      .msg-bubble { font-size: .8rem; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+<header id="top-bar">
+  <a href="/regions/" id="back-btn">← Guider</a>
+  <div class="hdr-center">SOFATRAVELS · <span>ODDA OG OMEGN</span></div>
+  <div class="hdr-right">
+    <button class="hdr-btn" id="voice-btn" title="Hildes stemme">🔇</button>
+    <button class="hdr-btn" id="settings-btn" title="Innstillinger">⚙</button>
+  </div>
+</header>
+
+<div id="eleven-banner" class="api-banner">
+  <label><strong>ElevenLabs API-nøkkel</strong> — for Hildes stemme</label>
+  <input type="password" id="eleven-key-input" placeholder="sk_..." autocomplete="off" />
+  <button id="eleven-key-save">Lagre</button>
+  <button class="banner-close" id="eleven-banner-close">✕</button>
+</div>
+
+<div id="app">
+
+  <!-- LEFT: SLIDESHOW + INFO CARD -->
+  <div id="left-col">
+    <img class="portrait-slide active" src="odda-turistby-1900.jpg"    alt="Odda i turistglansdagene" />
+    <img class="portrait-slide"        src="tyssedal-kraftstasjon.jpg" alt="Tysso I kraftstasjon i Tyssedal" />
+    <img class="portrait-slide"        src="trolltunga-utsikt.jpg"     alt="Trolltunga over Ringedalsvatnet" />
+    <img class="portrait-slide"        src="opo-elv-odda.jpg"          alt="Elva Opo gjennom Odda sentrum" />
+    <img class="portrait-slide"        src="buer-buarbreen.jpg"        alt="Buer og Buarbreen" />
+    <img class="portrait-slide"        src="seljestadjuvet-veg.jpg"    alt="Gamlevegen gjennom Seljestadjuvet" />
+    <img class="portrait-slide"        src="almerket-kyrkje.jpg"       alt="Odda kyrkje, det eneste som ble stående på Almerket" />
+    <div id="left-mist"></div>
+    <div id="left-mist-side"></div>
+    <div id="guide-badge">
+      <div class="badge-av"><img src="hilde-odda-og-omegn.jpg" alt="Hilde" /></div>
+      <span class="badge-name">Hilde</span>
+      <span class="online-dot"></span>
+    </div>
+    <div id="loc-badge">
+      <div id="loc-region">HARDANGER · VESTLAND</div>
+      <div id="loc-name">Odda og omegn</div>
+    </div>
+    <div id="slide-dots">
+      <div class="sdot active" data-idx="0"></div>
+      <div class="sdot" data-idx="1"></div>
+      <div class="sdot" data-idx="2"></div>
+      <div class="sdot" data-idx="3"></div>
+      <div class="sdot" data-idx="4"></div>
+      <div class="sdot" data-idx="5"></div>
+      <div class="sdot" data-idx="6"></div>
+    </div>
+
+    <!-- INFO CARD OVERLAY -->
+    <div id="info-card">
+      <div id="info-card-header">
+        <div>
+          <span id="info-card-label">ODDA OG OMEGN · HISTORIE</span>
+          <div id="info-card-title">—</div>
+        </div>
+        <button id="info-card-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="info-card-image">
+        <img id="info-card-img-bg" src="" alt="" aria-hidden="true" />
+        <img id="info-card-img" src="" alt="" />
+        <video id="info-card-video" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#050A0F;z-index:1;" autoplay muted loop playsinline></video>
+        <div id="info-card-image-cap" id="info-img-cap"></div>
+      </div>
+      <div id="info-card-body"></div>
+      <div id="info-card-footer">💬 Spør Hilde i chatten — hun ser det samme som deg</div>
+    </div>
+
+    <!-- MAP OVERLAY -->
+    <div id="map-overlay">
+      <div id="map-overlay-header">
+        <div>
+          <span id="map-overlay-label">NORGE · VESTLANDET</span>
+          <div id="map-overlay-title">Odda og omegn</div>
+        </div>
+        <button id="map-overlay-close" title="Tilbake til bildene">✕</button>
+      </div>
+      <div id="odda-map"></div>
+      <div id="map-zoom-hint">Klikk et punkt for å se hva det er — eller zoom selv med musehjul/fingre</div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right-col">
+    <div id="right-top">
+
+      <!-- Topics -->
+      <div id="topics-panel">
+        <div class="tp-region">ODDA OG OMEGN</div>
+        <div class="tp-name">Hilde</div>
+        <div class="tp-tagline">«Det du ikke ser når du kjører forbi»</div>
+        <div class="tp-label">FORESLÅTTE TEMAER</div>
+        <div id="topics">
+          <button class="topic-btn" data-topic="turiststedet">Odda før fabrikkene · turistbyen som forsvant</button>
+          <button class="topic-btn" data-topic="almerket">Almerket · bydelen Odda rev ned</button>
+          <button class="topic-btn" data-topic="albertleonie">Albert & Leonie · direktøren som forsvant</button>
+          <button class="topic-btn" data-topic="opo">Opo · natten elva tok husene</button>
+          <button class="topic-btn" data-topic="tokheim">Tokheim · murene som stopper skred</button>
+          <button class="topic-btn" data-topic="tyssedal">Tyssedal · "Slottet" og mennene i tauet</button>
+          <button class="topic-btn" data-topic="trolltunga">Trolltunga · fra 800 til 80 000</button>
+          <button class="topic-btn" data-topic="sandvin">Sandvin · bildet du kanskje kjenner</button>
+          <button class="topic-btn" data-topic="seljestadjuvet">Seljestadjuvet · mannen som gravde seg ut</button>
+          <button class="topic-btn" data-topic="buer">Buer · hotellet skredvinden tok</button>
+          <button class="topic-btn" data-topic="arbeiderklasse">Da Hardanger ble arbeiderklasse 🎬</button>
+          <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Odda og omegn?</button>
+        </div>
+      </div>
+
+      <!-- Hilde video -->
+      <div id="hilde-panel">
+        <video autoplay muted loop playsinline src="hilde-odda-og-omegn-guide.mp4" poster="hilde-odda-og-omegn-guide-poster.jpg"></video>
+        <div id="hilde-panel-overlay"></div>
+        <div id="hilde-panel-name">
+          <span id="hilde-panel-sub">GUIDE</span>Hilde
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat -->
+    <div id="chat-col">
+      <div id="tip-bar">💬 Klikk et tema for å utforske — eller spør Hilde direkte</div>
+      <div id="messages" role="log" aria-live="polite"></div>
+      <div id="input-row">
+        <input type="search" id="chat-input" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Spør Hilde om Odda og omegn…" />
+        <button id="send-btn">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ INFO CARD DATA ══
+const CARDS = {
+  turiststedet: {
+    title: 'Odda før fabrikkene',
+    subtitle: 'Turistbyen som forsvant',
+    img: 'kort-turiststedet.jpg',
+    imgCap: 'Odda i turistglansdagene, ca. 1900',
+    sections: [
+      { label: 'DEN GLEMTE TURISTBYEN', text: `I 1904 hadde Odda 83 anløp av utenlandske turistskip. Rundt 12 000 turister kom sjøveien det året alene — nesten halvparten av alle utenlandske besøkende til Norge det året kom innom Odda (Kraftmuseets egen tall). Strandstedet talte i 1900 bare 27 boligbygg og 285 fastboende.` },
+      { label: 'GJESTENE', text: `Kaiser Wilhelm II var årviss gjest i Hardanger fra 1889 til 1914, med yachten "Hohenzollern". Amerikaneren John L. Stoddard skrev i 1897 at Odda var det eneste stedet i Norge han hadde vanskelig for å få hotellrom — resepsjonen var som "børsen i New York". Odda hadde egen engelsk prest fra 1890-tallet.` },
+      { label: '"SORIA MORIA SLOTT"', text: `Hotel Hardanger (bygd på ti måneder, klart 1896, arkitekt Hans-Heinrich Jess) ble kalt et "Soria Moria slott" da det stod ferdig. Matsalen var dekorert med treskurd av Lars Kinsarvik og malerier av Nils Bergslien.` },
+      { label: 'KLAGEN', text: `En besøkende skrev: "Odda er malerisk, men skjæmmes af Fabrikvirksomhed, som har betaget Landskabet al dets Charme." Hotelleierne saksøkte karbidfabrikken for luktplager og verdiforringelse — og vant erstatning, kort tid før fabrikken selv gikk konkurs.` },
+      { label: 'I DAG', text: `Hotel Hardanger ble rådhus 1917–1958, deretter revet i 1977. I dag kommer over 80 000 mennesker årlig for å gå til Trolltunga — nesten ti ganger flere enn i turistglansdagene, bare med et helt annet formål.` }
+    ]
+  },
+  almerket: {
+    title: 'Almerket',
+    subtitle: 'Bydelen Odda rev ned',
+    img: 'kort-almerket.jpg',
+    imgCap: 'Almerket — der to hoteller og en dampskipskai en gang lå',
+    sections: [
+      { label: 'ODDAS NAVLE', text: `Almerket lå nord for kirkemuren, mellom kirken og fjorden — den gamle allmenningen der alt og alle kom inn til byen. Her lå Hotel Hardanger og Grand Hotel (opprinnelig Prestegaards Hotel), dampskipskai, småvirksomhet og boliger.` },
+      { label: 'RIVINGEN', text: `Grand Hotel ble revet i 1975. Hotel Hardanger — det gamle rådhuset — ble revet etter et dramatisk kommunestyrevedtak (27 mot 17 stemmer): rivingen startet 8. november 1976, og i juni 1977 var bare en grushaug igjen av det som en gang var Norges flotteste hotell.` },
+      { label: 'DEN MUNTLIGE HISTORIEN', text: `En lokal skribent som selv bodde i et av de siste husene forteller at kommunen samlet skrapet sitt der før riving, og at det siste huset brant ned bare uker etter at det ble fotografert. (Muntlig hukommelse, ikke dokumentert fakta.)` },
+      { label: 'I DAG', text: `Almerkeparken ble anlagt på tomten — steinmurene er bygget av skifer fra Seljestadjuvet. Monumentet "Skysshesten" av Unni Karlsen ble avduket i 1985. Området er nå under ny regulering, og navnet Almerket lever videre gjennom utbyggingsselskapet Almerket AS.` }
+    ]
+  },
+  albertleonie: {
+    title: 'Albert & Leonie',
+    subtitle: 'Direktøren som forsvant',
+    img: 'kort-albertleonie.jpg',
+    imgCap: 'Lindehuset — den tidligere nitrogenfabrikken der historien fortelles i dag',
+    sections: [
+      { label: 'MANNEN', text: `Albert Johan Petersson, født 6. februar 1870 i Landskrona, Sverige — svensk ingeniør med doktorgrad fra Zürich, utvikler av "Alby-ovnen" for karbidproduksjon, og fabrikkenes første direktør. Han er den eneste som har fått en gate oppkalt etter seg i Odda.` },
+      { label: 'LEONIE', text: `Han giftet seg med 18 år gamle Leonie Witt i 1906, datter av den kjente tyske kjemikeren Otto Nikolaus Witt. Hun fødte sønnen Claus i 1907, datteren Ingrid i 1910 — og døde i barsel samme år, bare 22 år gammel.` },
+      { label: 'DET UOPPKLARTE', text: `18. august 1914 gikk Petersson om bord i D/S Ullensvang i Odda, med kurs for Bergen. Da båten ankom neste morgen, var han forsvunnet. Årsaken er aldri oppklart. Barna ble foreldreløse samme dag, reiste til Sverige og beholdt morens navn Witt.` },
+      { label: 'MINNET', text: `To år senere, 18. august 1916, ble en minnebauta over ham avduket i Odda. Historien er i dag dramatisert i musikalen "Albert og Leonie", satt opp i Lindehuset — den gamle nitrogenfabrikken på smelteverkstomta.` }
+    ]
+  },
+  opo: {
+    title: 'Opo',
+    subtitle: 'Natten elva tok husene',
+    img: 'kort-opo.jpg',
+    imgCap: 'Elva Opo gjennom Odda sentrum',
+    sections: [
+      { label: 'FLOMMEN', text: `Natt til 29. oktober 2014 ble Odda rammet av den kraftigste flommen i Opo siden 1915 — 778 kubikkmeter vann i sekundet. Fem hus, en buss og en garasje ble tatt. Rundt 75 personer ble evakuert fra 39 bygg.` },
+      { label: 'MANNEN SOM REDDET 68 — OG MISTET SITT EGET', text: `Sivilforsvarssjef Knut Granheim ledet evakueringen hele natten og fikk reddet 68 mennesker. Klokken 04.50 så han sitt eget hus bli tatt av elva. "Det hadde vært bedre om det bare hadde brent og blitt borte," sa han senere. Erna Solberg roste ham i nyttårstalen.` },
+      { label: 'MUREN SOM HOLDT I 40 ÅR', text: `Jan Nordli bygget huset sitt i Røldalsvegen i 1973 og satte selv opp en vernemur mot elva. Den holdt i 40 år — til akkurat denne natten, da vannmassene gravde ut grunnen under huset til det hang delvis i løse luften over elva.` },
+      { label: 'I DAG', text: `NVE har bygget mur og elveforhøyning langs Opo, dimensjonert for en 200-årsflom. Med et middels klimascenario øker sannsynligheten for en tilsvarende flom fra 1 % til 3 % årlig innen slutten av århundret — omtrent hvert 30. år i stedet for hvert hundrede.` }
+    ]
+  },
+  tokheim: {
+    title: 'Tokheim',
+    subtitle: 'Murene som stopper skred',
+    img: 'kort-tokheim.jpg',
+    imgCap: 'Skredmurene ved Tokheim',
+    sections: [
+      { label: 'IKKE PYNT', text: `De store betongmurene ved Tokheim leder snøskred til sidene, vekk fra husene. De er i aktiv bruk den dag i dag.` },
+      { label: 'JANUAR 1993', text: `I januar 1993 gikk et av de kraftigste skredene i Oddas moderne historie. Ifølge Kraftmuseets kronologi: 12. januar isolerte et skred Eidfjord ved Brimnes ferjekai. Om morgenen 13. januar satt fruktbonde Einar Rødal på kjøkkenet på Apold med en kopp kaffe da et skred løsnet 1300 meter oppe og suste ned i rundt 200 km/t — skredvinden jevnet en hel fruktgård med 1300 trær med jorden. Samtidig rammet skred fra Tokheimsnuten selve Tokheimslia. Én person omkom ved Kalvanes.` },
+      { label: 'ET ELDRE SKRED', text: `Det finnes også et dokumentert skred fra 1928 som tok et gårdshus på Tokheim.` },
+      { label: 'I DAG', text: `Murene står fortsatt, og skredfaren er reell — fjellsiden mellom Askane og Tokheim overvåkes fortsatt når snøen bygger seg opp.` }
+    ]
+  },
+  tyssedal: {
+    title: 'Tyssedal',
+    subtitle: '"Slottet" og mennene i tauet',
+    img: 'kort-tyssedal.jpg',
+    imgCap: 'Tysso I kraftstasjon i Tyssedal',
+    sections: [
+      { label: 'HVORDAN BYGGET DE DETTE?', text: `Tysso I kraftstasjon ble bygget 1906–1918 og forsynte karbidfabrikken i Odda med strøm — Nord-Europas første høytrykksanlegg. 4. mai 1908 var i praksis sekundet industribyen Odda ble slått på. Rundt 500 mann bygde anlegget; røyrgata hadde 58 graders helning i det bratteste partiet, med et fall på rundt 400 meter.` },
+      { label: 'RALLARNE', text: `Boligmangelen var så stor at ledningsarbeiderne skal ha søkt ly under "Bispen" — en enorm steinblokk i uren Kvitura. Anleggsbasen Ole Martin Olaussen skal — ifølge muntlig overlevering — ha ropt: "Jobba för fan! I graven får ni hvila!"` },
+      { label: 'DIALEKTEN SOM AVSLØRER HISTORIEN', text: `Odda-arbeiderne kom overveiende (86 %) fra Vestlandet. Tyssedal fikk en langt mer sammensatt befolkning — bare rundt en tredjedel fra Vestlandet. Resultatet ble en egen, mer østlandspreget "koiné"-dialekt, siden studert av den britiske sosiolingvisten professor Paul Kerswill som et av de mest siterte eksemplene i internasjonal språkforskning. Hør etter "jeg" (Tyssedal) mot "eg" (Odda) — bare seks kilometer fra hverandre.` },
+      { label: 'FREDET, MEN IKKE VERDENSARV', text: `Anlegget ble fredet av Riksantikvaren i 2000. I 2009 ble Tyssedal, sammen med Odda Smelteverk og Rjukan/Notodden, satt opp på Norges tentative UNESCO-liste — men det var Rjukan-Notodden som faktisk ble innskrevet på verdensarvlisten i 2015.` }
+    ]
+  },
+  trolltunga: {
+    title: 'Trolltunga',
+    subtitle: 'Fra 800 til 80 000',
+    img: 'kort-trolltunga.jpg',
+    imgCap: 'Trolltunga over Ringedalsvatnet',
+    sections: [
+      { label: 'EKSPLOSJONEN', text: `Under 800 personer besøkte Trolltunga årlig fram til 2010. Etter at bilder begynte å spre seg via reiseliv og sosiale medier: rundt 21 000 i 2013, 40 000 i 2014, over 80 000 i 2016 — et tall som har holdt seg stabilt siden.` },
+      { label: 'DAMMEN UNDER FOTEN DIN', text: `Trolltunga ligger ved Ringedalsvatnet — samme reservoar som ble bygget som en del av Tyssedal-kraftutbyggingen. Turistene som går ut på klippen for et bilde, går altså til et utsiktspunkt over en hundre år gammel industridam.` },
+      { label: 'ET STED SOM MÅ FORVALTES', text: `Overbelastningen har gjort Trolltunga til et internasjonalt case-studie i "over-tourism". Lokale aktører har jobbet med fjellvakter, bedre stier og informasjon — et bevisst valg om ikke å bygge ned naturopplevelsen med gjerder og skilt.` }
+    ]
+  },
+  sandvin: {
+    title: 'Sandvin',
+    subtitle: 'Bildet du kanskje kjenner',
+    img: 'kort-sandvin.jpg',
+    imgCap: 'Sandvinsvatnet',
+    sections: [
+      { label: 'MALERIET', text: `"Brudeferd i Hardanger" (1848) av Adolph Tidemand (figurene) og Hans Gude (landskapet) er et av de mest kjente bildene i norsk kunsthistorie — malt i et atelier i Düsseldorf. Ifølge Store norske leksikon skal landskapet være malt etter inntrykk fra nettopp Sandvinsvatnet. Både brudefølget og landskapet er kunstnerisk konstruert, ikke et direkte portrett.` },
+      { label: 'VEIEN SOM VAR', text: `Før dagens vei ble bygget, gikk ferdselen på vestsiden av vannet — mellom Odda og Jordal var man avhengig av skyssbåt eller ferje. Deler av den gamle stien er fortsatt synlig, forbi Strandfossen.` },
+      { label: 'I DAG', text: `Området brukes i dag blant annet til historiske kajakkturer, der guider forteller nettopp Brudeferd-historien mens man padler forbi Buarbreen og Folgefonna i bakgrunnen.` }
+    ]
+  },
+  seljestadjuvet: {
+    title: 'Seljestadjuvet',
+    subtitle: 'Mannen som gravde seg ut',
+    img: 'kort-seljestadjuvet.jpg',
+    imgCap: 'Gamlevegen gjennom Seljestadjuvet',
+    sections: [
+      { label: 'POSTFØREREN', text: `Gunnar Turtveit fra Røldal var postfører over fjellet mellom Odda/Seljestad og Røldal. 2. januar 1903 dro han ut i snøvær og storm. I Bekkedalen tok et snøskred ham. Hjelpegutten kom seg unna og varslet, men et redningslag måtte snu på grunn av uværet.` },
+      { label: '56 TIMER', text: `Mandag kveld kom en kald, sliten mann gående til en gård ved Seljestad. Det var Turtveit selv — han hadde gravd seg ut av skredet med posthornet som eneste redskap.` },
+      { label: '"KISTA MÅ EG HA"', text: `Jobben var så farlig at Turtveit i årevis skal ha hatt en kiste stående klar på låven: "Kista må eg ha, for best du går der, så ligg du der." Minnesteinen, laget av O. Villand fra Øystese, ble avduket i juli 1934, med posthornet hugget inn over inskripsjonen.` },
+      { label: 'I DAG', text: `Gamlevegen — bygget midt på 1800-tallet, seks slynger fra ca. 856 til 1067 moh — er fortsatt farbar sommerstid, og var i sin tid både pilegrimsvei og markedsvei til Røldal.` }
+    ]
+  },
+  buer: {
+    title: 'Buer',
+    subtitle: 'Hotellet skredvinden tok',
+    img: 'kort-buer.jpg',
+    imgCap: 'Buer, med Buarbreen i bakgrunnen',
+    sections: [
+      { label: 'HOTELLET', text: `På slutten av 1800-tallet sto det et turisthotell ved Buer (ca. 250 moh), bygget for de som ville oppleve Buarbreen på nært hold. I 1897 rammet et kraftig snøskred området — det var vindtrykket fra raset, ikke skredmassene selv, som er dokumentert å ha revet bygningen av grunnmuren. Den ble aldri bygget opp igjen.` },
+      { label: 'TURISMEN FØR HOTELLET', text: `Organisert turisme over Folgefonna er dokumentert helt tilbake til 1833, med hovedrute fra Sundal til Tokheim. Det må ha eksistert et lokalt apparat rundt trafikken til Buer — førere, hester, overnatting — men et navngitt menneske er ikke funnet ennå.` },
+      { label: 'I DAG', text: `Buer er nasjonalparkgård og inngangsport til Buerdalen/Folgefonna nasjonalpark. Bjørn og Elisabeth Buer har bygget om låven til Buer Restaurant, med kokker fra Michelin-bakgrunn og sesongbasert mat fra lokale råvarer — fjord, fjell, skog og beitemark rett utenfor døren.` }
+    ]
+  },
+  arbeiderklasse: {
+    title: 'Da Hardanger ble arbeiderklasse',
+    subtitle: 'Det harde livet i industribyen',
+    img: 'kort-arbeiderklasse.jpg',
+    imgCap: 'Smelteverket, tidlig 1900-tall',
+    sections: [
+      { label: 'INNFLYTTINGEN', text: `Arbeidet i karbid- og cyanamidfabrikken var tungt, farlig og svært skittent — "cyanpakking" er beskrevet som veldig støvete arbeid. Arbeiderne organiserte seg raskt: Odda og Omland faglige Samorganisasjon ble stiftet i 1914, en av de første i landet.` },
+      { label: 'KONKURSEN 1921', text: `Våren 1921 gikk Odda Fabrikkane konkurs. I Tyssedal gikk Nitriden-fabrikken konkurs få uker senere. Til sammen ble 1000 mennesker arbeidsledige. Fabrikkene gjenoppstod i 1924 under navnet Odda Smelteverk.` },
+      { label: 'KNALLRØDT I ÅRTIER', text: `Fagforeningen ble stiftet i 1914. Tyskerne kalte Tyssedal "lille Moskva" under krigen. Så sent som i 2007 hadde Odda rødgrønt flertall i kommunestyret. Det sier noe om hvor tett arbeidet og politikken hang sammen her.` },
+      { label: 'LØNNINGSPOSEN', text: `Fram til bankkontoer ble vanlig utover 1970-tallet, fikk norske arbeidere lønnen kontant i hånden — hele Norge, ikke bare her. Sørfjorden var fram til 1970-tallet en av verdens mest forurensede fjorder.` }
+    ]
+  }
+};
+
+// Peker videokortet til dedikert asset for dette temaet, uten å endre kort-strukturen
+CARDS.arbeiderklasse.video = 'hilde-odda-og-omegn-smelteverk.mp4';
+
+
+// ══ SLIDESHOW ══
+const slides = document.querySelectorAll('.portrait-slide');
+const dots   = document.querySelectorAll('.sdot');
+let cur = 0, slideTimer;
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
+}
+function startSlides() { slideTimer = setInterval(() => goTo(cur + 1), 12000); }
+dots.forEach(d => d.addEventListener('click', () => {
+  clearInterval(slideTimer); goTo(+d.dataset.idx); startSlides();
+}));
+startSlides();
+
+// ══ INFO CARD ══
+let activeCard = null;
+
+function showCard(key) {
+  const card = CARDS[key];
+  if (!card) return;
+  activeCard = key;
+
+  document.getElementById('info-card-title').textContent = card.title;
+  const cardImgEl = document.getElementById('info-card-img');
+  const cardImgBg = document.getElementById('info-card-img-bg');
+  const cardVideoEl = document.getElementById('info-card-video');
+
+  const cardImageContainer = document.getElementById('info-card-image');
+  if (card.video) {
+    // Video-kort: viser klippet øverst, tekstseksjonene forblir under (til forskjell fra
+    // rene videokort som Ædnafossen i Sørfjorden-guiden — dette kortet har rikt tekstinnhold
+    // i tillegg, så vi beholder body-seksjonene og bare bruker video i bildeboksen).
+    cardImageContainer.classList.remove('video-mode');
+    cardImgEl.style.display = 'none';
+    cardImgBg.style.display = 'none';
+    cardImgBg.classList.remove('show');
+    cardVideoEl.style.display = 'block';
+    cardVideoEl.src = card.video;
+    document.getElementById('info-card-image-cap').textContent = card.imgCap || '';
+    document.getElementById('info-card-body').style.display = '';
+
+    const body = document.getElementById('info-card-body');
+    body.innerHTML = '';
+    (card.sections || []).forEach(s => {
+      const sec = document.createElement('div');
+      sec.className = 'info-section';
+      sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+      body.appendChild(sec);
+    });
+  } else {
+    cardImageContainer.classList.remove('video-mode');
+    document.getElementById('info-card-body').style.display = '';
+    cardVideoEl.pause();
+    cardVideoEl.style.display = 'none';
+    cardVideoEl.removeAttribute('src');
+    cardImgEl.style.display = '';
+    cardImgBg.style.display = '';
+    cardImgEl.classList.remove('contain-mode');
+    cardImgBg.classList.remove('show');
+    cardImgEl.onload = () => {
+      // Stående bilder passer ikke i den brede/lave boksen uansett fokuspunkt.
+      // Vis da hele bildet (contain), med en utsmurt kopi av samme bilde som fyller resten.
+      const isPortrait = cardImgEl.naturalHeight > cardImgEl.naturalWidth * 1.05;
+      if (isPortrait) {
+        cardImgEl.classList.add('contain-mode');
+        cardImgBg.src = card.img;
+        cardImgBg.classList.add('show');
+      } else {
+        cardImgEl.classList.remove('contain-mode');
+        cardImgBg.classList.remove('show');
+      }
+    };
+    cardImgEl.src = card.img;
+    cardImgEl.alt = card.title;
+    document.getElementById('info-card-image-cap').textContent = card.imgCap;
+
+    const body = document.getElementById('info-card-body');
+    body.innerHTML = '';
+    (card.sections || []).forEach(s => {
+      const sec = document.createElement('div');
+      sec.className = 'info-section';
+      sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
+      body.appendChild(sec);
+    });
+  }
+
+  document.getElementById('info-card').classList.add('visible');
+  clearInterval(slideTimer);
+
+  // Mark active topic button
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.topic === key);
+  });
+}
+
+function closeCard() {
+  activeCard = null;
+  document.getElementById('info-card-video').pause();
+  document.getElementById('info-card').classList.remove('visible');
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  startSlides();
+}
+
+document.getElementById('info-card-close').addEventListener('click', closeCard);
+
+// ══ KART ══
+let oddaMap = null;
+// NB: koordinatene under er anslag. Odda sentrum og Trolltunga er verifisert
+// (Trolltunga: Wikipedia/geohack 60.13318, 6.75472; her avrundet noe for visning
+// nær selve utsiktspunktet). Resten (Tyssedal, Sandvin, Seljestadjuvet, Buer,
+// Tokheim) er GROVE ANSLAG basert på stedsnavn og bør GPS-verifiseres før
+// publisering — flagget eksplisitt per punkt under. Almerket/Albert&Leonie/Opo
+// deler alle Odda sentrum-punktet siden de fysisk ligger i/ved sentrum.
+const ODDA_POINTS = [
+  { name: 'Odda sentrum',       lat: 60.0693, lng: 6.5466, desc: 'Turistbyen som ble fabrikkby — Almerket, Opo og Albert Petersson, alt her.', verified: true },
+  { name: 'Tyssedal',           lat: 60.1264, lng: 6.5636, desc: '"Slottet", rallarne og dialekten som avslører hvem som kom hit. (ANSLAG — verifiser)', verified: false },
+  { name: 'Trolltunga',         lat: 60.1332, lng: 6.7547, desc: 'Fra 800 til 80 000 besøkende, over samme dam som Tyssedal bygde.', verified: true },
+  { name: 'Tokheim',            lat: 60.0830, lng: 6.5780, desc: 'Skredmurene — ikke pynt, men i aktiv bruk. (ANSLAG — verifiser)', verified: false },
+  { name: 'Sandvin',            lat: 59.9800, lng: 6.6000, desc: 'Vannet bak «Brudeferd i Hardanger». (ANSLAG — verifiser)', verified: false },
+  { name: 'Seljestadjuvet',     lat: 59.8700, lng: 6.6200, desc: 'Der postfører Turtveit gravde seg ut av snøen. (ANSLAG — verifiser)', verified: false },
+  { name: 'Buer',               lat: 60.0300, lng: 6.6200, desc: 'Hotellet skredvinden tok, og Buerdalen i dag. (ANSLAG — verifiser)', verified: false }
+];
+
+function initMap() {
+  if (oddaMap) return;
+  oddaMap = L.map('odda-map', { zoomControl: true, attributionControl: true })
+    .setView([64.5, 15], 4); // Norge, oversikt
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(oddaMap);
+
+  const goldIcon = L.divIcon({ className: '', html: '<div class="odda-pin"></div>', iconSize: [14,14], iconAnchor: [7,12] });
+
+  // Norge-oversikt: kun Odda markert, så vi tydelig viser HVOR i landet vi er
+  const norgeMarker = L.marker([60.07, 6.55], { icon: goldIcon }).addTo(oddaMap)
+    .bindPopup('<strong>Odda og omegn</strong><br>Hardanger, Vestland — fra Tyssedal til Seljestadjuvet.');
+
+  // Etter kort pause: zoom inn og vis alle punktene
+  setTimeout(() => {
+    oddaMap.flyTo([60.05, 6.62], 10.2, { duration: 2.2 });
+    setTimeout(() => {
+      ODDA_POINTS.forEach(p => {
+        L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(oddaMap)
+          .bindPopup(`<strong>${p.name}</strong><br>${p.desc}`);
+      });
+    }, 1800);
+  }, 900);
+
+  setTimeout(() => oddaMap.invalidateSize(), 100);
+}
+
+document.getElementById('map-open-btn').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.add('visible');
+  clearInterval(slideTimer);
+  initMap();
+  setTimeout(() => oddaMap && oddaMap.invalidateSize(), 200);
+});
+document.getElementById('map-overlay-close').addEventListener('click', () => {
+  document.getElementById('map-overlay').classList.remove('visible');
+  startSlides();
+});
+
+// ══ ELEVENLABS ══
+let ELEVEN_KEY = localStorage.getItem('st_eleven') || '';
+let voiceOn = false, currentAudio = null;
+const VOICE_ID = 'jsCqWAovK2LkecY7zXl4';
+document.getElementById('eleven-key-save').onclick = () => {
+  const v = document.getElementById('eleven-key-input').value.trim();
+  if (v.length > 10) {
+    ELEVEN_KEY = v; localStorage.setItem('st_eleven', v);
+    document.getElementById('eleven-banner').classList.remove('show');
+    voiceOn = true; updateVoiceBtn();
+  }
+};
+document.getElementById('eleven-banner-close').onclick = () => document.getElementById('eleven-banner').classList.remove('show');
+document.getElementById('settings-btn').onclick = () => document.getElementById('eleven-banner').classList.toggle('show');
+document.getElementById('voice-btn').onclick = () => {
+  if (!ELEVEN_KEY) { document.getElementById('eleven-banner').classList.add('show'); return; }
+  voiceOn = !voiceOn; updateVoiceBtn();
+};
+function updateVoiceBtn() {
+  const b = document.getElementById('voice-btn');
+  b.textContent = voiceOn ? '🔊' : '🔇';
+  b.classList.toggle('active', voiceOn);
+}
+if (ELEVEN_KEY) { voiceOn = true; updateVoiceBtn(); }
+
+// ══ KNOWLEDGE BASE ══
+const ODDA_KB = `
+STED: Odda og omegn, Hardanger — fra Tyssedal til Seljestadjuvet, med Odda sentrum som midtpunkt
+
+Odda før fabrikkene:
+I 1904 hadde Odda 83 anløp av utenlandske turistskip og rundt 12 000 sjøveis turister — nesten halvparten av alle utenlandske besøkende til Norge det året. Strandstedet talte i 1900 bare 27 boligbygg og 285 fastboende. Kaiser Wilhelm II var årviss gjest 1889–1914. Hotel Hardanger (1896, arkitekt Hans-Heinrich Jess) ble kalt "Soria Moria slott", dekorert av Lars Kinsarvik og Nils Bergslien. Hotelleierne saksøkte karbidfabrikken for luktplager og vant. Hotel Hardanger ble rådhus 1917–1958, revet 1977.
+
+Almerket:
+Den gamle allmenningen nord for kirken, mellom kirken og fjorden — Oddas navle før industrien. Hadde Hotel Hardanger og Grand Hotel, dampskipskai. Grand Hotel revet 1975, Hotel Hardanger 1976–77 etter tett kommunestyrevedtak (27–17). Almerkeparken anlagt etterpå, steinmurer fra Seljestadjuvet, monumentet "Skysshesten" (Unni Karlsen) avduket 1985.
+
+Albert Petersson og Leonie:
+Svensk ingeniør (f. 1870, Landskrona), doktorgrad fra Zürich, fabrikkenes første direktør, oppfinner av "Alby-ovnen". Giftet seg med 18 år gamle Leonie Witt (datter av kjemikeren Otto N. Witt) i 1906. Leonie døde i barsel 1910, 22 år gammel. 18. august 1914 forsvant Petersson sporløst fra D/S Ullensvang på vei til Bergen — aldri oppklart. Barna Claus og Ingrid ble foreldreløse, reiste til Sverige. Minnebauta avduket 1916. Historien dramatisert i musikalen "Albert og Leonie" i Lindehuset.
+
+Opo-flommen 2014:
+Natt til 29. oktober 2014: 778 m³/s, den kraftigste flommen siden 1915. Fem hus, en buss og en garasje tatt, ~75 evakuert. Sivilforsvarssjef Knut Granheim reddet 68 mennesker og mistet selv huset sitt kl. 04.50 samme natt — rost av Erna Solberg i nyttårstalen. Jan Nordli mistet huset sitt til tross for en vernemur som hadde holdt i 40 år. NVE har siden bygget flomsikring for en 200-årsflom.
+
+Tokheim:
+Store betongmurer leder snøskred vekk fra husene, i aktiv bruk. Januar 1993: kraftig skredperiode, bl.a. Apold-skredet (fruktbonde Einar Rødal), skred fra Tokheimsnuten rammet Tokheimslia, én omkom ved Kalvanes. Eldre skred i 1928 tok et gårdshus. Skredfaren overvåkes fortsatt.
+
+Tyssedal:
+Tysso I kraftstasjon, bygd 1906–1918, Nord-Europas første høytrykksanlegg. 4. mai 1908: strømmen satt på mot Odda. ~500 mann bygde anlegget, røyrgate 58 graders helning, ~400 m fall. "Slottet" er kallenavnet på ARBEIDERBOLIGEN (14 leiligheter, 1912–17), IKKE kraftstasjonen selv — ikke bland disse. Boligmangel: arbeidere søkte ly under "Bispen"-steinblokken. Dialekt: Odda 86% vestlendinger, Tyssedal kun ~1/3 — ga en egen, mer østlandspreget koiné-dialekt, studert av professor Paul Kerswill (internasjonalt kjent forskningseksempel). Fredet 2000. På UNESCOs TENTATIVE liste 2009 sammen med Rjukan/Notodden — men det var Rjukan-Notodden som ble innskrevet i 2015, IKKE Odda/Tyssedal. Vær presis på dette skillet.
+
+Trolltunga:
+Under 800 besøkende årlig før 2010, over 80 000 fra 2016. Ligger ved Ringedalsvatnet — samme reservoar som Tyssedal-utbyggingen. Case-studie i "over-tourism" internasjonalt. Unngå å gjøre dødsulykker til hovedfortellingen — spør bruker eksplisitt om sikkerhet/risiko før den historien hentes fram.
+
+Sandvin:
+"Brudeferd i Hardanger" (1848, Tidemand/Gude) skal være malt etter inntrykk fra Sandvinsvatnet (SNL). Malt i Düsseldorf, kunstnerisk konstruert, ikke et direkte portrett. Gammel ferdselsvei gikk på vestsiden av vannet før dagens vei.
+
+Seljestadjuvet:
+Postfører Gunnar Turtveit, tatt av snøskred 2.–3. januar 1903 i Bekkedalen, gravde seg ut etter 56 timer med posthornet. Hadde i årevis en kiste klar på låven: "Kista må eg ha, for best du går der, så ligg du der." Minnestein (O. Villand) avduket juli 1934. Gamlevegen: seks slynger, 856–1067 moh, bygget midt på 1800-tallet, pilegrims- og markedsvei til Røldal.
+
+Buer:
+Turisthotell fra sent 1800-tall (~250 moh) ved Buarbreen, revet av vindtrykket fra et snøskred i 1897, aldri gjenoppbygd. Organisert Folgefonna-turisme fra 1833 (hovedrute Sundal–Tokheim). I dag: Buer Restaurant, drevet av Bjørn og Elisabeth Buer, kokker med Michelin-bakgrunn, sesongbasert lokal mat. INGEN navngitte kokker eller breførere skal brukes — usikker/ubekreftet.
+
+Da Hardanger ble arbeiderklasse:
+Farlig, skittent arbeid (cyanpakking). Fagforening stiftet 1914. Konkurs våren 1921 (Odda Fabrikkane + Nitriden i Tyssedal), 1000 arbeidsledige. Gjenoppstod 1924 som Odda Smelteverk. Tyssedal kalt "lille Moskva" av tyskerne. Odda hadde rødgrønt flertall så sent som 2007. Lønn i kontanter (lønningspose) var normen i hele Norge til 1970-tallet, IKKE spesielt for Odda. Sørfjorden var fram til 1970-tallet en av verdens mest forurensede fjorder. ALDRI koble industristøv automatisk til silikose uten lokal medisinsk kilde. ALDRI la Hilde ta politisk stilling — kun observere fakta ved siden av hverandre. Alkohol/familieliv-tema er IKKE dokumentert for dette stedet spesifikt — ikke fremstill som fakta.
+
+HILDES ODDA:
+Hun samler litt på det som er borte herfra — turistbyen, Almerket, husene Opo tok, hotellet skredvinden rev bort, mannen som forsvant sporløst. Ikke vemod over det vakre, men respekt for det som har overlevd noe brutalt. Skeptisk til Trolltunga-hypen, men aldri avvisende — hun nevner gjerne hva som lå der før noen fant ut det var Instagram-verdig. Hun er ikke fjellmenneske av natur; Odda er noe annet enn kysten hun kommer fra.
+`;
+
+const HILDE_KB = `
+Du er Hilde. 35 år, oppvokst på Vestlandet. Du kjenner Bergen godt — bor i Parkveien. Du dekker også Sørlandet og resten av Vestlandet, som Hardanger.
+
+KARAKTER:
+Du er en ledsager, ikke en lærer. Du er nysgjerrig på menneskene du møter.
+Du deler det du vet fordi du vil at de skal se det du ser — ikke for å imponere.
+En svak melankoli under overflaten. Forsiktig humor. Du lytter mer enn du snakker.
+
+HVORDAN DU SNAKKER:
+Første setning er alltid substans: et faktum, en hendelse, et navn. Aldri en handling eller introduksjon først.
+Korte setninger. Du lar dem lande.
+Du innrømmer når du ikke vet — uten å unnskylde deg.
+Du sier aldri "dette må du se" eller "jeg leder ingen steder."
+Handlinger i kursiv (*) brukes sparsomt — maks én gang per tre svar.
+Du er med brukeren, ikke foran dem.
+`;
+
+function getSystemPrompt() {
+  let cardCtx = '';
+  if (activeCard && CARDS[activeCard]) {
+    const c = CARDS[activeCard];
+    cardCtx = `\n\nBRUKEREN SER NÅ INFO-KORTET OM: "${c.title} — ${c.subtitle}".`
+      + `\nDu kan referere til det direkte — si "du ser der at..." eller bygg videre på det som står.`;
+    if (c.sections && c.sections.length) {
+      cardCtx += `\nKortet inneholder: ${c.sections.map(s => s.label + ': ' + s.text.substring(0, 80) + '...').join(' | ')}`;
+    }
+  }
+  return HILDE_KB
+    + '\n\nSTEDSKUNNSKAP:\n' + ODDA_KB
+    + cardCtx
+    + '\n\nFORMAT:'
+    + '\nMaks 45 ord. Aldri punktlister. Aldri oppsummeringer.'
+    + '\nAvslutt med ett spørsmål ELLER én observasjon — aldri begge.'
+    + '\nAlt om historiske hendelser og personer MÅ være faktisk korrekt. Si fra hvis du er usikker.'
+    + '\nSpråk: svar på samme språk som brukeren skriver på. Skriver de norsk, svar norsk. Skriver de engelsk eller tysk, svar på samme språk — behold Hildes stemme og stil uansett.';
+}
+
+// ══ CHAT ══
+let history = [], loading = false;
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('chat-input');
+const sendEl     = document.getElementById('send-btn');
+
+function parse(t) {
+  return t.replace(/<!--[^>]*-->/g,'').trim()
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role, text, withSpeak=false) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (role==='user' ? ' user' : '');
+  if (role !== 'user') {
+    const av = document.createElement('img');
+    av.src = 'hilde-odda-og-omegn.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
+    row.appendChild(av);
+  }
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble ' + (role==='user' ? 'user-b' : role==='error' ? 'error' : 'bot');
+  bub.innerHTML = parse(text);
+  if (withSpeak && ELEVEN_KEY) {
+    const sp = document.createElement('button');
+    sp.className = 'speak-btn'; sp.textContent = '🔊 Hør';
+    sp.onclick = () => speak(text, sp);
+    bub.appendChild(sp);
+  }
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addTyping() {
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-row';
+  const av = document.createElement('img');
+  av.src = 'hilde-odda-og-omegn.jpg'; av.className = 'msg-av'; av.alt = 'Hilde';
+  row.appendChild(av);
+  const bub = document.createElement('div');
+  bub.className = 'msg-bubble bot';
+  bub.innerHTML = '<span class="typing">···</span>';
+  row.appendChild(bub);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-row')?.remove(); }
+
+async function send(override) {
+  const msg = override || inputEl.value.trim();
+  if (!msg || loading) return;
+  inputEl.value = '';
+  loading = true; sendEl.disabled = true;
+  addMsg('user', msg);
+  history.push({ role: 'user', content: msg });
+  addTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: getSystemPrompt(), sted: 'odda-og-omegn' })
+    });
+    removeTyping();
+    if (!res.ok) { addMsg('error', 'Serverfeil ' + res.status); }
+    else {
+      const data = await res.json();
+      if (data.error) { addMsg('error', 'API-feil: ' + data.error.message); }
+      else {
+        const reply = data.content?.[0]?.text || '';
+        history.push({ role: 'assistant', content: reply });
+        addMsg('assistant', reply, true);
+        if (voiceOn && ELEVEN_KEY) speak(reply, null);
+      }
+    }
+  } catch(e) { removeTyping(); addMsg('error', 'Nettverksfeil: ' + e.message); }
+  loading = false; sendEl.disabled = false;
+  inputEl.focus();
+}
+
+sendEl.onclick = () => send();
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+// Topic buttons — show card AND start chat
+document.querySelectorAll('.topic-btn[data-topic]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.topic;
+    const card = CARDS[key];
+    showCard(key);
+    send(`Fortell meg om ${card.title} — ${card.subtitle}`);
+  });
+});
+
+// ══ TTS ══
+async function speak(text, btn) {
+  if (!ELEVEN_KEY) return;
+  const plain = text.replace(/<[^>]+>/g,'').replace(/\*[^*]+\*/g,'').trim();
+  if (!plain) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVEN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: plain, model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.48, similarity_boost: 0.82, style: 0.12, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) throw new Error();
+    const url = URL.createObjectURL(await r.blob());
+    currentAudio = new Audio(url);
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.add('playing'); }
+    currentAudio.onended = () => {
+      if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+      currentAudio = null;
+    };
+    currentAudio.play();
+    if (btn) btn.onclick = () => {
+      if (currentAudio) {
+        currentAudio.pause(); currentAudio = null;
+        btn.textContent = '🔊 Hør'; btn.classList.remove('playing');
+      } else speak(text, btn);
+    };
+  } catch(e) {
+    if (btn) { btn.textContent = '🔊 Hør'; btn.classList.remove('playing'); }
+  }
+}
+
+// ══ OPENING ══
+window.addEventListener('DOMContentLoaded', () => {
+  addMsg('assistant', 'Du fant Odda, da.\n\nJeg samler litt på det som er borte herfra. Hva tar deg hit?');
+});
+</script>
+</body>
+</html>
