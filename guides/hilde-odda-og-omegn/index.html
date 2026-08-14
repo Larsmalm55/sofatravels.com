@@ -153,7 +153,7 @@
       position: relative; flex-shrink: 0; height: 34%; min-height: 140px;
       background: #050A0F; overflow: hidden;
     }
-    #info-card-image.video-mode { height: 60%; }
+    #info-card-image.video-mode { flex: 1; height: auto; }
     #info-card-img-bg {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; filter: blur(22px) brightness(.55); transform: scale(1.15);
@@ -473,6 +473,9 @@
         <div class="tp-tagline">«Det du ikke ser når du kjører forbi»</div>
         <div class="tp-label">FORESLÅTTE TEMAER</div>
         <div id="topics">
+          <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Odda og omegn?</button>
+          <button class="topic-btn" data-topic="arbeiderklasse">Da Hardanger ble arbeiderklasse 🎬</button>
+          <button class="topic-btn" data-topic="arbeiderklasseTekst">Da Hardanger ble arbeiderklasse · lønn og politikk</button>
           <button class="topic-btn" data-topic="turiststedet">Odda før fabrikkene · turistbyen som forsvant</button>
           <button class="topic-btn" data-topic="almerket">Almerket · bydelen Odda rev ned</button>
           <button class="topic-btn" data-topic="albertleonie">Albert & Leonie · direktøren som forsvant</button>
@@ -483,8 +486,6 @@
           <button class="topic-btn" data-topic="sandvin">Sandvin · bildet du kanskje kjenner</button>
           <button class="topic-btn" data-topic="seljestadjuvet">Seljestadjuvet · mannen som gravde seg ut</button>
           <button class="topic-btn" data-topic="buer">Buer · hotellet skredvinden tok</button>
-          <button class="topic-btn" data-topic="arbeiderklasse">Da Hardanger ble arbeiderklasse 🎬</button>
-          <button class="topic-btn map-btn" id="map-open-btn">🗺 Kart · hvor er Odda og omegn?</button>
         </div>
       </div>
 
@@ -637,6 +638,12 @@ const CARDS = {
   arbeiderklasse: {
     title: 'Da Hardanger ble arbeiderklasse',
     subtitle: 'Det harde livet i industribyen',
+    video: 'hilde-odda-og-omegn-smelteverk.mp4',
+    imgCap: 'Smelteverket, tidlig 1900-tall — dette temaet har KUN video, ingen tekstkort. Ikke finn på faktapåstander utover det som står i STEDSKUNNSKAP.'
+  },
+  arbeiderklasseTekst: {
+    title: 'Da Hardanger ble arbeiderklasse',
+    subtitle: 'Lønn, fagforening og politikk',
     img: 'kort-arbeiderklasse.jpg',
     imgCap: 'Smelteverket, tidlig 1900-tall',
     sections: [
@@ -647,9 +654,6 @@ const CARDS = {
     ]
   }
 };
-
-// Peker videokortet til dedikert asset for dette temaet, uten å endre kort-strukturen
-CARDS.arbeiderklasse.video = 'hilde-odda-og-omegn-smelteverk.mp4';
 
 
 // ══ SLIDESHOW ══
@@ -682,26 +686,18 @@ function showCard(key) {
 
   const cardImageContainer = document.getElementById('info-card-image');
   if (card.video) {
-    // Video-kort: viser klippet øverst, tekstseksjonene forblir under (til forskjell fra
-    // rene videokort som Ædnafossen i Sørfjorden-guiden — dette kortet har rikt tekstinnhold
-    // i tillegg, så vi beholder body-seksjonene og bare bruker video i bildeboksen).
-    cardImageContainer.classList.remove('video-mode');
+    // Video-kort: ingen bilde, ingen tekstseksjoner — bare et stort spillende klipp
+    // som fyller hele boksen. Samme mønster som Ædnafossen i Sørfjorden-guiden.
+    cardImageContainer.classList.add('video-mode');
     cardImgEl.style.display = 'none';
     cardImgBg.style.display = 'none';
     cardImgBg.classList.remove('show');
     cardVideoEl.style.display = 'block';
     cardVideoEl.src = card.video;
     document.getElementById('info-card-image-cap').textContent = card.imgCap || '';
-    document.getElementById('info-card-body').style.display = '';
-
-    const body = document.getElementById('info-card-body');
-    body.innerHTML = '';
-    (card.sections || []).forEach(s => {
-      const sec = document.createElement('div');
-      sec.className = 'info-section';
-      sec.innerHTML = `<span class="info-section-label">${s.label}</span><p>${s.text}</p>`;
-      body.appendChild(sec);
-    });
+    const bodyEl = document.getElementById('info-card-body');
+    bodyEl.innerHTML = '';
+    bodyEl.style.display = 'none';
   } else {
     cardImageContainer.classList.remove('video-mode');
     document.getElementById('info-card-body').style.display = '';
